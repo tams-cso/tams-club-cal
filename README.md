@@ -14,6 +14,8 @@ CALENDAR_ID=[enter the ID for the google calendar to use]
 PORT=[(optional) port number]
 ```
 
+Install packages with `yarn install`
+
 ## Execution
 
 Simply type `yarn start` to run the program
