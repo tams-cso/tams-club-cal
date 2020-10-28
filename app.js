@@ -21,13 +21,18 @@ if (process.env.SHEET_ID === undefined || process.env.CALENDAR_ID === undefined)
     process.exit(1);
 }
 
+// Start web and 15 second interval for checking form additions
 startWeb();
 createEventIfMod();
+setInterval(createEventIfMod, 10000);
 
 function startWeb() {
-    // Create static webpage
+    // Use public folder as static pages
+    app.use(express.static(__dirname + '/public'));
+
+    // Send homepage
     app.get('/', function (req, res, next) {
-        res.sendFile(path.join(__dirname, 'index.html'));
+        res.sendFile(path.join(__dirname, 'public', 'html', 'index.html'));
     });
 
     // Start webpage on port
@@ -38,6 +43,7 @@ function startWeb() {
 
 function createEventIfMod() {
     const jwt = new google.auth.JWT(config.client_email, null, config.private_key, scopes);
+    const now = new Date();
     jwt.authorize(async (err, res) => {
         const fileRequest = {
             fileId: process.env.SHEET_ID,
@@ -135,14 +141,8 @@ function createEventIfMod() {
                 `${dateList[2]}-${pad(dateList[0])}-${pad(dateList[1])}` +
                 `T${pad(timeList[0])}:${pad(timeList[1])}:${pad(timeList[2])}.000`;
 
-            // Create an object for local timezone and calulate the offset
-            var now = new Date();
-            var offset = now.getTimezoneOffset() / 60;
-
-            // Create the correct date object with offset
-            var dat = new Date(dateStr + `-0${offset}:00`);
-
-            // Get milliseconds from starting time
+            // Create date object
+            var dat = new Date(dateStr);
             var millis = dat.getTime();
 
             // Calculate end time using milliseconds
@@ -151,9 +151,9 @@ function createEventIfMod() {
                 Number(dList[0]) * 3600000 + Number(dList[1]) * 60000 + Number(dList[2]) * 1000;
             var endStr = new Date(Number(millis)).toISOString();
 
-            // Save start and end times to list
-            e.start = { dateTime: dat.toISOString() };
-            e.end = { dateTime: endStr };
+            // Save start and end times to list, USING the correct time zone
+            e.start = { dateTime: dat.toISOString(), timeZone: 'America/Chicago' };
+            e.end = { dateTime: endStr, timeZone: 'America/Chicago' };
 
             // Add contact name to description
             e.description = `<b>Contact Person: ${e.contact}</b><br>` + e.description;
@@ -172,10 +172,10 @@ function createEventIfMod() {
             };
             google.calendar('v3').events.insert(calRequest, function (err, event) {
                 if (err) {
-                    console.log(`There was an error creating event: ${err}`);
+                    console.log(`[${now.toISOString()}] There was an error creating event: ${err}`);
                     return;
                 }
-                console.log(`Event created: ${event.data.htmlLink}`);
+                console.log(`[${now.toISOString()}] Event created: ${event.data.htmlLink}`);
             });
         });
 
