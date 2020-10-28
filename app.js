@@ -101,7 +101,7 @@ function createEventIfMod() {
                         descTemp = descTemp.values;
                         if (descTemp === undefined) descTemp = ' ';
                         else {
-                            descTemp = descTemp.values[0];
+                            descTemp = descTemp[0];
                             if (descTemp === undefined) descTemp = ' ';
                             else descTemp = descTemp.formattedValue;
                         }
