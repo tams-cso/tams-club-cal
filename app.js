@@ -17,9 +17,7 @@ dotenv.config();
 
 // Check for the right env variables
 if (process.env.SHEET_ID === undefined || process.env.CALENDAR_ID === undefined) {
-    console.error(
-        'Please have SHEET_ID and CALENDAR_ID environmental variables defined'
-    );
+    console.error('Please have SHEET_ID and CALENDAR_ID environmental variables defined');
     process.exit(1);
 }
 
@@ -55,7 +53,7 @@ function createEventIfMod() {
                 const modTimeUTC = new Date(modTime);
                 return modTimeUTC.getTime();
             });
-        
+
         if (modTime === lastMod) return;
         lastMod = modTime;
 
@@ -92,13 +90,13 @@ function createEventIfMod() {
                 for (var i = 0; i < rows[0].rowData.length; i++) {
                     p++;
                     var descTemp = rows[6].rowData[i];
-                    if (descTemp === undefined) descTemp = " ";
+                    if (descTemp === undefined) descTemp = ' ';
                     else {
                         descTemp = descTemp.values;
-                        if (descTemp === undefined) descTemp = " ";
+                        if (descTemp === undefined) descTemp = ' ';
                         else {
                             descTemp = descTemp.values[0];
-                            if (descTemp === undefined) descTemp = " ";
+                            if (descTemp === undefined) descTemp = ' ';
                             else descTemp = descTemp.formattedValue;
                         }
                     }
@@ -119,7 +117,6 @@ function createEventIfMod() {
         if (eventList === undefined) return;
 
         // Parse the list of events
-        // TODO: FIX TIME SO IT"S NOT UTC
         eventList.forEach((e) => {
             // Remove AM/PM thing
             var timePreList = e.start.time.split(' ');
@@ -129,22 +126,33 @@ function createEventIfMod() {
             var timeList = timePreList[0].split(':');
 
             // Change to 24-hr time
-            if (timePreList[1] === 'PM' && timeList[0] !== '12') timeList[0] = (Number(timeList[0]) + 12).toString();
+            if (timePreList[1] === 'PM' && timeList[0] !== '12')
+                timeList[0] = (Number(timeList[0]) + 12).toString();
             if (timeList[1] === 'AM' && timeList[0] === '12') timeList[0] = '00';
 
             // Create the ISO datetime string & save to start
             var dateStr =
                 `${dateList[2]}-${pad(dateList[0])}-${pad(dateList[1])}` +
                 `T${pad(timeList[0])}:${pad(timeList[1])}:${pad(timeList[2])}.000`;
-            var dat = new Date(dateStr);
-            var millis = dat.getTime() - dat.getTimezoneOffset() * 60000;
-            e.start = { dateTime: dateStr + 'Z' };
 
-            // Calculate end time and save to end
+            // Create an object for local timezone and calulate the offset
+            var now = new Date();
+            var offset = now.getTimezoneOffset() / 60;
+
+            // Create the correct date object with offset
+            var dat = new Date(dateStr + `-0${offset}:00`);
+
+            // Get milliseconds from starting time
+            var millis = dat.getTime();
+
+            // Calculate end time using milliseconds
             var dList = e.duration.split(':');
             millis +=
                 Number(dList[0]) * 3600000 + Number(dList[1]) * 60000 + Number(dList[2]) * 1000;
             var endStr = new Date(Number(millis)).toISOString();
+
+            // Save start and end times to list
+            e.start = { dateTime: dat.toISOString() };
             e.end = { dateTime: endStr };
 
             // Add contact name to description
