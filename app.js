@@ -120,6 +120,8 @@ function createEventIfMod() {
                 }
                 return events;
             });
+        
+        // Return if the eventlist is invalid
         if (eventList === undefined) return;
 
         // Parse the list of events
