@@ -60,7 +60,6 @@ function createEventIfMod() {
                 return modTimeUTC.getTime();
             });
 
-        console.log(`[${now.toISOString()}] Check: ${modTime}`);
         if (modTime === lastMod) return;
         lastMod = modTime;
 
