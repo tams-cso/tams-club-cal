@@ -3,7 +3,6 @@ const path = require('path');
 const { google } = require('googleapis');
 const dotenv = require('dotenv');
 const app = express();
-const config = require('./config.json');
 const scopes = [
     'https://www.googleapis.com/auth/spreadsheets',
     'https://www.googleapis.com/auth/drive',
@@ -16,8 +15,9 @@ var lastMod = 0;
 dotenv.config();
 
 // Check for the right env variables
-if (process.env.SHEET_ID === undefined || process.env.CALENDAR_ID === undefined) {
-    console.error('Please have SHEET_ID and CALENDAR_ID environmental variables defined');
+if (process.env.SHEET_ID === undefined || process.env.CALENDAR_ID === undefined ||
+    process.env.CLIENT_EMAIL === undefined || process.env.PRIVATE_KEY === undefined) {
+    console.error('Please have SHEET_ID, CALENDAR_ID, CLIENT_EMAIL, and PRIVATE_KEY environmental variables defined');
     process.exit(1);
 }
 
@@ -42,7 +42,7 @@ function startWeb() {
 }
 
 function createEventIfMod() {
-    const jwt = new google.auth.JWT(config.client_email, null, config.private_key, scopes);
+    const jwt = new google.auth.JWT(process.env.CLIENT_EMAIL, null, process.env.PRIVATE_KEY, scopes);
     const now = new Date();
     jwt.authorize(async (err, res) => {
         const fileRequest = {
