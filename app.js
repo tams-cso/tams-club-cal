@@ -95,17 +95,10 @@ function createEventIfMod() {
                 var events = [];
                 for (var i = 0; i < rows[0].rowData.length; i++) {
                     p++;
-                    var descTemp = rows[6].rowData[i];
-                    if (descTemp === undefined) descTemp = ' ';
-                    else {
-                        descTemp = descTemp.values;
-                        if (descTemp === undefined) descTemp = ' ';
-                        else {
-                            descTemp = descTemp[0];
-                            if (descTemp === undefined) descTemp = ' ';
-                            else descTemp = descTemp.formattedValue;
-                        }
-                    }
+                    
+                    if (rows[6].rowData == undefined) descTemp = ' ';
+                    else descTemp = rows[6].rowData[i].values[0].formattedValue;
+
                     events.push({
                         summary: rows[0].rowData[i].values[0].formattedValue,
                         contact: rows[1].rowData[i].values[0].formattedValue,
