@@ -50,6 +50,13 @@ function startWeb() {
         res.redirect(process.env.FORM_URL);
     });
 
+    // Send to info document
+    if (process.env.INFO_URL !== undefined) {
+        app.get('/info', function (req, res, next) {
+            res.redirect(process.env.INFO_URL);
+        })
+    }
+
     // Start webpage on port
     app.listen(process.env.PORT || PORT, () =>
         console.log(`Listening on port ${process.env.PORT || PORT}`)
