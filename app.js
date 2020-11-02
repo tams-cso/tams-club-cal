@@ -57,6 +57,10 @@ function startWeb() {
         })
     }
 
+    app.get('/calendar', function (req, res, next) {
+        res.redirect(process.env.CALENDAR_ADD_URL);
+    })
+
     // Start webpage on port
     app.listen(process.env.PORT || PORT, () =>
         console.log(`Listening on port ${process.env.PORT || PORT}`)
