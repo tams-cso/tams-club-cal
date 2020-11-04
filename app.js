@@ -183,6 +183,7 @@ async function getEventList(jwt, p) {
             `H${p}:H`,
             `I${p}:I`,
             `J${p}:J`,
+            `K${p}:K`
         ],
         includeGridData: true,
         auth: jwt,
@@ -198,10 +199,16 @@ async function getEventList(jwt, p) {
 
             // Create array of event objects
             var events = [];
+            var descTemp;
+            var signupTemp;
             for (var i = 0; i < rows[0].rowData.length; i++) {
                 // Get description or check if empty
-                if (rows[7].rowData == undefined) descTemp = '';
-                else descTemp = rows[7].rowData[i].values[0].formattedValue;
+                if (rows[8].rowData == undefined) descTemp = '';
+                else descTemp = rows[8].rowData[i].values[0].formattedValue;
+
+                // Get signup checkbox or check if empty
+                if (rows[6].rowData == undefined) signupTemp = '';
+                else signupTemp = rows[6].rowData[i].values[0].formattedValue;
 
                 // Create event object from row data
                 events.push({
@@ -213,8 +220,9 @@ async function getEventList(jwt, p) {
                         time: rows[4].rowData[i].values[0].formattedValue,
                     },
                     duration: rows[5].rowData[i].values[0].formattedValue,
-                    location: rows[6].rowData[i].values[0].formattedValue,
+                    location: rows[7].rowData[i].values[0].formattedValue,
                     description: descTemp,
+                    signup: signupTemp === '' ? false : true,
                 });
             }
             return events;
@@ -260,6 +268,9 @@ async function parseEvents(eventList) {
         e.start = { dateTime: dat.toISOString(), timeZone: 'America/Chicago' };
         e.end = { dateTime: endStr, timeZone: 'America/Chicago' };
 
+        // Signups have 0 duration
+        if (e.signup) e.end = e.start;
+
         // Add contact name to description and check for empty description
         if (e.description !== '')
             e.description = `<b>${e.description}</b><br><em>Added by: ${e.creator}</em>`;
@@ -285,7 +296,7 @@ async function addEventToCalendar(jwt, eventList, now) {
     eventList.forEach((e) => {
         const calRequest = {
             auth: jwt,
-            calendarId: EVENTS_CAL_ID,
+            calendarId: e.signup ? SIGNUP_CAL_ID : EVENTS_CAL_ID,
             resource: e,
         };
         google.calendar('v3').events.insert(calRequest, function (err, event) {
