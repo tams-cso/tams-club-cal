@@ -1,16 +1,16 @@
 {
-  "name": "club-calendar-view",
-  "version": "1.0.0",
-  "description": "A simple frontend for displaying events & creating them",
-  "main": "index.js",
-  "author": "Michael Zhao",
-  "license": "MIT",
-  "dependencies": {
-    "dotenv": "^8.2.0",
-    "express": "^4.17.1",
-    "googleapis": "^61.0.0"
-  },
-  "scripts": {
-    "start": "node app.js"
-  }
+    "name": "club-calendar-view",
+    "version": "1.0.0",
+    "description": "A simple frontend for displaying events & creating them",
+    "main": "index.js",
+    "author": "Michael Zhao",
+    "license": "MIT",
+    "dependencies": {
+        "dotenv": "^8.2.0",
+        "express": "^4.17.1",
+        "googleapis": "^61.0.0"
+    },
+    "scripts": {
+        "start": "node app.js"
+    }
 }
