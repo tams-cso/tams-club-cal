@@ -1,6 +1,6 @@
 {
     "name": "club-calendar-view",
-    "version": "1.0.0",
+    "version": "1.1.0",
     "description": "A simple frontend for displaying events & creating them",
     "main": "index.js",
     "author": "Michael Zhao",
