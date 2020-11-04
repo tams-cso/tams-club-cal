@@ -11,7 +11,17 @@ const SCOPES = [
     'https://www.googleapis.com/auth/calendar',
 ];
 const PORT = 5000;
-const COUNT_CELL = 'L1';
+const COUNT_CELL = 'M1';
+const SHEET_ID = '1lxx0OJM-fknlMhR_AiJBu06JUqqtyh_4JJKijmRrGls';
+const EVENTS_CAL_ID = '9bamjnrnrk9g3l2m9dqigum6hc@group.calendar.google.com';
+const SIGNUP_CAL_ID = '80gdfu9mneehbeo9hm6j4t0fhc@group.calendar.google.com';
+const FORM_URL = 'https://forms.gle/nfRN9kZEqBfctujn8';
+const INFO_URL =
+    'https://docs.google.com/document/d/1snYpiFV1qLho9aUSyQkuftGssIU6_6-J7lOpxeYajZU/edit?usp=sharing';
+const EVENTS_CAL_ADD =
+    'https://calendar.google.com/calendar/u/0?cid=OWJhbWpucm5yazlnM2wybTlkcWlndW02aGNAZ3JvdXAuY2FsZW5kYXIuZ29vZ2xlLmNvbQ';
+const SIGNUP_CAL_ADD =
+    'https://calendar.google.com/calendar/u/0?cid=ODBnZGZ1OW1uZWVoYmVvOWhtNmo0dDBmaGNAZ3JvdXAuY2FsZW5kYXIuZ29vZ2xlLmNvbQ';
 
 // The only state variable (could replace with pure sheets calls but might hit api limits)
 // TODO: Figure out how to use google drive webhooks so it automatically calls
@@ -21,10 +31,8 @@ var lastMod = 0;
 dotenv.config();
 
 // Check for the right env variables
-if (process.env.SHEET_ID === undefined || process.env.CALENDAR_ID === undefined ||
-    process.env.CLIENT_EMAIL === undefined || process.env.PRIVATE_KEY === undefined ||
-    process.env.FORM_URL === undefined) {
-    console.error('Please have FORM_URL, SHEET_ID, CALENDAR_ID, CLIENT_EMAIL, and PRIVATE_KEY environmental variables defined');
+if (process.env.CLIENT_EMAIL === undefined || process.env.PRIVATE_KEY === undefined) {
+    console.error('Please have CLIENT_EMAIL and PRIVATE_KEY environmental variables defined');
     process.exit(1);
 }
 
@@ -47,19 +55,21 @@ function startWeb() {
 
     // Form redirect
     app.get('/add', function (req, res, next) {
-        res.redirect(process.env.FORM_URL);
+        res.redirect(FORM_URL);
     });
 
     // Send to info document
-    if (process.env.INFO_URL !== undefined) {
-        app.get('/info', function (req, res, next) {
-            res.redirect(process.env.INFO_URL);
-        })
-    }
+    app.get('/info', function (req, res, next) {
+        res.redirect(INFO_URL);
+    });
 
-    app.get('/calendar', function (req, res, next) {
-        res.redirect(process.env.CALENDAR_ADD_URL);
-    })
+    app.get('/calendar/events', function (req, res, next) {
+        res.redirect(EVENTS_CAL_ADD);
+    });
+
+    app.get('/calendar/signups', function (req, res, next) {
+        res.redirect(SIGNUP_CAL_ADD);
+    });
 
     // Start webpage on port
     app.listen(process.env.PORT || PORT, () =>
@@ -71,7 +81,12 @@ function startWeb() {
  * Creates the event if a new event was submitted
  */
 function createEventIfMod() {
-    const jwt = new google.auth.JWT(process.env.CLIENT_EMAIL, null, process.env.PRIVATE_KEY, SCOPES);
+    const jwt = new google.auth.JWT(
+        process.env.CLIENT_EMAIL,
+        null,
+        process.env.PRIVATE_KEY,
+        SCOPES
+    );
     const now = new Date();
 
     // Call the Google Auth API to authorize using the service account
@@ -85,7 +100,7 @@ function createEventIfMod() {
 
         // Get only the parsed entry number of rows
         var eventList = await getEventList(jwt, p);
-        
+
         // Return if the eventlist is invalid
         if (eventList === undefined) return;
 
@@ -107,7 +122,7 @@ function createEventIfMod() {
  */
 async function isFileChanged(jwt) {
     const fileRequest = {
-        fileId: process.env.SHEET_ID,
+        fileId: SHEET_ID,
         fields: 'modifiedTime',
         auth: jwt,
     };
@@ -133,21 +148,21 @@ async function isFileChanged(jwt) {
  * @returns {Promise<number>} How many rows processed + 2
  */
 async function getStartingRow(jwt) {
-        const countRequest = {
-            spreadsheetId: process.env.SHEET_ID,
-            ranges: COUNT_CELL,
-            includeGridData: true,
-            auth: jwt,
-        };
+    const countRequest = {
+        spreadsheetId: SHEET_ID,
+        ranges: COUNT_CELL,
+        includeGridData: true,
+        auth: jwt,
+    };
 
-        var p = await google
-            .sheets('v4')
-            .spreadsheets.get(countRequest)
-            .then(async (data) => {
-                return Number(data.data.sheets[0].data[0].rowData[0].values[0].formattedValue);
-            });
+    var p = await google
+        .sheets('v4')
+        .spreadsheets.get(countRequest)
+        .then(async (data) => {
+            return Number(data.data.sheets[0].data[0].rowData[0].values[0].formattedValue);
+        });
 
-        return p + 2;
+    return p + 2;
 }
 
 /**
@@ -158,8 +173,17 @@ async function getStartingRow(jwt) {
  */
 async function getEventList(jwt, p) {
     const sheetRequest = {
-        spreadsheetId: process.env.SHEET_ID,
-        ranges: [`C${p}:C`, `D${p}:D`, `E${p}:E`, `F${p}:F`, `G${p}:G`, `H${p}:H`, `I${p}:I`, `J${p}:J`],
+        spreadsheetId: SHEET_ID,
+        ranges: [
+            `C${p}:C`,
+            `D${p}:D`,
+            `E${p}:E`,
+            `F${p}:F`,
+            `G${p}:G`,
+            `H${p}:H`,
+            `I${p}:I`,
+            `J${p}:J`,
+        ],
         includeGridData: true,
         auth: jwt,
     };
@@ -171,7 +195,7 @@ async function getEventList(jwt, p) {
 
             // Return if there are no edits
             if (rows[0].rowData === undefined) return undefined;
-            
+
             // Create array of event objects
             var events = [];
             for (var i = 0; i < rows[0].rowData.length; i++) {
@@ -229,8 +253,7 @@ async function parseEvents(eventList) {
 
         // Calculate end time using milliseconds
         var dList = e.duration.split(':');
-        millis +=
-            Number(dList[0]) * 3600000 + Number(dList[1]) * 60000 + Number(dList[2]) * 1000;
+        millis += Number(dList[0]) * 3600000 + Number(dList[1]) * 60000 + Number(dList[2]) * 1000;
         var endStr = new Date(Number(millis)).toISOString();
 
         // Save start and end times to list, USING the correct time zone
@@ -238,8 +261,9 @@ async function parseEvents(eventList) {
         e.end = { dateTime: endStr, timeZone: 'America/Chicago' };
 
         // Add contact name to description and check for empty description
-        if (e.description !== '') e.description = `<b>${e.description}</b><br><em>Added by: ${e.creator}</em>`;
-        else e.description = `<b>[No description]</b><br><em>Added by: ${e.creator}</em>`
+        if (e.description !== '')
+            e.description = `<b>${e.description}</b><br><em>Added by: ${e.creator}</em>`;
+        else e.description = `<b>[No description]</b><br><em>Added by: ${e.creator}</em>`;
 
         // Add the abbreviation to the title
         e.summary = `[${e.abbr}] ${e.summary}`;
@@ -261,7 +285,7 @@ async function addEventToCalendar(jwt, eventList, now) {
     eventList.forEach((e) => {
         const calRequest = {
             auth: jwt,
-            calendarId: process.env.CALENDAR_ID,
+            calendarId: EVENTS_CAL_ID,
             resource: e,
         };
         google.calendar('v3').events.insert(calRequest, function (err, event) {
@@ -281,7 +305,7 @@ async function addEventToCalendar(jwt, eventList, now) {
  */
 async function updateProcessedCount(jwt, p) {
     const updateRequest = {
-        spreadsheetId: process.env.SHEET_ID,
+        spreadsheetId: SHEET_ID,
         valueInputOption: 'USER_ENTERED',
         range: COUNT_CELL,
         resource: { values: [[(p - 2).toString()]] },
