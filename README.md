@@ -31,3 +31,4 @@ Simply type `yarn start` to run the program
 - Add info for contributing
 - Add html metadata and SEO stuff
 - Design favicon!
+- Improve SEO
