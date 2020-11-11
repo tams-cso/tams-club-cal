@@ -27,12 +27,14 @@ Simply type `yarn start` to run the program
 
 - Remove the .then() on api calls and move the info into the outer async functions
 - Line 162: Increment p using the number of elements instead of in the loop
-- Add PUG and use the html templating engine to add the FORM_URL from the .env instead of hardcoding it
-- Add info for contributing
+- Move all those const vars to a data.json file
+  - Update readme explaining how to change stuff in the data.json file
+  - Also get rid of the extra .env stuff in the instructions (only need private key and client email)
+- Add info for how to contribute
 - Add html metadata and SEO stuff
 - Design favicon!
 - Better looking homepage
-- Maybe try pulling data directly from Facebook posts, but I guess we need to do some in-depth analysis of the how clubs post dates ~ regex :DDD
+- Maybe try pulling data directly from Facebook posts, but I guess we need to do some in-depth analysis of the how clubs post dates ~ regex!
 - Have only the upcoming events and pull from cal when ppl load the page
   - Add cache for cal events so only when it updates do we pull
   - So ig to that extent, we need to add a webhook to check for when calendar gets updated
