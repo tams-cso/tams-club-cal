@@ -31,4 +31,8 @@ Simply type `yarn start` to run the program
 - Add info for contributing
 - Add html metadata and SEO stuff
 - Design favicon!
-- Improve SEO
+- Better looking homepage
+- Maybe try pulling data directly from Facebook posts, but I guess we need to do some in-depth analysis of the how clubs post dates ~ regex :DDD
+- Have only the upcoming events and pull from cal when ppl load the page
+  - Add cache for cal events so only when it updates do we pull
+  - So ig to that extent, we need to add a webhook to check for when calendar gets updated
