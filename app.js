@@ -52,6 +52,11 @@ function startWeb() {
         res.redirect(data.links.signupCal);
     });
 
+    app.post('/update', function (req, res, next) {
+        console.log(req.body);
+        res.sendStatus(200);
+    })
+
     // Start webpage on port
     app.listen(process.env.PORT || data.testPort, () =>
         console.log(`Listening on port ${process.env.PORT || data.testPort}`)
