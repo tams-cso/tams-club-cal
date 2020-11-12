@@ -2,26 +2,8 @@ const express = require('express');
 const path = require('path');
 const { google } = require('googleapis');
 const dotenv = require('dotenv');
+const data = require('./data.json');
 const app = express();
-
-// Define app constants
-const SCOPES = [
-    'https://www.googleapis.com/auth/spreadsheets',
-    'https://www.googleapis.com/auth/drive',
-    'https://www.googleapis.com/auth/calendar',
-];
-const PORT = 5000;
-const COUNT_CELL = 'M1';
-const SHEET_ID = '1lxx0OJM-fknlMhR_AiJBu06JUqqtyh_4JJKijmRrGls';
-const EVENTS_CAL_ID = '9bamjnrnrk9g3l2m9dqigum6hc@group.calendar.google.com';
-const SIGNUP_CAL_ID = '80gdfu9mneehbeo9hm6j4t0fhc@group.calendar.google.com';
-const FORM_URL = 'https://forms.gle/nfRN9kZEqBfctujn8';
-const INFO_URL =
-    'https://docs.google.com/document/d/1snYpiFV1qLho9aUSyQkuftGssIU6_6-J7lOpxeYajZU/edit?usp=sharing';
-const EVENTS_CAL_ADD =
-    'https://calendar.google.com/calendar/u/0?cid=OWJhbWpucm5yazlnM2wybTlkcWlndW02aGNAZ3JvdXAuY2FsZW5kYXIuZ29vZ2xlLmNvbQ';
-const SIGNUP_CAL_ADD =
-    'https://calendar.google.com/calendar/u/0?cid=ODBnZGZ1OW1uZWVoYmVvOWhtNmo0dDBmaGNAZ3JvdXAuY2FsZW5kYXIuZ29vZ2xlLmNvbQ';
 
 // The only state variable (could replace with pure sheets calls but might hit api limits)
 // TODO: Figure out how to use google drive webhooks so it automatically calls
@@ -55,25 +37,25 @@ function startWeb() {
 
     // Form redirect
     app.get('/add', function (req, res, next) {
-        res.redirect(FORM_URL);
+        res.redirect(data.links.feedback);
     });
 
     // Send to info document
     app.get('/info', function (req, res, next) {
-        res.redirect(INFO_URL);
+        res.redirect(data.links.info);
     });
 
     app.get('/calendar/events', function (req, res, next) {
-        res.redirect(EVENTS_CAL_ADD);
+        res.redirect(data.links.eventCal);
     });
 
     app.get('/calendar/signups', function (req, res, next) {
-        res.redirect(SIGNUP_CAL_ADD);
+        res.redirect(data.links.signupCal);
     });
 
     // Start webpage on port
-    app.listen(process.env.PORT || PORT, () =>
-        console.log(`Listening on port ${process.env.PORT || PORT}`)
+    app.listen(process.env.PORT || data.testPort, () =>
+        console.log(`Listening on port ${process.env.PORT || data.testPort}`)
     );
 }
 
@@ -85,7 +67,7 @@ function createEventIfMod() {
         process.env.CLIENT_EMAIL,
         null,
         process.env.PRIVATE_KEY,
-        SCOPES
+        data.scopes
     );
     const now = new Date();
 
@@ -122,7 +104,7 @@ function createEventIfMod() {
  */
 async function isFileChanged(jwt) {
     const fileRequest = {
-        fileId: SHEET_ID,
+        fileId: data.sheetId,
         fields: 'modifiedTime',
         auth: jwt,
     };
@@ -149,8 +131,8 @@ async function isFileChanged(jwt) {
  */
 async function getStartingRow(jwt) {
     const countRequest = {
-        spreadsheetId: SHEET_ID,
-        ranges: COUNT_CELL,
+        spreadsheetId: data.sheetId,
+        ranges: data.countCell,
         includeGridData: true,
         auth: jwt,
     };
@@ -173,7 +155,7 @@ async function getStartingRow(jwt) {
  */
 async function getEventList(jwt, p) {
     const sheetRequest = {
-        spreadsheetId: SHEET_ID,
+        spreadsheetId: data.sheetId,
         ranges: [
             `C${p}:C`,
             `D${p}:D`,
@@ -296,7 +278,7 @@ async function addEventToCalendar(jwt, eventList, now) {
     eventList.forEach((e) => {
         const calRequest = {
             auth: jwt,
-            calendarId: e.signup ? SIGNUP_CAL_ID : EVENTS_CAL_ID,
+            calendarId: e.signup ? data.calendarId.signups : data.calendarId.events,
             resource: e,
         };
         google.calendar('v3').events.insert(calRequest, function (err, event) {
@@ -316,7 +298,7 @@ async function addEventToCalendar(jwt, eventList, now) {
  */
 async function updateProcessedCount(jwt, p) {
     const updateRequest = {
-        spreadsheetId: SHEET_ID,
+        spreadsheetId: data.sheetId,
         valueInputOption: 'USER_ENTERED',
         range: COUNT_CELL,
         resource: { values: [[(p - 2).toString()]] },
