@@ -9,10 +9,9 @@ const app = express();
 // TODO: Figure out how to use google drive webhooks so it automatically calls
 var lastMod = 0;
 
-// Configure the environmental variables
-dotenv.config();
-
+// Configure the environmental variables and
 // Check for the right env variables
+dotenv.config();
 if (process.env.CLIENT_EMAIL === undefined || process.env.PRIVATE_KEY === undefined) {
     console.error('Please have CLIENT_EMAIL and PRIVATE_KEY environmental variables defined');
     process.exit(1);
