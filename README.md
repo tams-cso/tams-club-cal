@@ -1,4 +1,4 @@
-# Club Calendar
+# TAMS Club Calendar
 
 ## Setup
 
@@ -9,15 +9,14 @@ Generate a service account and download the config file. You will use the `clien
 Add the following to the environmental variables (`.env`) file (use quotation marks around the variables eg. `SHEET_ID="234fn321iHUeeZX329ff2_TXE"`):
 
 ```
-SHEET_ID=[enter the ID of the google sheets from the form responses here]
-CALENDAR_ID=[enter the ID for the google calendar to use]
 PRIVATE_KEY=[enter the private key from the config file]
 CLIENT_EMAIL=[enter the client email from the config file]
-FORM_URL=[enter the url to the google form]
-PORT=[(optional) port number]
+PORT=[(optional) port number - default is 5000]
 ```
 
 Install packages with `yarn install`
+
+Also if you want to use this, change `data.json` and `index.html` links/ids 
 
 ## Execution
 
@@ -26,11 +25,12 @@ Simply type `yarn start` to run the program
 ## TODO
 
 - Remove the .then() on api calls and move the info into the outer async functions
-- Line 162: Increment p using the number of elements instead of in the loop
-- Move all those const vars to a data.json file
-  - Update readme explaining how to change stuff in the data.json file
-  - Also get rid of the extra .env stuff in the instructions (only need private key and client email)
+- Update readme explaining how to change stuff in the data.json file
+- Also get rid of the extra .env stuff in the instructions (only need private key and client email)
 - Add info for how to contribute
+- Add error checking on ALL API CALLS (just add a `.catch(console.error)` after those functions)
+  - Also add lots of checks for undefined behavior
+  - Verify if the incoming POST request from google is actually valid
 - Add html metadata and SEO stuff
 - Design favicon!
 - Better looking homepage
@@ -38,3 +38,5 @@ Simply type `yarn start` to run the program
 - Have only the upcoming events and pull from cal when ppl load the page
   - Add cache for cal events so only when it updates do we pull
   - So ig to that extent, we need to add a webhook to check for when calendar gets updated
+- Extract `[${now.toISOString()}] message` to function, where `now` is `new Date()`
+- Change address to use the process variable instead of hardcoding it in the `createWebhookChannel` function

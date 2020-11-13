@@ -2,44 +2,31 @@ const express = require('express');
 const path = require('path');
 const { google } = require('googleapis');
 const dotenv = require('dotenv');
+const crypto = require('crypto');
+const cron = require('node-cron');
+const data = require('./data.json');
 const app = express();
 
-// Define app constants
-const SCOPES = [
-    'https://www.googleapis.com/auth/spreadsheets',
-    'https://www.googleapis.com/auth/drive',
-    'https://www.googleapis.com/auth/calendar',
-];
-const PORT = 5000;
-const COUNT_CELL = 'M1';
-const SHEET_ID = '1lxx0OJM-fknlMhR_AiJBu06JUqqtyh_4JJKijmRrGls';
-const EVENTS_CAL_ID = '9bamjnrnrk9g3l2m9dqigum6hc@group.calendar.google.com';
-const SIGNUP_CAL_ID = '80gdfu9mneehbeo9hm6j4t0fhc@group.calendar.google.com';
-const FORM_URL = 'https://forms.gle/nfRN9kZEqBfctujn8';
-const INFO_URL =
-    'https://docs.google.com/document/d/1snYpiFV1qLho9aUSyQkuftGssIU6_6-J7lOpxeYajZU/edit?usp=sharing';
-const EVENTS_CAL_ADD =
-    'https://calendar.google.com/calendar/u/0?cid=OWJhbWpucm5yazlnM2wybTlkcWlndW02aGNAZ3JvdXAuY2FsZW5kYXIuZ29vZ2xlLmNvbQ';
-const SIGNUP_CAL_ADD =
-    'https://calendar.google.com/calendar/u/0?cid=ODBnZGZ1OW1uZWVoYmVvOWhtNmo0dDBmaGNAZ3JvdXAuY2FsZW5kYXIuZ29vZ2xlLmNvbQ';
+// Stores the ID for the current Google API webhook channel to listen to
+var channelId;
+var auth;
 
-// The only state variable (could replace with pure sheets calls but might hit api limits)
-// TODO: Figure out how to use google drive webhooks so it automatically calls
-var lastMod = 0;
-
-// Configure the environmental variables
-dotenv.config();
-
+// Configure the environmental variables and
 // Check for the right env variables
+dotenv.config();
 if (process.env.CLIENT_EMAIL === undefined || process.env.PRIVATE_KEY === undefined) {
     console.error('Please have CLIENT_EMAIL and PRIVATE_KEY environmental variables defined');
     process.exit(1);
 }
 
-// Start web and 10 second interval for checking form additions
+// Start static frontend
+// Create webhook to listen for changes
+// Schedule cron task
+// Run the createEventIfMod function in case something changed
 startWeb();
+createWebhookChannel();
+cron.schedule('0 0 * * *', createWebhookChannel);
 createEventIfMod();
-setInterval(createEventIfMod, 10000);
 
 /**
  * Starts the express frontend page
@@ -55,104 +42,118 @@ function startWeb() {
 
     // Form redirect
     app.get('/add', function (req, res, next) {
-        res.redirect(FORM_URL);
+        res.redirect(data.links.feedback);
     });
 
     // Send to info document
     app.get('/info', function (req, res, next) {
-        res.redirect(INFO_URL);
+        res.redirect(data.links.info);
     });
 
     app.get('/calendar/events', function (req, res, next) {
-        res.redirect(EVENTS_CAL_ADD);
+        res.redirect(data.links.eventCal);
     });
 
     app.get('/calendar/signups', function (req, res, next) {
-        res.redirect(SIGNUP_CAL_ADD);
+        res.redirect(data.links.signupCal);
+    });
+
+    app.post('/update', function (req, res, next) {
+        if (
+            req.headers['x-goog-changed'] !== undefined &&
+            req.headers['x-goog-changed'].indexOf('content') !== -1 &&
+            req.headers['x-goog-channel-id'] === channelId
+        ) {
+            createEventIfMod();
+        }
+        res.sendStatus(200);
     });
 
     // Start webpage on port
-    app.listen(process.env.PORT || PORT, () =>
-        console.log(`Listening on port ${process.env.PORT || PORT}`)
+    app.listen(process.env.PORT || data.testPort, () =>
+        console.log(`Listening on port ${process.env.PORT || data.testPort}`)
     );
+}
+
+/**
+ * Call the Google Auth API to authorize using the service account
+ * @returns {Credentials}
+ */
+async function serviceAuth() {
+    var jwt = new google.auth.JWT(
+        process.env.CLIENT_EMAIL,
+        null,
+        process.env.PRIVATE_KEY,
+        data.scopes
+    );
+    await jwt.authorize();
+    auth = jwt;
+}
+
+/**
+ * Starts a Google Drive API Webhook to listen for file changes
+ */
+async function createWebhookChannel() {
+    await serviceAuth();
+    channelId = crypto.randomBytes(16).toString('hex');
+    const hookInfo = await google.drive('v3').files.watch({
+        fileId: data.sheetId,
+        supportsAllDrives: true,
+        requestBody: {
+            id: channelId,
+            type: 'web_hook',
+            address: 'https://tams.club/update',
+            expiration: new Date().getTime() + 86400000, // 1 day from now: 86,400,000 ms
+        },
+        auth,
+    });
+
+    // Log webhook creation
+    console.log(`[${(new Date()).toISOString()}] Created webhook!`);
+    console.log(`    | id: ${hookInfo.data.id}`);
+    console.log(`    | resId: ${hookInfo.data.resourceId}`);
+    console.log(`    | expire: ${hookInfo.data.expiration}`);
 }
 
 /**
  * Creates the event if a new event was submitted
  */
-function createEventIfMod() {
-    const jwt = new google.auth.JWT(
-        process.env.CLIENT_EMAIL,
-        null,
-        process.env.PRIVATE_KEY,
-        SCOPES
-    );
+async function createEventIfMod() {
+    // Get curr time
     const now = new Date();
 
-    // Call the Google Auth API to authorize using the service account
-    jwt.authorize(async (err, res) => {
-        // Check if there has been a file change
-        const change = await isFileChanged(jwt);
-        if (!change) return;
+    // Authenticate
+    await serviceAuth();
 
-        // Get the row to start reading entries from
-        var p = await getStartingRow(jwt);
+    // Get the row to start reading entries from
+    var p = await getStartingRow();
 
-        // Get only the parsed entry number of rows
-        var eventList = await getEventList(jwt, p);
+    // Get only the parsed entry number of rows
+    var eventList = await getEventList(p);
 
-        // Return if the eventlist is invalid
-        if (eventList === undefined) return;
+    // Return if the eventlist is invalid
+    if (eventList === undefined) return;
 
-        // Parse the events and modify the list of events
-        await parseEvents(eventList);
+    // Parse the events and modify the list of events
+    await parseEvents(eventList);
 
-        // Create calendar event(s)
-        await addEventToCalendar(jwt, eventList, now);
+    // Create calendar event(s)
+    await addEventToCalendar(eventList, now);
 
-        // Update the processed count on sheet
-        updateProcessedCount(jwt, p + eventList.length);
-    });
-}
-
-/**
- * Checks to see if the file was changed, calling the Google Drive API
- * @param {object} jwt Service account auth object
- * @returns {Promise<boolean>} If the mod time has changed
- */
-async function isFileChanged(jwt) {
-    const fileRequest = {
-        fileId: SHEET_ID,
-        fields: 'modifiedTime',
-        auth: jwt,
-    };
-
-    const modTime = await google
-        .drive('v3')
-        .files.get(fileRequest)
-        .then((data) => {
-            var modTime = data.data.modifiedTime;
-            modTime = modTime.substring(0, modTime.length - 1) + '+00:00';
-            const modTimeUTC = new Date(modTime);
-            return modTimeUTC.getTime();
-        });
-
-    if (modTime === lastMod) return false;
-    lastMod = modTime;
-    return true;
+    // Update the processed count on sheet
+    updateProcessedCount(p + eventList.length);
 }
 
 /**
  * Gets the row to start reading events from
- * @param {object} jwt Service account auth object
  * @returns {Promise<number>} How many rows processed + 2
  */
-async function getStartingRow(jwt) {
+async function getStartingRow() {
     const countRequest = {
-        spreadsheetId: SHEET_ID,
-        ranges: COUNT_CELL,
+        spreadsheetId: data.sheetId,
+        ranges: data.countCell,
         includeGridData: true,
-        auth: jwt,
+        auth,
     };
 
     var p = await google
@@ -167,13 +168,12 @@ async function getStartingRow(jwt) {
 
 /**
  * Gets the raw list of events
- * @param {object} jwt Service account auth object
  * @param {number} p The row to start reading events from
  * @returns {Promise<object[],number>} The list of raw event objects
  */
-async function getEventList(jwt, p) {
+async function getEventList(p) {
     const sheetRequest = {
-        spreadsheetId: SHEET_ID,
+        spreadsheetId: data.sheetId,
         ranges: [
             `C${p}:C`,
             `D${p}:D`,
@@ -183,10 +183,10 @@ async function getEventList(jwt, p) {
             `H${p}:H`,
             `I${p}:I`,
             `J${p}:J`,
-            `K${p}:K`
+            `K${p}:K`,
         ],
         includeGridData: true,
-        auth: jwt,
+        auth,
     };
     const eventList = await google
         .sheets('v4')
@@ -288,15 +288,14 @@ async function parseEvents(eventList) {
 
 /**
  * Add events to the Google Calender through the Google Calendar API
- * @param {JWT} jwt Service account auth object
  * @param {object[]} eventList The list of events
  * @param {Date} now The current time object
  */
-async function addEventToCalendar(jwt, eventList, now) {
+async function addEventToCalendar(eventList, now) {
     eventList.forEach((e) => {
         const calRequest = {
-            auth: jwt,
-            calendarId: e.signup ? SIGNUP_CAL_ID : EVENTS_CAL_ID,
+            auth,
+            calendarId: e.signup ? data.calendarId.signups : data.calendarId.events,
             resource: e,
         };
         google.calendar('v3').events.insert(calRequest, function (err, event) {
@@ -311,16 +310,15 @@ async function addEventToCalendar(jwt, eventList, now) {
 
 /**
  * Updates the count on the sheet through Google Sheets API
- * @param {JWT} jwt Service account auth object
  * @param {number} p The row that the last event was on
  */
-async function updateProcessedCount(jwt, p) {
+async function updateProcessedCount(p) {
     const updateRequest = {
-        spreadsheetId: SHEET_ID,
+        spreadsheetId: data.sheetId,
         valueInputOption: 'USER_ENTERED',
-        range: COUNT_CELL,
+        range: data.countCell,
         resource: { values: [[(p - 2).toString()]] },
-        auth: jwt,
+        auth,
     };
     google.sheets('v4').spreadsheets.values.update(updateRequest);
 }
