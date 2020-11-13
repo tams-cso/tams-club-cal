@@ -2,11 +2,7 @@
 
 ## Setup
 
-Create a [Google Cloud project](https://console.cloud.google.com/) and create a project, enabling the Google Drive, Google Sheets, and Google Calendar APIs.
-
-Generate a service account and download the config file. You will use the `client_email` and `private_key` fields.
-
-Add the following to the environmental variables (`.env`) file (use quotation marks around the variables eg. `SHEET_ID="234fn321iHUeeZX329ff2_TXE"`):
+Create a [Google Cloud project](https://console.cloud.google.com/) and create a project, enabling the Google Drive, Google Sheets, and Google Calendar APIs. Generate a service account and download the config file. You will use the `client_email` and `private_key` fields. Add the following to the environmental variables (`.env`) file (use quotation marks around the variables eg. `SHEET_ID="234fn321iHUeeZX329ff2_TXE"`):
 
 ```
 PRIVATE_KEY=[enter the private key from the config file]
@@ -14,9 +10,7 @@ CLIENT_EMAIL=[enter the client email from the config file]
 PORT=[(optional) port number - default is 5000]
 ```
 
-Install packages with `yarn install`
-
-Also if you want to use this, change `data.json` and `index.html` links/ids 
+The `data.json` file contains a lot of the links and constants that are used. Install packages with `yarn install`
 
 ## Execution
 
@@ -25,8 +19,6 @@ Simply type `yarn start` to run the program
 ## TODO
 
 - Remove the .then() on api calls and move the info into the outer async functions
-- Update readme explaining how to change stuff in the data.json file
-- Also get rid of the extra .env stuff in the instructions (only need private key and client email)
 - Add info for how to contribute
 - Add error checking on ALL API CALLS (just add a `.catch(console.error)` after those functions)
   - Also add lots of checks for undefined behavior
