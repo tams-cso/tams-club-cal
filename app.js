@@ -19,10 +19,14 @@ if (process.env.CLIENT_EMAIL === undefined || process.env.PRIVATE_KEY === undefi
     process.exit(1);
 }
 
-// Start web and 10 second interval for checking form additions
+// Start static frontend
+// Create webhook to listen for changes
+// Schedule cron task
+// Run the createEventIfMod function in case something changed
 startWeb();
 createWebhookChannel();
 cron.schedule('0 0 * * *', createWebhookChannel);
+createEventIfMod();
 
 /**
  * Starts the express frontend page
@@ -56,6 +60,7 @@ function startWeb() {
 
     app.post('/update', function (req, res, next) {
         if (
+            req.headers['x-goog-changed'] !== undefined &&
             req.headers['x-goog-changed'].indexOf('content') !== -1 &&
             req.headers['x-goog-channel-id'] === channelId
         ) {
@@ -311,7 +316,7 @@ async function updateProcessedCount(p) {
     const updateRequest = {
         spreadsheetId: data.sheetId,
         valueInputOption: 'USER_ENTERED',
-        range: COUNT_CELL,
+        range: data.countCell,
         resource: { values: [[(p - 2).toString()]] },
         auth,
     };
