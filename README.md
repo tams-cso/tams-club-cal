@@ -9,15 +9,14 @@ Generate a service account and download the config file. You will use the `clien
 Add the following to the environmental variables (`.env`) file (use quotation marks around the variables eg. `SHEET_ID="234fn321iHUeeZX329ff2_TXE"`):
 
 ```
-SHEET_ID=[enter the ID of the google sheets from the form responses here]
-CALENDAR_ID=[enter the ID for the google calendar to use]
 PRIVATE_KEY=[enter the private key from the config file]
 CLIENT_EMAIL=[enter the client email from the config file]
-FORM_URL=[enter the url to the google form]
-PORT=[(optional) port number]
+PORT=[(optional) port number - default is 5000]
 ```
 
 Install packages with `yarn install`
+
+Also if you want to use this, change `data.json` and `index.html` links/ids 
 
 ## Execution
 
