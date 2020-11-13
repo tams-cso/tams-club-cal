@@ -50,11 +50,12 @@ body {
     text-align: center;
     font-family: 'Indie Flower', cursive;
     font-size: 2em;
-    color: #c8a3ed;
+    color: #00a35e;
     text-decoration: none;
     transition: 0.5s;
 }
 
 .link:hover {
-    color: #9730fe;
+    color: #00ec27;
+    filter: drop-shadow(0 0 0.5px #00a35e)
 }
