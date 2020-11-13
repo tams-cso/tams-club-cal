@@ -40,3 +40,4 @@ Simply type `yarn start` to run the program
   - So ig to that extent, we need to add a [webhook](https://developers.google.com/calendar/v3/reference/events/watch) to check for when calendar gets updated
 - Extract `[${now.toISOString()}] message` to function, where `now` is `new Date()`
 - Change address to use the process variable instead of hardcoding it in the `createWebhookChannel` function
+- Add the webhook info to a file (JSON prob) and have the program stop it and create a new one upon restarting
