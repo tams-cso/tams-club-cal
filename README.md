@@ -1,4 +1,4 @@
-# Club Calendar
+# TAMS Club Calendar
 
 ## Setup
 
