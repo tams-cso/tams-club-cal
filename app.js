@@ -24,9 +24,11 @@ if (process.env.CLIENT_EMAIL === undefined || process.env.PRIVATE_KEY === undefi
 // Schedule cron task
 // Run the createEventIfMod function in case something changed
 startWeb();
-createWebhookChannel();
-cron.schedule('0 0 * * *', createWebhookChannel);
 createEventIfMod();
+if (process.env.TEST !== 'true') {
+    createWebhookChannel();
+    cron.schedule('0 0 * * *', createWebhookChannel);
+}
 
 /**
  * Starts the express frontend page
@@ -109,7 +111,7 @@ async function createWebhookChannel() {
     });
 
     // Log webhook creation
-    console.log(`[${(new Date()).toISOString()}] Created webhook!`);
+    console.log(`[${new Date().toISOString()}] Created webhook!`);
     console.log(`    | id: ${hookInfo.data.id}`);
     console.log(`    | resId: ${hookInfo.data.resourceId}`);
     console.log(`    | expire: ${hookInfo.data.expiration}`);
