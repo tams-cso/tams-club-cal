@@ -250,7 +250,7 @@ async function parseEvents(eventList) {
         // Change to 24-hr time
         if (timePreList[1] === 'PM' && timeList[0] !== '12')
             timeList[0] = (Number(timeList[0]) + 12).toString();
-        if (timeList[1] === 'AM' && timeList[0] === '12') timeList[0] = '00';
+        else if (timeList[1] === 'AM' && timeList[0] === '12') timeList[0] = '00';
 
         // Create the ISO datetime string & save to start
         var dateStr =
