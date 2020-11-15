@@ -1,0 +1,20 @@
+{
+    "name": "club-calendar-view-server",
+    "version": "1.1.0",
+    "description": "Backend for the calendar app",
+    "main": "index.js",
+    "author": "Michael Zhao <michaelzhao314@gmail.com> (https://michaelzhao.xyz/)",
+    "contributors": [
+        "Dylan Li <dylanli.yitong@gmail.com> (https://github.com/The-Box-Lord/)"
+    ],
+    "license": "MIT",
+    "dependencies": {
+        "dotenv": "^8.2.0",
+        "express": "^4.17.1",
+        "googleapis": "^61.0.0",
+        "node-cron": "^2.0.3"
+    },
+    "scripts": {
+        "start": "node src/app.js"
+    }
+}
