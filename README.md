@@ -23,21 +23,6 @@ Install packages in both the `client` and `server` folders with `yarn install` (
 
 Simply type `yarn start` to run the program
 
-## TODO
+## Ideas Doc
 
-- Remove the .then() on api calls and move the info into the outer async functions
-- Add info for how to contribute
-- Add error checking on ALL API CALLS (just add a `.catch(console.error)` after those functions)
-  - Also add lots of checks for undefined behavior
-  - Verify if the incoming POST request from google is actually valid
-- Add html metadata and SEO stuff
-- Design favicon!
-- Better looking homepage
-- Have only the upcoming events and pull from cal when ppl load the page
-  - Add cache for cal events so only when it updates do we pull
-  - So ig to that extent, we need to add a [webhook](https://developers.google.com/calendar/v3/reference/events/watch) to check for when calendar gets updated
-  - Also prob refersh the cache every day or smth just in case
-- Extract `[${now.toISOString()}] message` to function, where `now` is `new Date()`
-- Change address to use the process variable instead of hardcoding it in the `createWebhookChannel` function
-- Add the webhook info to a file (JSON prob) and have the program stop it and create a new one upon restarting
-- Update manifest
+[Here's the document for all of our ideas](https://docs.google.com/document/d/1U_zqoEiplk0ODeGdMTzK1aLhz9OYFQV0FlhSI52VSBo)
