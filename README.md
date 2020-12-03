@@ -2,7 +2,7 @@
 
 ## Development
 
-**None of the following setup information is accurate because of significant design and infrastructure changes for the second version** Check out the [beta test release](https://github.com/MichaelZhao21/club-calendar-view/tree/c9818e321647c6381baa97d162a0fb86edde67ef) for the current version deployed on the [tams.club](https://tams.club) website.
+**None of the following setup information is accurate because of significant design and infrastructure changes for the second version** Check out the [old-site branch](https://github.com/MichaelZhao21/club-calendar-view/tree/old-site) for the current version deployed on the [tams.club](https://tams.club) website.
 
 ## Setup
 
