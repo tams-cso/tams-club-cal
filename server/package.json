@@ -11,7 +11,6 @@
     "dependencies": {
         "dotenv": "^8.2.0",
         "express": "^4.17.1",
-        "googleapis": "^61.0.0",
         "node-cron": "^2.0.3"
     },
     "scripts": {
