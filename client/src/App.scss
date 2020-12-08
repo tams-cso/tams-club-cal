@@ -1,0 +1,9 @@
+@import './custom.scss';
+
+html, body, #root {
+    margin: 0;
+    color: black;
+    min-height: 100%;
+    font-size: 2vw;
+    font-family: 'Bubblegum Sans', sans-serif;
+}
