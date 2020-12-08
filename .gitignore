@@ -7,6 +7,7 @@ client/build
 # misc
 .DS_Store
 */.env
+.env
 .vscode
 
 */npm-debug.log*
