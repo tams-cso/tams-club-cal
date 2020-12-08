@@ -4,7 +4,7 @@
     display: flex;
     flex-direction: row;
     justify-content: space-between;
-    margin-top: 0.5rem;
+    margin: 0.5rem 0;
     align-items: center;
 }
 
@@ -13,10 +13,18 @@
     font-size: 0.9rem;
     text-decoration: none;
     color: black;
+    padding: 0.2rem;
+    border-radius: 0.1rem;
+    transition: 0.2s;
+}
+
+.menu-item:hover {
+    background-color: #dddddd;
 }
 
 .active {
     color: $primary;
+    background-color: $background !important;
 }
 
 .menu-logo-tams {
@@ -30,6 +38,7 @@
 
 .menu-search {
     width: 12rem;
+    background-color: $background !important;
 }
 
 .search-bar {
