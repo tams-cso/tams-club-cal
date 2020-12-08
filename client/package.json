@@ -7,6 +7,7 @@
         "Dylan Li <dylanli.yitong@gmail.com> (https://github.com/The-Box-Lord/)"
     ],
     "dependencies": {
+        "node-sass": "^5.0.0",
         "react": "^17.0.1",
         "react-dom": "^17.0.1",
         "react-scripts": "4.0.0"
