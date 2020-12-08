@@ -1,9 +1,10 @@
 import './App.scss';
+import Menu from './components/Menu';
 
 function App() {
     return (
         <div className="App">
-            <div>blep</div>
+            <Menu />
         </div>
     );
 }

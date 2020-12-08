@@ -4,3 +4,13 @@
 // Colors
 $background: white;
 $primary: #00CD2D;
+
+// General formats
+::placeholder {
+    color: #9E9E9E;
+    opacity: 1;
+}
+
+input {
+    font-family: 'Bubblegum Sans', sans-serif;
+}

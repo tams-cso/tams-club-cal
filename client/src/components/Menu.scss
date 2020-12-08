@@ -1,0 +1,33 @@
+@import '../custom.scss';
+
+.menu-list {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    margin-top: 0.5rem;
+    align-items: center;
+}
+
+.menu-item {
+    text-align: center;
+    font-size: 0.9rem;
+}
+
+.menu-logo-tams {
+    font-size: 1.5rem;
+}
+
+.menu-logo-club {
+    margin-top: -0.25rem;
+    font-size: 0.75rem;
+}
+
+.menu-search {
+    width: 12rem;
+}
+
+.search-bar {
+    width: 80%;
+    float: right;
+    font-size: 0.9rem;
+}
