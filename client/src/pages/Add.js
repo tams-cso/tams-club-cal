@@ -5,7 +5,7 @@ class Add extends React.Component {
     render() {
         return(
             <div className="Add">
-                Add!
+                Add Event!
             </div>
         )
     }
