@@ -1,11 +1,13 @@
 // Import fonts
-@import url('https://fonts.googleapis.com/css2?family=Bubbler+One&family=Bubblegum+Sans&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Montserrat&family=Bubblegum+Sans&display=swap');
 
-// Colors
+// Color Variables
+
 $background: white;
 $primary: #00CD2D;
 
 // General formats
+
 ::placeholder {
     color: #9E9E9E;
     opacity: 1;
