@@ -1,5 +1,6 @@
 import './Menu.scss';
 import React from 'react';
+import { NavLink } from 'react-router-dom';
 
 class Menu extends React.Component {
     render() {
@@ -7,22 +8,22 @@ class Menu extends React.Component {
         return (
             <div className="Menu">
                 <div className="menu-list">
-                    <div className="menu-item">
+                    <NavLink className="menu-item" activeClassName="active" to="/" exact>
                         <div className="menu-logo-tams">TAMS</div>
                         <div className="menu-logo-club">Club Calendar</div>
-                    </div>
-                    <div className="menu-item">
+                    </NavLink>
+                    <NavLink className="menu-item" activeClassName="active" to="/resources" exact>
                         Resources
-                    </div>
-                    <div className="menu-item">
+                    </NavLink>
+                    <NavLink className="menu-item" activeClassName="active" to="/clubs" exact>
                         Clubs
-                    </div>
-                    <div className="menu-item">
+                    </NavLink>
+                    <NavLink className="menu-item" activeClassName="active" to="/add" exact>
                         Add Event
-                    </div>
-                    <div className="menu-item">
+                    </NavLink>
+                    <NavLink className="menu-item" activeClassName="active" to="/about" exact>
                         About
-                    </div>
+                    </NavLink>
                     <div className="menu-item menu-search">
                         <input className="search-bar" type="text" placeholder="Search..."></input>
                     </div>

@@ -11,6 +11,12 @@
 .menu-item {
     text-align: center;
     font-size: 0.9rem;
+    text-decoration: none;
+    color: black;
+}
+
+.active {
+    color: $primary;
 }
 
 .menu-logo-tams {
