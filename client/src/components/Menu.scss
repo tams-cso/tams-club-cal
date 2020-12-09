@@ -1,10 +1,16 @@
 @import '../custom.scss';
 
+.Menu {
+    padding: 0.4rem 0;
+    margin-bottom: 0.3rem;
+    background-color: white;
+    width: 100%;
+}
+
 .menu-list {
     display: flex;
     flex-direction: row;
     justify-content: space-between;
-    margin: 0.5rem 0;
     align-items: center;
 }
 
@@ -45,4 +51,58 @@
     width: 80%;
     float: right;
     font-size: 0.9rem;
+}
+
+.mobile-menu {
+    display: none;
+}
+
+.mobile-menu-dropdown {
+    height: 0;
+    transition: height 1s;
+}
+
+.mob-item {
+    display: none;
+}
+
+@media handheld and (max-width: 652px),
+screen and (max-device-width: 652px),
+screen and (max-width: 652px) {
+    .Menu {
+        filter: drop-shadow(0 0 0.15rem #777777);
+    }
+    .menu-list {
+        display: none;
+    }
+    .mobile-menu {
+        display: flex !important;
+        flex-direction: row;
+        justify-content: space-between;
+        align-items: center;
+    }
+    .mobile-menu-title {
+        padding-left: 1rem;
+    }
+    .hamburger {
+        padding-right: 0.5rem;
+        fill: #cccccc;
+    }
+    .ham-active {
+        fill: #777777;
+    }
+    .drop-active > .mob-item {
+        display: block;
+    }    
+    .drop-active {
+        overflow: hidden;
+        height: 7rem;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        border-top: 1px solid #dddddd;
+        margin-top: 0.4rem;
+        padding-top: 0.25rem;
+    }
 }

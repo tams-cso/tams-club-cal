@@ -9,5 +9,16 @@ html, body, #root {
 }
 
 .App {
-    margin: 0 18%;
+    margin: 0 18vw;
+}
+
+@media handheld and (max-width: 652px),
+screen and (max-device-width: 652px),
+screen and (max-width: 652px) {
+    .App {
+        margin: 0;
+    }
+    html, body, #root {
+        font-size: 6vw;
+    }
 }
