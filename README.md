@@ -1,6 +1,6 @@
 # TAMS Club Calendar [WIP]
 
-## Development
+## Development Information
 
 **None of the following setup information is accurate because of significant design and infrastructure changes for the second version** Check out the [old-site branch](https://github.com/MichaelZhao21/club-calendar-view/tree/old-site) for the current version deployed on the [tams.club](https://tams.club) website.
 
