@@ -1,1 +1,11 @@
 @import '../custom.scss';
+
+.link-container {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+}
+
+.link-container > .LinkBox {
+    width: 9rem;
+}
