@@ -1,0 +1,26 @@
+.DateSection {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0.5rem 0;
+    font-size: 0.70rem;
+}
+
+.line {
+    height: 0.125rem;
+    border-radius: 1rem;
+    background-color: black;
+}
+
+.left-line {
+    flex-grow: 1;
+}
+
+.right-line {
+    flex-grow: 6;
+}
+
+.schedule-date {
+    padding: 0 0.5rem;
+}

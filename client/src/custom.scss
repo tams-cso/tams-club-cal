@@ -5,19 +5,25 @@
 
 $background: white;
 $primary: #00CD2D;
+$type-event: #FFC178;
+$type-signup: #D49DFF;
+$text-primary: black;
+$text-light: #777777;
+$text-lighter: #9E9E9E;
 
 // General formats
 
 ::placeholder {
-    color: #9E9E9E;
+    color: $text-lighter;
     opacity: 1;
 }
-
-input {
-    font-family: 'Bubblegum Sans', sans-serif;
-}
-
 h1 {
     margin: 0 0 1rem 0;
     text-align: center;
+}
+input {
+    font-family: 'Bubblegum Sans', sans-serif;
+    border: 0.05rem solid #DDDDDD;
+    border-radius: 0.1rem;
+    padding: 0.1rem;
 }
