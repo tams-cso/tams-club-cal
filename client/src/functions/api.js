@@ -8,4 +8,4 @@ getEvents = () => {
 // see https://github.com/MichaelZhao21/playlists-plus/blob/master/src/components/spotify-api.js
 // for example fetch POST requests
 
-export { getEvents };
+export default { getEvents };
