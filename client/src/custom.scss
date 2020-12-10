@@ -5,11 +5,16 @@
 
 $background: white;
 $primary: #00CD2D;
+$type-event: #FFC178;
+$type-signup: #D49DFF;
+$text-primary: black;
+$text-light: #777777;
+$text-lighter: #9E9E9E;
 
 // General formats
 
 ::placeholder {
-    color: #9E9E9E;
+    color: $text-lighter;
     opacity: 1;
 }
 
