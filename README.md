@@ -10,6 +10,28 @@ Check out the [old-site branch](https://github.com/MichaelZhao21/club-calendar-v
 
 *// TODO: this section*
 
+## Setup
+
+```bash
+git clone https://github.com/MichaelZhao21/tams-club-cal.git
+cd tams-club-cal/client
+yarn install
+cd ../server
+yarn install
+```
+
 ## Execution
 
-Simply type `yarn start` to run the program
+To run the client:
+
+```bash
+cd client
+yarn start
+```
+
+To run the server:
+
+```bash
+cd server
+yarn start
+```
