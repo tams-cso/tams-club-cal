@@ -6,7 +6,7 @@ class Resources extends React.Component {
     render() {
         return (
             <div className="Resources">
-                <h1>Links</h1>
+                <h1 className="links-title">Links</h1>
                 <div className="link-container">
                     <LinkBox href="https://docs.google.com/presentation/d/18ZPbYD5iH_2faGDtRRZUGOd70fmo8aRlWDb08qHxGas/edit?usp=sharing">
                         Exam Calendar

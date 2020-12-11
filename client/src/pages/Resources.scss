@@ -1,11 +1,17 @@
 @import '../custom.scss';
 
+.links-title {
+    margin-bottom: 0.5rem;
+}
+
 .link-container {
     display: flex;
     flex-direction: row;
-    justify-content: space-between;
+    justify-content: center;
+    flex-wrap: wrap;
 }
 
 .link-container > .LinkBox {
     width: 9rem;
+    margin: 0.4rem 0.4rem;
 }
