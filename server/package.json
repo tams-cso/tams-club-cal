@@ -1,5 +1,5 @@
 {
-    "name": "club-calendar-view-server",
+    "name": "tams-club-cal-server",
     "version": "1.1.0",
     "description": "Backend for the calendar app",
     "main": "index.js",
