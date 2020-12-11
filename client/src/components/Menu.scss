@@ -71,6 +71,7 @@ screen and (max-device-width: 652px),
 screen and (max-width: 652px) {
     .Menu {
         filter: drop-shadow(0 0 0.15rem #777777);
+        margin-bottom: 1rem;
     }
     .menu-list {
         display: none;
