@@ -42,6 +42,7 @@ class Home extends React.Component {
                     <button className="view-switch" onClick={this.switchView}>
                         Switch to Calendar View
                     </button>
+                    <div className="smol-spacer"></div>
                     <DateSection date="Monday 11/9/20"></DateSection>
                     <ScheduleEvent
                         type="event"
