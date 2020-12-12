@@ -1,0 +1,83 @@
+@import '../custom.scss';
+
+.ClubCard {
+    width: 7rem;
+    height: 8rem;
+    filter: drop-shadow(0 0 0.05rem #dddddd);
+    background-color: $background;
+    text-align: center;
+}
+
+.image-box {
+    background-color: #dddddd;
+    width: 100%;
+    height: 2.8rem;
+}
+
+// TODO: Fix jenk placeholder (prob replace with default image)
+.image-placeholder {
+    position: absolute;
+    top: 12%;
+    left: 17%;
+    font-size: 0.75rem;
+    color: white;
+}
+
+.club-image {
+    color: #dddddd;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.club-type {
+    margin-top: 0.1rem;
+    font-size: 0.5rem;
+    color: $primary;
+}
+
+.club-indp {
+    color: $type-signup;
+}
+
+.ClubCard > .club-name {
+    color: $text-primary;
+    font-size: 0.65rem;
+}
+
+// TODO: Change icon display to flexbox
+.icon-fb {
+    width: 1rem;
+    height: 1rem;
+    position: absolute;
+    bottom: 0.5rem;
+    left: 1.75rem;
+    transition: 0.2s;
+}
+
+.icon-fb > path {
+    transition: 0.2s;
+}
+
+.icon-web {
+    width: 1rem;
+    height: 1rem;
+    position: absolute;
+    bottom: 0.5rem;
+    right: 1.75rem;
+    transition: 0.2s;
+}
+
+.icon-fb:hover {
+    cursor: pointer;
+    filter: drop-shadow(0 0 0.05rem #aaaaaa);
+}
+
+.icon-fb:hover > path {
+    fill: #3b5998;
+}
+
+.icon-web:hover {
+    cursor: pointer;
+    filter: drop-shadow(0 0 0.05rem #aaaaaa);
+}
