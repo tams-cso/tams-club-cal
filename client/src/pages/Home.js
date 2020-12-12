@@ -1,14 +1,47 @@
 import React from 'react';
 import DateSection from '../components/DateSection';
 import ScheduleEvent from '../components/ScheduleEvent';
+import CalendarDay from '../components/CalendarDay';
 import './Home.scss';
 
 class Home extends React.Component {
+    pad(num) {
+        if (num < 10) return `0${num}`;
+        return `${num}`;
+    }
+    switchView() {
+        //TODO this is suppose to switch views when you click the button
+        
+        // console.log(document.getElementsByClassName("schedule-view")[0]);
+        // if (document.getElementsByClassName("schedule-view")[0].display == "none") {
+        //     document.getElementsByClassName("schedule-view")[0].display = "block";
+        //     document.getElementsByClassName("calendar-view")[0].display = "none";
+        // }
+        // else {
+        //     document.getElementsByClassName("schedule-view")[0].display = "none";
+        //     document.getElementsByClassName("calendar-view")[0].display = "block";
+        // }
+    }
     render() {
+        const daysOfWeek = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
+        var calendarHeader = [];
+        daysOfWeek.forEach((day) => {
+            calendarHeader.push(<div className="days-of-week" key={day}>{day}</div>);
+        });
+        var calendar = [];
+        for (let i = 1; i <= 30; i++)
+            calendar.push(<CalendarDay day={this.pad(i)} events={[]}></CalendarDay>);
+        for (let i = 1; i <= 5; i++)
+            calendar.push(<CalendarDay day={this.pad(i)} events={[]}></CalendarDay>);
+        
         return (
             <div className="Home">
                 <div className="schedule-view">
                     {/* TODO: Replace temp data with GET request from backend */}
+                    <div className="month-year">November 2020</div>
+                    <button className="view-switch" onClick={() => this.switchView()}>
+                        {"Switch to Calendar View"}
+                    </button>
                     <DateSection date="Monday 11/9/20"></DateSection>
                     <ScheduleEvent
                         type="event"
@@ -81,6 +114,16 @@ class Home extends React.Component {
                         club="Elm Fork"
                         description="Elm Fork Signups"
                     ></ScheduleEvent>
+                </div>
+                <div className="calendar-view">
+                    <div className="month-year">November 2020</div>
+                    <button className="view-switch" onClick={() => this.switchView()}>
+                        {"Switch to Schedule View"}
+                    </button>
+                    <div className="calendar">
+                        {calendarHeader}
+                        {calendar}
+                    </div>
                 </div>
             </div>
         );
