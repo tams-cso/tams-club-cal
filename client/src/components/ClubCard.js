@@ -22,7 +22,7 @@ class ClubCard extends React.Component {
                     viewBox="0 0 30 30"
                     xmlns="http://www.w3.org/2000/svg"
                     onClick={() => {
-                        window.open(this.props.fb);
+                        if (this.props.fb != '') window.open(this.props.fb);
                     }}
                 >
                     <path
@@ -34,7 +34,7 @@ class ClubCard extends React.Component {
                     className="icon-web"
                     src="https://api.michaelzhao.xyz/static/club-cal/website.svg"
                     onClick={() => {
-                        window.open(this.props.website);
+                        if (this.props.website != '') window.open(this.props.website);
                     }}
                     e
                 ></img>
