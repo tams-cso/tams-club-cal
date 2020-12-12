@@ -1,5 +1,6 @@
 import React from 'react';
 import LinkBox from '../components/LinkBox';
+import VolunteeringCard from '../components/VolunteeringCard';
 import './Resources.scss';
 
 class Resources extends React.Component {
@@ -15,6 +16,30 @@ class Resources extends React.Component {
                         Academics Guide
                     </LinkBox>
                     <LinkBox href="https://tams.unt.edu/studentlife/clubs#clubresources">Club Leader Resources</LinkBox>
+                </div>
+                <h1>Volunteering</h1>
+                <div className="volunteering-section">
+                    <VolunteeringCard
+                        name="Elm Fork"
+                        club="HOPE"
+                        description="Demonstrate hands-on science experiments for homeschoolers"
+                        filters={{ limited: true, semester: false, setTimes: true, weekly: true, open: true }}
+                        signupTime="Sunday 11:00pm"
+                    ></VolunteeringCard>
+                    <VolunteeringCard
+                        name="Denton Tutoring"
+                        club="TAS"
+                        description="Tutor denton high schoolers"
+                        filters={{ limited: true, semester: true, setTimes: true, weekly: false, open: true }}
+                        signupTime="Sunday 11:00pm"
+                    ></VolunteeringCard>
+                    <VolunteeringCard
+                        name="SciVids"
+                        club="JETS x RO"
+                        description="plan, record, and edit videos of science experiments"
+                        filters={{ limited: true, semester: false, setTimes: false, weekly: false, open: false }}
+                        signupTime="Sunday 11:00pm"
+                    ></VolunteeringCard>
                 </div>
             </div>
         );

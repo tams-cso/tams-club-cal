@@ -5,6 +5,7 @@
 
 $background: white;
 $primary: #00CD2D;
+$bad: #FF482F;
 $type-event: #FFC178;
 $type-signup: #D49DFF;
 $text-primary: black;
@@ -18,7 +19,7 @@ $text-lighter: #9E9E9E;
     opacity: 1;
 }
 h1 {
-    margin: 0 0 1rem 0;
+    margin: 0 0 0.5rem 0;
     text-align: center;
 }
 input {
