@@ -11,6 +11,7 @@ $grid-border: 0.025rem solid black;
     grid-template-columns: 1fr 1fr 1fr 1fr 1fr 1fr 1fr;
     grid-template-rows: auto 3rem 3rem 3rem 3rem 3rem;
     border-bottom: $grid-border;
+    margin-top: 1rem;
 }
 
 .calendar > .CalendarDay {
@@ -29,4 +30,29 @@ $grid-border: 0.025rem solid black;
 
 .view-active {
     display: block;
+}
+
+// TODO: Change this thing to a flexbox
+
+.month-year {
+    display: inline;
+    margin-left: 12.75rem;
+    text-align: center;
+}
+
+.view-switch {
+    display: inline;
+    float: right;
+    font-family: $main-font;
+    background-color: $background;
+    border: 0.1rem solid black;
+    padding: 0.1rem 0.25rem;
+    font-size: 0.75rem;
+    border-radius: 0.25rem;
+    transition: 0.2s;
+}
+
+.view-switch:hover {
+    cursor: pointer;
+    background-color: #dddddd;
 }
