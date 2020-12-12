@@ -28,6 +28,10 @@
     background-color: #dddddd;
 }
 
+.menu-item:active {
+    outline: none;
+}
+
 .active {
     color: $primary;
     background-color: $background !important;
