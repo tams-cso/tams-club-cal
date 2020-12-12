@@ -4,9 +4,23 @@
     display: none;
 }
 
+$grid-border: 0.025rem solid black;
+
 .calendar {
     display: grid;
-    grid-template-columns: auto auto auto auto auto auto auto;
+    grid-template-columns: 1fr 1fr 1fr 1fr 1fr 1fr 1fr;
+    grid-template-rows: auto 3rem 3rem 3rem 3rem 3rem;
+    border-bottom: $grid-border;
+}
+
+.calendar > .CalendarDay {
+    border: 0;
+    border-top: $grid-border;
+    border-left: $grid-border;
+}
+
+.CalendarDay:nth-child(7n) {
+    border-right: $grid-border;
 }
 
 .days-of-week {
