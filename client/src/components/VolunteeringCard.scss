@@ -1,0 +1,63 @@
+@import '../custom.scss';
+
+.VolunteeringCard {
+    background-color: white;
+    filter: drop-shadow(0 0 0.1rem #dddddd);    
+    text-align: center;
+    width: 9rem;
+    height: 7.5rem;
+}
+
+.overlay {
+    padding: 0.25rem;
+}
+
+.overlay-closed {
+    background-color: #00000033;
+}
+
+.card-status {
+    font-size: 0.6rem;
+}
+
+.status-open {
+    color: $primary;
+}
+
+.status-closed {
+    color: $bad;
+}
+
+.card-name {
+    font-size: 1.2rem;
+}
+
+.club-name {
+    color: $text-light;
+    font-size: 0.8rem;
+}
+
+.description {
+    font-size: 0.55rem;
+    overflow-x: hidden;
+}
+
+.filter-list {
+    font-size: 0.6rem;
+}
+
+.f-limited {
+    color: #FFB258;
+}
+
+.f-semester {
+    color: #FF8B99;
+}
+
+.f-set-times {
+    color: #ABB8FF;
+}
+
+.f-weekly {
+    color: #D38CFF;
+}
