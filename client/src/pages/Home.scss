@@ -1,1 +1,12 @@
 @import '../custom.scss';
+
+.schedule-view {
+    display: none;
+}
+.calendar {
+    display: grid;
+    grid-template-columns: auto auto auto auto auto auto auto;
+}
+.days-of-week {
+    text-align: center;
+}
