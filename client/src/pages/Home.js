@@ -31,8 +31,8 @@ class Home extends React.Component {
             );
         });
         var calendar = [];
-        for (let i = 1; i <= 30; i++) calendar.push(<CalendarDay day={this.pad(i)} events={[]}></CalendarDay>);
-        for (let i = 1; i <= 5; i++) calendar.push(<CalendarDay day={this.pad(i)} events={[]}></CalendarDay>);
+        for (let i = 1; i <= 30; i++) calendar.push(<CalendarDay day={this.pad(i)} key={'1-'+i} events={[]}></CalendarDay>);
+        for (let i = 1; i <= 5; i++) calendar.push(<CalendarDay day={this.pad(i)} key={'2-'+i} events={[]}></CalendarDay>);
 
         return (
             <div className="Home">
