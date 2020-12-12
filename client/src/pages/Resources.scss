@@ -9,3 +9,11 @@
 .link-container > .LinkBox {
     width: 9rem;
 }
+
+.volunteering-section {
+    display: grid;
+    gap: 1rem;
+    grid-template-columns: auto auto auto;
+    justify-items: center;
+    align-items: center;
+}
