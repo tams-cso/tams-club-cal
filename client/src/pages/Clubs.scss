@@ -1,1 +1,11 @@
 @import '../custom.scss';
+
+.club-card-list {
+    display: grid;
+    grid-template-columns: auto auto auto auto;
+    row-gap: 1rem;
+}
+
+.club-card-list > .ClubCard {
+    margin: 0 0.5rem;
+}
