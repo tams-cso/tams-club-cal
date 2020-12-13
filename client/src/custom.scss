@@ -26,9 +26,10 @@ $text-lighter: #9e9e9e;
 h1 {
     margin: 0 0 0.5rem 0;
     text-align: center;
+    font-weight: 300;
 }
 
-input {
+input, textarea {
     font-family: 'Bubblegum Sans', sans-serif;
     border: 0.05rem solid #dddddd;
     border-radius: 0.1rem;
