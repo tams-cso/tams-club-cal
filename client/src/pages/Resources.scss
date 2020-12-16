@@ -24,3 +24,91 @@
     justify-items: center;
     align-items: center;
 }
+
+.volunteering-filters {
+    display: flex;
+    margin-bottom: 0.75rem;
+}
+
+.filter-label {
+    margin: 0 0.5rem;
+    font-size: 0.75rem;
+    color: #777777;
+}
+
+.vol-filter {
+    background-color: $background;
+    border: 0.1rem solid #DDDDDD;
+    border-radius: 1rem;
+    width: 6rem;
+    // TODO: Fix slightly off button ratios
+    padding: 0.1rem;
+    margin-right: 0.5rem;
+    font-size: 0.4rem;
+    transition: 0.2s;
+}
+
+$filter-all: #DDDDDD;
+$filter-limited: #FFB258;
+$filter-semester: #FF8B99;
+$filter-set-times: #ABB8FF;
+$filter-weekly: #D38CFF;
+$filter-open: #82EE9A;
+
+.vol-filter.all {
+    border-color: $filter-all;
+}
+
+.vol-filter.all.active,
+.vol-filter.all:hover {
+    background-color: $filter-all;
+}
+
+.vol-filter.limited {
+    border-color: $filter-limited;
+}
+
+.vol-filter.limited.active,
+.vol-filter.limited:hover {
+    background-color: $filter-limited;
+}
+
+.vol-filter.semester {
+    border-color: $filter-semester;
+}
+
+.vol-filter.semester.active,
+.vol-filter.semester:hover {
+    background-color: $filter-semester;
+}
+
+.vol-filter.set-times {
+    border-color: $filter-set-times;
+}
+
+.vol-filter.set-times.active,
+.vol-filter.set-times:hover {
+    background-color: $filter-set-times;
+}
+
+.vol-filter.weekly {
+    border-color: $filter-weekly;
+}
+
+.vol-filter.weekly.active,
+.vol-filter.weekly:hover {
+    background-color: $filter-weekly;
+}
+
+.vol-filter.open {
+    border-color: $filter-open;
+}
+
+.vol-filter.open.active,
+.vol-filter.open:hover {
+    background-color: $filter-open;
+}
+
+.vol-filter:hover {
+    cursor: pointer;
+}
