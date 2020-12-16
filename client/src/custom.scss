@@ -30,10 +30,14 @@ h1 {
 }
 
 input, textarea {
-    font-family: 'Bubblegum Sans', sans-serif;
+    font-family: $main-font;
     border: 0.05rem solid #dddddd;
     border-radius: 0.1rem;
     padding: 0.1rem;
+}
+
+button {
+    font-family: $main-font;
 }
 
 .smol-spacer {
