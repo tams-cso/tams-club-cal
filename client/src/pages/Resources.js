@@ -38,19 +38,20 @@ class Resources extends React.Component {
     createCards = (currFilter) => {
         var volCards = [];
         this.volEvents.forEach((event) => {
-            volCards.push(
-                <VolunteeringCard
-                    name={event.name}
-                    club={event.club}
-                    description={event.description}
-                    filters={event.filters}
-                    signupTime={event.signupTime}
-                    key={event.name}
-                ></VolunteeringCard>
-            );
+            if (currFilter === null || event.filters[currFilter])
+                volCards.push(
+                    <VolunteeringCard
+                        name={event.name}
+                        club={event.club}
+                        description={event.description}
+                        filters={event.filters}
+                        signupTime={event.signupTime}
+                        key={event.name}
+                    ></VolunteeringCard>
+                );
         });
-        this.setState({ volCards });
-    }
+        this.setState({ volCards, filter: currFilter });
+    };
 
     componentDidMount() {
         this.createCards(null);
@@ -70,9 +71,48 @@ class Resources extends React.Component {
                     <LinkBox href="https://tams.unt.edu/studentlife/clubs#clubresources">Club Leader Resources</LinkBox>
                 </div>
                 <h1>Volunteering</h1>
-                <div className="volunteering-section">
-                    {this.state.volCards}
+                <div className="volunteering-filters">
+                    <div className="filter-label">
+                        Filter:
+                    </div>
+                    <button
+                        onClick={() => this.createCards(null)}
+                        className={'vol-filter all' + (this.state.filter === null ? ' active' : '')}
+                    >
+                        All
+                    </button>
+                    <button
+                        onClick={() => this.createCards('limited')}
+                        className={'vol-filter limited' + (this.state.filter === 'limited' ? ' active' : '')}
+                    >
+                        Limited Slots
+                    </button>
+                    <button
+                        onClick={() => this.createCards('semester')}
+                        className={'vol-filter semester' + (this.state.filter === 'semester' ? ' active' : '')}
+                    >
+                        Semester Long
+                    </button>
+                    <button
+                        onClick={() => this.createCards('setTimes')}
+                        className={'vol-filter set-times' + (this.state.filter === 'setTimes' ? ' active' : '')}
+                    >
+                        Set Volunteering Times
+                    </button>
+                    <button
+                        onClick={() => this.createCards('weekly')}
+                        className={'vol-filter weekly' + (this.state.filter === 'weekly' ? ' active' : '')}
+                    >
+                        Weekly Signups
+                    </button>
+                    <button
+                        onClick={() => this.createCards('open')}
+                        className={'vol-filter open' + (this.state.filter === 'open' ? ' active' : '')}
+                    >
+                        Open
+                    </button>
                 </div>
+                <div className="volunteering-section">{this.state.volCards}</div>
             </div>
         );
     }
