@@ -60,6 +60,7 @@
     position: absolute;
     bottom: 0.5rem;
     left: 1.75rem;
+    transition: 0.2s;
 }
 
 .web-icon {
@@ -72,16 +73,20 @@
     transition: 0.2s;
 }
 
-.icon-fb:hover {
+.fb-icon:hover {
     cursor: pointer;
     filter: drop-shadow(0 0 0.05rem #aaaaaa);
 }
 
-.icon-fb:hover > path {
+.fb-icon:hover > path {
     fill: #3b5998;
 }
 
-.icon-web:hover {
+.web-icon:hover {
     cursor: pointer;
-    filter: drop-shadow(0 0 0.05rem #aaaaaa);
+    filter: drop-shadow(0 0 0.01rem #aaaaaa);
+}
+
+.web-icon:hover > path {
+    stroke: $primary;
 }
