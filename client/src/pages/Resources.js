@@ -4,9 +4,11 @@ import VolunteeringCard from '../components/VolunteeringCard';
 import './Resources.scss';
 
 class Resources extends React.Component {
-    render() {
+    constructor(props) {
+        super(props);
+
         // TODO: Replace with fetched data from backend/cache
-        var volEvents = [
+        this.volEvents = [
             {
                 name: 'Elm Fork',
                 club: 'HOPE',
@@ -30,8 +32,12 @@ class Resources extends React.Component {
             },
         ];
 
+        this.state = {};
+    }
+
+    createCards = (currFilter) => {
         var volCards = [];
-        volEvents.forEach((event) => {
+        this.volEvents.forEach((event) => {
             volCards.push(
                 <VolunteeringCard
                     name={event.name}
@@ -43,6 +49,14 @@ class Resources extends React.Component {
                 ></VolunteeringCard>
             );
         });
+        this.setState({ volCards });
+    }
+
+    componentDidMount() {
+        this.createCards(null);
+    }
+
+    render() {
         return (
             <div className="Resources">
                 <h1 className="links-title">Links</h1>
@@ -57,7 +71,7 @@ class Resources extends React.Component {
                 </div>
                 <h1>Volunteering</h1>
                 <div className="volunteering-section">
-                    {volCards}
+                    {this.state.volCards}
                 </div>
             </div>
         );
