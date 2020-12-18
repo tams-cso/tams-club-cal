@@ -1,10 +1,12 @@
 @import '../custom.scss';
 
 .Menu {
-    padding: 0.4rem 0;
-    margin-bottom: 0.3rem;
+    position: fixed;
+    padding: 0.25rem 8rem;
+    left: 0;
+    right: 0;
+    height: 2.5rem;
     background-color: white;
-    width: 100%;
 }
 
 .menu-list {
