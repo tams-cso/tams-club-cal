@@ -4,14 +4,19 @@
     display: none;
 }
 
+.schedule-view {
+    margin: 0 8rem;
+}
+
 $grid-border: 0.025rem solid black;
+$rh: 5rem;
 
 .calendar {
     display: grid;
     grid-template-columns: 1fr 1fr 1fr 1fr 1fr 1fr 1fr;
-    grid-template-rows: auto 3rem 3rem 3rem 3rem 3rem;
+    grid-template-rows: auto $rh $rh $rh $rh $rh;
     border-bottom: $grid-border;
-    margin-top: 1rem;
+    margin: 1rem 4rem;
 }
 
 .calendar > .CalendarDay {
@@ -35,14 +40,10 @@ $grid-border: 0.025rem solid black;
 // TODO: Change this thing to a flexbox
 
 .month-year {
-    display: inline;
-    margin-left: 12.75rem;
     text-align: center;
 }
 
 .view-switch {
-    display: inline;
-    float: right;
     font-family: $main-font;
     background-color: $background;
     border: 0.1rem solid black;
@@ -55,4 +56,15 @@ $grid-border: 0.025rem solid black;
 .view-switch:hover {
     cursor: pointer;
     background-color: #dddddd;
+}
+
+.home-top {
+    padding-bottom: 0.25rem;
+    margin: 0 5rem;
+    display: flex;
+    justify-content: space-around;
+}
+
+.dummy {
+    width: 7rem;
 }
