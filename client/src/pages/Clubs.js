@@ -3,45 +3,76 @@ import ClubCard from '../components/ClubCard';
 import './Clubs.scss';
 
 class Clubs extends React.Component {
+    constructor(props) {
+        super(props);
+
+        // TODO: Replace with fetched data from backend/cache
+        this.clubList = [
+            {
+                name: 'CSO (Computer Science Organization)',
+                advised: 'true',
+                fb: 'https://www.facebook.com/groups/cso2021',
+                website: 'https://cso.tams.club',
+                coverImg: 'https://api.michaelzhao.xyz/static/club-cal/cso.png',
+            },
+            {
+                name: 'HOPE (Helping Other People Everywhere)',
+                advised: 'true',
+                fb: 'https://www.facebook.com/groups/hope2021',
+                website: 'https://tamshope.org',
+                coverImg: 'https://api.michaelzhao.xyz/static/club-cal/hope.png',                
+            },
+            {
+                name: 'Ambassadors',
+                advised: 'true',
+                fb: 'https://www.facebook.com/groups/435813770636084',
+                website: '',
+                coverImg: 'https://api.michaelzhao.xyz/static/club-cal/ambassadors.png',                
+            },
+            {
+                name: 'TCS (TAMS Culinary Society)',
+                advised: 'false',
+                fb: 'https://www.facebook.com/groups/481790829408149',
+                website: '',
+                coverImg: 'https://api.michaelzhao.xyz/static/club-cal/tcs.png',                
+            },
+            {
+                name: 'NACRA (Nihon Arts and Culture Research)',
+                advised: 'false',
+                fb: 'https://www.facebook.com/groups/416640248899431',
+                website: '',
+                coverImg: 'https://api.michaelzhao.xyz/static/club-cal/nacra.png',                
+            },
+        ];
+
+        this.state = {};
+    }
+
+    createCards = () => {
+        var clubCards = [];
+        this.clubList.forEach((club) => {
+            clubCards.push(
+                <ClubCard
+                    name={club.name}
+                    advised={club.advised}
+                    fb={club.fb}
+                    website={club.website}
+                    coverImg={club.coverImg}
+                ></ClubCard>
+            );
+        });
+        this.setState({ clubCards });
+    };
+
+    componentDidMount() {
+        this.createCards();
+    }
+
     render() {
         return (
             <div className="Clubs">
                 <div className="club-card-list">
-                    <ClubCard
-                        img="https://api.michaelzhao.xyz/static/club-cal/cso.png"
-                        website="https://cso.tams.club"
-                        fb="https://www.facebook.com/groups/cso2021"
-                        advised="true"
-                        name="CSO (Computer Science Organization)"
-                    ></ClubCard>
-                    <ClubCard
-                        img="https://api.michaelzhao.xyz/static/club-cal/hope.png"
-                        website="https://tamshope.org"
-                        fb="https://www.facebook.com/groups/hope2021"
-                        advised="true"
-                        name="HOPE (Helping Other People Everywhere)"
-                    ></ClubCard>
-                    <ClubCard
-                        img="https://api.michaelzhao.xyz/static/club-cal/ambassadors.png"
-                        website=""
-                        fb="https://www.facebook.com/groups/435813770636084"
-                        advised="true"
-                        name="Ambassadors"
-                    ></ClubCard>
-                    <ClubCard
-                        img="https://api.michaelzhao.xyz/static/club-cal/tcs.png"
-                        website=""
-                        fb="https://www.facebook.com/groups/481790829408149"
-                        advised="false"
-                        name="TCS (TAMS Culinary Society)"
-                    ></ClubCard>
-                    <ClubCard
-                        img="https://api.michaelzhao.xyz/static/club-cal/nacra.png"
-                        website=""
-                        fb="https://www.facebook.com/groups/416640248899431"
-                        advised="false"
-                        name="NACRA (Nihon Arts and Culture Research)"
-                    ></ClubCard>
+                    {this.state.clubCards}
                 </div>
             </div>
         );

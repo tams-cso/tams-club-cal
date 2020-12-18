@@ -6,10 +6,24 @@ html, body, #root {
     min-height: 100%;
     font-size: 2vw;
     font-family: 'Bubblegum Sans', sans-serif;
+    overflow-x: hidden;
 }
 
-.App {
-    margin: 0 18vw;
+html {
+    overflow-y: scroll;
+}
+
+.menu-bkgd {
+    position: fixed;
+    z-index: 99;
+    width: 100%;
+    height: 3rem;
+    background-color: white;
+    filter: drop-shadow(0 0 0.1rem #dddddd);
+}
+
+.page {
+    padding-top: 3.75rem;
 }
 
 @media handheld and (max-width: 652px),
@@ -20,5 +34,8 @@ screen and (max-width: 652px) {
     }
     html, body, #root {
         font-size: 6vw;
+    }
+    .menu-bkgd {
+        height: 2rem;
     }
 }

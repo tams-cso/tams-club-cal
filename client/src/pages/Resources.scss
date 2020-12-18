@@ -23,11 +23,13 @@
     grid-template-columns: auto auto auto;
     justify-items: center;
     align-items: center;
+    margin: 1rem 6rem;
+    justify-content: start;
 }
 
 .volunteering-filters {
     display: flex;
-    margin-bottom: 0.75rem;
+    margin: 0 5rem 0.75rem 5rem;
 }
 
 .filter-label {

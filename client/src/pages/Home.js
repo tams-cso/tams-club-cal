@@ -31,18 +31,22 @@ class Home extends React.Component {
             );
         });
         var calendar = [];
-        for (let i = 1; i <= 30; i++) calendar.push(<CalendarDay day={this.pad(i)} key={'1-'+i} events={[]}></CalendarDay>);
-        for (let i = 1; i <= 5; i++) calendar.push(<CalendarDay day={this.pad(i)} key={'2-'+i} events={[]}></CalendarDay>);
+        for (let i = 1; i <= 30; i++)
+            calendar.push(<CalendarDay day={this.pad(i)} key={'1-' + i} events={[]}></CalendarDay>);
+        for (let i = 1; i <= 5; i++)
+            calendar.push(<CalendarDay day={this.pad(i)} key={'2-' + i} events={[]}></CalendarDay>);
 
         return (
             <div className="Home">
-                <div className={'schedule-view' + (this.state.schedule ? ' view-active' : '')}>
-                    {/* TODO: Replace temp data with GET request from backend */}
+                <div className="home-top">
+                    <div className="dummy"></div>
                     <div className="month-year">November 2020</div>
                     <button className="view-switch" onClick={this.switchView}>
-                        Switch to Calendar View
+                        {`Switch to ${this.state.schedule ? 'Calendar' : 'Schedule'} View`}
                     </button>
-                    <div className="smol-spacer"></div>
+                </div>
+                <div className={'schedule-view' + (this.state.schedule ? ' view-active' : '')}>
+                    {/* TODO: Replace temp data with GET request from backend */}
                     <DateSection date="Monday 11/9/20"></DateSection>
                     <ScheduleEvent
                         type="event"
@@ -117,10 +121,6 @@ class Home extends React.Component {
                     ></ScheduleEvent>
                 </div>
                 <div className={'calendar-view' + (!this.state.schedule ? ' view-active' : '')}>
-                    <div className="month-year">November 2020</div>
-                    <button className="view-switch" onClick={this.switchView}>
-                        Switch to Schedule View
-                    </button>
                     <div className="calendar">
                         {calendarHeader}
                         {calendar}
