@@ -1,5 +1,9 @@
 @import '../custom.scss';
 
+.Clubs {
+    margin: 0 7rem;
+}
+
 .club-card-list {
     display: grid;
     grid-template-columns: auto auto auto auto;
