@@ -42,12 +42,16 @@
     background-color: $background;
     border: 0.1rem solid #DDDDDD;
     border-radius: 1rem;
-    width: 6rem;
+    width: 5rem;
     // TODO: Fix slightly off button ratios
-    padding: 0.1rem;
+    padding: 0.2rem 0.1rem;
     margin-right: 0.5rem;
-    font-size: 0.4rem;
+    font-size: 0.5rem;
     transition: 0.2s;
+}
+
+.vol-filter:active {
+    outline: none;
 }
 
 $filter-all: #DDDDDD;

@@ -40,6 +40,10 @@ button {
     font-family: $main-font;
 }
 
+button:active {
+    outline: none;
+}
+
 .smol-spacer {
     height: 0.25rem;
 }
