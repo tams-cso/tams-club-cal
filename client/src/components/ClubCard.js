@@ -9,10 +9,10 @@ class ClubCard extends React.Component {
             <div className="ClubCard">
                 <div className="image-box">
                     {/* TODO: Detect bad image url */}
-                    <div className="image-placeholder" style={this.props.img != '' ? { display: 'none' } : {}}>
+                    <div className="image-placeholder" style={this.props.coverImg != '' ? { display: 'none' } : {}}>
                         Club Image here
                     </div>
-                    <img className="club-image" src={this.props.img} alt="club image"></img>
+                    <img className="club-image" src={this.props.coverImg} alt="club image"></img>
                 </div>
                 <div className={'club-type' + (this.props.advised != 'true' ? ' club-indp' : '')}>
                     {this.props.advised == 'true' ? 'Advised' : 'Independent'}
