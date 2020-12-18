@@ -66,6 +66,8 @@
 .mobile-menu-dropdown {
     height: 0;
     transition: height 1s;
+    background-color: white;
+    filter: drop-shadow(0 0.05rem 0.05rem #dddddd);
 }
 
 .mob-item {
@@ -76,8 +78,8 @@
 screen and (max-device-width: 652px),
 screen and (max-width: 652px) {
     .Menu {
-        filter: drop-shadow(0 0 0.15rem #777777);
-        margin-bottom: 1rem;
+        padding: 0;
+        height: 2rem;
     }
     .menu-list {
         display: none;
@@ -87,6 +89,8 @@ screen and (max-width: 652px) {
         flex-direction: row;
         justify-content: space-between;
         align-items: center;
+        height: 1rem;
+        padding: 0.5rem 0;
     }
     .mobile-menu-title {
         padding-left: 1rem;
@@ -109,7 +113,6 @@ screen and (max-width: 652px) {
         justify-content: center;
         align-items: center;
         border-top: 1px solid #dddddd;
-        margin-top: 0.4rem;
-        padding-top: 0.25rem;
+        padding: 0.25rem 0;
     }
 }
