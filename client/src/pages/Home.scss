@@ -68,3 +68,19 @@ $rh: 5rem;
 .dummy {
     width: 7rem;
 }
+
+@media handheld and (max-width: 992px),
+screen and (max-device-width: 992px),
+screen and (max-width: 992px) {
+    .schedule-view {
+        margin: 0 4rem;
+    }
+}
+
+@media handheld and (max-width: 652px),
+screen and (max-device-width: 652px),
+screen and (max-width: 652px) {
+    .schedule-view {
+        margin: 0;
+    }
+}

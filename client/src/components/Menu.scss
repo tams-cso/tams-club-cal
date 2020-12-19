@@ -3,8 +3,7 @@
 .Menu {
     position: fixed;
     z-index: 100;
-    padding: 0.25rem 8rem;
-    padding-bottom: 0.5rem;
+    padding: 0.25rem 8rem 0 8rem;
     left: 0;
     right: 0;
     height: 2.5rem;
@@ -42,12 +41,12 @@
 }
 
 .menu-logo-tams {
-    font-size: 1.5rem;
+    font-size: 1.35rem;
 }
 
 .menu-logo-club {
     margin-top: -0.25rem;
-    font-size: 0.75rem;
+    font-size: 0.65rem;
 }
 
 .menu-search {
@@ -74,6 +73,20 @@
 
 .mob-item {
     display: none;
+}
+
+@media handheld and (max-width: 992px),
+screen and (max-device-width: 992px),
+screen and (max-width: 992px) {
+    .Menu {    
+        padding: 0.25rem 4rem 0.5rem 4rem;
+    }
+    .menu-item {
+        font-size: 0.75rem;
+    }
+    .menu-search {
+        width: 7rem;
+    }
 }
 
 @media handheld and (max-width: 652px),
