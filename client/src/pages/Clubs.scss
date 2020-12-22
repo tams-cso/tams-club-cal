@@ -8,6 +8,7 @@
     display: grid;
     grid-template-columns: auto auto auto auto;
     row-gap: 1rem;
+    justify-content: start;
 }
 
 .club-card-list > .ClubCard {
