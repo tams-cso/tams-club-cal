@@ -24,21 +24,19 @@ class About extends React.Component {
                     We would love to hear what you think and what ideas you would like to see! Here’s the form for any
                     bugs, comments, suggestions, and anything else you would like us to know!
                 </div>
-                {/* TODO: Add form tags back in with POST request */}
-                {/* <form> */}
-                <textarea id="feedback-form" name="feedback" placeholder="Enter feedback here..." />
-                <div className="center-div">
-                    {/* TODO: Replace with SubmitButton component */}
-                    <input
-                        id="feedback-submit"
-                        type="submit"
-                        value="Submit"
-                        onClick={() => {
-                            alert('Did you really think this would work right now?!?!');
-                        }}
-                    />
-                </div>
-                {/* </form> */}
+                <form>
+                    <textarea id="feedback-form" name="feedback" placeholder="Enter feedback here..." />
+                    <div className="center-div">
+                        <input
+                            id="feedback-submit"
+                            type="submit"
+                            value="Submit"
+                            onClick={() => {
+                                this.props.history.push('/about-callback');
+                            }}
+                        />
+                    </div>
+                </form>
             </div>
         );
     }

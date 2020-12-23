@@ -1,7 +1,7 @@
 const { MongoClient } = require('mongodb');
 
 const uri = `mongodb+srv://${process.env.MONGO_USER}:${process.env.MONGO_PASS}@tams-cal-db.seuxs.mongodb.net/clubs?retryWrites=true&w=majority`;
-const client = new MongoClient(uri, {useNewUrlParser: true, useUnifiedTopology: true});
+const client = new MongoClient(uri, { useNewUrlParser: true, useUnifiedTopology: true });
 
 client.connect();
 
@@ -11,8 +11,7 @@ async function getClubList() {
         const collection = db.collection('info');
         const clubs = await collection.find().toArray();
         return clubs;
-    }
-    catch (error) {
+    } catch (error) {
         console.dir(error);
     }
 }
