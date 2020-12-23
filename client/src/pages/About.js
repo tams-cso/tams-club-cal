@@ -25,7 +25,7 @@ class About extends React.Component {
                     bugs, comments, suggestions, and anything else you would like us to know!
                 </div>
                 {/* TODO: Add form tags back in with POST request */}
-                {/* <form> */}
+                <form>
                 <textarea id="feedback-form" name="feedback" placeholder="Enter feedback here..." />
                 <div className="center-div">
                     {/* TODO: Replace with SubmitButton component */}
@@ -38,7 +38,7 @@ class About extends React.Component {
                         }}
                     />
                 </div>
-                {/* </form> */}
+                </form>
             </div>
         );
     }

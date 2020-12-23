@@ -16,7 +16,7 @@ class Menu extends React.Component {
         return (
             <div className="Menu">
                 <div className="menu-list">
-                    <NavLink className="menu-item" activeClassName="active" to="/" exact>
+                    <NavLink className="menu-item menu-logo" activeClassName="active" to="/" exact>
                         <div className="menu-logo-tams">TAMS</div>
                         <div className="menu-logo-club">Club Calendar</div>
                     </NavLink>
