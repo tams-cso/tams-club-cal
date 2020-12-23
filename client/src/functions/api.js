@@ -1,3 +1,5 @@
+import config from '../files/config.json';
+
 function getEvents() {
     fetch('https://api.tams.club/events')
         .then((res) => res.json())
@@ -5,7 +7,7 @@ function getEvents() {
 }
 
 async function getClubList() {
-    return await fetch('http://localhost:5000/clubs').then((res) => res.json());
+    return await fetch(`${config.backend}/clubs`).then((res) => res.json());
 }
 
 async function postFeedback(feedback) {

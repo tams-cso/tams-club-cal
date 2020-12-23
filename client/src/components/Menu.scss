@@ -3,10 +3,10 @@
 .Menu {
     position: fixed;
     z-index: 100;
-    padding: 0.25rem 8rem 0 8rem;
+    padding: 0.25rem 16vw 0 16vw;
     left: 0;
     right: 0;
-    height: 2.5rem;
+    height: 2rem;
     background-color: white;
 }
 
@@ -19,10 +19,10 @@
 
 .menu-item {
     text-align: center;
-    font-size: 0.9rem;
+    font-size: 1.5vw;
     text-decoration: none;
     color: black;
-    padding: 0.2rem;
+    padding: 0.4vw;
     border-radius: 0.1rem;
     transition: 0.2s;
 }
@@ -40,8 +40,12 @@
     background-color: $background !important;
 }
 
+.menu-logo {
+    padding: 0 0.1rem;
+}
+
 .menu-logo-tams {
-    font-size: 1.35rem;
+    font-size: 1.25rem;
 }
 
 .menu-logo-club {
@@ -50,14 +54,14 @@
 }
 
 .menu-search {
-    width: 12rem;
+    width: 30vw;
     background-color: $background !important;
 }
 
 .search-bar {
-    width: 80%;
+    width: 70%;
     float: right;
-    font-size: 0.75rem;
+    font-size: 1.5vw;
 }
 
 .mobile-menu {
