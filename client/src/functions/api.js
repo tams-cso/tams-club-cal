@@ -8,8 +8,17 @@ async function getClubList() {
     return await fetch('http://localhost:5000/clubs').then((res) => res.json());
 }
 
+async function postFeedback(feedback) {
+    console.log(feedback);
+    fetch('http://localhost:5000/feedback', {
+        method: 'POST',
+        body: JSON.stringify({ feedback }),
+        headers: { 'Content-Type': 'application/json' },
+    }).then(res => res.json()).then(data => console.log(data));
+}
+
 // TODO: Add the rest of the requests
 // see https://github.com/MichaelZhao21/playlists-plus/blob/master/src/components/spotify-api.js
 // for example fetch POST requests
 
-export { getEvents, getClubList };
+export { getEvents, getClubList, postFeedback };
