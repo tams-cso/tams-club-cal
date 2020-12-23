@@ -18,4 +18,14 @@ async function getClubList() {
 
 function updateClubs() {}
 
-module.exports = { getClubList, updateClubs };
+async function addFeedback(feedback) {
+    try {
+        const db = client.db('feedback');
+        const collection = db.collection('data');
+        collection.insertOne({ date: new Date().getTime(), feedback });
+    } catch (error) {
+        console.dir(error);
+    }
+}
+
+module.exports = { getClubList, updateClubs, addFeedback };

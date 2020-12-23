@@ -1,8 +1,26 @@
 import React from 'react';
 import LinkBox from '../components/LinkBox';
+import { postFeedback } from '../functions/api';
 import './About.scss';
 
 class About extends React.Component {
+    constructor(props) {
+        super(props);
+        this.state = { feedbackValue: '' };
+
+        this.handleChange = this.handleChange.bind(this);
+        this.handleSubmit = this.handleSubmit.bind(this);
+    }
+
+    handleChange(event) {
+        this.setState({ feedbackValue: event.target.value });
+    }
+
+    handleSubmit() {
+        postFeedback(this.state.feedbackValue);
+        this.setState({ feedbackValue: '' });
+    }
+
     render() {
         return (
             <div className="About">
@@ -24,21 +42,15 @@ class About extends React.Component {
                     We would love to hear what you think and what ideas you would like to see! Here’s the form for any
                     bugs, comments, suggestions, and anything else you would like us to know!
                 </div>
-                {/* TODO: Add form tags back in with POST request */}
-                <form>
-                <textarea id="feedback-form" name="feedback" placeholder="Enter feedback here..." />
+                <textarea
+                    id="feedback-form"
+                    placeholder="Enter feedback here..."
+                    value={this.state.feedbackValue}
+                    onChange={this.handleChange}
+                />
                 <div className="center-div">
-                    {/* TODO: Replace with SubmitButton component */}
-                    <input
-                        id="feedback-submit"
-                        type="submit"
-                        value="Submit"
-                        onClick={() => {
-                            alert('Did you really think this would work right now?!?!');
-                        }}
-                    />
+                    <input id="feedback-submit" type="submit" value="Submit" onClick={this.handleSubmit} />
                 </div>
-                </form>
             </div>
         );
     }
