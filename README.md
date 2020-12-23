@@ -14,10 +14,16 @@ Check out the [old-site branch](https://github.com/MichaelZhao21/club-calendar-v
 
 ```bash
 git clone https://github.com/MichaelZhao21/tams-club-cal.git
-cd tams-club-cal/client
-yarn install
-cd ../server
-yarn install
+cd tams-club-cal/client && yarn install
+cd ../server && yarn install
+```
+
+Create the config file at `client/src/files/config.json`:
+
+```json
+{
+    "backend": "[address that the backend server is hosted on (eg. http://localhost:5000)]"
+}
 ```
 
 ## Execution
