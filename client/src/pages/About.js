@@ -17,7 +17,7 @@ class About extends React.Component {
     }
 
     handleSubmit() {
-        postFeedback(this.state.feedbackValue);
+        postFeedback(this.state.feedbackValue.trim());
         this.setState({ feedbackValue: '' });
     }
 
