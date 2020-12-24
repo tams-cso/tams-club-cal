@@ -17,7 +17,7 @@ async function postFeedback(feedback) {
         body: JSON.stringify({ feedback }),
         headers: { 'Content-Type': 'application/json' },
     });
-    console.log(res.status);
+    return res.status;
 }
 
 // TODO: Add the rest of the requests
