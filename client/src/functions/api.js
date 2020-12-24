@@ -12,7 +12,7 @@ async function getClubList() {
 
 async function postFeedback(feedback) {
     console.log(feedback);
-    fetch('http://localhost:5000/feedback', {
+    fetch(`${config.backend}/feedback`, {
         method: 'POST',
         body: JSON.stringify({ feedback }),
         headers: { 'Content-Type': 'application/json' },
