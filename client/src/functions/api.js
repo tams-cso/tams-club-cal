@@ -12,11 +12,12 @@ async function getClubList() {
 
 async function postFeedback(feedback) {
     console.log(feedback);
-    fetch(`${config.backend}/feedback`, {
+    const res = await fetch(`${config.backend}/feedback`, {
         method: 'POST',
         body: JSON.stringify({ feedback }),
         headers: { 'Content-Type': 'application/json' },
-    }).then(res => res.json()).then(data => console.log(data));
+    });
+    console.log(res.status);
 }
 
 // TODO: Add the rest of the requests
