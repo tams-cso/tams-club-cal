@@ -22,11 +22,7 @@ app.get('/clubs', async (req, res, next) => {
 
 app.post('/feedback', async (req, res, next) => {
     if (req.body.feedback == '') {
-        res.status(400);
-        res.send({
-            error: '400 Bad Request',
-            description: 'Empty feedback!',
-        });
+        res.sendStatus(400);
         return;
     }
     addFeedback(req.body.feedback);
