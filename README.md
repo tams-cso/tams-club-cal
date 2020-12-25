@@ -26,7 +26,7 @@ Create the config file at `client/src/files/config.json`:
 }
 ```
 
-** For the `backend` field, don't put a `/` after **
+**For the `backend` field, don't put a `/` after**
 
 ## Execution
 
