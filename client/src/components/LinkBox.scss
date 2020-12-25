@@ -1,10 +1,12 @@
+@import '../custom.scss';
+
 .LinkBox {
     border: 0.1rem solid black;
     padding: 0.25rem;
     font-size: 1rem;
     text-align: center;
     transition: 0.3s;
-    background-color: white;
+    background-color: $background;
 }
 
 .LinkBox:hover {
