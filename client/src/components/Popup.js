@@ -1,5 +1,4 @@
 import React from 'react';
-import { Redirect } from 'react-router-dom';
 import './Popup.scss';
 
 class Popup extends React.Component {
