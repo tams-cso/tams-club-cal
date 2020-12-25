@@ -7,7 +7,7 @@
     left: 0;
     right: 0;
     height: 2rem;
-    background-color: white;
+    background-color: $background;
 }
 
 .menu-list {
@@ -21,7 +21,7 @@
     text-align: center;
     font-size: 1.5vw;
     text-decoration: none;
-    color: black;
+    color: $text-primary;
     padding: 0.4vw;
     border-radius: 0.1rem;
     transition: 0.2s;
@@ -71,7 +71,7 @@
 .mobile-menu-dropdown {
     height: 0;
     transition: height 1s;
-    background-color: white;
+    background-color: $background;
     filter: drop-shadow(0 0.05rem 0.05rem #dddddd);
 }
 
@@ -119,7 +119,7 @@ screen and (max-width: 652px) {
         fill: #cccccc;
     }
     .ham-active {
-        fill: #777777;
+        fill: $text-light;
     }
     .drop-active > .mob-item {
         display: block;

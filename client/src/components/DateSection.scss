@@ -1,3 +1,5 @@
+@import '../custom.scss';
+
 .DateSection {
     display: flex;
     flex-direction: row;
@@ -10,7 +12,7 @@
 .line {
     height: 0.125rem;
     border-radius: 1rem;
-    background-color: black;
+    background-color: $text-primary;
 }
 
 .left-line {
