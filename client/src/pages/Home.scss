@@ -8,6 +8,11 @@
     margin: 0 8rem;
 }
 
+.schedule-view > .ScheduleEvent:hover {
+    cursor: pointer;
+    background-color: #dddddd;
+}
+
 $grid-border: 0.025rem solid black;
 $rh: 5rem;
 
@@ -59,7 +64,7 @@ $rh: 5rem;
 }
 
 .home-top {
-    padding-bottom: 0.25rem;
+    padding: 1.25rem 0 0.25rem 0;
     margin: 0 5rem;
     display: flex;
     justify-content: space-around;
