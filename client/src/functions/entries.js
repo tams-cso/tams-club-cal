@@ -1,7 +1,7 @@
-function Event(type, name, clubName, startDate, endDate, startTime, endTime, link, description, addedBy) {
+function Event(type, name, club, startDate, endDate, startTime, endTime, link, description, addedBy) {
     this.type = type;
     this.name = name;
-    this.clubName = clubName;
+    this.club = club;
     this.startDate = startDate;
     this.endDate = endDate;
     this.startTime = startTime;
