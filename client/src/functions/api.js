@@ -2,6 +2,20 @@ import config from '../files/config.json';
 import { ClubInfo, Event } from './entries';
 
 /**
+ * POST to /add - Creates an event
+ * @param {Event} event Event object
+ * @returns {number} POST status [200 for Success & 400 for Failure]
+ */
+async function postEvent(event) {
+    const res = await fetch(`${config.backend}/add-event`, {
+        method: 'POST',
+        body: JSON.stringify(event),
+        headers: { 'Content-Type': 'application/json' },
+    });
+    return res.status;
+}
+
+/**
  * GET to /clubs - Gets the list of clubs
  * @returns {ClubInfo[]} An array of all clubs' basic information
  */
@@ -19,20 +33,6 @@ async function postFeedback(feedback) {
     const res = await fetch(`${config.backend}/feedback`, {
         method: 'POST',
         body: JSON.stringify({ feedback }),
-        headers: { 'Content-Type': 'application/json' },
-    });
-    return res.status;
-}
-
-/**
- * POST to /add - Creates an event
- * @param {Event} event Event object
- * @returns {number} POST status [200 for Success & 400 for Failure]
- */
-async function postEvent(event) {
-    const res = await fetch(`${config.backend}/add-event`, {
-        method: 'POST',
-        body: JSON.stringify(event),
         headers: { 'Content-Type': 'application/json' },
     });
     return res.status;
