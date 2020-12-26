@@ -26,6 +26,22 @@ function Event(type, name, club, startDate, endDate, startTime, endTime, link, d
 }
 
 /**
+ * An object containing the basic information for an event. This will be displayed in the list/calendar of events
+ * @param {string} type The type of the event [event or signup]
+ * @param {string} name The name of the event
+ * @param {string} club The name of the club that is hosting the event
+ * @param {number} startTime The millisecond datetime that the event starts
+ * @param {number} endTime The millisecond datetime that the event ends
+ */
+function EventInfo(type, name, club, startTime, endTime) {
+    this.type = type;
+    this.name = name;
+    this.club = club;
+    this.startTime = startTime;
+    this.endTime = endTime;
+}
+
+/**
  * An object containing the information for a club
  * @param {string} name The name of the club
  * @param {boolean} advised True if an advised club, otherwise false for independent club
@@ -89,4 +105,4 @@ function Committee(name, description, fb, website) {
     this.website = website;
 }
 
-export { Event, Club, Exec, Committee, ClubInfo };
+export { Event, EventInfo, Club, ClubInfo, Exec, Committee };

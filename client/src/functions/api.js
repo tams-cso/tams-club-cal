@@ -1,5 +1,14 @@
 import config from '../files/config.json';
-import { ClubInfo, Event } from './entries';
+import { ClubInfo, Event, EventInfo } from './entries';
+
+/**
+ * GET to /events - Gets the list of all events
+ * @returns {EventInfo[]} An array of all events' basic information
+ */
+async function getEventList() {
+    // TODO: Add a start and end time range
+    return await fetch(`${config.backend}/events`).then((res) => res.json());
+}
 
 /**
  * POST to /add - Creates an event
@@ -38,4 +47,4 @@ async function postFeedback(feedback) {
     return res.status;
 }
 
-export { getClubList, postFeedback, postEvent };
+export { getClubList, postFeedback, postEvent, getEventList };
