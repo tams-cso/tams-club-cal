@@ -4,7 +4,7 @@ const cors = require('cors');
 const bodyParser = require('body-parser');
 require('dotenv').config();
 
-const { getClubList, addFeedback } = require('./database');
+const { getClubList, addFeedback, addEvent } = require('./database');
 
 app.use(cors());
 app.use(bodyParser.json());
@@ -26,6 +26,21 @@ app.post('/feedback', async (req, res, next) => {
         return;
     }
     addFeedback(req.body.feedback);
+    res.sendStatus(200);
+});
+
+app.post('/add-event', async (req, res, next) => {
+    // Make sure every field is filled
+    // TODO: Find some way to send the wrong field(s) back as an error message
+    var blank = false;
+    Object.values(req.body).forEach((val) => {
+        if (val == '') blank = true;
+    });
+    if (blank) {
+        res.sendStatus(400);
+        return;
+    }
+    addEvent(req.body);
     res.sendStatus(200);
 });
 

@@ -28,4 +28,30 @@ async function addFeedback(feedback) {
     }
 }
 
-module.exports = { getClubList, updateClubs, addFeedback };
+async function addEvent(event) {
+    try {
+        const db = client.db('events');
+        const infoCollection = db.collection('info');
+        const dataCollection = db.collection('data');
+        // TODO: Calculate time from start and end time/date (use library to manage time zones)
+        // Need to store times in milliseconds since Jan 1, 1970 + UTC time zone
+        var startTimeMillis = 0;
+        var endTimeMillis = 0;
+        infoCollection.insertOne({
+            type: event.type,
+            club: event.club,
+            startTime: startTimeMillis,
+            eventTime: endTimeMillis,
+        });
+        dataCollection.insertOne({
+            link: event.link,
+            addedBy: event.addedBy,
+            editedBy: event.editedBy,
+            description: event.description,
+        });
+    } catch (error) {
+        console.dir(error);
+    }
+}
+
+module.exports = { getClubList, updateClubs, addFeedback, addEvent };
