@@ -1,3 +1,16 @@
+/**
+ * Event object for the calendar events
+ * @param {string} type 
+ * @param {string} name 
+ * @param {string} club 
+ * @param {string} startDate 
+ * @param {string} endDate 
+ * @param {string} startTime 
+ * @param {string} endTime 
+ * @param {string} link 
+ * @param {string} description 
+ * @param {string} addedBy 
+ */
 function Event(type, name, club, startDate, endDate, startTime, endTime, link, description, addedBy) {
     this.type = type;
     this.name = name;
