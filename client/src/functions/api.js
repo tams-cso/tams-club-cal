@@ -1,6 +1,10 @@
 import config from '../files/config.json';
-import { Event } from './entries';
+import { ClubInfo, Event } from './entries';
 
+/**
+ * GET to /clubs - Gets the list of clubs
+ * @returns {ClubInfo[]} An array of all clubs' basic information
+ */
 async function getClubList() {
     return await fetch(`${config.backend}/clubs`).then((res) => res.json());
 }
@@ -33,9 +37,5 @@ async function postEvent(event) {
     });
     return res.status;
 }
-
-// TODO: Add the rest of the requests
-// see https://github.com/MichaelZhao21/playlists-plus/blob/master/src/components/spotify-api.js
-// for example fetch POST requests
 
 export { getClubList, postFeedback, postEvent };

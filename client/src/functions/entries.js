@@ -48,6 +48,20 @@ function Club(name, advised, fb, website, coverImg, description, execs, committe
 }
 
 /**
+ * An object containing the basic information for a club, to be displayed in the list view of all clubs
+ * @param {string} name The name of the club
+ * @param {boolean} advised True if an advised club, otherwise false for independent club
+ * @param {string} fb Link to facebook page
+ * @param {string} website Link to website
+ */
+function ClubInfo(name, advised, fb, website) {
+    this.name = name;
+    this.advised = advised;
+    this.fb = fb;
+    this.website = website;
+}
+
+/**
  * An object containing the information of an exec
  * @param {string} name The name of the exec
  * @param {string} position The postition of the exec
@@ -75,4 +89,4 @@ function Committee(name, description, fb, website) {
     this.website = website;
 }
 
-export { Event, Club, Exec, Committee };
+export { Event, Club, Exec, Committee, ClubInfo };
