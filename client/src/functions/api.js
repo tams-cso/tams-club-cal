@@ -1,23 +1,19 @@
 import config from '../files/config.json';
-import { Event } from './entries';
+import { ClubInfo, Event, EventInfo } from './entries';
 
-async function getClubList() {
-    return await fetch(`${config.backend}/clubs`).then((res) => res.json());
-}
-
-async function postFeedback(feedback) {
-    console.log(feedback);
-    const res = await fetch(`${config.backend}/feedback`, {
-        method: 'POST',
-        body: JSON.stringify({ feedback }),
-        headers: { 'Content-Type': 'application/json' },
-    });
-    return res.status;
+/**
+ * GET to /events - Gets the list of all events
+ * @returns {EventInfo[]} An array of all events' basic information
+ */
+async function getEventList() {
+    // TODO: Add a start and end time range
+    return await fetch(`${config.backend}/events`).then((res) => res.json());
 }
 
 /**
  * POST to /add - Creates an event
- * @param {Event} event 
+ * @param {Event} event Event object
+ * @returns {number} POST status [200 for Success & 400 for Failure]
  */
 async function postEvent(event) {
     const res = await fetch(`${config.backend}/add-event`, {
@@ -28,8 +24,27 @@ async function postEvent(event) {
     return res.status;
 }
 
-// TODO: Add the rest of the requests
-// see https://github.com/MichaelZhao21/playlists-plus/blob/master/src/components/spotify-api.js
-// for example fetch POST requests
+/**
+ * GET to /clubs - Gets the list of clubs
+ * @returns {ClubInfo[]} An array of all clubs' basic information
+ */
+async function getClubList() {
+    return await fetch(`${config.backend}/clubs`).then((res) => res.json());
+}
 
-export { getClubList, postFeedback, postEvent };
+/**
+ * POST to /feedback - Uploads user feedback
+ * @param {string} feedback The feedback
+ * @returns {number} POST status [200 for Success & 400 for Failure]
+ */
+async function postFeedback(feedback) {
+    console.log(feedback);
+    const res = await fetch(`${config.backend}/feedback`, {
+        method: 'POST',
+        body: JSON.stringify({ feedback }),
+        headers: { 'Content-Type': 'application/json' },
+    });
+    return res.status;
+}
+
+export { getClubList, postFeedback, postEvent, getEventList };
