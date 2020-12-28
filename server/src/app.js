@@ -30,8 +30,6 @@ app.post('/feedback', async (req, res, next) => {
 });
 
 app.post('/add-event', async (req, res, next) => {
-    // Make sure every field is filled
-    // TODO: Find some way to send the wrong field(s) back as an error message
     var blank = false;
     Object.values(req.body).forEach((val) => {
         if (val == '') blank = true;
