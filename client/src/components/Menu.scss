@@ -31,13 +31,13 @@
     background-color: #dddddd;
 }
 
-.menu-item:active {
-    outline: none;
-}
-
 .menu-item.active {
     color: $primary;
     background-color: $background !important;
+}
+
+.menu-item:focus {
+    outline: none;
 }
 
 .menu-logo {
