@@ -5,5 +5,5 @@
     "semi": true,
     "singleQuote": true,
     "endOfLine": "lf",
-    "jsxBracketSameLine": true
+    "jsxBracketSameLine": false
 }
