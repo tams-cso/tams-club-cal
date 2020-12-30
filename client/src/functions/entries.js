@@ -1,17 +1,17 @@
 /**
  * An object containing the information for calendar events
- * @param {string} type The type of the event [event or signup]
+ * @param {"event"|"signup"} type The type of the event
  * @param {string} name The name of the event
  * @param {string} club The name of the club that is hosting the event
  * @param {string} startDate The date that the event starts
  * @param {string} endDate The date that the event ends
  * @param {string} startTime The time that the event starts
  * @param {string} endTime The time that the event ends
- * @param {string} link The link to the zoom meeting/fb post of the event
+ * @param {string[]} links The link to the zoom meeting/fb post of the event
  * @param {string} description The description of the event
  * @param {string} addedBy Who added the event
  */
-function Event(type, name, club, startDate, endDate, startTime, endTime, link, description, addedBy) {
+function Event(type, name, club, startDate, endDate, startTime, endTime, links, description, addedBy) {
     this.type = type;
     this.name = name;
     this.club = club;
@@ -20,7 +20,7 @@ function Event(type, name, club, startDate, endDate, startTime, endTime, link, d
     this.startTime = startTime;
     this.endTime = endTime;
     // TODO: Add support for multiple events [make this an array & change name to links]
-    this.link = link;
+    this.links = links;
     this.description = description;
     this.addedBy = addedBy;
 }

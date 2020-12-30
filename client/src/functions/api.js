@@ -3,7 +3,7 @@ import { ClubInfo, Event, EventInfo } from './entries';
 
 /**
  * GET to /events - Gets the list of all events
- * @returns {EventInfo[]} An array of all events' basic information
+ * @returns {Promise<EventInfo[]>} An array of all events' basic information
  */
 async function getEventList() {
     // TODO: Add a start and end time range
@@ -13,7 +13,7 @@ async function getEventList() {
 /**
  * POST to /add - Creates an event
  * @param {Event} event Event object
- * @returns {number} POST status [200 for Success & 400 for Failure]
+ * @returns {Promise<number>} POST status [200 for Success & 400 for Failure]
  */
 async function postEvent(event) {
     const res = await fetch(`${config.backend}/add-event`, {
@@ -26,7 +26,7 @@ async function postEvent(event) {
 
 /**
  * GET to /clubs - Gets the list of clubs
- * @returns {ClubInfo[]} An array of all clubs' basic information
+ * @returns {Promise<ClubInfo[]>} An array of all clubs' basic information
  */
 async function getClubList() {
     return await fetch(`${config.backend}/clubs`).then((res) => res.json());
@@ -35,7 +35,7 @@ async function getClubList() {
 /**
  * POST to /feedback - Uploads user feedback
  * @param {string} feedback The feedback
- * @returns {number} POST status [200 for Success & 400 for Failure]
+ * @returns {Promise<number>} POST status [200 for Success & 400 for Failure]
  */
 async function postFeedback(feedback) {
     console.log(feedback);

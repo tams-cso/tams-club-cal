@@ -44,7 +44,7 @@ async function addEvent(event) {
             eventTime: endTimeMillis,
         });
         dataCollection.insertOne({
-            link: event.link,
+            links: event.links,
             addedBy: event.addedBy,
             editedBy: event.editedBy,
             description: event.description,
