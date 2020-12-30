@@ -30,14 +30,7 @@ app.post('/feedback', async (req, res, next) => {
 });
 
 app.post('/add-event', async (req, res, next) => {
-    var blank = false;
-    Object.values(req.body).forEach((val) => {
-        if (val == '') blank = true;
-    });
-    if (blank) {
-        res.sendStatus(400);
-        return;
-    }
+    // TODO: Add checking for specific empty fields
     addEvent(req.body);
     res.sendStatus(200);
 });

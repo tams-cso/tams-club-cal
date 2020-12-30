@@ -8,6 +8,7 @@ $cal-font: 'Montserrat', sans-serif;
 // Color Variables
 
 $background: white;
+$background-tint: #dddddd;
 $primary: #00cd2d;
 $bad: #ff482f;
 $type-event: #ffc178;
@@ -29,11 +30,17 @@ h1 {
     font-weight: 300;
 }
 
-input, textarea {
+input,
+textarea {
     font-family: $main-font;
-    border: 0.05rem solid #dddddd;
+    border: 0.05rem solid $background-tint;
     border-radius: 0.1rem;
     padding: 0.1rem;
+}
+
+label {
+    margin-right: 1rem;
+    color: $text-light;
 }
 
 button {
@@ -43,4 +50,19 @@ button {
 
 .smol-spacer {
     height: 0.25rem;
+}
+
+.line-in {
+    border: none;
+    border-bottom: 0.05rem solid $background-tint;
+    font-size: 1rem;
+    margin-bottom: 0.5rem;
+}
+
+.line-in::placeholder {
+    color: $background-tint;
+}
+
+.line-in:focus {
+    outline: none;
 }
