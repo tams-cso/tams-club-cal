@@ -12,6 +12,6 @@
 .LinkBox:hover {
     cursor: pointer;
     // TODO: Does the background color change or drop shadow look better?
-    background-color: #dddddd;
+    background-color: $background-tint;
     // filter: drop-shadow(0 0 0.1rem #777777);
 }

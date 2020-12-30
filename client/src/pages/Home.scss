@@ -10,7 +10,7 @@
 
 .schedule-view > .ScheduleEvent:hover {
     cursor: pointer;
-    background-color: #dddddd;
+    background-color: $background-tint;
 }
 
 $grid-border: 0.025rem solid black;
@@ -60,7 +60,7 @@ $rh: 5rem;
 
 .view-switch:hover {
     cursor: pointer;
-    background-color: #dddddd;
+    background-color: $background-tint;
 }
 
 .home-top {
