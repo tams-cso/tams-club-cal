@@ -60,14 +60,14 @@ function Club(name, advised, fb, website, coverImg, description, execs, committe
 
 /**
  * An object containing the basic information for a club, to be displayed in the list view of all clubs
- * @param {string} _id ID of the club, used for getting full club info
+ * @param {string} id ID of the club, used for getting full club info
  * @param {string} name The name of the club
  * @param {boolean} advised True if an advised club, otherwise false for independent club
  * @param {string} fb Link to facebook page
  * @param {string} website Link to website
  */
-function ClubInfo(_id, name, advised, fb, website) {
-    this._id = _id;
+function ClubInfo(id, name, advised, fb, website) {
+    this.id = id;
     this.name = name;
     this.advised = advised;
     this.fb = fb;

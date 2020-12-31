@@ -29,7 +29,10 @@ async function postEvent(event) {
  * @returns {Promise<Club>} Object of club specified by id
  */
 async function getClub(id) {
-    return await fetch(`${config.backend}/club?id=${id}`).then((res) => res.json());
+    var obj = await fetch(`${config.backend}/club?id=${id}`).then((res) => res.json());
+    obj.id = obj._id;
+    delete obj._id;
+    return obj;
 }
 
 /**
