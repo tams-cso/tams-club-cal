@@ -1,13 +1,21 @@
 import config from '../files/config.json';
-import { Club, ClubInfo, ClubData, Event, EventInfo, Volunteering } from './entries';
+import { Club, ClubInfo, ClubData, Event, EventInfo, EventData, Volunteering } from './entries';
 
 /**
- * GET to /events - Gets the list of all events
+ * GET to /event?id=${id} - Gets event with given id
+ * @returns {Promise<EventData>} An array of all events' basic information
+ */
+async function getEvent(id) {
+    return await fetch(`${config.backend}/event?id=${id}`).then((res) => res.json());
+}
+
+/**
+ * GET to /event-list - Gets the list of all events
  * @returns {Promise<EventInfo[]>} An array of all events' basic information
  */
 async function getEventList() {
     // TODO: Add a start and end time range
-    return await fetch(`${config.backend}/events`).then((res) => res.json());
+    return await fetch(`${config.backend}/event-list`).then((res) => res.json());
 }
 
 /**
@@ -25,7 +33,7 @@ async function postEvent(event) {
 }
 
 /**
- * GET to /club?id={id} - Gets club with given id
+ * GET to /club?id=${id} - Gets club with given id
  * @returns {Promise<ClubData>} Object of club specified by id
  */
 async function getClub(id) {
@@ -63,4 +71,4 @@ async function postFeedback(feedback) {
     return res.status;
 }
 
-export { getClub, getClubList, postFeedback, postEvent, getEventList, getVolunteering };
+export { getClub, getClubList, postFeedback, postEvent, getEvent, getEventList, getVolunteering };

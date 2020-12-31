@@ -14,7 +14,7 @@ class Clubs extends React.Component {
         data.forEach((club) => {
             clubCards.push(
                 <ClubCard
-                    id={club._id}
+                    objId={club.objId}
                     name={club.name}
                     advised={club.advised}
                     fb={club.fb}
