@@ -7,7 +7,7 @@
 
 .club-card-list {
     display: grid;
-    grid-template-columns: auto auto auto auto;
+    grid-template-columns: repeat(auto-fill, 9rem);
     row-gap: 1rem;
     justify-content: start;
 }
