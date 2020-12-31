@@ -55,13 +55,17 @@ async function addEvent(event) {
         const db = client.db('events');
         const infoCollection = db.collection('info');
         const dataCollection = db.collection('data');
+        // TODO: Check to make sure it doesn't match existing ID
+        const objId = crypto.randomBytes(16).toString('hex');
         infoCollection.insertOne({
+            objId,
             type: event.type,
             club: event.club,
             startTime: event.start,
             endTime: event.end,
         });
         dataCollection.insertOne({
+            objId,
             links: event.links,
             addedBy: event.addedBy,
             editedBy: event.editedBy,
