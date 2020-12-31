@@ -50,7 +50,6 @@ class Resources extends React.Component {
                 </div>
                 <h1>Volunteering</h1>
                 <div className="volunteering-filters">
-                    <div className="filter-label">Filter:</div>
                     <button
                         onClick={() => this.createCards(null)}
                         className={'vol-filter all' + (this.state.filter === null ? ' active' : '')}
