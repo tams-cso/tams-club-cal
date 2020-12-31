@@ -13,7 +13,7 @@ class Resources extends React.Component {
     createCards = (currFilter) => {
         var volCards = [];
         this.volList.forEach((volunteering) => {
-            if (currFilter === null ||volunteering.filters[currFilter])
+            if (currFilter === null || volunteering.filters[currFilter])
                 volCards.push(
                     <VolunteeringCard
                         name={volunteering.name}
