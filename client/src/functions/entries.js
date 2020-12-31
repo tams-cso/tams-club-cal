@@ -18,22 +18,39 @@ function Event(type, name, club, start, end, links, description, addedBy) {
     this.links = links;
     this.description = description;
     this.addedBy = addedBy;
+    this.editedBy = "";
 }
 
 /**
  * An object containing the basic information for an event. This will be displayed in the list/calendar of events
+ * @param {string} objId The unique ID to match the info and data objects
  * @param {string} type The type of the event [event or signup]
  * @param {string} name The name of the event
  * @param {string} club The name of the club that is hosting the event
- * @param {number} startTime The millisecond datetime that the event starts
- * @param {number} endTime The millisecond datetime that the event ends
+ * @param {number} start The millisecond datetime that the event starts
+ * @param {number} end The millisecond datetime that the event ends
  */
-function EventInfo(type, name, club, startTime, endTime) {
+function EventInfo(objId, type, name, club, start, end) {
+    this.objId = objId;
     this.type = type;
     this.name = name;
     this.club = club;
-    this.startTime = startTime;
-    this.endTime = endTime;
+    this.start = start;
+    this.end = end;
+}
+
+/**
+ * An object containing the extra data for an event
+ * @param {string[]} links The link to the zoom meeting/fb post of the event
+ * @param {string} description The description of the event
+ * @param {string} addedBy Who added the event
+ * @param {string[]} editedBy List of people who edited the event
+ */
+function EventData(links, description, addedBy, editedBy) {
+    this.links = links;
+    this.description = description;
+    this.addedBy = addedBy;
+    this.editedBy = editedBy;
 }
 
 /**
@@ -139,4 +156,4 @@ function Committee(name, description, fb, website) {
     this.website = website;
 }
 
-export { Event, EventInfo, Club, ClubInfo, ClubData, Volunteering, Exec, Committee };
+export { Event, EventInfo, EventData, Club, ClubInfo, ClubData, Volunteering, Exec, Committee };
