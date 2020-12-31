@@ -44,15 +44,11 @@ async function addEvent(event) {
         const db = client.db('events');
         const infoCollection = db.collection('info');
         const dataCollection = db.collection('data');
-        // TODO: Calculate time from start and end time/date (use library to manage time zones)
-        // Need to store times in milliseconds since Jan 1, 1970 + UTC time zone
-        var startTimeMillis = 0;
-        var endTimeMillis = 0;
         infoCollection.insertOne({
             type: event.type,
             club: event.club,
-            startTime: startTimeMillis,
-            eventTime: endTimeMillis,
+            startTime: event.start,
+            endTime: event.end,
         });
         dataCollection.insertOne({
             links: event.links,
