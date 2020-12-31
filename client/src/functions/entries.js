@@ -78,13 +78,13 @@ function ClubInfo(_id, name, advised, fb, website, coverImg) {
 
 /**
  * An object containing the data for a club
- * @param {string} id ID of the club, used for getting full club info
+ * @param {string} infoId ID of the club, used for getting full club info
  * @param {string} description Description of the club
  * @param {Exec[]} execs Array of exec objects
  * @param {Committee[]} committee Array of committee objects
  */
-function ClubData(id, description, execs, committee) {
-    this.id = id;
+function ClubData(infoId, description, execs, committee) {
+    this.infoId = infoId;
     this.description = description;
     this.execs = execs;
     this.committee = committee;
