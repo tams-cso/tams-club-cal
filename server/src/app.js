@@ -4,7 +4,7 @@ const cors = require('cors');
 const bodyParser = require('body-parser');
 require('dotenv').config();
 
-const { getClubList, addFeedback, addEvent } = require('./database');
+const { getClubList, addFeedback, addEvent, getVolunteering } = require('./database');
 
 app.use(cors());
 app.use(bodyParser.json());
@@ -18,6 +18,12 @@ app.get('/clubs', async (req, res, next) => {
     res.header('Access-Control-Allow-Origin', '*');
     const clubs = await getClubList();
     res.send(clubs);
+});
+
+app.get('/volunteering', async (req, res, next) => {
+    res.header('Access-Control-Allow-Origin', '*');
+    const volunteering = await getVolunteering();
+    res.send(volunteering);
 });
 
 app.post('/feedback', async (req, res, next) => {

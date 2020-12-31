@@ -16,6 +16,17 @@ async function getClubList() {
     }
 }
 
+async function getVolunteering() {
+    try {
+        const db = client.db('volunteering');
+        const collection = db.collection('data');
+        const volunteering = await collection.find().toArray();
+        return volunteering;
+    } catch (error) {
+        console.dir(error);
+    }
+}
+
 function updateClubs() {}
 
 async function addFeedback(feedback) {
@@ -54,4 +65,4 @@ async function addEvent(event) {
     }
 }
 
-module.exports = { getClubList, updateClubs, addFeedback, addEvent };
+module.exports = { getClubList, updateClubs, addFeedback, addEvent, getVolunteering };

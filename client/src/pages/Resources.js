@@ -1,52 +1,27 @@
 import React from 'react';
 import LinkBox from '../components/LinkBox';
 import VolunteeringCard from '../components/VolunteeringCard';
+import { getVolunteering } from '../functions/api';
 import './Resources.scss';
 
 class Resources extends React.Component {
     constructor(props) {
         super(props);
-
-        // TODO: Replace with fetched data from backend/cache
-        this.volEvents = [
-            {
-                name: 'Elm Fork',
-                club: 'HOPE',
-                description: 'Demonstrate hands-on science experiments for homeschoolers',
-                filters: { limited: true, semester: false, setTimes: true, weekly: true, open: true },
-                signupTime: 'Sunday 11:00pm',
-            },
-            {
-                name: 'Denton Tutoring',
-                club: 'TAS',
-                description: 'Tutor denton high schoolers',
-                filters: { limited: true, semester: true, setTimes: true, weekly: false, open: true },
-                signupTime: null,
-            },
-            {
-                name: 'SciVids',
-                club: 'JETS x RO',
-                description: 'plan, record, and edit videos of science experiments',
-                filters: { limited: true, semester: false, setTimes: false, weekly: false, open: false },
-                signupTime: null,
-            },
-        ];
-
         this.state = {};
     }
 
     createCards = (currFilter) => {
         var volCards = [];
-        this.volEvents.forEach((event) => {
-            if (currFilter === null || event.filters[currFilter])
+        this.volList.forEach((volunteering) => {
+            if (currFilter === null || volunteering.filters[currFilter])
                 volCards.push(
                     <VolunteeringCard
-                        name={event.name}
-                        club={event.club}
-                        description={event.description}
-                        filters={event.filters}
-                        signupTime={event.signupTime}
-                        key={event.name}
+                        name={volunteering.name}
+                        club={volunteering.club}
+                        description={volunteering.description}
+                        filters={volunteering.filters}
+                        signupTime={volunteering.signupTime}
+                        key={volunteering.name}
                     ></VolunteeringCard>
                 );
         });
@@ -54,7 +29,10 @@ class Resources extends React.Component {
     };
 
     componentDidMount() {
-        this.createCards(null);
+        getVolunteering().then((data) => {
+            this.volList = data;
+            this.createCards(null);
+        });
     }
 
     render() {
@@ -72,9 +50,7 @@ class Resources extends React.Component {
                 </div>
                 <h1>Volunteering</h1>
                 <div className="volunteering-filters">
-                    <div className="filter-label">
-                        Filter:
-                    </div>
+                    <div className="filter-label">Filter:</div>
                     <button
                         onClick={() => this.createCards(null)}
                         className={'vol-filter all' + (this.state.filter === null ? ' active' : '')}

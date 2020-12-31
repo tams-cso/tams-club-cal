@@ -78,6 +78,27 @@ function ClubInfo(name, advised, fb, website) {
 }
 
 /**
+ * An object containing the information for a volunteering opportunity
+ * @param {string} name The name of the volunteering opportunity
+ * @param {string} club The club name that is offering the volunteering opportunity
+ * @param {string} description Description of the volunteering opportunity
+ * @param {Object} filters Object used for filtering volunteering opportunities
+ * @param {boolean} filters.limited True if limited slots, otherwise false
+ * @param {boolean} filters.senester True if semester long sommitment, otherwise false
+ * @param {boolean} filters.setTimes True if set volunteering time, otherwise false
+ * @param {boolean} filters.weekly True if there are weekly signups, otherwise false
+ * @param {boolean} filters.open True if volunteering opportunity is currently available, otherwise false
+ * @param {string} signupTime Time of weekly signups, null if no weekly signups
+ */
+function Volunteering(name, club, description, filters, signupTime) {
+    this.name = name;
+    this.club = club;
+    this.description = description;
+    this.filters = filters;
+    this.signupTime = signupTime;
+}
+
+/**
  * An object containing the information of an exec
  * @param {string} name The name of the exec
  * @param {string} position The postition of the exec
@@ -105,4 +126,4 @@ function Committee(name, description, fb, website) {
     this.website = website;
 }
 
-export { Event, EventInfo, Club, ClubInfo, Exec, Committee };
+export { Event, EventInfo, Club, ClubInfo, Volunteering, Exec, Committee };

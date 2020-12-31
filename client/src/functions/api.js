@@ -1,5 +1,5 @@
 import config from '../files/config.json';
-import { ClubInfo, Event, EventInfo } from './entries';
+import { ClubInfo, Event, EventInfo, Volunteering } from './entries';
 
 /**
  * GET to /events - Gets the list of all events
@@ -33,6 +33,14 @@ async function getClubList() {
 }
 
 /**
+ * GET to /volunteering - Gets the list of volunteering opportunities
+ * @returns {Promise<Volunteering[]>} An array of all volunteering opportunities
+ */
+async function getVolunteering() {
+    return await fetch(`${config.backend}/volunteering`).then((res) => res.json());
+}
+
+/**
  * POST to /feedback - Uploads user feedback
  * @param {string} feedback The feedback
  * @returns {Promise<number>} POST status [200 for Success & 400 for Failure]
@@ -47,4 +55,4 @@ async function postFeedback(feedback) {
     return res.status;
 }
 
-export { getClubList, postFeedback, postEvent, getEventList };
+export { getClubList, postFeedback, postEvent, getEventList, getVolunteering };
