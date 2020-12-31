@@ -14,7 +14,13 @@ app.get('/', (req, res, next) => {
     res.send('hello!');
 });
 
-app.get('/clubs', async (req, res, next) => {
+app.get('/club', async (req, res, next) => {
+    res.header('Access-Control-Allow-Origin', '*');
+    const club = await getClubList(req.params.id);
+    res.send(club);
+});
+
+app.get('/club-list', async (req, res, next) => {
     res.header('Access-Control-Allow-Origin', '*');
     const clubs = await getClubList();
     res.send(clubs);

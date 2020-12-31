@@ -1,5 +1,5 @@
 import config from '../files/config.json';
-import { ClubInfo, Event, EventInfo, Volunteering } from './entries';
+import { Club, ClubInfo, Event, EventInfo, Volunteering } from './entries';
 
 /**
  * GET to /events - Gets the list of all events
@@ -25,11 +25,19 @@ async function postEvent(event) {
 }
 
 /**
- * GET to /clubs - Gets the list of clubs
+ * GET to /club?id={id} - Gets club with given id
+ * @returns {Promise<Club>} Object of club specified by id
+ */
+async function getClub(id) {
+    return await fetch(`${config.backend}/club?id=${id}`).then((res) => res.json());
+}
+
+/**
+ * GET to /club-list - Gets the list of clubs
  * @returns {Promise<ClubInfo[]>} An array of all clubs' basic information
  */
 async function getClubList() {
-    return await fetch(`${config.backend}/clubs`).then((res) => res.json());
+    return await fetch(`${config.backend}/club-list`).then((res) => res.json());
 }
 
 /**
@@ -55,4 +63,4 @@ async function postFeedback(feedback) {
     return res.status;
 }
 
-export { getClubList, postFeedback, postEvent, getEventList, getVolunteering };
+export { getClub, getClubList, postFeedback, postEvent, getEventList, getVolunteering };
