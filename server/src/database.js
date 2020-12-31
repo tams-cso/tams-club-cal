@@ -9,7 +9,7 @@ async function getClub(id) {
     try {
         const db = client.db('clubs');
         const collection = db.collection('data');
-        const club = await collection.findOne({ id });
+        const club = await collection.findOne({ infoId: id });
         return club;
     } catch (error) {
         console.dir(error);
@@ -72,4 +72,4 @@ async function addEvent(event) {
     }
 }
 
-module.exports = { getClubList, updateClubs, addFeedback, addEvent, getVolunteering };
+module.exports = { getClubList, getClub, updateClubs, addFeedback, addEvent, getVolunteering };

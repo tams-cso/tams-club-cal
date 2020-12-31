@@ -60,18 +60,34 @@ function Club(name, advised, fb, website, coverImg, description, execs, committe
 
 /**
  * An object containing the basic information for a club, to be displayed in the list view of all clubs
- * @param {string} id ID of the club, used for getting full club info
+ * @param {string} _id ID of the club, used for getting full club info
  * @param {string} name The name of the club
  * @param {boolean} advised True if an advised club, otherwise false for independent club
  * @param {string} fb Link to facebook page
  * @param {string} website Link to website
+ * @param {string} coverImg URL of cover image
  */
-function ClubInfo(id, name, advised, fb, website) {
-    this.id = id;
+function ClubInfo(_id, name, advised, fb, website, coverImg) {
+    this._id = _id;
     this.name = name;
     this.advised = advised;
     this.fb = fb;
     this.website = website;
+    this.coverImg = coverImg;
+}
+
+/**
+ * An object containing the data for a club
+ * @param {string} id ID of the club, used for getting full club info
+ * @param {string} description Description of the club
+ * @param {Exec[]} execs Array of exec objects
+ * @param {Committee[]} committee Array of committee objects
+ */
+function ClubData(id, description, execs, committee) {
+    this.id = id;
+    this.description = description;
+    this.execs = execs;
+    this.committee = committee;
 }
 
 /**
@@ -123,4 +139,4 @@ function Committee(name, description, fb, website) {
     this.website = website;
 }
 
-export { Event, EventInfo, Club, ClubInfo, Volunteering, Exec, Committee };
+export { Event, EventInfo, Club, ClubInfo, ClubData, Volunteering, Exec, Committee };
