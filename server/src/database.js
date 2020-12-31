@@ -5,6 +5,17 @@ const client = new MongoClient(uri, { useNewUrlParser: true, useUnifiedTopology:
 
 client.connect().then(() => console.log('Connected to mongodb'));
 
+async function getClub(id) {
+    try {
+        const db = client.db('clubs');
+        const collection = db.collection('data');
+        const club = await collection.findOne({ infoId: id });
+        return club;
+    } catch (error) {
+        console.dir(error);
+    }
+}
+
 async function getClubList() {
     try {
         const db = client.db('clubs');
@@ -61,4 +72,4 @@ async function addEvent(event) {
     }
 }
 
-module.exports = { getClubList, updateClubs, addFeedback, addEvent, getVolunteering };
+module.exports = { getClubList, getClub, updateClubs, addFeedback, addEvent, getVolunteering };
