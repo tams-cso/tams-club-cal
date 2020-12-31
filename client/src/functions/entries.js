@@ -41,12 +41,14 @@ function EventInfo(objId, type, name, club, start, end) {
 
 /**
  * An object containing the extra data for an event
+ * @param {string} objId The unique ID to match the info and data objects
  * @param {string[]} links The link to the zoom meeting/fb post of the event
  * @param {string} description The description of the event
  * @param {string} addedBy Who added the event
  * @param {string[]} editedBy List of people who edited the event
  */
-function EventData(links, description, addedBy, editedBy) {
+function EventData(objId, links, description, addedBy, editedBy) {
+    this.objId = objId;
     this.links = links;
     this.description = description;
     this.addedBy = addedBy;
@@ -77,15 +79,15 @@ function Club(name, advised, fb, website, coverImg, description, execs, committe
 
 /**
  * An object containing the basic information for a club, to be displayed in the list view of all clubs
- * @param {string} _id ID of the club, used for getting full club info
+ * @param {string} objId The unique ID to match the info and data objects
  * @param {string} name The name of the club
  * @param {boolean} advised True if an advised club, otherwise false for independent club
  * @param {string} fb Link to facebook page
  * @param {string} website Link to website
  * @param {string} coverImg URL of cover image
  */
-function ClubInfo(_id, name, advised, fb, website, coverImg) {
-    this._id = _id;
+function ClubInfo(objId, name, advised, fb, website, coverImg) {
+    this.objId = objId;
     this.name = name;
     this.advised = advised;
     this.fb = fb;
@@ -95,12 +97,14 @@ function ClubInfo(_id, name, advised, fb, website, coverImg) {
 
 /**
  * An object containing the data for a club
+ * @param {string} objId The unique ID to match the info and data objects
  * @param {string} infoId ID of the club, used for getting full club info
  * @param {string} description Description of the club
  * @param {Exec[]} execs Array of exec objects
  * @param {Committee[]} committee Array of committee objects
  */
 function ClubData(infoId, description, execs, committee) {
+    this.objId = objId;
     this.infoId = infoId;
     this.description = description;
     this.execs = execs;

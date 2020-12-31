@@ -9,7 +9,7 @@ async function getClub(id) {
     try {
         const db = client.db('clubs');
         const collection = db.collection('data');
-        const club = await collection.findOne({ infoId: id });
+        const club = await collection.findOne({ objId: id });
         return club;
     } catch (error) {
         console.dir(error);
