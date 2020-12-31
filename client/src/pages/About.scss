@@ -37,10 +37,10 @@
     color: $primary;
     padding: 0.25rem 0.75rem;
     font-size: 1rem;
-    filter: drop-shadow(0 0 0.05rem #dddddd);
+    filter: drop-shadow(0 0 0.05rem $background-tint);
     transition: 0.3s;
 }
 
 #feedback-submit:hover {
-    filter: drop-shadow(0 0 0.15rem #dddddd);
+    filter: drop-shadow(0 0 0.15rem $background-tint);
 }

@@ -2,7 +2,7 @@
 
 .VolunteeringCard {
     background-color: $background;
-    filter: drop-shadow(0 0 0.1rem #dddddd);    
+    filter: drop-shadow(0 0 0.1rem $background-tint);    
     text-align: center;
     width: 9rem;
     height: 7.5rem;

@@ -40,7 +40,7 @@
 
 .vol-filter {
     background-color: $background;
-    border: 0.1rem solid #DDDDDD;
+    border: 0.1rem solid $background-tint;
     border-radius: 1rem;
     width: 5rem;
     // TODO: Fix slightly off button ratios
@@ -50,7 +50,7 @@
     transition: 0.2s;
 }
 
-$filter-all: #DDDDDD;
+$filter-all: $background-tint;
 $filter-limited: #FFB258;
 $filter-semester: #FF8B99;
 $filter-set-times: #ABB8FF;
