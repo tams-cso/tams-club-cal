@@ -50,6 +50,28 @@ async function addFeedback(feedback) {
     }
 }
 
+async function getEvent(id) {
+    try {
+        const db = client.db('events');
+        const collection = db.collection('data');
+        const event = await collection.findOne({ objId: id });
+        return event;
+    } catch (error) {
+        console.dir(error);
+    }
+}
+
+async function getEventList() {
+    try {
+        const db = client.db('events');
+        const collection = db.collection('info');
+        const events = await collection.find().toArray();
+        return events;
+    } catch (error) {
+        console.dir(error);
+    }
+}
+
 async function addEvent(event) {
     try {
         const db = client.db('events');
@@ -76,4 +98,4 @@ async function addEvent(event) {
     }
 }
 
-module.exports = { getClubList, getClub, updateClubs, addFeedback, addEvent, getVolunteering };
+module.exports = { getClubList, getClub, updateClubs, addFeedback, addEvent, getEvent, getEventList, getVolunteering };

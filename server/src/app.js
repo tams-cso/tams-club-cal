@@ -4,7 +4,7 @@ const cors = require('cors');
 const bodyParser = require('body-parser');
 require('dotenv').config();
 
-const { getClubList, addFeedback, addEvent, getVolunteering } = require('./database');
+const { getClubList, getClub, addFeedback, addEvent, getEvent, getEventList, getVolunteering } = require('./database');
 
 app.use(cors());
 app.use(bodyParser.json());
@@ -16,7 +16,7 @@ app.get('/', (req, res, next) => {
 
 app.get('/club', async (req, res, next) => {
     res.header('Access-Control-Allow-Origin', '*');
-    const club = await getClubList(req.params.id);
+    const club = await getClub(req.params.id);
     res.send(club);
 });
 
@@ -39,6 +39,18 @@ app.post('/feedback', async (req, res, next) => {
     }
     addFeedback(req.body.feedback);
     res.sendStatus(200);
+});
+
+app.get('/event', async (req, res, next) => {
+    res.header('Access-Control-Allow-Origin', '*');
+    const club = await getEvent(req.params.id);
+    res.send(club);
+});
+
+app.get('/event-list', async (req, res, next) => {
+    res.header('Access-Control-Allow-Origin', '*');
+    const clubs = await getEventList();
+    res.send(clubs);
 });
 
 app.post('/add-event', async (req, res, next) => {
