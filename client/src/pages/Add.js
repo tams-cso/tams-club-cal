@@ -1,7 +1,13 @@
 import React from 'react';
+import dayjs from 'dayjs';
+import utc from 'dayjs/plugin/utc';
+import timezone from 'dayjs/plugin/timezone';
 import { postEvent } from '../functions/api';
 import { Event } from '../functions/entries';
 import './Add.scss';
+
+dayjs.extend(utc);
+dayjs.extend(timezone);
 
 class Add extends React.Component {
     constructor(props) {
@@ -50,6 +56,10 @@ class Add extends React.Component {
                 else i++;
             }
 
+            // Calculate milliseconds from starting/ending datetimes
+            var start = dayjs.tz(`${this.state.startDate} ${this.state.startTime}`, 'America/Chicago');
+            var end = dayjs.tz(`${this.state.endDate} ${this.state.endTime}`, 'America/Chicago');
+
             // POST event
             console.log('submitted!');
             postEvent(
@@ -57,10 +67,8 @@ class Add extends React.Component {
                     this.state.type,
                     this.state.name,
                     this.state.clubName,
-                    this.state.startDate,
-                    this.state.endDate,
-                    this.state.startTime,
-                    this.state.endTime,
+                    start.valueOf(),
+                    end.valueOf(),
                     currLinks,
                     this.state.description,
                     this.state.addedBy
@@ -178,6 +186,7 @@ class Add extends React.Component {
                 ></input>
                 <br />
                 {endObj}
+                <p className="timezone-message">** Timezone is America/Chicago [CST/CDT] **</p>
                 <label htmlFor="links-0">Links</label>
                 <input
                     name="links-0"

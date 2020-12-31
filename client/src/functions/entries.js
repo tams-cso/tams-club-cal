@@ -3,23 +3,18 @@
  * @param {"event"|"signup"} type The type of the event
  * @param {string} name The name of the event
  * @param {string} club The name of the club that is hosting the event
- * @param {string} startDate The date that the event starts
- * @param {string} endDate The date that the event ends
- * @param {string} startTime The time that the event starts
- * @param {string} endTime The time that the event ends
+ * @param {string} start The time in UTC milliseconds that the event starts
+ * @param {string} end The time in UTC milliseconds that the event ends
  * @param {string[]} links The link to the zoom meeting/fb post of the event
  * @param {string} description The description of the event
  * @param {string} addedBy Who added the event
  */
-function Event(type, name, club, startDate, endDate, startTime, endTime, links, description, addedBy) {
+function Event(type, name, club, start, end, links, description, addedBy) {
     this.type = type;
     this.name = name;
     this.club = club;
-    this.startDate = startDate;
-    this.endDate = endDate;
-    this.startTime = startTime;
-    this.endTime = endTime;
-    // TODO: Add support for multiple events [make this an array & change name to links]
+    this.start = start;
+    this.end = end;
     this.links = links;
     this.description = description;
     this.addedBy = addedBy;
