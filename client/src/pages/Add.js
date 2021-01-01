@@ -73,7 +73,22 @@ class Add extends React.Component {
                     this.state.description,
                     this.state.addedBy
                 )
-            ).then((status) => alert(status == 200 ? 'Successfully added!' : 'Adding event failed :(('));
+            ).then((status) => {
+                this.setState({
+                    name: '',
+                    clubName: '',
+                    startDate: '',
+                    startTime: '',
+                    endDate: '',
+                    endTime: '',
+                    links: [''],
+                    description: '',
+                    addedBy: '',
+                    type: 'event',
+                    invalid: [],
+                });
+                alert(status == 200 ? 'Successfully added!' : 'Adding event failed :((');
+            });
         } else {
             this.setState({ invalid });
         }
@@ -104,12 +119,14 @@ class Add extends React.Component {
                         name="endDate"
                         className="line-in date-input"
                         type="date"
+                        value={this.state.endDate}
                         onChange={this.handleInputChange}
                     ></input>
                     <input
                         name="endTime"
                         className="line-in time-input"
                         type="time"
+                        value={this.state.endTime}
                         onChange={this.handleInputChange}
                     ></input>
                     <br />
@@ -127,6 +144,7 @@ class Add extends React.Component {
                     className="line-in links-input extra-link"
                     type="text"
                     placeholder="Add another link"
+                    value={this.state.links[i]}
                     onChange={this.handleInputChange}
                 ></input>
             );
@@ -160,6 +178,7 @@ class Add extends React.Component {
                     className="line-in name-input"
                     type="text"
                     placeholder="Event name..."
+                    value={this.state.name}
                     onChange={this.handleInputChange}
                 ></input>
                 <label htmlFor="clubName">Club Name</label>
@@ -168,6 +187,7 @@ class Add extends React.Component {
                     className="line-in club-name-input"
                     type="text"
                     placeholder="Enter the club hosting this event"
+                    value={this.state.clubName}
                     onChange={this.handleInputChange}
                 ></input>
                 <br />
@@ -176,12 +196,14 @@ class Add extends React.Component {
                     name="startDate"
                     className="line-in date-input"
                     type="date"
+                    value={this.state.startDate}
                     onChange={this.handleInputChange}
                 ></input>
                 <input
                     name="startTime"
                     className="line-in time-input"
                     type="time"
+                    value={this.state.startTime}
                     onChange={this.handleInputChange}
                 ></input>
                 <br />
@@ -193,6 +215,7 @@ class Add extends React.Component {
                     className="line-in links-input"
                     type="text"
                     placeholder="Add a link"
+                    value={this.state.links[0]}
                     onChange={this.handleInputChange}
                 ></input>
                 <br />
@@ -204,6 +227,7 @@ class Add extends React.Component {
                     className="description-input"
                     type="text"
                     placeholder="Enter a description for your event"
+                    value={this.state.description}
                     onChange={this.handleInputChange}
                 ></textarea>
                 <label htmlFor="addedBy">YOUR Name</label>
@@ -212,6 +236,7 @@ class Add extends React.Component {
                     className="line-in added-by-input"
                     type="text"
                     placeholder="The name of the person editing"
+                    value={this.state.addedBy}
                     onChange={this.handleInputChange}
                 ></input>
                 <br />
