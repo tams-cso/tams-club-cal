@@ -14,7 +14,7 @@ function App() {
                 <Menu />
                 <div className="menu-bkgd"></div>
                 <div className="page">
-                    <Route exact path="/" component={Home} />
+                    <Route exact path={["/", "/event"]} component={Home} />
                     <Route exact path="/resources" component={Resources} />
                     <Route exact path="/clubs" component={Clubs} />
                     <Route exact path="/add" component={Add} />
