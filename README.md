@@ -28,6 +28,13 @@ Create the config file at `client/src/files/config.json`:
 
 **For the `backend` field, don't put a `/` after**
 
+Create the environmental variable file at `server/.env`:
+
+```.env
+MONGO_USER="[Username for cluster]"
+MONGO_PASS="[Password for cluster]"
+```
+
 ## Execution
 
 To run the client:
