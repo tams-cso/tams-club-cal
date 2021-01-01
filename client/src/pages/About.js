@@ -17,8 +17,11 @@ class About extends React.Component {
     }
 
     handleSubmit() {
-        postFeedback(this.state.feedbackValue.trim());
-        this.setState({ feedbackValue: '' });
+        postFeedback(this.state.feedbackValue.trim()).then((status) => {
+            if (status == 200)
+                this.setState({ feedbackValue: '' });
+            alert(status == 200 ? 'Thank you for your feedback!' : 'Submitting feedback failed :((');
+        });
     }
 
     render() {
