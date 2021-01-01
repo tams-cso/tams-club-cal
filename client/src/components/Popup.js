@@ -8,12 +8,14 @@ class Popup extends React.Component {
     }
 
     activate = (id) => {
-        this.props.history.push(`${window.location.pathname}?id=${id}`);
+        if (window.location.pathname == '/') this.props.history.push('/event?id=' + id);
+        else this.props.history.push(`${window.location.pathname}?id=${id}`);
         this.setState({ active: ' active', id });
     };
 
     close = () => {
-        this.props.history.push(`${window.location.pathname}`);
+        if (window.location.pathname == '/event') this.props.history.push('/');
+        else this.props.history.push(`${window.location.pathname}`);
         this.setState({ active: '' });
     };
 
