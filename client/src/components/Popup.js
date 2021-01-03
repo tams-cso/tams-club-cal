@@ -1,4 +1,5 @@
 import React from 'react';
+import { getId } from '../functions/util';
 import './Popup.scss';
 
 class Popup extends React.Component {
@@ -20,8 +21,7 @@ class Popup extends React.Component {
     };
 
     componentDidMount() {
-        const params = new URLSearchParams(window.location.search);
-        const id = params.get('id');
+        const id = getId();
         if (id == undefined || id == null) this.setState({ active: '' });
         else this.setState({ active: ' active', id });
 
