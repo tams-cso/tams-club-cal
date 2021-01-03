@@ -81,6 +81,7 @@ async function addEvent(event) {
         const objId = crypto.randomBytes(16).toString('hex');
         infoCollection.insertOne({
             objId,
+            name: event.name,
             type: event.type,
             club: event.club,
             startTime: event.start,
