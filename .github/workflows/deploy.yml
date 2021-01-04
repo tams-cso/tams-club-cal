@@ -20,7 +20,6 @@ jobs:
           envs: MONGO_USER,MONGO_PASS
           script: |
             cd /var/www/tams-club-cal
-            nvm use lts/fermium
             git checkout master
             git pull
             cd client
