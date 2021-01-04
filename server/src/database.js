@@ -92,7 +92,7 @@ async function addEvent(event) {
             objId,
             links: event.links,
             addedBy: event.addedBy,
-            editedBy: event.editedBy,
+            editedBy: [],
             description: event.description,
         });
     } catch (error) {
