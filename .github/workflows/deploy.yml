@@ -27,7 +27,7 @@ jobs:
           yarn install && yarn build
           cd build
           zip -r ../../tams-club-cal-client.zip .
-          cd ../server
+          cd ../../server
           echo "MONGO_USER=$MONGO_USER" >| .env
           echo "MONGO_PASS=$MONGO_PASS" >> .env
           yarn install
