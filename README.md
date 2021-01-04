@@ -18,7 +18,7 @@ cd tams-club-cal/client && yarn install
 cd ../server && yarn install
 ```
 
-Create the config file at `client/src/files/config.json`:
+Create the config file at `client/src/files/config.json` (**For the `backend` field, don't put a `/` after**):
 
 ```json
 {
@@ -26,7 +26,7 @@ Create the config file at `client/src/files/config.json`:
 }
 ```
 
-**For the `backend` field, don't put a `/` after**
+If you would like to help develop the backend, email or message [MichaelZhao21](https://github.com/MichaelZhao21) to get access to the database. If are just developing frontend, you can simply use `https://api.tams.club` as the backend address in the json file and only run the frontend (`client` folder). You will not need to do the following step if you are only developing frontend.
 
 Create the environmental variable file at `server/.env`:
 
