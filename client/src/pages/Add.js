@@ -1,13 +1,8 @@
 import React from 'react';
-import dayjs from 'dayjs';
-import utc from 'dayjs/plugin/utc';
-import timezone from 'dayjs/plugin/timezone';
 import { postEvent } from '../functions/api';
 import { Event } from '../functions/entries';
+import { parseTimeZone } from '../functions/util';
 import './Add.scss';
-
-dayjs.extend(utc);
-dayjs.extend(timezone);
 
 class Add extends React.Component {
     constructor(props) {
@@ -57,8 +52,8 @@ class Add extends React.Component {
             }
 
             // Calculate milliseconds from starting/ending datetimes
-            var start = dayjs.tz(`${this.state.startDate} ${this.state.startTime}`, 'America/Chicago');
-            var end = dayjs.tz(`${this.state.endDate} ${this.state.endTime}`, 'America/Chicago');
+            var start = parseTimeZone(`${this.state.startDate} ${this.state.startTime}`, 'America/Chicago');
+            var end = parseTimeZone(`${this.state.endDate} ${this.state.endTime}`, 'America/Chicago');
 
             // POST event
             console.log('submitted!');
@@ -67,8 +62,8 @@ class Add extends React.Component {
                     this.state.type,
                     this.state.name,
                     this.state.clubName,
-                    start.valueOf(),
-                    end.valueOf(),
+                    start,
+                    end,
                     currLinks,
                     this.state.description,
                     this.state.addedBy
