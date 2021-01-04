@@ -4,12 +4,14 @@ import ScheduleEvent from '../components/ScheduleEvent';
 import CalendarDay from '../components/CalendarDay';
 import './Home.scss';
 import Popup from '../components/Popup';
+import { getEvent, getEventList } from '../functions/api';
+import { convertToTimeZone, createDateHeader, divideByDate, getFormattedTime } from '../functions/util';
 
 class Home extends React.Component {
     constructor(props) {
         super(props);
         this.popup = React.createRef();
-        this.state = { schedule: true, popupActive: false };
+        this.state = { schedule: true, popupActive: false, events: null };
     }
 
     // Pads a date to 2 digits (eg. 1 => '01')
@@ -21,6 +23,51 @@ class Home extends React.Component {
     switchView = () => {
         this.setState({ schedule: !this.state.schedule });
     };
+
+    activatePopup = () => {
+        const id = this.popup.current.state.id;
+        // TODO: Add check for errors (invalid ID or no ID could be found) -> redirect user to 404 page
+        getEvent(id).then((data) => {});
+    };
+
+    componentDidMount() {
+        getEventList().then((data) => {
+            // Create a dayjs object for each event
+            data.forEach((d) => {
+                // TODO: Add place to change time zone
+                d.startDayjs = convertToTimeZone(d.start, 'America/Chicago');
+                d.endDayjs = convertToTimeZone(d.end, 'America/Chicago');
+            });
+
+            // Sort the days
+            data.sort((a, b) => a.start - b.start);
+
+            // Insert the date objects
+            divideByDate(data);
+
+            // Generate the list of events
+            var eventList = [];
+            data.forEach((e) => {
+                if (e.isDate) {
+                    eventList.push(<DateSection date={createDateHeader(e.day)} key={e.day}></DateSection>);
+                } else {
+                    eventList.push(
+                        <ScheduleEvent
+                            type={e.type}
+                            time={getFormattedTime(e)}
+                            club={e.club}
+                            name={e.name}
+                            key={e.objId}
+                            onClick={() => {
+                                this.popup.current.activate(e.objId);
+                            }}
+                        ></ScheduleEvent>
+                    );
+                }
+            });
+            this.setState({ events: eventList });
+        });
+    }
 
     render() {
         const daysOfWeek = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
@@ -34,13 +81,18 @@ class Home extends React.Component {
         });
         var calendar = [];
         for (let i = 1; i <= 30; i++)
-            calendar.push(<CalendarDay day={this.pad(i)} key={'1-' + i} events={[]}></CalendarDay>);
+            calendar.push(<CalendarDay day={this.pad(i)} key={'1 -' + i} events={[]}></CalendarDay>);
         for (let i = 1; i <= 5; i++)
             calendar.push(<CalendarDay day={this.pad(i)} key={'2-' + i} events={[]}></CalendarDay>);
 
         return (
             <div className="Home">
-                <Popup history={this.props.history} id={this.state.popupId} ref={this.popup}></Popup>
+                <Popup
+                    history={this.props.history}
+                    id={this.state.popupId}
+                    ref={this.popup}
+                    activateCallback={this.activatePopup}
+                ></Popup>
                 <div className="home-top">
                     <div className="dummy"></div>
                     <div className="month-year">November 2020</div>
@@ -49,8 +101,8 @@ class Home extends React.Component {
                     </button>
                 </div>
                 <div className={'schedule-view' + (this.state.schedule ? ' view-active' : '')}>
-                    {/* TODO: Replace temp data with GET request from backend */}
-                    <DateSection date="Monday 11/9/20"></DateSection>
+                    {this.state.events}
+                    {/* <DateSection date="Monday 11/9/20"></DateSection>
                     <ScheduleEvent
                         type="event"
                         time="7:00pm - 8:00pm"
@@ -124,7 +176,7 @@ class Home extends React.Component {
                         time="11:00pm"
                         club="Elm Fork"
                         description="Elm Fork Signups"
-                    ></ScheduleEvent>
+                    ></ScheduleEvent> */}
                 </div>
                 <div className={'calendar-view' + (!this.state.schedule ? ' view-active' : '')}>
                     <div className="calendar">

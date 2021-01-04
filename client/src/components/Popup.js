@@ -11,7 +11,9 @@ class Popup extends React.Component {
     activate = (id) => {
         if (window.location.pathname == '/') this.props.history.push('/event?id=' + id);
         else this.props.history.push(`${window.location.pathname}?id=${id}`);
-        this.setState({ active: ' active', id });
+        this.setState({ active: ' active', id }, () => {
+            if (this.props.activateCallback !== undefined) this.props.activateCallback();
+        });
     };
 
     close = () => {
@@ -42,7 +44,7 @@ class Popup extends React.Component {
         return (
             <div className={'Popup ' + this.state.active}>
                 <div className="close-bkgd" onClick={this.close}></div>
-                <div className="popup-content">{this.state.id}</div>
+                <div className="popup-content">{this.props.children}</div>
             </div>
         );
     }
