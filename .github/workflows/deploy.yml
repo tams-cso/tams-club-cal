@@ -21,7 +21,7 @@ jobs:
           MONGO_PASS: ${{ secrets.MONGO_PASS }}
         run: |
           npm install -g yarn
-          cd $GITHUB_WORKSPACE && ll
+          cd $GITHUB_WORKSPACE && ls -la
           cd client
           echo "{\"backend\":\"https://pr.tams.club\"}" >| src/files/config.json
           yarn install && yarn build
