@@ -24,11 +24,13 @@ jobs:
           cd $GITHUB_WORKSPACE && ls -la
           cd client
           echo "{\"backend\":\"https://pr.tams.club\"}" >| src/files/config.json
+          ls -la
           yarn install && yarn build
           zip -r ../tams-club-cal-client.zip build/*
           cd ../server
           echo "MONGO_USER=$MONGO_USER" >| .env
           echo "MONGO_PASS=$MONGO_PASS" >> .env
+          ls -la
           yarn install
           zip -r ../tams-club-cal-server.zip *
           cd ..
