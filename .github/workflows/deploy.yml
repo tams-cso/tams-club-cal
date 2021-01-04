@@ -30,6 +30,7 @@ jobs:
           cd ../../server
           echo "MONGO_USER=$MONGO_USER" >| .env
           echo "MONGO_PASS=$MONGO_PASS" >> .env
+          echo "PORT=8081" >> .env
           yarn install
           zip -r ../tams-club-cal-server.zip .
           cd ..
