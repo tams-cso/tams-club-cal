@@ -48,8 +48,7 @@ jobs:
           host: ${{ secrets.HOST }}
           username: ${{ secrets.USERNAME }}
           key: ${{ secrets.KEY }}
-          script_stop: true
-          run: |
+          script: |
             cd /var/www
             rm -rf tams-club-cal-client/*
             rm -rf tams-club-cal-server/*
