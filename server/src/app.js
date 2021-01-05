@@ -10,13 +10,12 @@ app.use(cors());
 app.use(bodyParser.json());
 
 app.get('/', (req, res, next) => {
-    console.log(req.query);
     res.send('hello!');
 });
 
 app.get('/club', async (req, res, next) => {
     res.header('Access-Control-Allow-Origin', '*');
-    const club = await getClub(req.params.id);
+    const club = await getClub(req.query.id);
     res.send(club);
 });
 
@@ -43,7 +42,7 @@ app.post('/feedback', async (req, res, next) => {
 
 app.get('/event', async (req, res, next) => {
     res.header('Access-Control-Allow-Origin', '*');
-    const club = await getEvent(req.params.id);
+    const club = await getEvent(req.query.id);
     res.send(club);
 });
 
