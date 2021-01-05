@@ -52,8 +52,9 @@ class Add extends React.Component {
             }
 
             // Calculate milliseconds from starting/ending datetimes
+            var end = null;
             var start = parseTimeZone(`${this.state.startDate} ${this.state.startTime}`, 'America/Chicago');
-            var end = parseTimeZone(`${this.state.endDate} ${this.state.endTime}`, 'America/Chicago');
+            if (this.state.type === 'event') var end = parseTimeZone(`${this.state.endDate} ${this.state.endTime}`, 'America/Chicago');
 
             // POST event
             console.log('submitted!');
@@ -95,8 +96,8 @@ class Add extends React.Component {
         if (this.state.clubName == '') invalid.push('Club Name');
         if (this.state.startDate == '') invalid.push('Start Date');
         if (this.state.startTime == '') invalid.push('Start Time');
-        if (this.state.endDate == '') invalid.push('End Date');
-        if (this.state.endTime == '') invalid.push('End Time');
+        if (this.state.endDate == '' && this.state.type == 'event') invalid.push('End Date');
+        if (this.state.endTime == '' && this.state.type == 'event') invalid.push('End Time');
         if (this.state.addedBy == '') invalid.push('Added By Name');
         return invalid;
     };
