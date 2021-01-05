@@ -31,23 +31,23 @@ class Home extends React.Component {
     };
 
     componentDidMount() {
-        getEventList().then((data) => {
+        getEventList().then((event) => {
             // Create a dayjs object for each event
-            data.forEach((d) => {
+            event.forEach((e) => {
                 // TODO: Add place to change time zone
-                d.startDayjs = convertToTimeZone(d.start, 'America/Chicago');
-                d.endDayjs = convertToTimeZone(d.end, 'America/Chicago');
+                e.startDayjs = convertToTimeZone(e.start, 'America/Chicago');
+                if (e.type === 'event') e.endDayjs = convertToTimeZone(e.end, 'America/Chicago');
             });
 
             // Sort the days
-            data.sort((a, b) => a.start - b.start);
+            event.sort((a, b) => a.start - b.start);
 
             // Insert the date objects
-            divideByDate(data);
+            divideByDate(event);
 
             // Generate the list of events
             var eventList = [];
-            data.forEach((e) => {
+            event.forEach((e) => {
                 if (e.isDate) {
                     eventList.push(<DateSection date={createDateHeader(e.day)} key={e.day}></DateSection>);
                 } else {

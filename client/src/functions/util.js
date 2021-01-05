@@ -75,7 +75,8 @@ function createDateHeader(date) {
  * @return {string} The formatted starting and ending time
  */
 function getFormattedTime(event) {
-    return event.startDayjs.format('h:mma - ') + event.endDayjs.format('h:mma');
+    if (event.type === 'event') return event.startDayjs.format('h:mma - ') + event.endDayjs.format('h:mma');
+    return event.startDayjs.format('h:mma');
 }
 
 export { getId, parseTimeZone, convertToTimeZone, divideByDate, createDateHeader, getFormattedTime };
