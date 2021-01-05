@@ -37,6 +37,8 @@ function EventInfo(objId, type, name, club, start, end) {
     this.club = club;
     this.start = start;
     this.end = end;
+    this.startDayjs = null;
+    this.endDayjs = null;
 }
 
 /**

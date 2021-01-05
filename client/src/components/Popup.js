@@ -1,4 +1,5 @@
 import React from 'react';
+import { getId } from '../functions/util';
 import './Popup.scss';
 
 class Popup extends React.Component {
@@ -10,7 +11,9 @@ class Popup extends React.Component {
     activate = (id) => {
         if (window.location.pathname == '/') this.props.history.push('/event?id=' + id);
         else this.props.history.push(`${window.location.pathname}?id=${id}`);
-        this.setState({ active: ' active', id });
+        this.setState({ active: ' active', id }, () => {
+            if (this.props.activateCallback !== undefined) this.props.activateCallback();
+        });
     };
 
     close = () => {
@@ -20,8 +23,7 @@ class Popup extends React.Component {
     };
 
     componentDidMount() {
-        const params = new URLSearchParams(window.location.search);
-        const id = params.get('id');
+        const id = getId();
         if (id == undefined || id == null) this.setState({ active: '' });
         else this.setState({ active: ' active', id });
 
@@ -42,7 +44,7 @@ class Popup extends React.Component {
         return (
             <div className={'Popup ' + this.state.active}>
                 <div className="close-bkgd" onClick={this.close}></div>
-                <div className="popup-content">{this.state.id}</div>
+                <div className="popup-content">{this.props.children}</div>
             </div>
         );
     }
