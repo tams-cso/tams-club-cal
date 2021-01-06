@@ -18,16 +18,18 @@ class ClubCard extends React.Component {
                     {this.props.advised == 'true' ? 'Advised' : 'Independent'}
                 </div>
                 <div className="club-name">{this.props.name}</div>
-                <GlobeIcon
-                    onClick={() => {
-                        if (this.props.website != '') window.open(this.props.website);
-                    }}
-                ></GlobeIcon>
-                <FbIcon
-                    onClick={() => {
-                        if (this.props.fb != '') window.open(this.props.fb);
-                    }}
-                ></FbIcon>
+                <div className="club-icons">
+                    <GlobeIcon
+                        onClick={() => {
+                            if (this.props.website != '') window.open(this.props.website);
+                        }}
+                    ></GlobeIcon>
+                    <FbIcon
+                        onClick={() => {
+                            if (this.props.fb != '') window.open(this.props.fb);
+                        }}
+                    ></FbIcon>
+                </div>
             </div>
         );
     }
