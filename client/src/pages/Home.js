@@ -11,7 +11,7 @@ class Home extends React.Component {
     constructor(props) {
         super(props);
         this.popup = React.createRef();
-        this.state = { schedule: true, popupActive: false, events: null };
+        this.state = { schedule: true, events: null };
     }
 
     // Pads a date to 2 digits (eg. 1 => '01')
@@ -117,7 +117,6 @@ class Home extends React.Component {
             <div className="Home">
                 <Popup
                     history={this.props.history}
-                    id={this.state.popupId}
                     ref={this.popup}
                     activateCallback={this.activatePopup}
                 >
