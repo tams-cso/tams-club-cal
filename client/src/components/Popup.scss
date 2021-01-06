@@ -1,12 +1,12 @@
 @import '../custom.scss';
 
 .Popup {
-    position: fixed;
+    position: absolute;
     background-color: #94949444;
     display: none;
     width: 100%;
     height: 100%;
-    z-index: 100;
+    z-index: 10;
 }
 
 .Popup.active {
@@ -14,18 +14,18 @@
 }
 
 .close-bkgd {
-    position: fixed;
+    position: absolute;
     width: 100%;
     height: 100%;
-    z-index: 101;
+    z-index: 11;
 }
 
 .popup-content {
     background-color: $background;
-    padding: 1rem;
     position: absolute;
     left: 50%;
-    top: 50%;
-    transform: translate(-50%, -50%);
-    z-index: 102;
+    top: 4%;
+    transform: translate(-50%, 0);
+    z-index: 12;
+    box-shadow: 0 0 3px #777777;
 }

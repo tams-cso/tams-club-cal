@@ -54,9 +54,11 @@ async function addFeedback(feedback) {
 async function getEvent(id) {
     try {
         const db = client.db('events');
-        const collection = db.collection('data');
-        const event = await collection.findOne({ objId: id });
-        return event;
+        const collectionData = db.collection('data');
+        const collectionInfo = db.collection('info');
+        const eventData = await collectionData.findOne({ objId: id });
+        const eventInfo = await collectionInfo.findOne({ objId: id });
+        return { ...eventData, ...eventInfo };
     } catch (error) {
         console.dir(error);
     }

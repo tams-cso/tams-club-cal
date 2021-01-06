@@ -1,11 +1,13 @@
 @import '../custom.scss';
 
-.schedule-view, .calendar-view {
+.schedule-view,
+.calendar-view {
     display: none;
 }
 
 .schedule-view {
     margin: 0 8rem;
+    padding-bottom: 0.5rem;
 }
 
 .schedule-view > .ScheduleEvent:hover {
@@ -74,18 +76,88 @@ $rh: 5rem;
     width: 7rem;
 }
 
-@media handheld and (max-width: 992px),
-screen and (max-device-width: 992px),
-screen and (max-width: 992px) {
+@media handheld and (max-width: 992px), screen and (max-device-width: 992px), screen and (max-width: 992px) {
     .schedule-view {
         margin: 0 4rem;
     }
 }
 
-@media handheld and (max-width: 652px),
-screen and (max-device-width: 652px),
-screen and (max-width: 652px) {
+@media handheld and (max-width: 652px), screen and (max-device-width: 652px), screen and (max-width: 652px) {
     .schedule-view {
         margin: 0;
     }
+}
+
+.home-popup-content {
+    display: flex;
+    flex-direction: row;
+    width: 25rem;
+    padding: 0.5rem;
+}
+
+.home-popup-side {
+    flex-basis: 50%;
+    overflow-x: hidden;
+    padding: 0.5rem;
+}
+
+.popup-event-left {
+    border-right: 0.03rem solid black;
+}
+
+.popup-event-type {
+    font-size: 0.6rem;
+}
+
+.popup-event-type.event {
+    color: $type-event;
+}
+
+.popup-event-type.signup {
+    color: $type-signup;
+}
+
+.popup-event-name {
+    width: 100%;
+    max-width: 100%;
+    overflow: hidden;
+    font-size: 1.1rem;
+    margin-bottom: -0.1rem;
+}
+
+.popup-event-club {
+    font-size: 0.5rem;
+    color: $text-light;
+}
+
+.popup-event-date {
+    font-size: 0.65rem;
+    margin-top: 0.5rem;
+}
+
+.popup-event-time {
+    font-size: 0.65rem;
+    margin-bottom: 0.5rem;
+}
+
+.popup-event-link {
+    display: block;
+    font-size: 0.5rem;
+    color: $text-primary;
+    transition: 0.2s;
+    margin-bottom: 0.25rem;
+}
+
+.popup-event-link:hover {
+    color: $primary;
+}
+
+.popup-event-added-by {
+    margin-top: 3rem;
+    font-size: 0.45rem;
+    color: $text-lighter;
+}
+
+.popup-event-description {
+    font-size: 0.55rem;
 }

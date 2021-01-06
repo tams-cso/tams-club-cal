@@ -75,8 +75,32 @@ function createDateHeader(date) {
  * @return {string} The formatted starting and ending time
  */
 function getFormattedTime(event) {
-    if (event.type === 'event') return event.startDayjs.format('h:mma - ') + event.endDayjs.format('h:mma');
-    return event.startDayjs.format('h:mma');
+    var formattedDate = event.startDayjs.format('h:mma');
+    if (event.type === 'event') return formattedDate + event.endDayjs.format(' - h:mma');
+    return formattedDate;
 }
 
-export { getId, parseTimeZone, convertToTimeZone, divideByDate, createDateHeader, getFormattedTime };
+function getFormattedDate(event) {
+    return event.startDayjs.format('dddd · MMMM D, YYYY');
+}
+
+/**
+ * Adds dayjs objects an event object
+ * @param {EventInfo} event An event object
+ */
+function addDayjsElement(e) {
+    // TODO: Add place to change time zone
+    e.startDayjs = convertToTimeZone(e.start, 'America/Chicago');
+    if (e.type === 'event') e.endDayjs = convertToTimeZone(e.end, 'America/Chicago');
+}
+
+export {
+    getId,
+    parseTimeZone,
+    convertToTimeZone,
+    divideByDate,
+    createDateHeader,
+    getFormattedTime,
+    getFormattedDate,
+    addDayjsElement,
+};
