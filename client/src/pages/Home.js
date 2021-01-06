@@ -5,7 +5,7 @@ import CalendarDay from '../components/CalendarDay';
 import './Home.scss';
 import Popup from '../components/Popup';
 import { getEvent, getEventList } from '../functions/api';
-import { convertToTimeZone, createDateHeader, divideByDate, getFormattedTime } from '../functions/util';
+import { createDateHeader, divideByDate, getFormattedDate, getFormattedTime, addDayjsElement } from '../functions/util';
 
 class Home extends React.Component {
     constructor(props) {
@@ -27,27 +27,55 @@ class Home extends React.Component {
     activatePopup = () => {
         const id = this.popup.current.state.id;
         // TODO: Add check for errors (invalid ID or no ID could be found) -> redirect user to 404 page
-        getEvent(id).then((data) => {});
+        getEvent(id).then((event) => {
+            addDayjsElement(event);
+            var linkData = [];
+            event.links.forEach((link) =>
+                linkData.push(
+                    <a className="popup-event-link" key={link} href={link}>
+                        {link}
+                    </a>
+                )
+            );
+            this.setState({
+                popupContent: (
+                    <div className="home-popup-content">
+                        <div className="popup-event-left home-popup-side">
+                            {event.type === 'event' ? (
+                                <p className="popup-event-type event">Event</p>
+                            ) : (
+                                <p className="popup-event-type signup">Signup</p>
+                            )}
+                            <p className="popup-event-name">{event.name}</p>
+                            <p className="popup-event-club">{event.club}</p>
+                            <p className="popup-event-date">{getFormattedDate(event)}</p>
+                            <p className="popup-event-time">{getFormattedTime(event)}</p>
+                            {linkData}
+                            <p className="popup-event-added-by">{'Added by: ' + event.addedBy}</p>
+                        </div>
+                        <div className="popup-event-right home-popup-side">
+                            <p className="popup-event-description">{event.description}</p>
+                        </div>
+                    </div>
+                ),
+            });
+        });
     };
 
     componentDidMount() {
-        getEventList().then((event) => {
+        getEventList().then((events) => {
             // Create a dayjs object for each event
-            event.forEach((e) => {
-                // TODO: Add place to change time zone
-                e.startDayjs = convertToTimeZone(e.start, 'America/Chicago');
-                if (e.type === 'event') e.endDayjs = convertToTimeZone(e.end, 'America/Chicago');
-            });
+            events.forEach((e) => addDayjsElement(e));
 
             // Sort the days
-            event.sort((a, b) => a.start - b.start);
+            events.sort((a, b) => a.start - b.start);
 
             // Insert the date objects
-            divideByDate(event);
+            divideByDate(events);
 
             // Generate the list of events
             var eventList = [];
-            event.forEach((e) => {
+            events.forEach((e) => {
                 if (e.isDate) {
                     eventList.push(<DateSection date={createDateHeader(e.day)} key={e.day}></DateSection>);
                 } else {
@@ -92,7 +120,9 @@ class Home extends React.Component {
                     id={this.state.popupId}
                     ref={this.popup}
                     activateCallback={this.activatePopup}
-                ></Popup>
+                >
+                    {this.state.popupContent}
+                </Popup>
                 <div className="home-top">
                     <div className="dummy"></div>
                     <div className="month-year">November 2020</div>

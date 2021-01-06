@@ -48,6 +48,11 @@ button {
     outline: none;
 }
 
+p {
+    margin: 0.1rem;
+    font-size: 0.75rem;
+}
+
 .smol-spacer {
     height: 0.25rem;
 }
@@ -63,6 +68,6 @@ button {
     color: $background-tint;
 }
 
-.line-in:focus {
+:focus {
     outline: none;
 }
