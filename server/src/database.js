@@ -80,8 +80,13 @@ async function addEvent(event) {
         const db = client.db('events');
         const infoCollection = db.collection('info');
         const dataCollection = db.collection('data');
-        // TODO: Check to make sure it doesn't match existing ID
-        const objId = crypto.randomBytes(16).toString('hex');
+        var objId;
+        while (true) {
+            objId = crypto.randomBytes(16).toString('hex');
+            const eventInfo = await infoCollection.find({ objId }).toArray();
+            if (eventInfo.length == 0)
+                break;
+        }
         infoCollection.insertOne({
             objId,
             name: event.name,
