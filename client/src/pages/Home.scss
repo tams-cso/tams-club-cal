@@ -15,7 +15,7 @@
     background-color: $background-tint;
 }
 
-$grid-border: 0.025rem solid black;
+$grid-border: 0.025rem solid $text-primary;
 $rh: 5rem;
 
 .calendar {
@@ -53,7 +53,7 @@ $rh: 5rem;
 .view-switch {
     font-family: $main-font;
     background-color: $background;
-    border: 0.1rem solid black;
+    border: 0.1rem solid $text-primary;
     padding: 0.1rem 0.25rem;
     font-size: 0.75rem;
     border-radius: 0.25rem;
@@ -102,7 +102,7 @@ $rh: 5rem;
 }
 
 .popup-event-left {
-    border-right: 0.03rem solid black;
+    border-right: 0.03rem solid $text-primary;
 }
 
 .popup-event-type {
