@@ -94,6 +94,10 @@ function addDayjsElement(e) {
     if (e.type === 'event') e.endDayjs = convertToTimeZone(e.end, 'America/Chicago');
 }
 
+function getMonthAndYear(tz) {
+    return dayjs().format('MMMM YYYY');
+}
+
 export {
     getId,
     parseTimeZone,
@@ -103,4 +107,5 @@ export {
     getFormattedTime,
     getFormattedDate,
     addDayjsElement,
+    getMonthAndYear,
 };
