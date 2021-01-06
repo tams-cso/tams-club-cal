@@ -1,12 +1,16 @@
 import React from 'react';
 import LinkBox from '../components/LinkBox';
+import Popup from '../components/Popup';
 import VolunteeringCard from '../components/VolunteeringCard';
 import { getVolunteering } from '../functions/api';
+import { formatVolunteeringFilters } from '../functions/util';
 import './Resources.scss';
 
 class Resources extends React.Component {
     constructor(props) {
         super(props);
+        this.popup = React.createRef();
+        this.volList = [];
         this.state = {};
     }
 
@@ -22,22 +26,57 @@ class Resources extends React.Component {
                         filters={volunteering.filters}
                         signupTime={volunteering.signupTime}
                         key={volunteering.name}
+                        onClick={() => {
+                            this.popup.current.activate(volunteering._id);
+                        }}
                     ></VolunteeringCard>
                 );
         });
         this.setState({ volCards, filter: currFilter });
     };
 
-    componentDidMount() {
-        getVolunteering().then((data) => {
-            this.volList = data;
-            this.createCards(null);
+    activatePopup = async () => {
+        const id = this.popup.current.state.id;
+        if (this.volList.length === 0) {
+            await getVolunteering().then((data) => {
+                this.volList = data;
+            });
+        }
+        var vol = this.volList.find((v) => v._id === id);
+        var filters = formatVolunteeringFilters(vol.filters, vol.signupTime);
+        this.setState({
+            popupContent: (
+                <div className="res-popup-content">
+                    {vol.filters.open ? (
+                        <p className="res-popup-open open">Open</p>
+                    ) : (
+                        <p className="res-popup-open closed">Closed</p>
+                    )}
+                    <p className="res-popup-name">{vol.name}</p>
+                    <p className="res-popup-club">{vol.club}</p>
+                    <p className="res-popup-description">{vol.description}</p>
+                    {filters}
+                </div>
+            ),
         });
+    };
+
+    componentDidMount() {
+        if (this.volList.length === 0) {
+            getVolunteering().then((data) => {
+                console.log(data);
+                this.volList = data;
+                this.createCards(null);
+            });
+        } else this.createCards(null);
     }
 
     render() {
         return (
             <div className="Resources">
+                <Popup history={this.props.history} ref={this.popup} activateCallback={this.activatePopup}>
+                    {this.state.popupContent}
+                </Popup>
                 <h1 className="links-title">Links</h1>
                 <div className="link-container">
                     <LinkBox href="https://docs.google.com/presentation/d/18ZPbYD5iH_2faGDtRRZUGOd70fmo8aRlWDb08qHxGas/edit?usp=sharing">

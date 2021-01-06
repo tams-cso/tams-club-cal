@@ -94,6 +94,45 @@ function addDayjsElement(e) {
     if (e.type === 'event') e.endDayjs = convertToTimeZone(e.end, 'America/Chicago');
 }
 
+/**
+ * Returns a jsx array of filters
+ * @param {object} filters List of filters
+ * @param {boolean} filters.limited Limited slots
+ * @param {boolean} filters.semester Limited slots
+ * @param {boolean} filters.setTimes Limited slots
+ * @param {boolean} filters.weekly Weekly signups (with time)
+ * @param {string} [signupTime] Time that signup will go up, only needed if weekly is true
+ * @returns {JSX.IntrinsicElements[]} jsx array
+ */
+function formatVolunteeringFilters(filters, signupTime) {
+    var filterObjects = [];
+    if (filters.limited)
+        filterObjects.push(
+            <div key="0" className="filter f-limited">
+                Limited Slots
+            </div>
+        );
+    if (filters.semester)
+        filterObjects.push(
+            <div key="1" className="filter f-semester">
+                Semester Long Commitment
+            </div>
+        );
+    if (filters.setTimes)
+        filterObjects.push(
+            <div key="2" className="filter f-set-times">
+                Set Volunteering Times
+            </div>
+        );
+    if (filters.weekly)
+        filterObjects.push(
+            <div key="3" className="filter f-weekly">
+                Weekly Signups [{signupTime}]
+            </div>
+        );
+    return filterObjects;
+}
+
 export {
     getId,
     parseTimeZone,
@@ -103,4 +142,5 @@ export {
     getFormattedTime,
     getFormattedDate,
     addDayjsElement,
+    formatVolunteeringFilters,
 };
