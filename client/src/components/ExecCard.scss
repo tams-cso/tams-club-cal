@@ -1,0 +1,30 @@
+@import '../custom.scss';
+
+.ExecCard {
+    display: flex;
+    flex-direction: row;
+    margin: 0 2rem 1rem 2rem;
+}
+
+.ExecCard .name-position-group {
+    display: flex;
+    flex-direction: row;
+    align-items: flex-end;
+    margin-bottom: 0.25rem;
+}
+
+.ExecCard .position {
+    color: $text-lighter;
+    font-size: 0.6rem;
+    padding-bottom: 0.1rem;
+    padding-left: 0.75rem;
+}
+
+.ExecCard .description {
+    text-align: left;
+}
+
+.exec-img {
+    height: 4rem;
+    margin-right: 1rem;
+}
