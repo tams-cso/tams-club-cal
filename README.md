@@ -1,8 +1,8 @@
-# TAMS Club Calendar [WIP]
+# TAMS Club Calendar
 
 An unofficial calendar for the [Texas Academy of Mathematics and Science (TAMS)](https://tams.unt.edu/) student organizations.
 
-[Here's the document](https://docs.google.com/document/d/1U_zqoEiplk0ODeGdMTzK1aLhz9OYFQV0FlhSI52VSBo) for all the ideas, planning, and other notes for this project.
+<p align="center"><img src="client/public/android-chrome-512x512.png" height="256px"></img></p>
 
 ## Contribution
 
