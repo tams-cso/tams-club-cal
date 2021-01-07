@@ -21,7 +21,7 @@ $rh: 5rem;
 .calendar {
     display: grid;
     grid-template-columns: 1fr 1fr 1fr 1fr 1fr 1fr 1fr;
-    grid-template-rows: auto $rh $rh $rh $rh $rh;
+    grid-template-rows: auto $rh $rh $rh $rh $rh $rh;
     border-bottom: $grid-border;
     margin: 1rem 4rem;
 }
