@@ -5,7 +5,16 @@ import CalendarDay from '../components/CalendarDay';
 import './Home.scss';
 import Popup from '../components/Popup';
 import { getEvent, getEventList } from '../functions/api';
-import { createDateHeader, divideByDate, getFormattedDate, getFormattedTime, addDayjsElement, getMonthAndYear, calendarDays, daysOfWeek } from '../functions/util';
+import {
+    createDateHeader,
+    divideByDate,
+    getFormattedDate,
+    getFormattedTime,
+    addDayjsElement,
+    getMonthAndYear,
+    calendarDays,
+    daysOfWeek,
+} from '../functions/util';
 
 class Home extends React.Component {
     constructor(props) {
@@ -108,17 +117,15 @@ class Home extends React.Component {
         });
         const calendar = calendarDays();
         for (let i = 0; i < calendar.length; i++)
-            calendar[i] = <CalendarDay day={this.pad(calendar[i])} key={i + '-' + calendar[i]} events={[]}></CalendarDay>;
-        // for (let i = 0; i < 7; i++)
+            calendar[i] = (
+                <CalendarDay day={this.pad(calendar[i])} key={i + '-' + calendar[i]} events={[]}></CalendarDay>
+            );
+        // for (let i = 1; i <= 7; i++)
         //     calendar.shift();
 
         return (
             <div className="Home">
-                <Popup
-                    history={this.props.history}
-                    ref={this.popup}
-                    activateCallback={this.activatePopup}
-                >
+                <Popup history={this.props.history} ref={this.popup} activateCallback={this.activatePopup}>
                     {this.state.popupContent}
                 </Popup>
                 <div className="home-top">
@@ -128,9 +135,7 @@ class Home extends React.Component {
                         {`Switch to ${this.state.schedule ? 'Calendar' : 'Schedule'} View`}
                     </button>
                 </div>
-                <div className={'schedule-view' + (this.state.schedule ? ' view-active' : '')}>
-                    {this.state.events}
-                </div>
+                <div className={'schedule-view' + (this.state.schedule ? ' view-active' : '')}>{this.state.events}</div>
                 <div className={'calendar-view' + (!this.state.schedule ? ' view-active' : '')}>
                     <div className="calendar">
                         {calendarHeader}

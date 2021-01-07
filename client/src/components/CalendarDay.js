@@ -6,9 +6,7 @@ class CalendarDay extends React.Component {
         return (
             <div className="CalendarDay">
                 <div className="day">{this.props.day}</div>
-                <div className="calendar-event">
-                    {/* TODO add events from props */}
-                </div>
+                <div className="calendar-event">{/* TODO add events from props */}</div>
             </div>
         );
     }

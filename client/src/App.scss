@@ -1,6 +1,8 @@
 @import './custom.scss';
 
-html, body, #root {
+html,
+body,
+#root {
     margin: 0;
     color: $text-primary;
     min-height: 100%;
@@ -26,10 +28,10 @@ html {
     padding-top: 2.5rem;
 }
 
-@media handheld and (max-width: 992px),
-screen and (max-device-width: 992px),
-screen and (max-width: 992px) {
-    html, body, #root {
+@media handheld and (max-width: 992px), screen and (max-device-width: 992px), screen and (max-width: 992px) {
+    html,
+    body,
+    #root {
         font-size: 24px;
     }
     .menu-bkgd {
@@ -37,10 +39,10 @@ screen and (max-width: 992px) {
     }
 }
 
-@media handheld and (max-width: 652px),
-screen and (max-device-width: 652px),
-screen and (max-width: 652px) {
-    html, body, #root {
+@media handheld and (max-width: 652px), screen and (max-device-width: 652px), screen and (max-width: 652px) {
+    html,
+    body,
+    #root {
         font-size: 24px;
     }
     .menu-bkgd {
