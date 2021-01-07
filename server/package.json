@@ -18,9 +18,11 @@
     },
     "scripts": {
         "start": "node src/app.js",
-        "dev": "nodemon src/app.js"
+        "dev": "nodemon src/app.js",
+        "format": "prettier --config ../.prettierrc --write ."
     },
     "devDependencies": {
-        "nodemon": "^2.0.6"
+        "nodemon": "^2.0.6",
+        "prettier": "^2.2.1"
     }
 }
