@@ -1,10 +1,12 @@
 import dayjs from 'dayjs';
 import utc from 'dayjs/plugin/utc';
 import timezone from 'dayjs/plugin/timezone';
+import isLeapYear from 'dayjs/plugin/isLeapYear';
 import { EventInfo } from './entries';
 
 dayjs.extend(utc);
 dayjs.extend(timezone);
+dayjs.extend(isLeapYear);
 
 function getId() {
     const params = new URLSearchParams(window.location.search);
@@ -139,16 +141,22 @@ function getMonthAndYear(tz) {
 
 function calendarDays() {
     const date = dayjs().date(1);
-    const year = date.year();
-    const month = date.month();
-    const day = date.day();
-    const days = [31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31];
-    if (!(year % 400) || !(year % 4 && !year % 100)) days[1]++;
-    var calendar = [];
-    for (let i = 1; i <= days[month]; i++) calendar.push(i);
-    for (let i = day; i > 0; i--) calendar.unshift(days[(month + 11) % 12] - i);
-    for (let i = (day + days[month]) % 7, j = 1; i < 7; i++) calendar.push(j++);
+    const calendar = [];
+    for (let i = 1; i <= date.daysInMonth(); i++)
+        calendar.push(i);
+    for (let i = date.day(), j = date.subtract(1, 'month').daysInMonth(); i > 0; i--)
+        calendar.unshift(j--);
+    for (let i = date.date(date.daysInMonth()).day()+1, j = 1; i < 7; i++)
+        calendar.push(j++);
     return calendar;
+}
+
+function daysOfWeek() {
+    const date = dayjs().day(0);
+    const header = [];
+    for (let i = 0; i < 7; i++)
+        header.push(date.add(i, 'day').format('ddd'));
+    return header;
 }
 
 export {
@@ -163,4 +171,5 @@ export {
     formatVolunteeringFilters,
     getMonthAndYear,
     calendarDays,
+    daysOfWeek,
 };

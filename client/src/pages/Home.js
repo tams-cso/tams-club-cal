@@ -5,15 +5,7 @@ import CalendarDay from '../components/CalendarDay';
 import './Home.scss';
 import Popup from '../components/Popup';
 import { getEvent, getEventList } from '../functions/api';
-import {
-    createDateHeader,
-    divideByDate,
-    getFormattedDate,
-    getFormattedTime,
-    addDayjsElement,
-    getMonthAndYear,
-    calendarDays,
-} from '../functions/util';
+import { createDateHeader, divideByDate, getFormattedDate, getFormattedTime, addDayjsElement, getMonthAndYear, calendarDays, daysOfWeek } from '../functions/util';
 
 class Home extends React.Component {
     constructor(props) {
@@ -106,16 +98,15 @@ class Home extends React.Component {
     }
 
     render() {
-        const daysOfWeek = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
-        var calendarHeader = [];
-        daysOfWeek.forEach((day) => {
+        const calendarHeader = [];
+        daysOfWeek().forEach((day) => {
             calendarHeader.push(
                 <div className="days-of-week" key={day}>
                     {day}
                 </div>
             );
         });
-        var calendar = calendarDays();
+        const calendar = calendarDays();
         for (let i = 0; i < calendar.length; i++)
             calendar[i] = (
                 <CalendarDay day={this.pad(calendar[i])} key={i + '-' + calendar[i]} events={[]}></CalendarDay>
