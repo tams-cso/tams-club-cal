@@ -151,6 +151,14 @@ function calendarDays() {
     return calendar;
 }
 
+function daysOfWeek() {
+    const date = dayjs().day(0);
+    const header = [];
+    for (let i = 0; i < 7; i++)
+        header.push(date.add(i, 'day').format('ddd'));
+    return header;
+}
+
 export {
     getId,
     parseTimeZone,
@@ -163,4 +171,5 @@ export {
     formatVolunteeringFilters,
     getMonthAndYear,
     calendarDays,
+    daysOfWeek,
 };
