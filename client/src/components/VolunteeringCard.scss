@@ -2,10 +2,16 @@
 
 .VolunteeringCard {
     background-color: $background;
-    filter: drop-shadow(0 0 0.1rem $background-tint);
+    box-shadow: 0 0 0.3rem $background-tint;
     text-align: center;
     width: 9rem;
     height: 7.5rem;
+    transition: 0.3s;
+}
+
+.VolunteeringCard:hover {
+    cursor: pointer;
+    box-shadow: 0 0 0.2rem 0.1rem $background-dark;
 }
 
 .overlay {

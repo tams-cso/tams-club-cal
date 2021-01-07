@@ -9,9 +9,11 @@ client.connect().then(() => console.log('Connected to mongodb'));
 async function getClub(id) {
     try {
         const db = client.db('clubs');
-        const collection = db.collection('data');
-        const club = await collection.findOne({ objId: id });
-        return club;
+        const collectionData = db.collection('data');
+        const collectionInfo = db.collection('info');
+        const clubData = await collectionData.findOne({ objId: id });
+        const clubInfo = await collectionInfo.findOne({ objId: id });
+        return { ...clubData, ...clubInfo };
     } catch (error) {
         console.dir(error);
     }

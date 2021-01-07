@@ -1,7 +1,8 @@
 @import '../custom.scss';
 
 .links-title {
-    margin: 1rem 0 0.5rem;
+    padding-top: 1rem;
+    margin-bottom: 0.5rem;
 }
 
 .link-container {
@@ -21,10 +22,9 @@
     display: grid;
     gap: 1rem;
     grid-template-columns: repeat(auto-fill, 9rem);
-    justify-items: center;
+    justify-content: center;
     align-items: center;
     margin: 0 6rem 1rem;
-    justify-content: start;
 }
 
 .volunteering-filters {
@@ -109,4 +109,40 @@ $filter-open: #82ee9a;
 
 .vol-filter:hover {
     cursor: pointer;
+}
+
+.res-popup-content {
+    text-align: center;
+    padding: 0.5rem;
+    width: 14rem;
+}
+
+.res-popup-content .filter {
+    font-size: 0.65rem;
+}
+
+.res-popup-open {
+    font-size: 0.65rem;
+}
+
+.res-popup-open.open {
+    color: $primary;
+}
+
+.res-popup-open.closed {
+    color: $bad;
+}
+
+.res-popup-name {
+    font-size: 1.5rem;
+}
+
+.res-popup-club {
+    font-size: 1rem;
+    color: $text-light;
+    margin-top: -0.25rem;
+}
+
+.res-popup-description {
+    margin-bottom: 0.75rem;
 }
