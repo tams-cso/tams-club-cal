@@ -1,4 +1,4 @@
-![TAMS Club Calendar](docs/logo.png)
+![TAMS Club Calendar](logo.png)
 
 An unofficial calendar for the [Texas Academy of Mathematics and Science (TAMS)](https://tams.unt.edu/) student organizations.
 
