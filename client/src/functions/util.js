@@ -132,6 +132,10 @@ function formatVolunteeringFilters(filters, signupTime) {
         );
     return filterObjects;
 }
+ 
+function getMonthAndYear(tz) {
+    return dayjs().format('MMMM YYYY');
+}
 
 export {
     getId,
@@ -143,4 +147,5 @@ export {
     getFormattedDate,
     addDayjsElement,
     formatVolunteeringFilters,
+    getMonthAndYear,
 };

@@ -5,7 +5,7 @@ import CalendarDay from '../components/CalendarDay';
 import './Home.scss';
 import Popup from '../components/Popup';
 import { getEvent, getEventList } from '../functions/api';
-import { createDateHeader, divideByDate, getFormattedDate, getFormattedTime, addDayjsElement } from '../functions/util';
+import { createDateHeader, divideByDate, getFormattedDate, getFormattedTime, addDayjsElement, getMonthAndYear } from '../functions/util';
 
 class Home extends React.Component {
     constructor(props) {
@@ -124,7 +124,7 @@ class Home extends React.Component {
                 </Popup>
                 <div className="home-top">
                     <div className="dummy"></div>
-                    <div className="month-year">November 2020</div>
+                    <div className="month-year">{getMonthAndYear()}</div>
                     <button className="view-switch" onClick={this.switchView}>
                         {`Switch to ${this.state.schedule ? 'Calendar' : 'Schedule'} View`}
                     </button>
