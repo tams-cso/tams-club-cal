@@ -5,7 +5,7 @@ import CalendarDay from '../components/CalendarDay';
 import './Home.scss';
 import Popup from '../components/Popup';
 import { getEvent, getEventList } from '../functions/api';
-import { createDateHeader, divideByDate, getFormattedDate, getFormattedTime, addDayjsElement, getMonthAndYear } from '../functions/util';
+import { createDateHeader, divideByDate, getFormattedDate, getFormattedTime, addDayjsElement, getMonthAndYear, calendarDays } from '../functions/util';
 
 class Home extends React.Component {
     constructor(props) {
@@ -107,11 +107,11 @@ class Home extends React.Component {
                 </div>
             );
         });
-        var calendar = [];
-        for (let i = 1; i <= 30; i++)
-            calendar.push(<CalendarDay day={this.pad(i)} key={'1 -' + i} events={[]}></CalendarDay>);
-        for (let i = 1; i <= 5; i++)
-            calendar.push(<CalendarDay day={this.pad(i)} key={'2-' + i} events={[]}></CalendarDay>);
+        var calendar = calendarDays();
+        for (let i = 0; i < calendar.length; i++)
+            calendar[i] = <CalendarDay day={this.pad(calendar[i])} key={i + '-' + calendar[i]} events={[]}></CalendarDay>;
+        // for (let i = 1; i <= 7; i++)
+        //     calendar.shift();
 
         return (
             <div className="Home">
