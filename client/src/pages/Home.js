@@ -107,10 +107,10 @@ class Home extends React.Component {
                 </div>
             );
         });
-        var calendar = calendarDays();
+        const calendar = calendarDays();
         for (let i = 0; i < calendar.length; i++)
             calendar[i] = <CalendarDay day={this.pad(calendar[i])} key={i + '-' + calendar[i]} events={[]}></CalendarDay>;
-        // for (let i = 1; i <= 7; i++)
+        // for (let i = 0; i < 7; i++)
         //     calendar.shift();
 
         return (
