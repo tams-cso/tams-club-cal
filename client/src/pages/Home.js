@@ -5,7 +5,16 @@ import CalendarDay from '../components/CalendarDay';
 import './Home.scss';
 import Popup from '../components/Popup';
 import { getEvent, getEventList } from '../functions/api';
-import { createDateHeader, divideByDate, getFormattedDate, getFormattedTime, addDayjsElement, getMonthAndYear, calendarDays, daysOfWeek } from '../functions/util';
+import {
+    createDateHeader,
+    divideByDate,
+    getFormattedDate,
+    getFormattedTime,
+    addDayjsElement,
+    getMonthAndYear,
+    calendarDays,
+    daysOfWeek,
+} from '../functions/util';
 
 class Home extends React.Component {
     constructor(props) {

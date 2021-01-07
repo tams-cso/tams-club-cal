@@ -142,20 +142,16 @@ function getMonthAndYear(tz) {
 function calendarDays() {
     const date = dayjs().date(1);
     const calendar = [];
-    for (let i = 1; i <= date.daysInMonth(); i++)
-        calendar.push(i);
-    for (let i = date.day(), j = date.subtract(1, 'month').daysInMonth(); i > 0; i--)
-        calendar.unshift(j--);
-    for (let i = date.date(date.daysInMonth()).day()+1, j = 1; i < 7; i++)
-        calendar.push(j++);
+    for (let i = 1; i <= date.daysInMonth(); i++) calendar.push(i);
+    for (let i = date.day(), j = date.subtract(1, 'month').daysInMonth(); i > 0; i--) calendar.unshift(j--);
+    for (let i = date.date(date.daysInMonth()).day() + 1, j = 1; i < 7; i++) calendar.push(j++);
     return calendar;
 }
 
 function daysOfWeek() {
     const date = dayjs().day(0);
     const header = [];
-    for (let i = 0; i < 7; i++)
-        header.push(date.add(i, 'day').format('ddd'));
+    for (let i = 0; i < 7; i++) header.push(date.add(i, 'day').format('ddd'));
     return header;
 }
 
