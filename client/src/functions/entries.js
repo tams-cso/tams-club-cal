@@ -63,16 +63,18 @@ function EventData(objId, links, description, addedBy, editedBy) {
  * @param {boolean} advised True if an advised club, otherwise false for independent club
  * @param {string} fb Link to facebook page
  * @param {string} website Link to website
- * @param {string} coverImg URL of cover image
+ * @param {string} coverImgThumbnail URL of cover image thumbnail
+ * @param {string} coverImg URL of the full-sized cover image
  * @param {string} description Description of the club
  * @param {Exec[]} execs Array of exec objects
  * @param {Committee[]} committee Array of committee objects
  */
-function Club(name, advised, fb, website, coverImg, description, execs, committee) {
+function Club(name, advised, fb, website, coverImgThumbnail, coverImg, description, execs, committee) {
     this.name = name;
     this.advised = advised;
     this.fb = fb;
     this.website = website;
+    this.coverImgThumbnail = coverImgThumbnail;
     this.coverImg = coverImg;
     this.description = description;
     this.execs = execs;
@@ -86,15 +88,15 @@ function Club(name, advised, fb, website, coverImg, description, execs, committe
  * @param {boolean} advised True if an advised club, otherwise false for independent club
  * @param {string} fb Link to facebook page
  * @param {string} website Link to website
- * @param {string} coverImg URL of cover image
+ * @param {string} coverImgThumbnail URL of cover image thumbnail
  */
-function ClubInfo(objId, name, advised, fb, website, coverImg) {
+function ClubInfo(objId, name, advised, fb, website, coverImgThumbnail) {
     this.objId = objId;
     this.name = name;
     this.advised = advised;
     this.fb = fb;
     this.website = website;
-    this.coverImg = coverImg;
+    this.coverImgThumbnail = coverImgThumbnail;
 }
 
 /**
@@ -104,8 +106,9 @@ function ClubInfo(objId, name, advised, fb, website, coverImg) {
  * @param {string} description Description of the club
  * @param {Exec[]} execs Array of exec objects
  * @param {Committee[]} committee Array of committee objects
+ * @param {string} coverImg URL of the full-sized cover image
  */
-function ClubData(infoId, description, execs, committee) {
+function ClubData(infoId, description, execs, committee, coverImg) {
     this.objId = objId;
     this.infoId = infoId;
     this.description = description;

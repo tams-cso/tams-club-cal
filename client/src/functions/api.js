@@ -37,7 +37,10 @@ async function postEvent(event) {
  * @returns {Promise<ClubData>} Object of club specified by id
  */
 async function getClub(id) {
-    return await fetch(`${config.backend}/club?id=${id}`).then((res) => res.json());
+    return await fetch(`${config.backend}/club?id=${id}`).then((res) => {
+        if (res.status === 400) return null;
+        else return res.json();
+    });
 }
 
 /**

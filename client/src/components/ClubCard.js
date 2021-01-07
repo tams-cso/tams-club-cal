@@ -6,13 +6,13 @@ import './ClubCard.scss';
 class ClubCard extends React.Component {
     render() {
         return (
-            <div className="ClubCard">
+            <div className="ClubCard" onClick={this.props.onClick}>
                 <div className="image-box">
                     {/* TODO: Detect bad image url */}
                     <div className="image-placeholder" style={this.props.coverImg != '' ? { display: 'none' } : {}}>
                         Club Image here
                     </div>
-                    <img className="club-image" src={this.props.coverImg} alt="club image"></img>
+                    <img className="club-image" src={this.props.coverImgThumbnail} alt="club image"></img>
                 </div>
                 <div className={'club-type' + (this.props.advised != 'true' ? ' club-indp' : '')}>
                     {this.props.advised == 'true' ? 'Advised' : 'Independent'}
