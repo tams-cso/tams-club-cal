@@ -18,7 +18,7 @@ function Event(type, name, club, start, end, links, description, addedBy) {
     this.links = links;
     this.description = description;
     this.addedBy = addedBy;
-    this.editedBy = "";
+    this.editedBy = '';
 }
 
 /**

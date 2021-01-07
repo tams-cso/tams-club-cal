@@ -54,7 +54,8 @@ class Add extends React.Component {
             // Calculate milliseconds from starting/ending datetimes
             var end = null;
             var start = parseTimeZone(`${this.state.startDate} ${this.state.startTime}`, 'America/Chicago');
-            if (this.state.type === 'event') var end = parseTimeZone(`${this.state.endDate} ${this.state.endTime}`, 'America/Chicago');
+            if (this.state.type === 'event')
+                var end = parseTimeZone(`${this.state.endDate} ${this.state.endTime}`, 'America/Chicago');
 
             // POST event
             console.log('submitted!');

@@ -86,8 +86,7 @@ async function addEvent(event) {
         while (true) {
             objId = crypto.randomBytes(16).toString('hex');
             const eventInfo = await infoCollection.find({ objId }).toArray();
-            if (eventInfo.length == 0)
-                break;
+            if (eventInfo.length == 0) break;
         }
         infoCollection.insertOne({
             objId,

@@ -132,7 +132,7 @@ function formatVolunteeringFilters(filters, signupTime) {
         );
     return filterObjects;
 }
- 
+
 function getMonthAndYear(tz) {
     return dayjs().format('MMMM YYYY');
 }
@@ -143,15 +143,11 @@ function calendarDays() {
     const month = date.month();
     const day = date.day();
     const days = [31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31];
-    if (!(year%400) || !(year%4 && !year%100))
-        days[1]++;
+    if (!(year % 400) || !(year % 4 && !year % 100)) days[1]++;
     var calendar = [];
-    for (let i = 1; i <= days[month]; i++)
-        calendar.push(i);
-    for (let i = day; i > 0; i--)
-        calendar.unshift(days[(month+11)%12]-i);
-    for (let i = (day+days[month])%7, j = 1; i < 7; i++)
-        calendar.push(j++);
+    for (let i = 1; i <= days[month]; i++) calendar.push(i);
+    for (let i = day; i > 0; i--) calendar.unshift(days[(month + 11) % 12] - i);
+    for (let i = (day + days[month]) % 7, j = 1; i < 7; i++) calendar.push(j++);
     return calendar;
 }
 

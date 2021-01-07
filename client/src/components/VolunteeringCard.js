@@ -5,7 +5,7 @@ import './VolunteeringCard.scss';
 class VolunteeringCard extends React.Component {
     render() {
         // TODO: Convert millisecond signup time to [Sunday 11:00pm]
-        var filterObjects = formatVolunteeringFilters(this.props.filters, this.props.signupTime)
+        var filterObjects = formatVolunteeringFilters(this.props.filters, this.props.signupTime);
         return (
             <div className="VolunteeringCard" onClick={this.props.onClick}>
                 <div className={'overlay' + (!this.props.filters.open ? ' overlay-closed' : '')}>

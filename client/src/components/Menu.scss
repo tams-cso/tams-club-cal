@@ -79,10 +79,8 @@
     display: none;
 }
 
-@media handheld and (max-width: 992px),
-screen and (max-device-width: 992px),
-screen and (max-width: 992px) {
-    .Menu {    
+@media handheld and (max-width: 992px), screen and (max-device-width: 992px), screen and (max-width: 992px) {
+    .Menu {
         padding: 0.25rem 4rem 0.5rem 4rem;
     }
     .menu-item {
@@ -93,9 +91,7 @@ screen and (max-width: 992px) {
     }
 }
 
-@media handheld and (max-width: 652px),
-screen and (max-device-width: 652px),
-screen and (max-width: 652px) {
+@media handheld and (max-width: 652px), screen and (max-device-width: 652px), screen and (max-width: 652px) {
     .Menu {
         padding: 0;
         height: 2rem;
@@ -123,7 +119,7 @@ screen and (max-width: 652px) {
     }
     .drop-active > .mob-item {
         display: block;
-    }    
+    }
     .drop-active {
         overflow: hidden;
         height: 7rem;
