@@ -11,7 +11,6 @@ class Popup extends React.Component {
     activate = (id) => {
         if (window.location.pathname == '/') this.props.history.push('/event?id=' + id);
         else this.props.history.push(`${window.location.pathname}?id=${id}`);
-        scrollTo(window.top);
         this.setState({ active: ' active', id }, () => {
             if (this.props.activateCallback !== undefined) this.props.activateCallback();
         });
