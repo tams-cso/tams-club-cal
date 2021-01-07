@@ -1,0 +1,70 @@
+@import '../custom.scss';
+
+.CommitteeCard {
+    width: 10rem;
+    height: 9rem;
+    box-shadow: 0 0 0.1rem $background-tint;
+    filter: drop-shadow(0 0 0.08rem $background-tint);
+    background-color: $background;
+    text-align: center;
+    transition: 0.2s;
+}
+
+.CommitteeCard > .committee-name {
+    color: $text-primary;
+    font-size: 0.85rem;
+    padding: 0.25rem 0.5rem;
+}
+
+.committee-description {
+    font-size: 0.5rem;
+    padding: 0 0.25rem;
+}
+
+.globe-style {
+    fill: none;
+    stroke: #231f20;
+    stroke-linejoin: round;
+    stroke-width: 30px;
+}
+
+.committee-icons {
+    position: fixed;
+    bottom: 0.5rem;
+    left: 0;
+    right: 0;
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+}
+
+.web-icon,
+.fb-icon {
+    margin: 0 0.75rem;
+    width: 1rem;
+    height: 1rem;
+    transition: 0.2s;
+}
+
+.web-icon > path,
+.fb-icon > path {
+    transition: 0.2s;
+}
+
+.fb-icon:hover {
+    cursor: pointer;
+    filter: drop-shadow(0 0 0.05rem #aaaaaa);
+}
+
+.fb-icon:hover > path {
+    fill: #3b5998;
+}
+
+.web-icon:hover {
+    cursor: pointer;
+    filter: drop-shadow(0 0 0.01rem #aaaaaa);
+}
+
+.web-icon:hover > path {
+    stroke: $primary;
+}
