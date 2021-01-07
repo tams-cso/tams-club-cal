@@ -22,10 +22,9 @@
     display: grid;
     gap: 1rem;
     grid-template-columns: repeat(auto-fill, 9rem);
-    justify-items: center;
+    justify-content: center;
     align-items: center;
     margin: 0 6rem 1rem;
-    justify-content: start;
 }
 
 .volunteering-filters {
