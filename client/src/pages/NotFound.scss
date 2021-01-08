@@ -4,9 +4,24 @@
     width: fit-content;
     text-align: center;
 }
+
+.error-message > h1 {
+    font-size: 1.5rem;
+}
+
+.error-message > h2 {
+    font-size: 1rem;
+    margin-top: 0;
+}
+
 .error-message > ul {
     list-style-type: none;
 }
+
+.error-message li {
+    margin: 0.5rem;
+}
+
 .page-not-found-nav-item {
     text-align: center;
     text-decoration: none;
@@ -17,7 +32,7 @@
     transition: 0.3s;
 }
 .page-not-found-nav-item:hover {
-    background-color: $background-tint;
+    color: $primary;
 }
 .helper-text {
     font-size: 0.6em;
