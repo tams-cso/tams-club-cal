@@ -1,9 +1,15 @@
 import React from 'react';
+import { connect } from 'react-redux';
+
 import LinkBox from '../components/LinkBox';
 import Popup from '../components/Popup';
 import VolunteeringCard from '../components/VolunteeringCard';
 import VolunteeringPopup from '../components/VolunteeringPopup';
+
 import { getVolunteering } from '../functions/api';
+import { getSavedVolunteeringList } from '../redux/selectors';
+import { setVolunteeringList } from '../redux/actions';
+
 import './Resources.scss';
 
 class Resources extends React.Component {
@@ -21,12 +27,7 @@ class Resources extends React.Component {
             if (currFilter === null || volunteering.filters[currFilter])
                 volCards.push(
                     <VolunteeringCard
-                        name={volunteering.name}
-                        club={volunteering.club}
-                        description={volunteering.description}
-                        filters={volunteering.filters}
-                        signupTime={volunteering.signupTime}
-                        key={volunteering.name}
+                        vol={volunteering}
                         onClick={() => {
                             this.popup.current.activate(volunteering._id);
                         }}
@@ -47,7 +48,7 @@ class Resources extends React.Component {
         this.setState({ vol });
     };
 
-    componentDidMount() {
+    async componentDidMount() {
         if (this.volList.length === 0) {
             getVolunteering().then((data) => {
                 this.volList = data;
@@ -126,4 +127,11 @@ class Resources extends React.Component {
     }
 }
 
-export default Resources;
+const mapStateToProps = (state) => {
+    return {
+        eventList: getSavedVolunteeringList(state),
+    };
+};
+const mapDispatchToProps = { setVolunteeringList };
+
+export default connect(mapStateToProps, mapDispatchToProps)(Resources);
