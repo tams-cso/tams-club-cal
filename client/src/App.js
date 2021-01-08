@@ -12,18 +12,18 @@ function App() {
     return (
         <div className="App">
             <BrowserRouter>
-            <Menu />
+                <Menu />
                 <div className="menu-bkgd"></div>
                 <div className="page">
-                        <Switch>
-                            <Route exact path={['/', '/event']} component={Home} />
-                            <Route exact path="/resources" component={Resources} />
-                            <Route exact path="/clubs" component={Clubs} />
-                            <Route exact path="/add" component={Add} />
-                            <Route exact path="/about" component={About} />
-                            <Route exact path="/pagenotfound" component={NotFound} />
-                            <Route component={NotFound} />    
-                        </Switch>
+                    <Switch>
+                        <Route exact path={['/', '/event']} component={Home} />
+                        <Route exact path="/resources" component={Resources} />
+                        <Route exact path="/clubs" component={Clubs} />
+                        <Route exact path="/add" component={Add} />
+                        <Route exact path="/about" component={About} />
+                        <Route exact path="/pagenotfound" component={NotFound} />
+                        <Route component={NotFound} />
+                    </Switch>
                 </div>
             </BrowserRouter>
         </div>
