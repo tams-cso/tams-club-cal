@@ -43,7 +43,7 @@ class Popup extends React.Component {
 
     render() {
         return (
-            <div className={'Popup ' + this.state.active}>
+            <div className={`Popup ${this.state.active} ${this.props.scroll}`}>
                 <div className="close-bkgd" onClick={this.close}></div>
                 <div className="popup-content">{this.props.children}</div>
             </div>

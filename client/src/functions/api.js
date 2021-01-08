@@ -52,6 +52,21 @@ async function getClubList() {
 }
 
 /**
+ * POST to /add-volunteering - Adds or updates a volunteering event
+ * @param {Volunteering} vol The volunteering object
+ * @param {string} [id] ID to update
+ */
+async function postVolunteering(vol, id) {
+    var update = id !== undefined && id !== null ? `?update=true&id=${id}` : '';
+    const res = await fetch(`${config.backend}/add-volunteering${update}`, {
+        method: 'POST',
+        body: JSON.stringify(vol),
+        headers: { 'Content-Type': 'application/json' },
+    });
+    return res.status;
+}
+
+/**
  * GET to /volunteering - Gets the list of volunteering opportunities
  * @returns {Promise<Volunteering[]>} An array of all volunteering opportunities
  */
@@ -74,4 +89,4 @@ async function postFeedback(feedback) {
     return res.status;
 }
 
-export { getClub, getClubList, postFeedback, postEvent, getEvent, getEventList, getVolunteering };
+export { getClub, getClubList, postFeedback, postEvent, getEvent, getEventList, getVolunteering, postVolunteering };

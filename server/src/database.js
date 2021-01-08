@@ -1,4 +1,4 @@
-const { MongoClient } = require('mongodb');
+const { MongoClient, ObjectId } = require('mongodb');
 const crypto = require('crypto');
 
 const uri = `mongodb+srv://${process.env.MONGO_USER}:${process.env.MONGO_PASS}@tams-cal-db.seuxs.mongodb.net/clubs?retryWrites=true&w=majority`;
@@ -108,4 +108,35 @@ async function addEvent(event) {
     }
 }
 
-module.exports = { getClubList, getClub, updateClubs, addFeedback, addEvent, getEvent, getEventList, getVolunteering };
+async function updateVolunteering(vol, id) {
+    try {
+        const db = client.db('volunteering');
+        const collection = db.collection('data');
+        collection.updateOne(
+            { _id: ObjectId(id) },
+            {
+                $set: {
+                    name: vol.name,
+                    club: vol.club,
+                    description: vol.description,
+                    filters: vol.filters,
+                    signupTime: vol.signupTime,
+                },
+            }
+        );
+    } catch (error) {
+        console.dir(error);
+    }
+}
+
+module.exports = {
+    getClubList,
+    getClub,
+    updateClubs,
+    addFeedback,
+    addEvent,
+    getEvent,
+    getEventList,
+    getVolunteering,
+    updateVolunteering,
+};

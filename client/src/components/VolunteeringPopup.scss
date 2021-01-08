@@ -35,3 +35,100 @@
 .VolunteeringPopup .ActionButton {
     margin-top: 0.5rem;
 }
+
+.VolunteeringPopup .inactive {
+    display: none;
+}
+
+.VolunteeringPopup .active {
+    display: block;
+}
+
+.vol-filter {
+    display: block;
+}
+
+.VolunteeringPopup .edit {
+    text-align: left;
+    font-size: 0.65rem;
+}
+
+.VolunteeringPopup .edit label {
+    margin-right: 0.5rem;
+}
+
+.VolunteeringPopup .edit input {
+    font-size: 0.65rem;
+}
+
+.VolunteeringPopup .edit textarea {
+    width: 95%;
+    margin: 0.25rem 0 0.5rem;
+    font-size: 0.5rem;
+    padding: 0.25rem;
+    height: 5rem;
+    resize: none;
+}
+
+.VolunteeringPopup .title-and-open {
+    display: flex;
+    flex-direction: row;
+    justify-content: left;
+}
+
+.title {
+    width: 10rem;
+}
+
+.open-switch {
+    font-size: 0.65rem;
+    margin-left: 1.25rem;
+    margin-top: 0.25rem;
+    border: 0;
+    box-shadow: 0 0 0.1rem $background-tint;
+    height: fit-content;
+    padding: 0.1rem 0.5rem;
+    background-color: $background;
+    transition: 0.2s;
+}
+
+.open-switch.open {
+    color: $primary;
+}
+
+.open-switch.closed {
+    color: $bad;
+}
+
+.open-switch:hover {
+    cursor: pointer;
+    box-shadow: 0 0 0.1rem 0.05rem $background-tint;
+}
+
+.filter-buttons {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, 6rem);
+    justify-content: center;
+}
+
+.signup-time-input {
+    width: 10rem;
+}
+
+.action-button-box {
+    display: flex;
+    flex-direction: row;
+    justify-content: flex-end;
+}
+
+.action-button-box .ActionButton {
+    margin: 0.25rem 0.25rem 0;
+}
+
+.ActionButton.submit {
+    color: $primary;
+}
+
+.ActionButton.cancel {
+    color: $bad;
+}

@@ -10,8 +10,9 @@ class Resources extends React.Component {
     constructor(props) {
         super(props);
         this.popup = React.createRef();
+        this.popupContent = React.createRef();
         this.volList = [];
-        this.state = {};
+        this.state = { vol: null };
     }
 
     createCards = (currFilter) => {
@@ -43,9 +44,7 @@ class Resources extends React.Component {
             });
         }
         var vol = this.volList.find((v) => v._id === id);
-        this.setState({
-            popupContent: <VolunteeringPopup vol={vol}></VolunteeringPopup>
-        });
+        this.setState({ vol });
     };
 
     componentDidMount() {
@@ -60,8 +59,17 @@ class Resources extends React.Component {
     render() {
         return (
             <div className="Resources">
-                <Popup history={this.props.history} ref={this.popup} activateCallback={this.activatePopup} edit="false">
-                    {this.state.popupContent}
+                <Popup
+                    history={this.props.history}
+                    ref={this.popup}
+                    activateCallback={this.activatePopup}
+                    edit="false"
+                    scroll="hidden"
+                    closeCallback={() => {
+                        this.popupContent.current.closeEdit();
+                    }}
+                >
+                    <VolunteeringPopup vol={this.state.vol} ref={this.popupContent}></VolunteeringPopup>
                 </Popup>
                 <h1 className="links-title">Links</h1>
                 <div className="link-container">
