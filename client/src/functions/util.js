@@ -8,9 +8,8 @@ dayjs.extend(utc);
 dayjs.extend(timezone);
 dayjs.extend(isLeapYear);
 
-function getId() {
-    const params = new URLSearchParams(window.location.search);
-    return params.get('id');
+function getParams() {
+    return new URLSearchParams(window.location.search);
 }
 
 /**
@@ -156,7 +155,7 @@ function daysOfWeek() {
 }
 
 export {
-    getId,
+    getParams,
     parseTimeZone,
     convertToTimeZone,
     divideByDate,

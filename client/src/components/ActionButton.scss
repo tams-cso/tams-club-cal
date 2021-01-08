@@ -1,0 +1,15 @@
+@import '../custom.scss';
+
+.ActionButton {
+    border: none;
+    background-color: white;
+    box-shadow: 0 0 0.1rem 0.025rem $background-tint;
+    font-size: 1rem;
+    padding: 0 0.5rem;
+    transition: 0.2s;
+}
+
+.ActionButton:hover {
+    cursor: pointer;
+    box-shadow: 0 0 0.1rem 0.1rem $background-tint;
+}

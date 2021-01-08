@@ -1,11 +1,11 @@
 import React from 'react';
-import { getId } from '../functions/util';
+import { getParams } from '../functions/util';
 import './Popup.scss';
 
 class Popup extends React.Component {
     constructor(props) {
         super(props);
-        this.state = { active: '', id: null };
+        this.state = { active: '', id: null, edit: false };
     }
 
     activate = (id) => {
@@ -26,8 +26,12 @@ class Popup extends React.Component {
     };
 
     componentDidMount() {
-        const id = getId();
-        if (id == undefined || id == null) this.setState({ active: '' });
+        const params = getParams();
+        const id = params.get('id');
+        const edit = params.get('edit');
+        if ((edit === null && this.props.edit === 'true') || (edit === 'true' && this.props.edit === 'false'))
+            this.setState({ active: '' });
+        else if (id === undefined || id === null) this.setState({ active: '' });
         else this.activate(id);
 
         addEventListener('keydown', (event) => {
@@ -39,7 +43,7 @@ class Popup extends React.Component {
 
     render() {
         return (
-            <div className={'Popup ' + this.state.active}>
+            <div className={`Popup ${this.state.active} ${this.props.scroll}`}>
                 <div className="close-bkgd" onClick={this.close}></div>
                 <div className="popup-content">{this.props.children}</div>
             </div>

@@ -58,7 +58,7 @@ $filter-open: #82ee9a;
 }
 
 .vol-filter.all.active,
-.vol-filter.all:hover {
+.volunteering-filters .vol-filter.all:hover {
     background-color: $filter-all;
 }
 
@@ -67,7 +67,7 @@ $filter-open: #82ee9a;
 }
 
 .vol-filter.limited.active,
-.vol-filter.limited:hover {
+.volunteering-filters .vol-filter.limited:hover {
     background-color: $filter-limited;
 }
 
@@ -76,7 +76,7 @@ $filter-open: #82ee9a;
 }
 
 .vol-filter.semester.active,
-.vol-filter.semester:hover {
+.volunteering-filters .vol-filter.semester:hover {
     background-color: $filter-semester;
 }
 
@@ -85,7 +85,7 @@ $filter-open: #82ee9a;
 }
 
 .vol-filter.set-times.active,
-.vol-filter.set-times:hover {
+.volunteering-filters .vol-filter.set-times:hover {
     background-color: $filter-set-times;
 }
 
@@ -94,7 +94,7 @@ $filter-open: #82ee9a;
 }
 
 .vol-filter.weekly.active,
-.vol-filter.weekly:hover {
+.volunteering-filters .vol-filter.weekly:hover {
     background-color: $filter-weekly;
 }
 
@@ -103,46 +103,11 @@ $filter-open: #82ee9a;
 }
 
 .vol-filter.open.active,
-.vol-filter.open:hover {
+.volunteering-filters .vol-filter.open:hover {
     background-color: $filter-open;
 }
 
 .vol-filter:hover {
     cursor: pointer;
-}
-
-.res-popup-content {
-    text-align: center;
-    padding: 0.5rem;
-    width: 14rem;
-}
-
-.res-popup-content .filter {
-    font-size: 0.65rem;
-}
-
-.res-popup-open {
-    font-size: 0.65rem;
-}
-
-.res-popup-open.open {
-    color: $primary;
-}
-
-.res-popup-open.closed {
-    color: $bad;
-}
-
-.res-popup-name {
-    font-size: 1.5rem;
-}
-
-.res-popup-club {
-    font-size: 1rem;
-    color: $text-light;
-    margin-top: -0.25rem;
-}
-
-.res-popup-description {
-    margin-bottom: 0.75rem;
+    box-shadow: 0 0 0.2rem 0.05rem $background-tint;
 }
