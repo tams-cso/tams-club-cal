@@ -83,7 +83,7 @@ class Home extends React.Component {
             eventList = await getEventList();
             this.props.setEventList(eventList);
         }
-        const events =  [ ...eventList ];
+        const events = [...eventList];
         // Create a dayjs object for each event
         events.forEach((e) => addDayjsElement(e));
 
