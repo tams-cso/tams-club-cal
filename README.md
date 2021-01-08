@@ -46,3 +46,8 @@ To run the server:
 cd server
 yarn start
 ```
+
+## Documentation
+
+More information and general documentation can be found on our [documentation site](https://docs.tams.club). This project is still being actively developed, so expect a lot of missing and/or incorrect information.
+
