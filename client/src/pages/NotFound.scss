@@ -1,6 +1,24 @@
+@import '../custom.scss';
 .error-message {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    height: 10vh;
+    margin: 3vh auto;
+    width: fit-content;
+    text-align: center;
+}
+.error-message > ul {
+    list-style-type: none;
+}
+.page-not-found-nav-item {
+    text-align: center;
+    text-decoration: none;
+    color: $text-primary;
+    padding: 10px;
+    margin: 10px auto;
+    border-radius: 0.1rem;
+    transition: 0.3s;
+}
+.page-not-found-nav-item:hover {
+    background-color: $background-tint;
+}
+.helper-text {
+    font-size: 0.6em;
 }
