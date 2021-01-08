@@ -2,8 +2,8 @@ import React from 'react';
 import LinkBox from '../components/LinkBox';
 import Popup from '../components/Popup';
 import VolunteeringCard from '../components/VolunteeringCard';
+import VolunteeringPopup from '../components/VolunteeringPopup';
 import { getVolunteering } from '../functions/api';
-import { formatVolunteeringFilters } from '../functions/util';
 import './Resources.scss';
 
 class Resources extends React.Component {
@@ -43,28 +43,14 @@ class Resources extends React.Component {
             });
         }
         var vol = this.volList.find((v) => v._id === id);
-        var filters = formatVolunteeringFilters(vol.filters, vol.signupTime);
         this.setState({
-            popupContent: (
-                <div className="res-popup-content">
-                    {vol.filters.open ? (
-                        <p className="res-popup-open open">Open</p>
-                    ) : (
-                        <p className="res-popup-open closed">Closed</p>
-                    )}
-                    <p className="res-popup-name">{vol.name}</p>
-                    <p className="res-popup-club">{vol.club}</p>
-                    <p className="res-popup-description">{vol.description}</p>
-                    {filters}
-                </div>
-            ),
+            popupContent: <VolunteeringPopup vol={vol}></VolunteeringPopup>
         });
     };
 
     componentDidMount() {
         if (this.volList.length === 0) {
             getVolunteering().then((data) => {
-                console.log(data);
                 this.volList = data;
                 this.createCards(null);
             });
@@ -74,7 +60,7 @@ class Resources extends React.Component {
     render() {
         return (
             <div className="Resources">
-                <Popup history={this.props.history} ref={this.popup} activateCallback={this.activatePopup}>
+                <Popup history={this.props.history} ref={this.popup} activateCallback={this.activatePopup} edit="false">
                     {this.state.popupContent}
                 </Popup>
                 <h1 className="links-title">Links</h1>
