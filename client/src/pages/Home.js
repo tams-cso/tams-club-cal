@@ -1,10 +1,12 @@
 import React from 'react';
+import { connect } from 'react-redux';
 import DateSection from '../components/DateSection';
 import ScheduleEvent from '../components/ScheduleEvent';
 import CalendarDay from '../components/CalendarDay';
 import './Home.scss';
 import Popup from '../components/Popup';
 import { getEvent, getEventList } from '../functions/api';
+import { setEventList } from '../redux/actions';
 import {
     createDateHeader,
     divideByDate,
@@ -15,6 +17,7 @@ import {
     calendarDays,
     daysOfWeek,
 } from '../functions/util';
+import { getSavedEventList } from '../redux/selectors';
 
 class Home extends React.Component {
     constructor(props) {
@@ -31,6 +34,7 @@ class Home extends React.Component {
 
     switchView = () => {
         this.setState({ schedule: !this.state.schedule });
+        console.log(this.props.eventList);
     };
 
     activatePopup = () => {
@@ -73,6 +77,7 @@ class Home extends React.Component {
 
     componentDidMount() {
         getEventList().then((events) => {
+            this.props.setEventList(events);
             // Create a dayjs object for each event
             events.forEach((e) => addDayjsElement(e));
 
@@ -147,4 +152,11 @@ class Home extends React.Component {
     }
 }
 
-export default Home;
+const mapStateToProps = (state) => {
+    return {
+        eventList: getSavedEventList(state),
+    };
+};
+const mapDispatchToProps = { setEventList };
+
+export default connect(mapStateToProps, mapDispatchToProps)(Home);
