@@ -23,7 +23,7 @@ class Home extends React.Component {
     constructor(props) {
         super(props);
         this.popup = React.createRef();
-        this.state = { schedule: true, events: null };
+        this.state = { schedule: true, eventComponents: null };
     }
 
     // Pads a date to 2 digits (eg. 1 => '01')
@@ -75,40 +75,45 @@ class Home extends React.Component {
         });
     };
 
-    componentDidMount() {
-        getEventList().then((events) => {
-            this.props.setEventList(events);
-            // Create a dayjs object for each event
-            events.forEach((e) => addDayjsElement(e));
+    async componentDidMount() {
+        var eventList = this.props.eventList;
+        // Check if there is already events saved
+        if (this.props.eventList === null) {
+            // Get event list from backend
+            eventList = await getEventList();
+            this.props.setEventList(eventList);
+        }
+        const events =  [ ...eventList ];
+        // Create a dayjs object for each event
+        events.forEach((e) => addDayjsElement(e));
 
-            // Sort the days
-            events.sort((a, b) => a.start - b.start);
+        // Sort the days
+        events.sort((a, b) => a.start - b.start);
 
-            // Insert the date objects
-            divideByDate(events);
+        // Insert the date objects
+        divideByDate(events);
 
-            // Generate the list of events
-            var eventList = [];
-            events.forEach((e) => {
-                if (e.isDate) {
-                    eventList.push(<DateSection date={createDateHeader(e.day)} key={e.day}></DateSection>);
-                } else {
-                    eventList.push(
-                        <ScheduleEvent
-                            type={e.type}
-                            time={getFormattedTime(e)}
-                            club={e.club}
-                            name={e.name}
-                            key={e.objId}
-                            onClick={() => {
-                                this.popup.current.activate(e.objId);
-                            }}
-                        ></ScheduleEvent>
-                    );
-                }
-            });
-            this.setState({ events: eventList });
+        // Generate the list of events
+        var eventComponents = [];
+        events.forEach((e) => {
+            if (e.isDate) {
+                eventComponents.push(<DateSection date={createDateHeader(e.day)} key={e.day}></DateSection>);
+            } else {
+                eventComponents.push(
+                    <ScheduleEvent
+                        type={e.type}
+                        time={getFormattedTime(e)}
+                        club={e.club}
+                        name={e.name}
+                        key={e.objId}
+                        onClick={() => {
+                            this.popup.current.activate(e.objId);
+                        }}
+                    ></ScheduleEvent>
+                );
+            }
         });
+        this.setState({ eventComponents });
     }
 
     render() {
@@ -140,7 +145,9 @@ class Home extends React.Component {
                         {`Switch to ${this.state.schedule ? 'Calendar' : 'Schedule'} View`}
                     </button>
                 </div>
-                <div className={'schedule-view' + (this.state.schedule ? ' view-active' : '')}>{this.state.events}</div>
+                <div className={'schedule-view' + (this.state.schedule ? ' view-active' : '')}>
+                    {this.state.eventComponents}
+                </div>
                 <div className={'calendar-view' + (!this.state.schedule ? ' view-active' : '')}>
                     <div className="calendar">
                         {calendarHeader}
