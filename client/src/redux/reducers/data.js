@@ -1,4 +1,4 @@
-import { RESET_STATE, SET_EVENT_LIST } from "../actionTypes";
+import { RESET_STATE, SET_EVENT_LIST } from '../actionTypes';
 
 const initialState = {
     eventList: null,

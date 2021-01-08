@@ -1,1 +1,1 @@
-export const getSavedEventList = store => store.data.eventList;
+export const getSavedEventList = (store) => store.data.eventList;
