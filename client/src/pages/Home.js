@@ -7,6 +7,7 @@ import './Home.scss';
 import Popup from '../components/Popup';
 import { getEvent, getEventList } from '../functions/api';
 import { setEventList } from '../redux/actions';
+import dayjs from 'dayjs';
 import {
     createDateHeader,
     divideByDate,
@@ -23,7 +24,7 @@ class Home extends React.Component {
     constructor(props) {
         super(props);
         this.popup = React.createRef();
-        this.state = { schedule: true, eventComponents: null };
+        this.state = { schedule: true, eventComponents: null, calendarComponents: null };
     }
 
     // Pads a date to 2 digits (eg. 1 => '01')
@@ -83,7 +84,7 @@ class Home extends React.Component {
             eventList = await getEventList();
             this.props.setEventList(eventList);
         }
-        const events =  [ ...eventList ];
+        const events = [...eventList];
         // Create a dayjs object for each event
         events.forEach((e) => addDayjsElement(e));
 
@@ -113,7 +114,82 @@ class Home extends React.Component {
                 );
             }
         });
-        this.setState({ eventComponents });
+        var { calendar, previous, after, date } = calendarDays();
+        var month = date.month(), year = date.year();
+        // Index the beginning of the events to add to calendar
+        var i;
+        for (i = 0; i < eventList.length; i++) {
+            const day = dayjs(eventList[i].start);
+            if (dayjs(day).year() >= year && dayjs(day).month() >= month && dayjs(day).date() >= previous[0]) break;
+        }
+
+        var calendarComponents = [];
+        // Add events for previous month
+        previous.forEach((currDay) => {
+            var calEvents = [];
+            while (i < eventList.length) {
+                const day = dayjs(eventList[i].start);
+                if (dayjs(day).year() === year && dayjs(day).month() === month && dayjs(day).date() === currDay) {
+                    calEvents.push(eventList[i]);
+                    i++;
+                }
+                else
+                    break;
+            }
+            calendarComponents.push(
+                <CalendarDay
+                    day={this.pad(currDay)}
+                    key={date.month() + '-' + currDay}
+                    events={calEvents}
+                ></CalendarDay>
+            );
+        });
+        // Add events for current month
+        date = date.add(1, 'month');
+        month = date.month();
+        year = date.year();
+        calendar.forEach((currDay) => {
+            var calEvents = [];
+            while (i < eventList.length) {
+                const day = dayjs(eventList[i].start);
+                if (dayjs(day).year() === year && dayjs(day).month() === month && dayjs(day).date() === currDay) {
+                    calEvents.push(eventList[i]);
+                    i++;
+                }
+                else
+                    break;
+            }
+            calendarComponents.push(
+                <CalendarDay
+                    day={this.pad(currDay)}
+                    key={date.month() + '-' + currDay}
+                    events={calEvents}
+                ></CalendarDay>
+            );
+        });
+        date = date.add(1, 'month');
+        month = date.month();
+        year = date.year();
+        after.forEach((currDay) => {
+            var calEvents = [];
+            while (i < eventList.length) {
+                const day = dayjs(eventList[i].start);
+                if (dayjs(day).year() === year && dayjs(day).month() === month && dayjs(day).date() === currDay) {
+                    calEvents.push(eventList[i]);
+                    i++;
+                }
+                else
+                    break;
+            }
+            calendarComponents.push(
+                <CalendarDay
+                    day={this.pad(currDay)}
+                    key={date.month() + '-' + currDay}
+                    events={calEvents}
+                ></CalendarDay>
+            );
+        });
+        this.setState({ eventComponents, calendarComponents });
     }
 
     render() {
@@ -125,13 +201,6 @@ class Home extends React.Component {
                 </div>
             );
         });
-        const calendar = calendarDays();
-        for (let i = 0; i < calendar.length; i++)
-            calendar[i] = (
-                <CalendarDay day={this.pad(calendar[i])} key={i + '-' + calendar[i]} events={[]}></CalendarDay>
-            );
-        // for (let i = 1; i <= 7; i++)
-        //     calendar.shift();
 
         return (
             <div className="Home">
@@ -151,7 +220,7 @@ class Home extends React.Component {
                 <div className={'calendar-view' + (!this.state.schedule ? ' view-active' : '')}>
                     <div className="calendar">
                         {calendarHeader}
-                        {calendar}
+                        {this.state.calendarComponents}
                     </div>
                 </div>
             </div>
