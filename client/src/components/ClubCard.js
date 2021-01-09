@@ -9,24 +9,27 @@ class ClubCard extends React.Component {
             <div className="ClubCard" onClick={this.props.onClick}>
                 <div className="image-box">
                     {/* TODO: Detect bad image url */}
-                    <div className="image-placeholder" style={this.props.coverImg != '' ? { display: 'none' } : {}}>
+                    <div
+                        className="image-placeholder"
+                        style={this.props.club.coverImg != '' ? { display: 'none' } : {}}
+                    >
                         Club Image here
                     </div>
-                    <img className="club-image" src={this.props.coverImgThumbnail} alt="club image"></img>
+                    <img className="club-image" src={this.props.club.coverImgThumbnail} alt="club image"></img>
                 </div>
-                <div className={'club-type' + (this.props.advised != 'true' ? ' club-indp' : '')}>
-                    {this.props.advised == 'true' ? 'Advised' : 'Independent'}
+                <div className={'club-type' + (this.props.club.advised != 'true' ? ' club-indp' : '')}>
+                    {this.props.club.advised == 'true' ? 'Advised' : 'Independent'}
                 </div>
-                <div className="club-name">{this.props.name}</div>
+                <div className="club-name">{this.props.club.name}</div>
                 <div className="club-icons">
                     <GlobeIcon
                         onClick={() => {
-                            if (this.props.website != '') window.open(this.props.website);
+                            if (this.props.club.website != '') window.open(this.props.club.website);
                         }}
                     ></GlobeIcon>
                     <FbIcon
                         onClick={() => {
-                            if (this.props.fb != '') window.open(this.props.fb);
+                            if (this.props.club.fb != '') window.open(this.props.club.fb);
                         }}
                     ></FbIcon>
                 </div>

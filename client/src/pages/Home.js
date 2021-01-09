@@ -5,27 +5,26 @@ import ScheduleEvent from '../components/ScheduleEvent';
 import CalendarDay from '../components/CalendarDay';
 import './Home.scss';
 import Popup from '../components/Popup';
-import { getEvent, getEventList } from '../functions/api';
-import { setEventList } from '../redux/actions';
+import { getEventList } from '../functions/api';
+import { setEventList, setPopupOpen, setPopupId } from '../redux/actions';
 import dayjs from 'dayjs';
 import arraySupport from 'dayjs/plugin/arraySupport';
-dayjs.extend(arraySupport);
+
 import {
     createDateHeader,
     divideByDate,
-    getFormattedDate,
-    getFormattedTime,
     addDayjsElement,
     getMonthAndYear,
     calendarDays,
     daysOfWeek,
 } from '../functions/util';
 import { getSavedEventList } from '../redux/selectors';
+import EventPopup from '../components/EventPopup';
 
 class Home extends React.Component {
     constructor(props) {
         super(props);
-        this.popup = React.createRef();
+        dayjs.extend(arraySupport);
         this.state = { schedule: true, eventComponents: null, calendarComponents: null };
     }
 
@@ -37,45 +36,12 @@ class Home extends React.Component {
 
     switchView = () => {
         this.setState({ schedule: !this.state.schedule });
-        console.log(this.props.eventList);
     };
 
-    activatePopup = () => {
-        const id = this.popup.current.state.id;
-        // TODO: Add check for errors (invalid ID or no ID could be found) -> redirect user to 404 page
-        getEvent(id).then((event) => {
-            addDayjsElement(event);
-            var linkData = [];
-            event.links.forEach((link) =>
-                linkData.push(
-                    <a className="popup-event-link" key={link} href={link}>
-                        {link}
-                    </a>
-                )
-            );
-            this.setState({
-                popupContent: (
-                    <div className="home-popup-content">
-                        <div className="popup-event-left home-popup-side">
-                            {event.type === 'event' ? (
-                                <p className="popup-event-type event">Event</p>
-                            ) : (
-                                <p className="popup-event-type signup">Signup</p>
-                            )}
-                            <p className="popup-event-name">{event.name}</p>
-                            <p className="popup-event-club">{event.club}</p>
-                            <p className="popup-event-date">{getFormattedDate(event)}</p>
-                            <p className="popup-event-time">{getFormattedTime(event)}</p>
-                            {linkData}
-                            <p className="popup-event-added-by">{'Added by: ' + event.addedBy}</p>
-                        </div>
-                        <div className="popup-event-right home-popup-side">
-                            <p className="popup-event-description">{event.description}</p>
-                        </div>
-                    </div>
-                ),
-            });
-        });
+    activatePopup = (id) => {
+        this.props.history.push(`/events?id=${id}`);
+        this.props.setPopupId(id);
+        this.props.setPopupOpen(true);
     };
 
     setCalendar = (eventList) => {
@@ -84,7 +50,6 @@ class Home extends React.Component {
             year = date.year();
         // Index the beginning of the events to add to calendar
         var i;
-        console.log(date.format('D M YY'));
         if (previous.length === 0) {
             date = date.add(1, 'month');
             month = date.month();
@@ -93,10 +58,8 @@ class Home extends React.Component {
         const first = dayjs([year, month, previous.length === 0 ? 1 : previous[0]]);
         for (i = 0; i < eventList.length; i++) {
             const day = dayjs(eventList[i].start);
-            console.log(day.format('D M YY'));
             if (day.isAfter(first)) break;
         }
-        console.log(i);
 
         var calendarComponents = [];
         // Add events for previous month
@@ -190,13 +153,10 @@ class Home extends React.Component {
             } else {
                 eventComponents.push(
                     <ScheduleEvent
-                        type={e.type}
-                        time={getFormattedTime(e)}
-                        club={e.club}
-                        name={e.name}
+                        event={e}
                         key={e.objId}
                         onClick={() => {
-                            this.popup.current.activate(e.objId);
+                            this.activatePopup(e._id);
                         }}
                     ></ScheduleEvent>
                 );
@@ -217,8 +177,8 @@ class Home extends React.Component {
 
         return (
             <div className="Home">
-                <Popup history={this.props.history} ref={this.popup} activateCallback={this.activatePopup}>
-                    {this.state.popupContent}
+                <Popup history={this.props.history}>
+                    <EventPopup></EventPopup>
                 </Popup>
                 <div className="home-top">
                     <div className="dummy"></div>
@@ -246,6 +206,6 @@ const mapStateToProps = (state) => {
         eventList: getSavedEventList(state),
     };
 };
-const mapDispatchToProps = { setEventList };
+const mapDispatchToProps = { setEventList, setPopupOpen, setPopupId };
 
 export default connect(mapStateToProps, mapDispatchToProps)(Home);

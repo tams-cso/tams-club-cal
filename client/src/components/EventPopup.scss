@@ -1,0 +1,76 @@
+@import '../custom.scss';
+
+.EventPopup {
+    display: flex;
+    flex-direction: row;
+    width: 25rem;
+    padding: 0.5rem;
+}
+
+.home-side {
+    flex-basis: 50%;
+    overflow-x: hidden;
+    padding: 0.5rem;
+}
+
+.EventPopup .event-left {
+    border-right: 0.03rem solid $text-primary;
+}
+
+.EventPopup .popup-event-type {
+    font-size: 0.6rem;
+}
+
+.EventPopup .popup-event-type.event {
+    color: $type-event-darker;
+}
+
+.EventPopup .popup-event-type.signup {
+    color: $type-signup;
+}
+
+.EventPopup .event-name {
+    width: 100%;
+    max-width: 100%;
+    overflow: hidden;
+    font-size: 1.1rem;
+    margin-bottom: -0.1rem;
+}
+
+.EventPopup .event-club {
+    font-size: 0.5rem;
+    color: $text-light;
+}
+
+.EventPopup .event-date {
+    font-size: 0.65rem;
+    margin-top: 0.5rem;
+}
+
+.EventPopup .event-time {
+    font-size: 0.65rem;
+    margin-bottom: 0.5rem;
+}
+
+.EventPopup .event-link {
+    display: block;
+    font-size: 0.5rem;
+    color: $text-primary;
+    transition: 0.2s;
+    margin-bottom: 0.25rem;
+}
+
+.EventPopup .event-link:hover {
+    color: $primary;
+}
+
+.EventPopup .event-added-by {
+    margin-top: 3rem;
+    font-size: 0.45rem;
+    color: $text-lighter;
+}
+
+.EventPopup .event-description {
+    font-size: 0.55rem;
+    white-space: pre-line;
+}

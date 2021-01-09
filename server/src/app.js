@@ -52,14 +52,14 @@ app.post('/feedback', async (req, res, next) => {
 
 app.get('/event', async (req, res, next) => {
     res.header('Access-Control-Allow-Origin', '*');
-    const club = await getEvent(req.query.id);
-    res.send(club);
+    const event = await getEvent(req.query.id);
+    res.send(event);
 });
 
 app.get('/event-list', async (req, res, next) => {
     res.header('Access-Control-Allow-Origin', '*');
-    const clubs = await getEventList();
-    res.send(clubs);
+    const events = await getEventList();
+    res.send(events);
 });
 
 app.post('/add-event', async (req, res, next) => {

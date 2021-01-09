@@ -1,0 +1,74 @@
+@import '../custom.scss';
+
+.ClubPopup.no-content {
+    padding: 1rem;
+}
+
+.ClubPopup {
+    width: 24rem;
+    background-color: $background;
+    text-align: center;
+}
+
+.clubs-popup-img {
+    width: 24rem;
+}
+
+.clubs-popup-name {
+    font-size: 1.45rem;
+    padding: 0 0.75rem;
+}
+
+.clubs-popup-description {
+    font-size: 0.65rem;
+    padding: 0.5rem 1.75rem;
+}
+
+.clubs-popup-link {
+    font-size: 0.7rem;
+    color: $text-light;
+    transition: 0.2s;
+    text-decoration: underline;
+    width: fit-content;
+    margin: auto;
+}
+
+.clubs-popup-link:hover {
+    cursor: pointer;
+    color: $primary;
+}
+
+.clubs-popup-tab-container {
+    margin-top: 0.75rem;
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+}
+
+.clubs-popup-tab-item {
+    margin: 0 1.5rem;
+    color: $text-light;
+    transition: 0.2s;
+}
+
+.clubs-popup-tab-item:hover {
+    cursor: pointer;
+    color: $primary;
+}
+
+.clubs-popup-tab-container .active {
+    color: $primary;
+}
+
+.clubs-popup-tab-container {
+    margin-bottom: 0.5rem;
+}
+
+.clubs-popup-committees {
+    margin: auto;
+    display: grid;
+    gap: 1rem;
+    grid-template-columns: repeat(auto-fill, 10rem);
+    justify-content: center;
+    align-items: center;
+}
