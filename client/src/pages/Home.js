@@ -39,7 +39,7 @@ class Home extends React.Component {
     };
 
     activatePopup = (id) => {
-        this.props.history.push(`/event?id=${id}`);
+        this.props.history.push(`/events?id=${id}`);
         this.props.setPopupId(id);
         this.props.setPopupOpen(true);
     };
