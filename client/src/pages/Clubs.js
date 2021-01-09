@@ -25,11 +25,7 @@ class Clubs extends React.Component {
         var clubCards = [];
         data.forEach((club) => {
             clubCards.push(
-                <ClubCard
-                    club={club}
-                    key={club.name}
-                    onClick={() => this.activatePopup(club.objId)}
-                ></ClubCard>
+                <ClubCard club={club} key={club.name} onClick={() => this.activatePopup(club.objId)}></ClubCard>
             );
         });
         this.setState({ clubCards });

@@ -9,7 +9,10 @@ class ClubCard extends React.Component {
             <div className="ClubCard" onClick={this.props.onClick}>
                 <div className="image-box">
                     {/* TODO: Detect bad image url */}
-                    <div className="image-placeholder" style={this.props.club.coverImg != '' ? { display: 'none' } : {}}>
+                    <div
+                        className="image-placeholder"
+                        style={this.props.club.coverImg != '' ? { display: 'none' } : {}}
+                    >
                         Club Image here
                     </div>
                     <img className="club-image" src={this.props.club.coverImgThumbnail} alt="club image"></img>
