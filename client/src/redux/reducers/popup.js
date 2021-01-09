@@ -29,7 +29,7 @@ export default function popup(state = initialState, action) {
             const { id } = action.payload;
             return {
                 ...state,
-                id
+                id,
             };
         }
         default:

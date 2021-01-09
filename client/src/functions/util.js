@@ -174,7 +174,7 @@ async function getOrFetchVolList() {
         store.dispatch(setVolunteeringList(volList));
     }
     return volList;
-};
+}
 
 export {
     getParams,

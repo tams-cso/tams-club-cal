@@ -9,7 +9,7 @@ class Popup extends React.Component {
     activate = (id) => {
         this.props.setPopupOpen(true);
         this.props.setPopupId(id);
-    }
+    };
 
     close = () => {
         if (window.location.pathname == '/event') this.props.history.push('/');

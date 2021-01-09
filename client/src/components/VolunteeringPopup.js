@@ -36,7 +36,7 @@ class VolunteeringPopup extends React.Component {
     closeEdit = () => {
         this.props.setPopupEdit(false);
         this.resetState();
-    }
+    };
 
     submit = async () => {
         var invalid = this.testValid();
@@ -82,7 +82,7 @@ class VolunteeringPopup extends React.Component {
             signupTime: this.props.vol.signupTime,
             filters: { ...this.props.vol.filters },
         });
-    }
+    };
 
     componentDidUpdate(prevProps) {
         if (prevProps.vol !== this.props.vol && this.props.vol !== undefined) {
