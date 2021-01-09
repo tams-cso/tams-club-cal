@@ -1,8 +1,15 @@
-import { RESET_DATA_STATE, SET_EVENT_LIST, SET_VOLUNTEERING_LIST, UPDATE_VOLUNTEERING } from '../actionTypes';
+import {
+    RESET_DATA_STATE,
+    SET_CLUB_LIST,
+    SET_EVENT_LIST,
+    SET_VOLUNTEERING_LIST,
+    UPDATE_VOLUNTEERING,
+} from '../actionTypes';
 
 const initialState = {
     eventList: null,
     volunteeringList: null,
+    clubList: null,
 };
 
 export default function data(state = initialState, action) {
@@ -36,6 +43,13 @@ export default function data(state = initialState, action) {
             return {
                 ...state,
                 volunteeringList,
+            };
+        }
+        case SET_CLUB_LIST: {
+            const { clubList } = action.payload;
+            return {
+                ...state,
+                clubList,
             };
         }
         default:
