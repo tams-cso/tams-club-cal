@@ -1,14 +1,18 @@
 import React from 'react';
 import { connect } from 'react-redux';
+import dayjs from 'dayjs';
+
 import DateSection from '../components/DateSection';
 import ScheduleEvent from '../components/ScheduleEvent';
 import CalendarDay from '../components/CalendarDay';
-import './Home.scss';
 import Popup from '../components/Popup';
+
 import { getEventList } from '../functions/api';
 import { setEventList, setPopupOpen, setPopupId } from '../redux/actions';
-import dayjs from 'dayjs';
 import arraySupport from 'dayjs/plugin/arraySupport';
+
+import './Home.scss';
+
 
 import {
     createDateHeader,

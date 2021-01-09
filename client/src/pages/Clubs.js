@@ -1,13 +1,16 @@
 import React from 'react';
 import { connect } from 'react-redux';
+
 import ClubCard from '../components/ClubCard';
 import ClubPopup from '../components/ClubPopup';
 import CommitteeCard from '../components/CommitteeCard';
 import Popup from '../components/Popup';
+
+import { getClubList } from '../functions/api';
 import { getSavedClubList } from '../redux/selectors';
 import { setClubList, setPopupOpen, setPopupId } from '../redux/actions';
+
 import './Clubs.scss';
-import { getClubList } from '../functions/api';
 
 class Clubs extends React.Component {
     constructor(props) {

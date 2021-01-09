@@ -1,7 +1,9 @@
 import React from 'react';
+
 import { postEvent } from '../functions/api';
 import { Event } from '../functions/entries';
 import { parseTimeZone } from '../functions/util';
+
 import './Add.scss';
 
 class Add extends React.Component {

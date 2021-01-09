@@ -1,6 +1,9 @@
 import React from 'react';
+
 import LinkBox from '../components/LinkBox';
+
 import { postFeedback } from '../functions/api';
+
 import './About.scss';
 
 class About extends React.Component {
