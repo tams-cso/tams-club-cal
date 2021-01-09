@@ -1,8 +1,8 @@
 name: 'Format with Prettier'
 
 on: 
-  pull_request:
-    branches: [master]
+  push:
+    branches: [ master ]
 
 jobs:
   format:
@@ -11,7 +11,7 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v2
         with:
-          ref: ${{ github.sha }}
+          token: ${{ secrets.TOKEN }}
       
       - name: Use NodeJS 14
         uses: actions/setup-node@v1
