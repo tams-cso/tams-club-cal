@@ -11,7 +11,7 @@ class EventPopup extends React.Component {
         super(props);
         this.state = { event: null };
     }
-    
+
     getEventData = async () => {
         const event = await getEvent(this.props.event.objId);
         this.setState({ event });
