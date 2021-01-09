@@ -18,7 +18,7 @@ class EventPopup extends React.Component {
     };
 
     componentDidUpdate(prevProps) {
-        if (prevProps.id !== this.props.id && this.props.popupOpen) {
+        if (prevProps.event !== this.props.event && this.props.popupOpen) {
             this.getEventData();
         }
         if (prevProps.popupOpen !== this.props.popupOpen && !this.props.popupOpen) {

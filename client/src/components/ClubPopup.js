@@ -23,7 +23,7 @@ class ClubPopup extends React.Component {
     };
 
     componentDidUpdate(prevProps) {
-        if (prevProps.id !== this.props.id && this.props.popupOpen) {
+        if (prevProps.club !== this.props.club && this.props.popupOpen) {
             this.getClubData();
         }
         if (prevProps.popupOpen !== this.props.popupOpen && !this.props.popupOpen) {

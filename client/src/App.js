@@ -16,7 +16,7 @@ function App() {
                 <div className="menu-bkgd"></div>
                 <div className="page">
                     <Switch>
-                        <Route exact path={['/', '/event']} component={Home} />
+                        <Route exact path={['/', '/events']} component={Home} />
                         <Route exact path="/resources" component={Resources} />
                         <Route exact path="/clubs" component={Clubs} />
                         <Route exact path="/add" component={Add} />
