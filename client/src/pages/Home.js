@@ -13,7 +13,6 @@ import arraySupport from 'dayjs/plugin/arraySupport';
 
 import './Home.scss';
 
-
 import {
     createDateHeader,
     divideByDate,
