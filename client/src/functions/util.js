@@ -134,17 +134,19 @@ function formatVolunteeringFilters(filters, signupTime) {
     return filterObjects;
 }
 
-function getMonthAndYear(tz) {
+function getMonthAndYear() {
     return dayjs().format('MMMM YYYY');
 }
 
-function calendarDays() {
-    const date = dayjs().date(1);
+function calendarDays(currMonth = undefined) {
+    const date = dayjs(currMonth).date(1);
     const calendar = [];
     for (let i = 1; i <= date.daysInMonth(); i++) calendar.push(i);
-    for (let i = date.day(), j = date.subtract(1, 'month').daysInMonth(); i > 0; i--) calendar.unshift(j--);
-    for (let i = date.date(date.daysInMonth()).day() + 1, j = 1; i < 7; i++) calendar.push(j++);
-    return calendar;
+    const previous = [];
+    for (let i = date.day(), j = date.subtract(1, 'month').daysInMonth(); i > 0; i--) previous.unshift(j--);
+    const after = [];
+    for (let i = date.date(date.daysInMonth()).day() + 1, j = 1; i < 7; i++) after.push(j++);
+    return { calendar, previous, after, date: date.subtract(1, 'month') };
 }
 
 function daysOfWeek() {
