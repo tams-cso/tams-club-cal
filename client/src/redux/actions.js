@@ -44,5 +44,5 @@ export const setPopupId = (id) => ({
 
 export const updateVolunteering = (id, vol) => ({
     type: UPDATE_VOLUNTEERING,
-    payload: { id, vol }
-})
+    payload: { id, vol },
+});
