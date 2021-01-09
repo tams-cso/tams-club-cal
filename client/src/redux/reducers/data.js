@@ -1,4 +1,4 @@
-import { RESET_DATA_STATE, SET_EVENT_LIST, SET_VOLUNTEERING_LIST } from '../actionTypes';
+import { RESET_DATA_STATE, SET_EVENT_LIST, SET_VOLUNTEERING_LIST, UPDATE_VOLUNTEERING } from '../actionTypes';
 
 const initialState = {
     eventList: null,
@@ -19,6 +19,20 @@ export default function data(state = initialState, action) {
         }
         case SET_VOLUNTEERING_LIST: {
             const { volunteeringList } = action.payload;
+            return {
+                ...state,
+                volunteeringList,
+            };
+        }
+        case UPDATE_VOLUNTEERING: {
+            const { id, vol } = action.payload;
+            var volunteeringList = [...state.volunteeringList];
+            for (var i = 0; i < volunteeringList.length; i++) {
+                if (volunteeringList[i]._id === id) {
+                    volunteeringList[i] = { ...volunteeringList[i], ...vol };
+                    break;
+                }
+            }
             return {
                 ...state,
                 volunteeringList,

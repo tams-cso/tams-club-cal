@@ -6,6 +6,7 @@ import {
     SET_OPEN,
     SET_EDIT,
     SET_ID,
+    UPDATE_VOLUNTEERING,
 } from './actionTypes';
 
 export const resetDataState = () => ({
@@ -40,3 +41,8 @@ export const setPopupId = (id) => ({
     type: SET_ID,
     payload: { id },
 });
+
+export const updateVolunteering = (id, vol) => ({
+    type: UPDATE_VOLUNTEERING,
+    payload: { id, vol }
+})

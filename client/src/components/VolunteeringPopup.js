@@ -3,7 +3,7 @@ import { postVolunteering } from '../functions/api';
 import { Volunteering } from '../functions/entries';
 import { formatVolunteeringFilters } from '../functions/util';
 import { getPopupEdit, getPopupId, getPopupOpen, getPopupVolunteering } from '../redux/selectors';
-import { setPopupOpen, setPopupId, setPopupEdit } from '../redux/actions';
+import { setPopupOpen, setPopupId, setPopupEdit, updateVolunteering } from '../redux/actions';
 import ActionButton from './ActionButton';
 import './VolunteeringPopup.scss';
 import { connect } from 'react-redux';
@@ -52,16 +52,16 @@ class VolunteeringPopup extends React.Component {
 
         // POST volunteering
         // TODO: Add check for 200 status
-        await postVolunteering(
-            new Volunteering(
-                this.state.name,
-                this.state.club,
-                this.state.description,
-                filters,
-                this.state.signupTime || null
-            ),
-            this.props.vol._id
+        var volunteeringObj = new Volunteering(
+            this.state.name,
+            this.state.club,
+            this.state.description,
+            filters,
+            this.state.signupTime || null
         );
+
+        await postVolunteering(volunteeringObj, this.props.vol._id);
+        this.props.updateVolunteering(this.props.vol._id, volunteeringObj);
         this.props.setPopupEdit(false);
     };
 
@@ -91,6 +91,7 @@ class VolunteeringPopup extends React.Component {
     }
 
     render() {
+        // Return empty div if the current popup is not defined
         if (this.props.vol === null || this.props.vol === undefined) return <div className="VolunteeringPopup"></div>;
 
         // Get a list of filters
@@ -223,6 +224,6 @@ const mapStateToProps = (state) => {
         vol: getPopupVolunteering(state),
     };
 };
-const mapDispatchToProps = { setPopupOpen, setPopupId, setPopupEdit };
+const mapDispatchToProps = { setPopupOpen, setPopupId, setPopupEdit, updateVolunteering };
 
 export default connect(mapStateToProps, mapDispatchToProps)(VolunteeringPopup);
