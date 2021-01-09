@@ -8,6 +8,8 @@ import Popup from '../components/Popup';
 import { getEvent, getEventList } from '../functions/api';
 import { setEventList } from '../redux/actions';
 import dayjs from 'dayjs';
+import arraySupport from 'dayjs/plugin/arraySupport';
+dayjs.extend(arraySupport);
 import {
     createDateHeader,
     divideByDate,
@@ -76,6 +78,90 @@ class Home extends React.Component {
         });
     };
 
+    setCalendar = (eventList) => {
+        var { calendar, previous, after, date } = calendarDays();
+        var month = date.month(),
+            year = date.year();
+        // Index the beginning of the events to add to calendar
+        var i;
+        console.log(date.format('D M YY'));
+        if (previous.length === 0) {
+            date = date.add(1, 'month');
+            month = date.month();
+            year = date.year();
+        }
+        const first = dayjs([year, month, previous.length === 0 ? 1 : previous[0]]);
+        for (i = 0; i < eventList.length; i++) {
+            const day = dayjs(eventList[i].start);
+            console.log(day.format('D M YY'));
+            if (day.isAfter(first)) break;
+        }
+        console.log(i);
+
+        var calendarComponents = [];
+        // Add events for previous month
+        previous.forEach((currDay) => {
+            var calEvents = [];
+            while (i < eventList.length) {
+                const day = dayjs(eventList[i].start);
+                if (dayjs(day).year() === year && dayjs(day).month() === month && dayjs(day).date() === currDay) {
+                    calEvents.push(eventList[i]);
+                    i++;
+                } else break;
+            }
+            calendarComponents.push(
+                <CalendarDay
+                    day={this.pad(currDay)}
+                    key={date.month() + '-' + currDay}
+                    events={calEvents}
+                ></CalendarDay>
+            );
+        });
+        if (previous.length > 0) {
+            date = date.add(1, 'month');
+            month = date.month();
+            year = date.year();
+        }
+        calendar.forEach((currDay) => {
+            var calEvents = [];
+            while (i < eventList.length) {
+                const day = dayjs(eventList[i].start);
+                if (dayjs(day).year() === year && dayjs(day).month() === month && dayjs(day).date() === currDay) {
+                    calEvents.push(eventList[i]);
+                    i++;
+                } else break;
+            }
+            calendarComponents.push(
+                <CalendarDay
+                    day={this.pad(currDay)}
+                    key={date.month() + '-' + currDay}
+                    events={calEvents}
+                ></CalendarDay>
+            );
+        });
+        date = date.add(1, 'month');
+        month = date.month();
+        year = date.year();
+        after.forEach((currDay) => {
+            var calEvents = [];
+            while (i < eventList.length) {
+                const day = dayjs(eventList[i].start);
+                if (dayjs(day).year() === year && dayjs(day).month() === month && dayjs(day).date() === currDay) {
+                    calEvents.push(eventList[i]);
+                    i++;
+                } else break;
+            }
+            calendarComponents.push(
+                <CalendarDay
+                    day={this.pad(currDay)}
+                    key={date.month() + '-' + currDay}
+                    events={calEvents}
+                ></CalendarDay>
+            );
+        });
+        this.setState({ calendarComponents });
+    };
+
     async componentDidMount() {
         var eventList = this.props.eventList;
         // Check if there is already events saved
@@ -90,6 +176,8 @@ class Home extends React.Component {
 
         // Sort the days
         events.sort((a, b) => a.start - b.start);
+
+        this.setCalendar([...events]);
 
         // Insert the date objects
         divideByDate(events);
@@ -114,82 +202,7 @@ class Home extends React.Component {
                 );
             }
         });
-        var { calendar, previous, after, date } = calendarDays();
-        var month = date.month(), year = date.year();
-        // Index the beginning of the events to add to calendar
-        var i;
-        for (i = 0; i < eventList.length; i++) {
-            const day = dayjs(eventList[i].start);
-            if (dayjs(day).year() >= year && dayjs(day).month() >= month && dayjs(day).date() >= previous[0]) break;
-        }
-
-        var calendarComponents = [];
-        // Add events for previous month
-        previous.forEach((currDay) => {
-            var calEvents = [];
-            while (i < eventList.length) {
-                const day = dayjs(eventList[i].start);
-                if (dayjs(day).year() === year && dayjs(day).month() === month && dayjs(day).date() === currDay) {
-                    calEvents.push(eventList[i]);
-                    i++;
-                }
-                else
-                    break;
-            }
-            calendarComponents.push(
-                <CalendarDay
-                    day={this.pad(currDay)}
-                    key={date.month() + '-' + currDay}
-                    events={calEvents}
-                ></CalendarDay>
-            );
-        });
-        // Add events for current month
-        date = date.add(1, 'month');
-        month = date.month();
-        year = date.year();
-        calendar.forEach((currDay) => {
-            var calEvents = [];
-            while (i < eventList.length) {
-                const day = dayjs(eventList[i].start);
-                if (dayjs(day).year() === year && dayjs(day).month() === month && dayjs(day).date() === currDay) {
-                    calEvents.push(eventList[i]);
-                    i++;
-                }
-                else
-                    break;
-            }
-            calendarComponents.push(
-                <CalendarDay
-                    day={this.pad(currDay)}
-                    key={date.month() + '-' + currDay}
-                    events={calEvents}
-                ></CalendarDay>
-            );
-        });
-        date = date.add(1, 'month');
-        month = date.month();
-        year = date.year();
-        after.forEach((currDay) => {
-            var calEvents = [];
-            while (i < eventList.length) {
-                const day = dayjs(eventList[i].start);
-                if (dayjs(day).year() === year && dayjs(day).month() === month && dayjs(day).date() === currDay) {
-                    calEvents.push(eventList[i]);
-                    i++;
-                }
-                else
-                    break;
-            }
-            calendarComponents.push(
-                <CalendarDay
-                    day={this.pad(currDay)}
-                    key={date.month() + '-' + currDay}
-                    events={calEvents}
-                ></CalendarDay>
-            );
-        });
-        this.setState({ eventComponents, calendarComponents });
+        this.setState({ eventComponents });
     }
 
     render() {

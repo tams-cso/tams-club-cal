@@ -1,5 +1,5 @@
 import React from 'react';
-import './ScheduleEvent.scss';
+import './CalendarEvent.scss';
 
 class CalendarEvent extends React.Component {
     render() {
