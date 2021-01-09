@@ -1,6 +1,6 @@
 @import '../custom.scss';
 
-.event-type {
+.calendar-event-type {
     height: 0.5rem;
     width: 0.5rem;
     background-color: $type-event;
@@ -9,24 +9,24 @@
     margin: 0 1em 0 2em;
 }
 
-.event-type-signup {
+.calendar-event-type-signup {
     background-color: $type-signup;
     font-size: 0.5rem;
     margin: 0.25rem;
 }
 
-.event-time {
+.calendar-event-time {
     font-size: 0.5rem;
     margin: 0.25rem;
 }
 
-.event-club-name {
+.calendar-event-club-name {
     color: $text-light;
     font-size: 0.5rem;
     margin: 0.25rem;
 }
 
-.event-name {
+.calendar-event-name {
     font-size: 0.5rem;
     margin: 0.25rem;
 }
