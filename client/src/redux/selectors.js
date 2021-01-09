@@ -8,6 +8,11 @@ export const getPopupEdit = (store) => store.popup.edit;
 
 export const getPopupId = (store) => store.popup.id;
 
+export const getPopupEvent = (store) => {
+    if (store.data.eventList === null) return null;
+    return store.data.eventList.find((v) => v._id === store.popup.id);
+};
+
 export const getPopupVolunteering = (store) => {
     if (store.data.volunteeringList === null) return null;
     return store.data.volunteeringList.find((v) => v._id === store.popup.id);

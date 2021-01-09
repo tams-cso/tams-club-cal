@@ -11,7 +11,6 @@ import { getSavedVolunteeringList } from '../redux/selectors';
 import { setVolunteeringList, setPopupOpen, setPopupId } from '../redux/actions';
 
 import './Resources.scss';
-import { Volunteering } from '../functions/entries';
 
 class Resources extends React.Component {
     constructor(props) {
@@ -19,8 +18,8 @@ class Resources extends React.Component {
         this.state = { volCards: null, filter: null };
     }
 
-    activatePopup = async (id) => {
-        this.props.history.push(`${window.location.pathname}?id=${id}`);
+    activatePopup = (id) => {
+        this.props.history.push(`/resources?id=${id}`);
         this.props.setPopupId(id);
         this.props.setPopupOpen(true);
     };
