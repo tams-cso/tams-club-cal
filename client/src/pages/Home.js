@@ -5,7 +5,7 @@ import ScheduleEvent from '../components/ScheduleEvent';
 import CalendarDay from '../components/CalendarDay';
 import './Home.scss';
 import Popup from '../components/Popup';
-import { getEvent, getEventList } from '../functions/api';
+import { getEventList } from '../functions/api';
 import { setEventList, setPopupOpen, setPopupId } from '../redux/actions';
 import dayjs from 'dayjs';
 import arraySupport from 'dayjs/plugin/arraySupport';
@@ -13,8 +13,6 @@ import arraySupport from 'dayjs/plugin/arraySupport';
 import {
     createDateHeader,
     divideByDate,
-    getFormattedDate,
-    getFormattedTime,
     addDayjsElement,
     getMonthAndYear,
     calendarDays,
