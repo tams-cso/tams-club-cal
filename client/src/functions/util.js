@@ -146,7 +146,7 @@ function calendarDays(currMonth = undefined) {
     for (let i = date.day(), j = date.subtract(1, 'month').daysInMonth(); i > 0; i--) previous.unshift(j--);
     const after = [];
     for (let i = date.date(date.daysInMonth()).day() + 1, j = 1; i < 7; i++) after.push(j++);
-    return {calendar, previous, after, date: date.subtract(1, 'month')};
+    return { calendar, previous, after, date: date.subtract(1, 'month') };
 }
 
 function daysOfWeek() {
