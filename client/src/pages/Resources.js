@@ -1,34 +1,45 @@
 import React from 'react';
+import { connect } from 'react-redux';
+
 import LinkBox from '../components/LinkBox';
 import Popup from '../components/Popup';
 import VolunteeringCard from '../components/VolunteeringCard';
 import VolunteeringPopup from '../components/VolunteeringPopup';
-import { getVolunteering } from '../functions/api';
+
+import { getOrFetchVolList } from '../functions/util';
+import { getSavedVolunteeringList } from '../redux/selectors';
+import { setVolunteeringList, setPopupOpen, setPopupId } from '../redux/actions';
+
 import './Resources.scss';
+import { Volunteering } from '../functions/entries';
 
 class Resources extends React.Component {
     constructor(props) {
         super(props);
-        this.popup = React.createRef();
-        this.popupContent = React.createRef();
-        this.volList = [];
-        this.state = { vol: null };
+        this.state = { volCards: null, filter: null };
+    }
+
+    activatePopup = async (id) => {
+        this.props.history.push(`${window.location.pathname}?id=${id}`);
+        this.props.setPopupId(id);
+        this.props.setPopupOpen(true);
+    };
+
+    async componentDidMount() {
+        await getOrFetchVolList();
+        this.createCards(null);
     }
 
     createCards = (currFilter) => {
         var volCards = [];
-        this.volList.forEach((volunteering) => {
-            if (currFilter === null || volunteering.filters[currFilter])
+        this.props.volunteeringList.forEach((vol) => {
+            if (currFilter === null || vol.filters[currFilter])
                 volCards.push(
                     <VolunteeringCard
-                        name={volunteering.name}
-                        club={volunteering.club}
-                        description={volunteering.description}
-                        filters={volunteering.filters}
-                        signupTime={volunteering.signupTime}
-                        key={volunteering.name}
+                        vol={vol}
+                        key={vol._id}
                         onClick={() => {
-                            this.popup.current.activate(volunteering._id);
+                            this.activatePopup(vol._id);
                         }}
                     ></VolunteeringCard>
                 );
@@ -36,40 +47,11 @@ class Resources extends React.Component {
         this.setState({ volCards, filter: currFilter });
     };
 
-    activatePopup = async () => {
-        const id = this.popup.current.state.id;
-        if (this.volList.length === 0) {
-            await getVolunteering().then((data) => {
-                this.volList = data;
-            });
-        }
-        var vol = this.volList.find((v) => v._id === id);
-        this.setState({ vol });
-    };
-
-    componentDidMount() {
-        if (this.volList.length === 0) {
-            getVolunteering().then((data) => {
-                this.volList = data;
-                this.createCards(null);
-            });
-        } else this.createCards(null);
-    }
-
     render() {
         return (
             <div className="Resources">
-                <Popup
-                    history={this.props.history}
-                    ref={this.popup}
-                    activateCallback={this.activatePopup}
-                    edit="false"
-                    scroll="hidden"
-                    closeCallback={() => {
-                        this.popupContent.current.closeEdit();
-                    }}
-                >
-                    <VolunteeringPopup vol={this.state.vol} ref={this.popupContent}></VolunteeringPopup>
+                <Popup history={this.props.history} noscroll>
+                    <VolunteeringPopup></VolunteeringPopup>
                 </Popup>
                 <h1 className="links-title">Links</h1>
                 <div className="link-container">
@@ -126,4 +108,11 @@ class Resources extends React.Component {
     }
 }
 
-export default Resources;
+const mapStateToProps = (state) => {
+    return {
+        volunteeringList: getSavedVolunteeringList(state),
+    };
+};
+const mapDispatchToProps = { setVolunteeringList, setPopupOpen, setPopupId };
+
+export default connect(mapStateToProps, mapDispatchToProps)(Resources);

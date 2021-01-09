@@ -3,13 +3,21 @@ import utc from 'dayjs/plugin/utc';
 import timezone from 'dayjs/plugin/timezone';
 import isLeapYear from 'dayjs/plugin/isLeapYear';
 import { EventInfo } from './entries';
+import store from '../redux/store';
+import { getSavedVolunteeringList } from '../redux/selectors';
+import { getVolunteering } from '../functions/api';
+import { setVolunteeringList } from '../redux/actions';
 
 dayjs.extend(utc);
 dayjs.extend(timezone);
 dayjs.extend(isLeapYear);
 
-function getParams() {
-    return new URLSearchParams(window.location.search);
+/**
+ * Gets query parameters
+ * @returns {string | null} The value of the query parameter or null if missing
+ */
+function getParams(query) {
+    return new URLSearchParams(window.location.search).get(query);
 }
 
 /**
@@ -156,6 +164,20 @@ function daysOfWeek() {
     return header;
 }
 
+/**
+ * Gets volunteering list from store or if null,
+ * fetches it and stores it in the store
+ * @returns {Promise<Volunteering[]>} List of volunteering events
+ */
+async function getOrFetchVolList() {
+    var volList = getSavedVolunteeringList(store.getState());
+    if (volList === null) {
+        volList = await getVolunteering();
+        store.dispatch(setVolunteeringList(volList));
+    }
+    return volList;
+}
+
 export {
     getParams,
     parseTimeZone,
@@ -169,4 +191,5 @@ export {
     getMonthAndYear,
     calendarDays,
     daysOfWeek,
+    getOrFetchVolList,
 };

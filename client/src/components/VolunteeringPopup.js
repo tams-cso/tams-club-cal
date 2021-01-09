@@ -1,27 +1,22 @@
 import React from 'react';
 import { postVolunteering } from '../functions/api';
 import { Volunteering } from '../functions/entries';
-import { formatVolunteeringFilters, getParams } from '../functions/util';
+import { formatVolunteeringFilters } from '../functions/util';
+import { getPopupEdit, getPopupId, getPopupOpen, getPopupVolunteering } from '../redux/selectors';
+import { setPopupOpen, setPopupId, setPopupEdit } from '../redux/actions';
 import ActionButton from './ActionButton';
 import './VolunteeringPopup.scss';
+import { connect } from 'react-redux';
 
 class VolunteeringPopup extends React.Component {
     constructor(props) {
         super(props);
-        this.state = { edit: false, open: false, name: '', club: '', description: '', filters: {} };
+        this.state = { open: false, name: '', club: '', description: '', filters: {} };
     }
 
     handleInputChange = (event) => {
         const target = event.target;
         this.setState({ [target.name]: target.value });
-    };
-
-    closeEdit = () => {
-        this.setState({ edit: false });
-    };
-
-    edit = () => {
-        this.setState({ edit: true });
     };
 
     changeFilter = (filter) => {
@@ -34,34 +29,40 @@ class VolunteeringPopup extends React.Component {
         this.setState({ open: !this.state.open });
     };
 
-    submit = () => {
-        var invalid = this.testValid();
-        if (invalid.length === 0) {
-            // Updated 'open' filter
-            var filters = this.state.filters;
-            filters['open'] = this.state.open;
+    openEdit = () => {
+        this.props.setPopupEdit(true);
+    };
 
-            // POST volunteering
-            postVolunteering(
-                new Volunteering(
-                    this.state.name,
-                    this.state.club,
-                    this.state.description,
-                    filters,
-                    this.state.signupTime || null
-                ),
-                this.props.vol._id
-            ).then(() => {
-                this.closeEdit();
-                // TODO: Find more permanant solution LMAO
-                alert('Volunteering opportunity updated!');
-                window.location.reload();
-            });
-        } else {
+    closeEdit = () => {
+        this.props.setPopupEdit(false);
+        this.resetState();
+    };
+
+    submit = async () => {
+        var invalid = this.testValid();
+        if (invalid.length !== 0) {
             var message = '';
             invalid.forEach((i) => (message += `${i} cannot be empty!\n`));
             alert(message);
+            return;
         }
+        // Updated 'open' filter
+        var filters = this.state.filters;
+        filters['open'] = this.state.open;
+
+        // POST volunteering
+        // TODO: Add check for 200 status
+        await postVolunteering(
+            new Volunteering(
+                this.state.name,
+                this.state.club,
+                this.state.description,
+                filters,
+                this.state.signupTime || null
+            ),
+            this.props.vol._id
+        );
+        this.props.setPopupEdit(false);
     };
 
     testValid = () => {
@@ -72,11 +73,8 @@ class VolunteeringPopup extends React.Component {
         return invalid;
     };
 
-    componentDidMount() {
-        if (this.props.vol === null) return;
-
+    resetState = () => {
         this.setState({
-            open: this.props.vol.filters.open === 'true',
             name: this.props.vol.name,
             club: this.props.vol.club,
             description: this.props.vol.description,
@@ -84,24 +82,21 @@ class VolunteeringPopup extends React.Component {
             signupTime: this.props.vol.signupTime,
             filters: { ...this.props.vol.filters },
         });
-    }
+    };
 
     componentDidUpdate(prevProps) {
-        if (prevProps.vol !== this.props.vol) {
-            this.setState({
-                name: this.props.vol.name,
-                club: this.props.vol.club,
-                description: this.props.vol.description,
-                open: this.props.vol.filters.open,
-                signupTime: this.props.vol.signupTime,
-                filters: { ...this.props.vol.filters },
-            });
+        if (prevProps.vol !== this.props.vol && this.props.vol !== undefined) {
+            this.resetState();
         }
     }
 
     render() {
-        if (this.props.vol === null) return <div className="VolunteeringPopup"></div>;
+        if (this.props.vol === null || this.props.vol === undefined) return <div className="VolunteeringPopup"></div>;
+
+        // Get a list of filters
         var filters = formatVolunteeringFilters(this.props.vol.filters, this.props.vol.signupTime);
+
+        // If the weekly filter is active, show edit field for signup time
         var signupTime = null;
         if (this.state.filters.weekly) {
             signupTime = (
@@ -117,9 +112,10 @@ class VolunteeringPopup extends React.Component {
                 </>
             );
         }
+
         return (
             <div className="VolunteeringPopup">
-                <div className={'display' + (!this.state.edit ? ' active' : ' inactive')}>
+                <div className={'display' + (!this.props.edit ? ' active' : ' inactive')}>
                     {this.props.vol.filters.open ? (
                         <p className="res-popup-open open">Open</p>
                     ) : (
@@ -129,9 +125,9 @@ class VolunteeringPopup extends React.Component {
                     <p className="res-popup-club">{this.props.vol.club}</p>
                     <p className="res-popup-description">{this.props.vol.description}</p>
                     {filters}
-                    <ActionButton onClick={this.edit}>Edit</ActionButton>
+                    <ActionButton onClick={this.openEdit}>Edit</ActionButton>
                 </div>
-                <div className={'edit' + (this.state.edit ? ' active' : ' inactive')}>
+                <div className={'edit' + (this.props.edit ? ' active' : ' inactive')}>
                     <div className="title-and-open">
                         <div className="title">
                             <input
@@ -219,4 +215,14 @@ class VolunteeringPopup extends React.Component {
     }
 }
 
-export default VolunteeringPopup;
+const mapStateToProps = (state) => {
+    return {
+        popupOpen: getPopupOpen(state),
+        id: getPopupId(state),
+        edit: getPopupEdit(state),
+        vol: getPopupVolunteering(state),
+    };
+};
+const mapDispatchToProps = { setPopupOpen, setPopupId, setPopupEdit };
+
+export default connect(mapStateToProps, mapDispatchToProps)(VolunteeringPopup);

@@ -33,6 +33,6 @@
     box-shadow: 0 0 3px $text-light;
 }
 
-.Popup.hidden .popup-content {
+.Popup.noscroll .popup-content {
     overflow-y: hidden !important;
 }
