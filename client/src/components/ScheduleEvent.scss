@@ -14,6 +14,8 @@
 .event-type {
     height: 0.8rem;
     width: 0.8rem;
+    flex-grow: 0;
+    flex-shrink: 0;
     background-color: $type-event;
     border: 0.1rem solid $text-primary;
     border-radius: 0.25rem;
@@ -25,12 +27,22 @@
 }
 
 .event-time {
-    width: 7.5rem;
+    width: 6.7rem;
+    flex-grow: 0;
+    flex-shrink: 0;
 }
 
 .event-club-name {
     color: $text-light;
     width: 5rem;
+    flex-grow: 0;
+    flex-shrink: 0;
+}
+
+.event-name {
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
 }
 
 // TODO: Add mobile view
