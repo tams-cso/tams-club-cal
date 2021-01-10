@@ -15,7 +15,7 @@ class CalendarDay extends React.Component {
             events.push(
                 <CalendarEvent
                     type={e.type}
-                    time={getFormattedTime(e)}
+                    time={getFormattedTime(e, true)}
                     club={e.club}
                     name={e.name}
                     key={e.objId}

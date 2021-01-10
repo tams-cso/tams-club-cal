@@ -18,15 +18,22 @@
 $grid-border: 0.025rem solid $text-primary;
 $rh: 5rem;
 
-.calendar {
+.calendar-header, .calendar-days {
     display: grid;
-    grid-template-columns: 1fr 1fr 1fr 1fr 1fr 1fr 1fr;
-    grid-template-rows: auto $rh $rh $rh $rh $rh $rh;
-    border-bottom: $grid-border;
-    margin: 1rem 4rem;
+    grid-template-columns: repeat(7, 1fr);
 }
 
-.calendar > .CalendarDay {
+.calendar-header {
+    margin: 1rem 4rem 0 4rem;
+}
+
+.calendar-days {
+    grid-auto-rows: $rh;
+    border-bottom: $grid-border;
+    margin: 0 4rem 1rem 4rem;
+}
+
+.calendar-days > .CalendarDay {
     border: 0;
     border-top: $grid-border;
     border-left: $grid-border;
@@ -43,8 +50,6 @@ $rh: 5rem;
 .view-active {
     display: block;
 }
-
-// TODO: Change this thing to a flexbox
 
 .month-year {
     text-align: center;

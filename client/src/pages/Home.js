@@ -194,10 +194,8 @@ class Home extends React.Component {
                     {this.state.eventComponents}
                 </div>
                 <div className={'calendar-view' + (!this.state.schedule ? ' view-active' : '')}>
-                    <div className="calendar">
-                        {calendarHeader}
-                        {this.state.calendarComponents}
-                    </div>
+                    <div className="calendar-header">{calendarHeader}</div>
+                    <div className="calendar-days">{this.state.calendarComponents}</div>
                 </div>
             </div>
         );
