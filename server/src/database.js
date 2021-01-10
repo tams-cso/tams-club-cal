@@ -108,6 +108,39 @@ async function addEvent(event) {
     }
 }
 
+async function updateEvent(event, id) {
+    try {
+        const db = client.db('events');
+        const infoCollection = db.collection('info');
+        const dataCollection = db.collection('data');
+        infoCollection.updateOne(
+            { objId: id },
+            {
+                $set: {
+                    name: event.name,
+                    type: event.type,
+                    club: event.club,
+                    start: event.start,
+                    end: event.end,
+                },
+            }
+        );
+        dataCollection.updateOne(
+            { objId: id },
+            {
+                $set: {
+                    links: event.links,
+                    addedBy: event.addedBy,
+                    editedBy: [],
+                    description: event.description,
+                },
+            }
+        );
+    } catch (error) {
+        console.dir(error);
+    }
+}
+
 async function updateVolunteering(vol, id) {
     try {
         const db = client.db('volunteering');
@@ -137,6 +170,7 @@ module.exports = {
     addEvent,
     getEvent,
     getEventList,
+    updateEvent,
     getVolunteering,
     updateVolunteering,
 };

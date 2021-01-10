@@ -156,7 +156,7 @@ class Home extends React.Component {
                         event={e}
                         key={e.objId}
                         onClick={() => {
-                            this.activatePopup(e._id);
+                            this.activatePopup(e.objId);
                         }}
                     ></ScheduleEvent>
                 );
