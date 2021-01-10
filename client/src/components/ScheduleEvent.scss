@@ -27,19 +27,23 @@
 }
 
 .event-time {
-    width: 6.7rem;
+    width: 6.5rem;
     flex-grow: 0;
     flex-shrink: 0;
 }
 
 .event-club-name {
     color: $text-light;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
     width: 5rem;
     flex-grow: 0;
     flex-shrink: 0;
 }
 
 .event-name {
+    margin-left: 0.2rem;
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
