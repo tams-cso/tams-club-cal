@@ -18,7 +18,8 @@
 $grid-border: 0.025rem solid $text-primary;
 $rh: 5rem;
 
-.calendar-header, .calendar-days {
+.calendar-header,
+.calendar-days {
     display: grid;
     grid-template-columns: repeat(7, 1fr);
 }

@@ -84,8 +84,7 @@ function createDateHeader(date) {
  * @return {string} The formatted starting and ending time
  */
 function getFormattedTime(event, calendar = false) {
-    if (calendar)
-        return event.startDayjs.format('h:mma');
+    if (calendar) return event.startDayjs.format('h:mma');
     var formattedDate = event.startDayjs.format('h:mma');
     if (event.type === 'event') return formattedDate + event.endDayjs.format(' - h:mma');
     return formattedDate;
