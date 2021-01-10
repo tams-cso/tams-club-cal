@@ -1,9 +1,9 @@
 # How to Contribute to TAMS Club Calendar
 
-Welcome! We are a completely open-source project, so feel free to contribute as much or as little as you would like! :smile:
+Welcome! We are a completely open-source project, so feel free to contributue as much or as little as you would like! :smile:
 
-| :warning: | <div style="color:#ff9a3d">These contributing guidelines are incomplete! If you would like to add anything, simply make a pull request for this file :)</div> |
-| --------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| :warning: | These contributing guidelines are incomplete! If you would like to add anything, simply make a pull request for this file :) |
+| --------- | ---------------------------------------------------------------------------------------------------------------------------- |
 
 ## :flight_departure: Where to start
 
