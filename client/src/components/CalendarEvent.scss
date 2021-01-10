@@ -1,32 +1,39 @@
 @import '../custom.scss';
 
-.calendar-event-type {
-    height: 0.5rem;
-    width: 0.5rem;
-    background-color: $type-event;
-    border: 0.1rem solid $text-primary;
-    border-radius: 0.25rem;
-    margin: 0 1em 0 2em;
+.CalendarEvent {
+    display: flex;
+    justify-content: flex-start;
+    align-items: center;
+    font-family: $cal-font;
+    font-weight: 800;
+    margin: 0 0 0.15rem 0.15rem;
 }
 
-.calendar-event-type-signup {
+.calendar-event-type {
+    height: 0.3rem;
+    width: 0.3rem;
+    flex-basis: 0.3rem;
+    flex-grow: 0;
+    flex-shrink: 0;
+    background-color: $type-event;
+    border-radius: 0.05rem;
+    margin: 0 0.15rem 0 0.1rem;
+}
+
+.event-type-signup {
     background-color: $type-signup;
-    font-size: 0.5rem;
-    margin: 0.25rem;
 }
 
 .calendar-event-time {
-    font-size: 0.5rem;
-    margin: 0.25rem;
-}
-
-.calendar-event-club-name {
+    font-size: 0.35rem;
     color: $text-light;
-    font-size: 0.5rem;
-    margin: 0.25rem;
+    margin: 0 0.1rem 0 0.1rem;
 }
 
 .calendar-event-name {
-    font-size: 0.5rem;
-    margin: 0.25rem;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    font-size: 0.4rem;
+    margin: 0 0.1rem 0 0.1rem;
 }
