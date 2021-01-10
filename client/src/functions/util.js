@@ -2,7 +2,7 @@ import dayjs from 'dayjs';
 import utc from 'dayjs/plugin/utc';
 import timezone from 'dayjs/plugin/timezone';
 import isLeapYear from 'dayjs/plugin/isLeapYear';
-import { EventInfo } from './entries';
+import { EventInfo, DateAndTime } from './entries';
 import store from '../redux/store';
 import { getSavedVolunteeringList } from '../redux/selectors';
 import { getVolunteering } from '../functions/api';
@@ -166,6 +166,19 @@ function daysOfWeek() {
 }
 
 /**
+ * Converts millisecond time to object with string date and time
+ * @param {number} millis The UTC millisecond time
+ * @returns {DateAndTime} The date and time objects
+ */
+function millisToDateAndTime(millis) {
+    var dayObj = convertToTimeZone(millis, 'America/Chicago');
+    return {
+        date: dayObj.format('YYYY-MM-DD'),
+        time: dayObj.format('HH:mm'),
+    };
+}
+
+/**
  * Gets volunteering list from store or if null,
  * fetches it and stores it in the store
  * @returns {Promise<Volunteering[]>} List of volunteering events
@@ -193,4 +206,5 @@ export {
     calendarDays,
     daysOfWeek,
     getOrFetchVolList,
+    millisToDateAndTime,
 };

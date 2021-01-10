@@ -1,10 +1,13 @@
 @import '../custom.scss';
 
 .EventPopup {
-    display: flex;
-    flex-direction: row;
     width: 25rem;
     padding: 0.5rem;
+}
+
+.EventPopup .display-events {
+    display: flex;
+    flex-direction: row;
 }
 
 .home-side {
@@ -38,7 +41,7 @@
 }
 
 .EventPopup .event-club {
-    font-size: 0.5rem;
+    font-size: 0.65rem;
     color: $text-light;
 }
 
@@ -54,8 +57,9 @@
 
 .EventPopup .event-link {
     display: block;
+    width: fit-content;
     font-size: 0.5rem;
-    color: $text-primary;
+    color: $text-light;
     transition: 0.2s;
     margin-bottom: 0.25rem;
 }
@@ -73,4 +77,54 @@
 .EventPopup .event-description {
     font-size: 0.55rem;
     white-space: pre-line;
+}
+
+.EventPopup .ActionButton {
+    font-size: 0.65rem;
+    padding: 0.1rem 0.25rem;
+}
+
+.EventPopup .inactive {
+    display: none;
+}
+
+.EventPopup .active {
+    display: block;
+}
+
+.EventPopup .edit {
+    padding: 0.5rem;
+}
+
+.EventPopup .name-input {
+    width: 15rem;
+}
+
+.EventPopup input, .EventPopup label, .EventPopup textarea {
+    font-size: 0.75rem;
+}
+
+.EventPopup label {
+    margin-right: 0.5rem;
+}
+
+.EventPopup .description-input {
+    width: 95%;
+    height: 6rem;
+}
+
+.EventPopup .extra-link {
+    margin-left: 2rem;
+}
+
+.action-button-box .ActionButton {
+    margin: 0.25rem 0.25rem 0;
+}
+
+.ActionButton.submit {
+    color: $primary;
+}
+
+.ActionButton.cancel {
+    color: $bad;
 }

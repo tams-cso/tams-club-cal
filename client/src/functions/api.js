@@ -19,12 +19,14 @@ async function getEventList() {
 }
 
 /**
- * POST to /add - Creates an event
+ * POST to /add - Creates or updates an event
  * @param {Event} event Event object
+ * @param {string} [id] ID to update
  * @returns {Promise<number>} POST status [200 for Success & 400 for Failure]
  */
-async function postEvent(event) {
-    const res = await fetch(`${config.backend}/add-event`, {
+async function postEvent(event, id) {
+    var update = id !== undefined && id !== null ? `?update=true&id=${id}` : '';
+    const res = await fetch(`${config.backend}/add-event${update}`, {
         method: 'POST',
         body: JSON.stringify(event),
         headers: { 'Content-Type': 'application/json' },

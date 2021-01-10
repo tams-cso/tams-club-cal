@@ -13,6 +13,7 @@ const {
     getEventList,
     getVolunteering,
     updateVolunteering,
+    updateEvent,
 } = require('./database');
 
 app.use(cors());
@@ -63,8 +64,8 @@ app.get('/event-list', async (req, res, next) => {
 });
 
 app.post('/add-event', async (req, res, next) => {
-    // TODO: Add checking for specific empty fields
-    addEvent(req.body);
+    if (req.query.update === 'true') updateEvent(req.body, req.query.id);
+    else addEvent(req.body);
     res.sendStatus(200);
 });
 

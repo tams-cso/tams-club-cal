@@ -8,8 +8,9 @@
  * @param {string[]} links The link to the zoom meeting/fb post of the event
  * @param {string} description The description of the event
  * @param {string} addedBy Who added the event
+ * @param {string[]} editedBy The editors of the event
  */
-function Event(type, name, club, start, end, links, description, addedBy) {
+function Event(type, name, club, start, end, links, description, addedBy, editedBy = []) {
     this.type = type;
     this.name = name;
     this.club = club;
@@ -18,7 +19,7 @@ function Event(type, name, club, start, end, links, description, addedBy) {
     this.links = links;
     this.description = description;
     this.addedBy = addedBy;
-    this.editedBy = '';
+    this.editedBy = editedBy;
 }
 
 /**
@@ -164,5 +165,11 @@ function Committee(name, description, fb, website) {
     this.fb = fb;
     this.website = website;
 }
+
+/**
+ * @typedef {Object} DateAndTime
+ * @property {string} date The date in the format (YYYY-MM-DD)
+ * @property {string} time The time in the format (HH:MM)
+ */
 
 export { Event, EventInfo, EventData, Club, ClubInfo, ClubData, Volunteering, Exec, Committee };
