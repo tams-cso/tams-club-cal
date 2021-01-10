@@ -4,7 +4,7 @@ An unofficial calendar for the [Texas Academy of Mathematics and Science (TAMS)]
 
 ## Contribution
 
-There currently is no format for pull requests or issues, but if you would like to contribute, make a fork of the repo and create pull requests to resolve issues. I am currently actively working on this project and can review any pull requests that are made. 
+Find out how to contribute [here](CONTRIBUTING.md)! You can look through the issues, comment on the ones you like, and make a pull request to resolve them :grinning: We also welcome any bug reports or feature requests ➔ create a new issue [here](https://github.com/MichaelZhao21/tams-club-cal/issues/new)!
 
 ## Setup
 
