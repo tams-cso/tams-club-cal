@@ -6,7 +6,12 @@
     align-items: center;
     font-family: $cal-font;
     font-weight: 800;
-    margin: 0 0 0.15rem 0.15rem;
+    margin: 0 0.15rem 0.15rem 0.15rem;
+}
+
+.CalendarEvent:hover {
+    cursor: pointer;
+    background-color: $background-tint;
 }
 
 .calendar-event-type {
@@ -35,5 +40,5 @@
     overflow: hidden;
     text-overflow: ellipsis;
     font-size: 0.4rem;
-    margin: 0 0.1rem 0 0.1rem;
+    margin: 0 0.1rem 0 0;
 }

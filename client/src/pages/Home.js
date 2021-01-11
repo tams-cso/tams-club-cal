@@ -80,6 +80,7 @@ class Home extends React.Component {
                     day={this.pad(currDay)}
                     key={date.month() + '-' + currDay}
                     events={calEvents}
+                    activatePopup={this.activatePopup}
                 ></CalendarDay>
             );
         });
@@ -102,6 +103,7 @@ class Home extends React.Component {
                     day={this.pad(currDay)}
                     key={date.month() + '-' + currDay}
                     events={calEvents}
+                    activatePopup={this.activatePopup}
                 ></CalendarDay>
             );
         });
@@ -122,6 +124,7 @@ class Home extends React.Component {
                     day={this.pad(currDay)}
                     key={date.month() + '-' + currDay}
                     events={calEvents}
+                    activatePopup={this.activatePopup}
                 ></CalendarDay>
             );
         });
