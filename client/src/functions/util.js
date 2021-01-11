@@ -71,7 +71,7 @@ function divideByDate(eventList) {
  * Converts a date to a readable date section label
  *
  * @param {string} date Date passed in formatted as YYYY-MM-DD
- * @return {string} Readable date section label
+ * @returns {string} Readable date section label
  */
 function createDateHeader(date) {
     return dayjs(date).format('dddd M/D/YY');
@@ -81,7 +81,7 @@ function createDateHeader(date) {
  * Gets the starting and ending time display for an event
  *
  * @param {EventInfo} event The event object
- * @return {string} The formatted starting and ending time
+ * @returns {string} The formatted starting and ending time
  */
 function getFormattedTime(event, calendar = false) {
     if (calendar) return event.startDayjs.format('h:mma');
@@ -90,7 +90,15 @@ function getFormattedTime(event, calendar = false) {
     return formattedDate;
 }
 
-function getFormattedDate(event) {
+/**
+ * Returns a formatted starting date for an event
+ *
+ * @param {EventInfo} event The event object
+ * @param {boolean} noName True will not print a weekday name (eg. Monday)
+ * @returns {string} The formatted starting date
+ */
+function getFormattedDate(event, noName = false) {
+    if (noName) return event.startDayjs.format('MMMM D, YYYY');
     return event.startDayjs.format('dddd · MMMM D, YYYY');
 }
 

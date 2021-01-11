@@ -12,6 +12,7 @@ export const getPopupId = (store) => store.popup.id;
 
 export const getPopupEvent = (store) => {
     if (store.data.eventList === null) return null;
+    console.log(store.popup.id);
     return store.data.eventList.find((e) => e.objId === store.popup.id);
 };
 

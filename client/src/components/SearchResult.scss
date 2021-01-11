@@ -1,0 +1,51 @@
+@import '../custom.scss';
+
+.SearchResult {
+    border-radius: 0.25rem;
+    background-color: $background;
+    transition: 0.2s;
+    cursor: pointer;
+    padding: 0.5rem;
+    display: flex;
+    text-align: left;
+    overflow: hidden;
+}
+
+.SearchResult:hover {
+    background-color: $background-tint;
+}
+
+.search-result-right {
+    display: flex;
+    flex-direction: column;
+}
+
+.search-result-bottom {
+    display: flex;
+    flex-direction: row;
+    align-items: baseline;
+    justify-content: flex-start;
+}
+
+.SearchResult .event-type {
+    height: 0.8rem;
+    width: 0.8rem;
+    flex-grow: 0;
+    flex-shrink: 0;
+    background-color: $type-event;
+    border: 0.1rem solid $text-primary;
+    border-radius: 0.25rem;
+    margin: 0 1em 0 0;
+}
+
+.SearchResult .event-club-name {
+    width: 4rem;
+    padding-right: 0.5rem;
+    font-size: 0.65rem;
+    color: $text-lighter;
+}
+
+.SearchResult .event-datetime {
+    font-size: 0.75rem;
+    color: $text-light;
+}

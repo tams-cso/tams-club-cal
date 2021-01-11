@@ -7,6 +7,7 @@ import Clubs from './pages/Clubs';
 import Home from './pages/Home';
 import NotFound from './pages/NotFound';
 import Resources from './pages/Resources';
+import Search from './pages/Search';
 
 function App() {
     return (
@@ -21,7 +22,7 @@ function App() {
                         <Route exact path="/clubs" component={Clubs} />
                         <Route exact path="/add" component={Add} />
                         <Route exact path="/about" component={About} />
-                        <Route exact path="/pagenotfound" component={NotFound} />
+                        <Route exact path="/search" component={Search} />
                         <Route component={NotFound} />
                     </Switch>
                 </div>
