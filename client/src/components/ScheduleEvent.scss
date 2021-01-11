@@ -5,13 +5,13 @@
     flex-direction: row;
     align-items: center;
     justify-content: left;
-    padding: 0.5rem 0;
+    padding: 0.5rem 1rem;
     font-size: 0.75rem;
     border-radius: 0.25rem;
     transition: 0.2s;
 }
 
-.event-type {
+.ScheduleEvent .event-type {
     height: 0.8rem;
     width: 0.8rem;
     flex-grow: 0;
@@ -19,31 +19,33 @@
     background-color: $type-event;
     border: 0.1rem solid $text-primary;
     border-radius: 0.25rem;
-    margin: 0 1em 0 2em;
+    margin: 0 0.5em 0 1em;
 }
 
-.event-type-signup {
+.ScheduleEvent .event-type-signup {
     background-color: $type-signup;
 }
 
-.event-time {
-    width: 6.5rem;
+.ScheduleEvent .event-time {
+    width: 6.1rem;
     flex-grow: 0;
     flex-shrink: 0;
+    margin: 0 0.5em 0 0.5em;
 }
 
-.event-club-name {
+.ScheduleEvent .event-club-name {
     color: $text-light;
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
-    width: 5rem;
+    width: 5.2rem;
     flex-grow: 0;
     flex-shrink: 0;
+    margin: 0 0.5em 0 0.5em;
 }
 
-.event-name {
-    margin-left: 0.2rem;
+.ScheduleEvent .event-name {
+    margin-left: 0.5em;
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
