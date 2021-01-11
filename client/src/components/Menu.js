@@ -1,17 +1,29 @@
 import './Menu.scss';
 import React from 'react';
-import { NavLink } from 'react-router-dom';
+import { NavLink, withRouter } from 'react-router-dom';
 import SearchBar from './SearchBar';
 
 class Menu extends React.Component {
     constructor(props) {
         super(props);
-        this.state = { mobileDropdown: false };
+        this.state = { mobileDropdown: false, searchBar: <SearchBar className="menu-item"></SearchBar> };
     }
 
     clickDropdown = () => {
         this.setState({ mobileDropdown: !this.state.mobileDropdown });
     };
+
+    componentWillUnmount() {
+        this.unlisten();
+    }
+
+    componentDidMount() {
+        if (location.pathname.includes('/search')) this.setState({ searchBar: null });
+        this.unlisten = this.props.history.listen((location, action) => {
+            if (location.pathname.includes('/search')) this.setState({ searchBar: null });
+            else this.setState({ searchBar: <SearchBar className="menu-item"></SearchBar> });
+        });
+    }
 
     render() {
         return (
@@ -39,9 +51,7 @@ class Menu extends React.Component {
                     <NavLink className="menu-item" activeClassName="active" to="/about" exact>
                         About
                     </NavLink>
-                    <div className="search-bar-wrapper menu-item">
-                        <SearchBar className="menu-item"></SearchBar>
-                    </div>
+                    <div className="search-bar-wrapper menu-item">{this.state.searchBar}</div>
                 </div>
                 <div className="mobile-menu">
                     <div className="mobile-menu-title">TAMS Club Calendar</div>
@@ -79,4 +89,4 @@ class Menu extends React.Component {
     }
 }
 
-export default Menu;
+export default withRouter(Menu);
