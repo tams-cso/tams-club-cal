@@ -38,6 +38,10 @@
     margin: 0 1em 0 0;
 }
 
+.SearchResult .event-type-signup {
+    background-color: $type-signup;
+}
+
 .SearchResult .event-club-name {
     width: 4rem;
     padding-right: 0.5rem;
