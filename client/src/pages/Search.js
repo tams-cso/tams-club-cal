@@ -41,7 +41,15 @@ class Search extends React.Component {
 
         var results = [];
         rawResults.forEach((r) => {
-            results.push(<SearchResult event={r.item} key={r.item.objId} onClick={() => {this.activatePopup(r.item.objId)}}></SearchResult>);
+            results.push(
+                <SearchResult
+                    event={r.item}
+                    key={r.item.objId}
+                    onClick={() => {
+                        this.activatePopup(r.item.objId);
+                    }}
+                ></SearchResult>
+            );
         });
         this.setState({ results, query });
     };
