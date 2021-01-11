@@ -19,9 +19,9 @@ class CalendarDay extends React.Component {
                     club={e.club}
                     name={e.name}
                     key={e.objId}
-                    // onClick={() => {
-                    //     this.popup.current.activate(e.objId);
-                    // }}
+                    onClick={() => {
+                        this.props.activatePopup(e.objId);
+                    }}
                 ></CalendarEvent>
             );
         });
