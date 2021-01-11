@@ -1,6 +1,6 @@
 import React from 'react';
 import { connect } from 'react-redux';
-import { getPopupEdit, getPopupId, getPopupOpen, getPopupEvent } from '../redux/selectors';
+import { getPopupEdit, getPopupId, getPopupOpen, getSavedEventList } from '../redux/selectors';
 import { setPopupOpen, setPopupId, setPopupEdit, updateEvent } from '../redux/actions';
 import './EventPopup.scss';
 import {
@@ -33,7 +33,7 @@ class EventPopup extends React.Component {
     }
 
     getEventData = async () => {
-        const event = await getEvent(this.props.event.objId);
+        const event = await getEvent(this.props.id);
         this.setState({ event }, () => {
             this.resetState();
         });
@@ -153,11 +153,15 @@ class EventPopup extends React.Component {
         return invalid;
     };
 
-    async componentDidUpdate(prevProps) {
-        if (prevProps.event !== this.props.event && this.props.popupOpen) {
-            await this.getEventData();
-        }
-        if (prevProps.popupOpen !== this.props.popupOpen && !this.props.popupOpen) {
+    componentDidMount() {
+        if (this.props.id !== null && this.props.id !== '') this.getEventData();
+    }
+
+    componentDidUpdate(prevProps) {
+        if (prevProps.popupOpen === this.props.popupOpen) return;
+        if (this.props.popupOpen && this.props.id !== null) {
+            this.getEventData();
+        } else {
             this.setState({ event: null });
         }
     }
@@ -165,7 +169,6 @@ class EventPopup extends React.Component {
     render() {
         // Return empty div if the current popup is not defined
         if (!this.props.popupOpen || this.state.event === null) return <div className="EventPopup"></div>;
-
         // Add a Dayjs attribute
         addDayjsElement(this.state.event);
 
@@ -347,7 +350,7 @@ const mapStateToProps = (state) => {
         popupOpen: getPopupOpen(state),
         id: getPopupId(state),
         edit: getPopupEdit(state),
-        event: getPopupEvent(state),
+        event: getSavedEventList(state),
     };
 };
 const mapDispatchToProps = { setPopupOpen, setPopupId, setPopupEdit, updateEvent };

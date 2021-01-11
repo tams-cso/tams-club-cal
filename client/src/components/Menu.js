@@ -1,6 +1,7 @@
 import './Menu.scss';
 import React from 'react';
 import { NavLink } from 'react-router-dom';
+import SearchBar from './SearchBar';
 
 class Menu extends React.Component {
     constructor(props) {
@@ -38,8 +39,8 @@ class Menu extends React.Component {
                     <NavLink className="menu-item" activeClassName="active" to="/about" exact>
                         About
                     </NavLink>
-                    <div className="menu-item menu-search">
-                        <input className="search-bar" type="text" placeholder="Search..."></input>
+                    <div className="search-bar-wrapper menu-item">
+                        <SearchBar className="menu-item"></SearchBar>
                     </div>
                 </div>
                 <div className="mobile-menu">
