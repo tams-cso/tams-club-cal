@@ -128,14 +128,7 @@ class Home extends React.Component {
         this.setState({ calendarComponents });
     };
 
-    async componentDidMount() {
-        var eventList = this.props.eventList;
-        // Check if there is already events saved
-        if (this.props.eventList === null) {
-            // Get event list from backend
-            eventList = await getEventList();
-            this.props.setEventList(eventList);
-        }
+    createEventComponents = (eventList) => {
         const events = [...eventList];
         // Create a dayjs object for each event
         events.forEach((e) => addDayjsElement(e));
@@ -166,6 +159,21 @@ class Home extends React.Component {
             }
         });
         this.setState({ eventComponents });
+    };
+
+    async componentDidMount() {
+        var eventList = this.props.eventList;
+        // Check if there is already events saved
+        if (this.props.eventList === null) {
+            // Get event list from backend
+            eventList = await getEventList();
+            this.props.setEventList(eventList);
+        }
+        this.createEventComponents(eventList);
+    }
+
+    componentDidUpdate(prevProps) {
+        if (this.props.eventList !== prevProps.eventList) this.createEventComponents(this.props.eventList);
     }
 
     render() {
