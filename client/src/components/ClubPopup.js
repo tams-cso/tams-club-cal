@@ -41,7 +41,7 @@ class ClubPopup extends React.Component {
 
         var committeeList = [];
         this.state.club.committees.forEach((committee) => {
-            committeeList.push(<CommitteeCard committee={committee}></CommitteeCard>);
+            committeeList.push(<CommitteeCard committee={committee} key={committee.name}></CommitteeCard>);
         });
         return (
             <div className="ClubPopup">
