@@ -30,6 +30,7 @@ class EventPopup extends React.Component {
             editedBy: '',
             type: 'event',
         };
+        this.handleInputChange = this.handleInputChange.bind(this);
     }
 
     getEventData = async () => {

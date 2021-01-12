@@ -21,3 +21,17 @@
 .action-button:hover {
     box-shadow: 0 0 0.1rem 0.1rem $background-tint;
 }
+
+/*
+ * #########################
+ * ##### CUSTOM COLORS #####
+ * #########################
+ */
+
+.action-button.submit {
+    color: $primary;
+}
+
+.action-button.cancel {
+    color: $bad;
+}
