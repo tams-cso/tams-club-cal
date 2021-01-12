@@ -28,7 +28,7 @@ class Home extends React.Component {
     constructor(props) {
         super(props);
         dayjs.extend(arraySupport);
-        this.state = { schedule: true, eventComponents: null, calendarComponents: null };
+        this.state = { schedule: true, eventComponents: null, calendarComponents: null, currentDate: dayjs() };
     }
 
     // Pads a date to 2 digits (eg. 1 => '01')
@@ -38,7 +38,16 @@ class Home extends React.Component {
     };
 
     switchView = () => {
-        this.setState({ schedule: !this.state.schedule });
+        this.setState({ schedule: !this.state.schedule, currentDate: dayjs() });
+    };
+
+    changeMonth = (amount) => {
+        var currentDate;
+        if (amount < 0)
+            currentDate = this.state.currentDate.subtract(-amount, 'month')
+        else
+            currentDate = this.state.currentDate.add(amount, 'month');
+        this.setState({ currentDate });
     };
 
     activatePopup = (id) => {
@@ -48,7 +57,7 @@ class Home extends React.Component {
     };
 
     setCalendar = (eventList) => {
-        var { calendar, previous, after, date } = calendarDays();
+        var { calendar, previous, after, date } = calendarDays(this.state.currentDate);
         var month = date.month(),
             year = date.year();
         // Index the beginning of the events to add to calendar
@@ -175,8 +184,9 @@ class Home extends React.Component {
         this.createEventComponents(eventList);
     }
 
-    componentDidUpdate(prevProps) {
-        if (this.props.eventList !== prevProps.eventList) this.createEventComponents(this.props.eventList);
+    componentDidUpdate(prevProps, prevState) {
+        if (this.props.eventList !== prevProps.eventList || this.state.currentDate !== prevState.currentDate)
+            this.createEventComponents(this.props.eventList);
     }
 
     render() {
@@ -196,7 +206,11 @@ class Home extends React.Component {
                 </Popup>
                 <div className="home-top">
                     <div className="dummy"></div>
-                    <div className="month-year">{getMonthAndYear()}</div>
+                    <div className={'dummy-change-month month-back' + (this.state.schedule ? ' view-active' : '')}></div>
+                    <button className={'change-month month-back' + (!this.state.schedule ? ' view-active' : '')} onClick={() => {this.changeMonth(-1)}}>{'<'}</button>
+                    <div className="month-year">{getMonthAndYear(this.state.currentDate)}</div>
+                    <div className={'dummy-change-month month-forward' + (this.state.schedule ? ' view-active' : '')}></div>
+                    <button className={'change-month month-forward' + (!this.state.schedule ? ' view-active' : '')} onClick={() => {this.changeMonth(1)}}>{'>'}</button>
                     <button className="view-switch" onClick={this.switchView}>
                         {`Switch to ${this.state.schedule ? 'Calendar' : 'Schedule'} View`}
                     </button>

@@ -151,12 +151,12 @@ function formatVolunteeringFilters(filters, signupTime) {
     return filterObjects;
 }
 
-function getMonthAndYear() {
-    return dayjs().format('MMMM YYYY');
+function getMonthAndYear(date = undefined) {
+    return dayjs(date).format('MMMM YYYY');
 }
 
-function calendarDays(currMonth = undefined) {
-    const date = dayjs(currMonth).date(1);
+function calendarDays(currDate = undefined) {
+    const date = dayjs(currDate).date(1);
     const calendar = [];
     for (let i = 1; i <= date.daysInMonth(); i++) calendar.push(i);
     const previous = [];

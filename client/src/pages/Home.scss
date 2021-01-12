@@ -6,7 +6,7 @@
 }
 
 .schedule-view {
-    margin: 0 15vw;
+    margin: 0 14vw;
     padding-bottom: 0.5rem;
 }
 
@@ -44,21 +44,62 @@ $rh: 5rem;
     border-right: $grid-border;
 }
 
+.home-top {
+    padding: 1.25rem 0 0.25rem 0;
+    margin: 0 5rem;
+    display: flex;
+    justify-content: space-around;
+}
+
 .days-of-week {
     text-align: center;
+}
+
+.month-year {
+    text-align: center;
+    width: 6.5rem;
+    padding: 0 0.2rem;
+}
+
+.dummy-change-month {
+    display: none;
+    width: 1.3rem;
+}
+
+.change-month {
+    display: none;
+    font-family: $main-font;
+    background-color: $background;
+    width: 1.3rem;
+    border: 0.1rem solid $text-primary;
+    padding: 0.1rem 0.25rem;
+    font-size: 0.75rem;
+    border-radius: 0.25rem;
+    transition: 0.2s;
+}
+
+.change-month:hover {
+    cursor: pointer;
+    background-color: $background-tint;
 }
 
 .view-active {
     display: block;
 }
 
-.month-year {
-    text-align: center;
+.month-back {
+    margin-left: 3vw;
+}
+
+.month-forward {
+    margin-right: 3vw;
 }
 
 .view-switch {
     font-family: $main-font;
+    text-align: center;
     background-color: $background;
+    width: 7.7rem;
     border: 0.1rem solid $text-primary;
     padding: 0.1rem 0.25rem;
     font-size: 0.75rem;
@@ -71,15 +112,8 @@ $rh: 5rem;
     background-color: $background-tint;
 }
 
-.home-top {
-    padding: 1.25rem 0 0.25rem 0;
-    margin: 0 5rem;
-    display: flex;
-    justify-content: space-around;
-}
-
 .dummy {
-    width: 7rem;
+    width: 7.7rem;
 }
 
 @media handheld and (max-width: 992px), screen and (max-device-width: 992px), screen and (max-width: 992px) {
