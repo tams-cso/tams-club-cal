@@ -1,5 +1,5 @@
 import React from 'react';
-import { ReactComponent as GlobeIcon } from '../files/globe.svg';
+import { ReactComponent as WebIcon } from '../files/web.svg';
 import { ReactComponent as FbIcon } from '../files/fb.svg';
 import './CommitteeCard.scss';
 
@@ -9,12 +9,14 @@ class CommitteeCard extends React.Component {
             <div className="CommitteeCard">
                 <div className="committee-name">{this.props.committee.name}</div>
                 <div className="committee-description">{this.props.committee.description}</div>
+                {/* TODO: Extract this to a component bc it's used by club card as well? */}
+                {/* TODO: Change the font of the tiny text on the committee card? */}
                 <div className="committee-icons">
-                    <GlobeIcon
+                    <WebIcon
                         onClick={() => {
                             if (this.props.committee.website != '') window.open(this.props.committee.website);
                         }}
-                    ></GlobeIcon>
+                    ></WebIcon>
                     <FbIcon
                         onClick={() => {
                             if (this.props.committee.fb != '') window.open(this.props.committee.fb);
