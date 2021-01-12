@@ -43,10 +43,8 @@ class Home extends React.Component {
 
     changeMonth = (amount) => {
         var currentDate;
-        if (amount < 0)
-            currentDate = this.state.currentDate.subtract(-amount, 'month')
-        else
-            currentDate = this.state.currentDate.add(amount, 'month');
+        if (amount < 0) currentDate = this.state.currentDate.subtract(-amount, 'month');
+        else currentDate = this.state.currentDate.add(amount, 'month');
         this.setState({ currentDate });
     };
 
@@ -206,11 +204,29 @@ class Home extends React.Component {
                 </Popup>
                 <div className="home-top">
                     <div className="dummy"></div>
-                    <div className={'dummy-change-month month-back' + (this.state.schedule ? ' view-active' : '')}></div>
-                    <button className={'change-month month-back' + (!this.state.schedule ? ' view-active' : '')} onClick={() => {this.changeMonth(-1)}}>{'<'}</button>
+                    <div
+                        className={'dummy-change-month month-back' + (this.state.schedule ? ' view-active' : '')}
+                    ></div>
+                    <button
+                        className={'change-month month-back' + (!this.state.schedule ? ' view-active' : '')}
+                        onClick={() => {
+                            this.changeMonth(-1);
+                        }}
+                    >
+                        {'<'}
+                    </button>
                     <div className="month-year">{getMonthAndYear(this.state.currentDate)}</div>
-                    <div className={'dummy-change-month month-forward' + (this.state.schedule ? ' view-active' : '')}></div>
-                    <button className={'change-month month-forward' + (!this.state.schedule ? ' view-active' : '')} onClick={() => {this.changeMonth(1)}}>{'>'}</button>
+                    <div
+                        className={'dummy-change-month month-forward' + (this.state.schedule ? ' view-active' : '')}
+                    ></div>
+                    <button
+                        className={'change-month month-forward' + (!this.state.schedule ? ' view-active' : '')}
+                        onClick={() => {
+                            this.changeMonth(1);
+                        }}
+                    >
+                        {'>'}
+                    </button>
                     <button className="view-switch" onClick={this.switchView}>
                         {`Switch to ${this.state.schedule ? 'Calendar' : 'Schedule'} View`}
                     </button>
