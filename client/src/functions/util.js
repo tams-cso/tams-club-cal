@@ -16,7 +16,7 @@ dayjs.extend(isLeapYear);
  * Gets query parameters
  * @returns {string | null} The value of the query parameter or null if missing
  */
-function getParams(query) {
+export function getParams(query) {
     return new URLSearchParams(window.location.search).get(query);
 }
 
@@ -28,7 +28,7 @@ function getParams(query) {
  * @param {string} tz Tz database time zone (https://en.wikipedia.org/wiki/List_of_tz_database_time_zones)
  * @returns {number} Milliseconds since Jan 1, 1970 [UTC time]
  */
-function parseTimeZone(input, tz) {
+export function parseTimeZone(input, tz) {
     return dayjs.tz(input, tz).valueOf();
 }
 
@@ -40,7 +40,7 @@ function parseTimeZone(input, tz) {
  * @param {string} [tz] Tz database time zone; If left blank, the timezone will be guessed
  * @returns {dayjs.Dayjs} Dayjs object with the correct timezone
  */
-function convertToTimeZone(millis, tz) {
+export function convertToTimeZone(millis, tz) {
     if (tz == undefined) {
         var tz = dayjs.tz.guess();
     }
@@ -52,7 +52,7 @@ function convertToTimeZone(millis, tz) {
  *
  * @param {EventInfo[]} eventList List of events, with an extra dayjs object defined
  */
-function divideByDate(eventList) {
+export function divideByDate(eventList) {
     var currDay = '';
     for (var i = 0; i < eventList.length; i++) {
         var day = eventList[i].startDayjs.format('YYYY-MM-DD');
@@ -73,7 +73,7 @@ function divideByDate(eventList) {
  * @param {string} date Date passed in formatted as YYYY-MM-DD
  * @returns {string} Readable date section label
  */
-function createDateHeader(date) {
+export function createDateHeader(date) {
     return dayjs(date).format('dddd M/D/YY');
 }
 
@@ -83,7 +83,7 @@ function createDateHeader(date) {
  * @param {EventInfo} event The event object
  * @returns {string} The formatted starting and ending time
  */
-function getFormattedTime(event, calendar = false) {
+export function getFormattedTime(event, calendar = false) {
     if (calendar) return event.startDayjs.format('h:mma');
     var formattedDate = event.startDayjs.format('h:mma');
     if (event.type === 'event') return formattedDate + event.endDayjs.format(' - h:mma');
@@ -97,7 +97,7 @@ function getFormattedTime(event, calendar = false) {
  * @param {boolean} noName True will not print a weekday name (eg. Monday)
  * @returns {string} The formatted starting date
  */
-function getFormattedDate(event, noName = false) {
+export function getFormattedDate(event, noName = false) {
     if (noName) return event.startDayjs.format('MMMM D, YYYY');
     return event.startDayjs.format('dddd · MMMM D, YYYY');
 }
@@ -106,7 +106,7 @@ function getFormattedDate(event, noName = false) {
  * Adds dayjs objects an event object
  * @param {EventInfo} event An event object
  */
-function addDayjsElement(e) {
+export function addDayjsElement(e) {
     // TODO: Add place to change time zone
     e.startDayjs = convertToTimeZone(e.start, 'America/Chicago');
     if (e.type === 'event') e.endDayjs = convertToTimeZone(e.end, 'America/Chicago');
@@ -122,7 +122,7 @@ function addDayjsElement(e) {
  * @param {string} [signupTime] Time that signup will go up, only needed if weekly is true
  * @returns {JSX.IntrinsicElements[]} jsx array
  */
-function formatVolunteeringFilters(filters, signupTime) {
+export function formatVolunteeringFilters(filters, signupTime) {
     var filterObjects = [];
     if (filters.limited)
         filterObjects.push(
@@ -151,11 +151,11 @@ function formatVolunteeringFilters(filters, signupTime) {
     return filterObjects;
 }
 
-function getMonthAndYear(date = undefined) {
+export function getMonthAndYear(date = undefined) {
     return dayjs(date).format('MMMM YYYY');
 }
 
-function calendarDays(currDate = undefined) {
+export function calendarDays(currDate = undefined) {
     const date = dayjs(currDate).date(1);
     const calendar = [];
     for (let i = 1; i <= date.daysInMonth(); i++) calendar.push(i);
@@ -166,7 +166,7 @@ function calendarDays(currDate = undefined) {
     return { calendar, previous, after, date: date.subtract(1, 'month') };
 }
 
-function daysOfWeek() {
+export function daysOfWeek() {
     const date = dayjs().day(0);
     const header = [];
     for (let i = 0; i < 7; i++) header.push(date.add(i, 'day').format('ddd'));
@@ -178,7 +178,7 @@ function daysOfWeek() {
  * @param {number} millis The UTC millisecond time
  * @returns {DateAndTime} The date and time objects
  */
-function millisToDateAndTime(millis) {
+export function millisToDateAndTime(millis) {
     var dayObj = convertToTimeZone(millis, 'America/Chicago');
     return {
         date: dayObj.format('YYYY-MM-DD'),
@@ -191,7 +191,7 @@ function millisToDateAndTime(millis) {
  * fetches it and stores it in the store
  * @returns {Promise<Volunteering[]>} List of volunteering events
  */
-async function getOrFetchVolList() {
+export async function getOrFetchVolList() {
     var volList = getSavedVolunteeringList(store.getState());
     if (volList === null) {
         volList = await getVolunteering();
@@ -200,19 +200,12 @@ async function getOrFetchVolList() {
     return volList;
 }
 
-export {
-    getParams,
-    parseTimeZone,
-    convertToTimeZone,
-    divideByDate,
-    createDateHeader,
-    getFormattedTime,
-    getFormattedDate,
-    addDayjsElement,
-    formatVolunteeringFilters,
-    getMonthAndYear,
-    calendarDays,
-    daysOfWeek,
-    getOrFetchVolList,
-    millisToDateAndTime,
-};
+/**
+ * Adds 'active' or 'inactive' to an element's classname.
+ *
+ * @param {string} className Base name of the class
+ * @param {boolean} state State variable, true would be active
+ */
+export async function isActive(className, state) {
+    return `${className} ${state ? 'active' : 'inactive'}`;
+}
