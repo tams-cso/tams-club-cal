@@ -196,7 +196,11 @@ class Home extends React.Component {
                 </Popup>
                 <div className="home-top">
                     <div className="dummy"></div>
+                    <div className={'dummy-change-month month-back' + (this.state.schedule ? ' view-active' : '')}></div>
+                    <button className={'change-month month-back' + (!this.state.schedule ? ' view-active' : '')}>{'<'}</button>
                     <div className="month-year">{getMonthAndYear()}</div>
+                    <div className={'dummy-change-month month-forward' + (this.state.schedule ? ' view-active' : '')}></div>
+                    <button className={'change-month month-forward' + (!this.state.schedule ? ' view-active' : '')}>{'>'}</button>
                     <button className="view-switch" onClick={this.switchView}>
                         {`Switch to ${this.state.schedule ? 'Calendar' : 'Schedule'} View`}
                     </button>
