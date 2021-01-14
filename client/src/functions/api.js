@@ -6,7 +6,11 @@ import { Club, ClubInfo, ClubData, Event, EventInfo, EventData, Volunteering } f
  * @returns {Promise<EventData>} An array of all events' basic information
  */
 async function getEvent(id) {
-    return await fetch(`${config.backend}/event?id=${id}`).then((res) => res.json());
+    try {
+        return await fetch(`${config.backend}/event?id=${id}`).then((res) => res.json());
+    } catch (error) {
+        console.dir(error);
+    }
 }
 
 /**
@@ -15,7 +19,11 @@ async function getEvent(id) {
  */
 async function getEventList() {
     // TODO: Add a start and end time range
-    return await fetch(`${config.backend}/event-list`).then((res) => res.json());
+    try {
+        return await fetch(`${config.backend}/event-list`).then((res) => res.json());
+    } catch (error) {
+        console.dir(error);
+    }
 }
 
 /**
@@ -26,12 +34,16 @@ async function getEventList() {
  */
 async function postEvent(event, id) {
     var update = id !== undefined && id !== null ? `?update=true&id=${id}` : '';
-    const res = await fetch(`${config.backend}/add-event${update}`, {
-        method: 'POST',
-        body: JSON.stringify(event),
-        headers: { 'Content-Type': 'application/json' },
-    });
-    return res.status;
+    try {
+        const res = await fetch(`${config.backend}/add-event${update}`, {
+            method: 'POST',
+            body: JSON.stringify(event),
+            headers: { 'Content-Type': 'application/json' },
+        });
+        return res.status;
+    } catch (error) {
+        console.dir(error);
+    }
 }
 
 /**
@@ -39,10 +51,14 @@ async function postEvent(event, id) {
  * @returns {Promise<ClubData>} Object of club specified by id
  */
 async function getClub(id) {
-    return await fetch(`${config.backend}/club?id=${id}`).then((res) => {
-        if (res.status === 400) return null;
-        else return res.json();
-    });
+    try {
+        return await fetch(`${config.backend}/club?id=${id}`).then((res) => {
+            if (res.status === 400) return null;
+            else return res.json();
+        });
+    } catch (error) {
+        console.dir(error);
+    }
 }
 
 /**
@@ -50,7 +66,11 @@ async function getClub(id) {
  * @returns {Promise<ClubInfo[]>} An array of all clubs' basic information
  */
 async function getClubList() {
-    return await fetch(`${config.backend}/club-list`).then((res) => res.json());
+    try {
+        return await fetch(`${config.backend}/club-list`).then((res) => res.json());
+    } catch (error) {
+        console.dir(error);
+    }
 }
 
 /**
@@ -60,12 +80,16 @@ async function getClubList() {
  */
 async function postVolunteering(vol, id) {
     var update = id !== undefined && id !== null ? `?update=true&id=${id}` : '';
-    const res = await fetch(`${config.backend}/add-volunteering${update}`, {
-        method: 'POST',
-        body: JSON.stringify(vol),
-        headers: { 'Content-Type': 'application/json' },
-    });
-    return res.status;
+    try {
+        const res = await fetch(`${config.backend}/add-volunteering${update}`, {
+            method: 'POST',
+            body: JSON.stringify(vol),
+            headers: { 'Content-Type': 'application/json' },
+        });
+        return res.status;
+    } catch (error) {
+        console.dir(error);
+    }
 }
 
 /**
@@ -73,7 +97,11 @@ async function postVolunteering(vol, id) {
  * @returns {Promise<Volunteering[]>} An array of all volunteering opportunities
  */
 async function getVolunteering() {
-    return await fetch(`${config.backend}/volunteering`).then((res) => res.json());
+    try {
+        return await fetch(`${config.backend}/volunteering`).then((res) => res.json());
+    } catch (error) {
+        console.dir(error);
+    }
 }
 
 /**
@@ -83,12 +111,16 @@ async function getVolunteering() {
  */
 async function postFeedback(feedback) {
     console.log(feedback);
-    const res = await fetch(`${config.backend}/feedback`, {
-        method: 'POST',
-        body: JSON.stringify({ feedback }),
-        headers: { 'Content-Type': 'application/json' },
-    });
-    return res.status;
+    try {
+        const res = await fetch(`${config.backend}/feedback`, {
+            method: 'POST',
+            body: JSON.stringify({ feedback }),
+            headers: { 'Content-Type': 'application/json' },
+        });
+        return res.status;
+    } catch (error) {
+        console.dir(error);
+    }
 }
 
 export { getClub, getClubList, postFeedback, postEvent, getEvent, getEventList, getVolunteering, postVolunteering };
