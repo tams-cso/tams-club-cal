@@ -177,7 +177,7 @@ function calendarDays(currDate = undefined) {
 }
 
 /**
- * @returns {string[]} Array of days of the week 
+ * @returns {string[]} Array of days of the week
  */
 function daysOfWeek() {
     const date = dayjs().day(0);
