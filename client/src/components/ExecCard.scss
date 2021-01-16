@@ -26,5 +26,9 @@
 
 .exec-img {
     height: 4rem;
+    max-height: 4rem;
     margin-right: 1rem;
+
+    object-fit: cover;
+    box-shadow: 0 0 0.2rem 0.1rem $background-tint;
 }

@@ -68,9 +68,13 @@ function EventData(objId, links, description, addedBy, editedBy) {
  * @param {string} coverImg URL of the full-sized cover image
  * @param {string} description Description of the club
  * @param {Exec[]} execs Array of exec objects
- * @param {Committee[]} committee Array of committee objects
+ * @param {Committee[]} committees Array of committee objects
+ * @param {Object} coverImgBlobs Base64 encoded strings of the cover image
+ * @param {string} coverImgBlobs.img The compressed cover image
+ * @param {string} coverImgBlobs.thumb The super compressed cover image thumbnail
+ * @param {string[]} execProfilePicBlobs Base64 encoded strings of the exec profile pics in the order of the execs (null if missing)
  */
-function Club(name, advised, fb, website, coverImgThumbnail, coverImg, description, execs, committee) {
+function Club(name, advised, fb, website, coverImgThumbnail, coverImg, description, execs, committees, coverImgBlobs = null, execProfilePicBlobs = null) {
     this.name = name;
     this.advised = advised;
     this.fb = fb;
@@ -79,7 +83,9 @@ function Club(name, advised, fb, website, coverImgThumbnail, coverImg, descripti
     this.coverImg = coverImg;
     this.description = description;
     this.execs = execs;
-    this.committee = committee;
+    this.committees = committees;
+    this.coverImgBlobs = coverImgBlobs;
+    this.execProfilePicBlobs = execProfilePicBlobs;
 }
 
 /**
@@ -143,13 +149,13 @@ function Volunteering(name, club, description, filters, signupTime) {
  * @param {string} name The name of the exec
  * @param {string} position The postition of the exec
  * @param {string} description The description of the exec
- * @param {string} image The image URL of the exec
+ * @param {string} img The image URL of the exec
  */
-function Exec(name, position, description, image) {
+function Exec(name, position, description, img) {
     this.name = name;
     this.position = position;
     this.description = description;
-    this.image = image;
+    this.image = img;
 }
 
 /**

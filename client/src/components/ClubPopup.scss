@@ -1,74 +1,183 @@
+/**
+ * This is the most complex popup component, with a tab that switches betwwen
+ * viewing execs and committees.
+ * 
+ * 1) The two views (execs and committees) can be toggled by tabs above that section
+ * 2) The edit button is below this section and will open the editing menu
+ * 3) The cover photo is exactly 864 x 378 (which is a 48:21 ratio or 24rem x 10.5rem)
+ */
+
 @import '../custom.scss';
 
-.ClubPopup.no-content {
-    padding: 1rem;
-}
-
-.ClubPopup {
+.club-popup {
     width: 24rem;
     background-color: $background;
     text-align: center;
 }
 
-.clubs-popup-img {
+/*
+ * ######################
+ * ##### POPUP INFO #####
+ * ######################
+ */
+
+// Set scale ratio for the image
+.club-popup-image {
     width: 24rem;
+    height: 10.5rem;
+    object-fit: cover;
 }
 
-.clubs-popup-name {
+.club-popup-name {
     font-size: 1.45rem;
     padding: 0 0.75rem;
 }
 
-.clubs-popup-description {
+.club-popup-description {
     font-size: 0.65rem;
     padding: 0.5rem 1.75rem;
 }
 
-.clubs-popup-link {
-    font-size: 0.7rem;
-    color: $text-light;
-    transition: 0.2s;
-    text-decoration: underline;
+/*
+ * #################
+ * ##### LINKS #####
+ * #################
+ */
+
+.club-popup-link {
     width: fit-content;
     margin: auto;
-}
 
-.clubs-popup-link:hover {
-    cursor: pointer;
-    color: $primary;
-}
-
-.clubs-popup-tab-container {
-    margin-top: 0.75rem;
-    display: flex;
-    flex-direction: row;
-    justify-content: center;
-}
-
-.clubs-popup-tab-item {
-    margin: 0 1.5rem;
     color: $text-light;
+    font-size: 0.7rem;
+    text-decoration: underline;
+
+    cursor: pointer;
     transition: 0.2s;
 }
 
-.clubs-popup-tab-item:hover {
-    cursor: pointer;
+.club-popup-link:hover {
     color: $primary;
 }
 
-.clubs-popup-tab-container .active {
-    color: $primary;
-}
+/*
+ * ###################################
+ * ##### EXEC AND COMMITTEE TABS #####
+ * ###################################
+ */
 
-.clubs-popup-tab-container {
+.club-popup-tab-container {
+    flex-direction: row;
+    justify-content: center;
+
+    display: flex;
+    margin-top: 0.75rem;
     margin-bottom: 0.5rem;
 }
 
-.clubs-popup-committees {
-    margin: auto;
-    display: grid;
-    gap: 1rem;
+.club-popup-tab-item {
+    margin: 0 1.5rem;
+    color: $text-light;
+    transition: 0.2s;
+    cursor: pointer;
+}
+
+// Override the default inactive behavior (display: none)
+.club-popup-tab-item.inactive {
+    display: block !important;
+}
+
+.club-popup-tab-item.active,
+.club-popup-tab-item:hover {
+    color: $primary;
+}
+
+.club-popup-committees {
     grid-template-columns: repeat(auto-fill, 10rem);
+    gap: 1rem;
     justify-content: center;
     align-items: center;
+
+    display: grid;
+    margin: auto;
+    margin-bottom: 1rem;
+}
+
+/*
+ * ##########################
+ * ##### EDIT CLUB INFO #####
+ * ##########################
+ */
+
+.club-popup-edit-button {
+    margin-bottom: 0.5rem;
+}
+
+.club-popup-edit {
+    text-align: left;
+}
+
+// Container is relative because absolute needs a non-static positioned ancestor
+.club-popup-edit-image-container {
+    position: relative;
+    width: 100%;
+    height: 10.5rem;
+}
+
+// Input (button) of type 'file' to upload images
+.club-popup-cover-photo-upload {
+    position: absolute;
+    bottom: 0.5rem;
+    left: 0.5rem;
+}
+
+// Everything underneath the cover photo upload
+// This container has a padding that applies to all the 'edit' elements
+.club-popup-edit-bottom {
+    padding: 0.75rem;
+}
+
+.club-popup-name-input {
+    width: 98%;
+    font-size: 1.1rem;
+}
+
+.club-popup-description-input {
+    width: 98%;
+    height: 6rem;
+    margin: 0.25rem 0 0.5rem;
+    font-size: 0.5rem;
+}
+
+.club-popup-link-input,
+.club-popup-link-label {
+    font-size: 0.75rem;
+}
+
+.club-popup-link-input {
+    width: 60%
+}
+
+/*
+ * ###################################
+ * ##### EXEC AND COMMITTEE EDIT #####
+ * ###################################
+ */
+
+.club-popup-card-edit-heading {
+    margin-bottom: 0.25rem;
+    font-size: 1rem;
+    text-align: center;
+    color: $text-light;
+}
+
+// Override bottom margins
+.club-popup .exec-edit,
+.club-popup .committee-edit {
+    margin-bottom: 0.5rem;
+}
+
+.club-popup-card-edit-list {
+    display: flex;
+    flex-direction: column;
 }

@@ -2,11 +2,13 @@ import dayjs from 'dayjs';
 import utc from 'dayjs/plugin/utc';
 import timezone from 'dayjs/plugin/timezone';
 import isLeapYear from 'dayjs/plugin/isLeapYear';
+import imageCompression from 'browser-image-compression';
 import { EventInfo, DateAndTime } from './entries';
 import store from '../redux/store';
 import { getSavedVolunteeringList } from '../redux/selectors';
 import { getVolunteering } from '../functions/api';
 import { setVolunteeringList } from '../redux/actions';
+import config from '../files/config.json';
 
 dayjs.extend(utc);
 dayjs.extend(timezone);
@@ -206,6 +208,33 @@ export async function getOrFetchVolList() {
  * @param {string} className Base name of the class
  * @param {boolean} state State variable, true would be active
  */
-export async function isActive(className, state) {
+export function isActive(className, state) {
     return `${className} ${state ? 'active' : 'inactive'}`;
 }
+
+/**
+ * Compresses the image to a specific max width or height
+ * Cover Photos: 1728x756
+ * Cover Photo Thumbnails: 288x126
+ * Exec Profile Pictures: 256x256
+ *
+ * @param {Blob} imageFile Image file object
+ * @param {number} maxWidthOrHeight The max width/height to scale down, in pixels
+ * @returns {Promise<Blob>} The compressed image blob
+ */
+export async function compressUploadedImage(imageFile, maxWidthOrHeight) {
+    try {
+        console.log(`uncompressed size: ${imageFile.size / 1024 / 1024} MB`);
+        const compressed = await imageCompression(imageFile, { maxWidthOrHeight });
+        console.log(`compressed size: ${compressed.size / 1024 / 1024} MB`);
+        return compressed;
+    } catch (error) {
+        console.dir(error);
+    }
+}
+
+/**
+ * 
+ * @param {string} path Path of file (eg. /7ad67e9c87f78de90d.png)
+ */
+export const imgUrl = (path) => `${config.backend}/static${path}`;

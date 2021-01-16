@@ -24,7 +24,7 @@ async function getEventList() {
  * @param {string} [id] ID to update
  * @returns {Promise<number>} POST status [200 for Success & 400 for Failure]
  */
-async function postEvent(event, id) {
+async function postEvent(event, id = null) {
     var update = id !== undefined && id !== null ? `?update=true&id=${id}` : '';
     const res = await fetch(`${config.backend}/add-event${update}`, {
         method: 'POST',
@@ -51,6 +51,30 @@ async function getClub(id) {
  */
 async function getClubList() {
     return await fetch(`${config.backend}/club-list`).then((res) => res.json());
+}
+
+/**
+ * POST to /add-club - Creates or updates a club
+ * @param {Club} club Club object
+ * @param {string} [id] ID to update
+ * @returns {Promise<object | null>} POST response of a string for the updated cover image thumbnail url
+ */
+async function postClub(club, id = null) {
+    var data = new FormData();
+    data.append('data', JSON.stringify(club));
+    data.append('img', club.coverImgBlobs.img);
+    data.append('thumb', club.coverImgBlobs.thumb);
+    for (var i = 0; i < club.execProfilePicBlobs.length; i++) {
+        if (club.execProfilePicBlobs[i] !== undefined) data.append(`exec${i}`, club.execProfilePicBlobs[i]);
+    }
+
+    var update = id !== undefined && id !== null ? `?update=true&id=${id}` : '';
+    const res = await fetch(`${config.backend}/add-club${update}`, {
+        method: 'POST',
+        body: data,
+    });
+    if (res.status !== 200) return null;
+    return res.json();
 }
 
 /**
@@ -91,4 +115,14 @@ async function postFeedback(feedback) {
     return res.status;
 }
 
-export { getClub, getClubList, postFeedback, postEvent, getEvent, getEventList, getVolunteering, postVolunteering };
+export {
+    getClub,
+    getClubList,
+    postFeedback,
+    postEvent,
+    getEvent,
+    getEventList,
+    getVolunteering,
+    postVolunteering,
+    postClub,
+};

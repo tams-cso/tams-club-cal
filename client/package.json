@@ -7,6 +7,7 @@
         "Dylan Li <dylanli.yitong@gmail.com> (https://github.com/The-Box-Lord/)"
     ],
     "dependencies": {
+        "browser-image-compression": "^1.0.14",
         "dayjs": "^1.9.8",
         "fuse.js": "^6.4.6",
         "node-sass": "4.14.1",

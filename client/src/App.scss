@@ -15,6 +15,40 @@ html {
     overflow-y: scroll;
 }
 
+h1 {
+    margin: 0 0 0.5rem 0;
+    text-align: center;
+    font-weight: 300;
+}
+
+p {
+    margin: 0.1rem;
+    font-size: 0.75rem;
+}
+
+// TODO: Change general selector for input to a classname (like line-in)
+input[type='text'],
+textarea {
+    font-family: $main-font;
+    border: 0.05rem solid $background-tint;
+    border-radius: 0.1rem;
+    padding: 0.1rem;
+}
+
+input {
+    font-family: $main-font;
+}
+
+label {
+    margin-right: 1rem;
+    color: $text-light;
+}
+
+button {
+    font-family: $main-font;
+    outline: none;
+}
+
 .menu-bkgd {
     position: fixed;
     z-index: 99;
@@ -27,6 +61,51 @@ html {
 .page {
     padding-top: 2.5rem;
 }
+
+.smol-spacer {
+    height: 0.25rem;
+}
+
+.line-in {
+    border: none !important;
+    border-bottom: 0.05rem solid $background-tint !important;
+    font-size: 1rem;
+    margin-bottom: 0.5rem !important;
+}
+
+.line-in::placeholder {
+    color: $background-tint;
+}
+
+/*
+ * ############################
+ * ##### PSEUDO-SELECTORS #####
+ * ############################
+ */
+
+:focus {
+    outline: none;
+}
+
+::placeholder {
+    color: $text-lighter;
+    opacity: 1;
+}
+
+/*
+ * ######################################
+ * ##### ACTIVE & INACTIVE DISPLAYS #####
+ * ######################################
+ */
+
+.inactive {
+    display: none;
+}
+
+.active {
+    display: block;
+}
+
 
 @media handheld and (max-width: 992px), screen and (max-device-width: 992px), screen and (max-width: 992px) {
     html,

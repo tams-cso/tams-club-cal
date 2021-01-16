@@ -162,6 +162,39 @@ async function updateVolunteering(vol, id) {
     }
 }
 
+async function updateClub(club, id) {
+    try {
+        const db = client.db('clubs');
+        const dataCollection = db.collection('data');
+        const infoCollection = db.collection('info');
+        dataCollection.updateOne(
+            { objId: id },
+            {
+                $set: {
+                    description: club.description,
+                    execs: club.execs,
+                    committees: club.committees,
+                    coverImg: club.coverImg
+                }
+            }
+        );
+        infoCollection.updateOne(
+            { objId: id },
+            {
+                $set: {
+                    name: club.name,
+                    advised: club.advised,
+                    fb: club.fb,
+                    website: club.website,
+                    coverImgThumbnail: club.coverImgThumbnail
+                }
+            }
+        );
+    } catch (error) {
+        console.dir(error);
+    }
+}
+
 module.exports = {
     getClubList,
     getClub,
@@ -173,4 +206,5 @@ module.exports = {
     updateEvent,
     getVolunteering,
     updateVolunteering,
+    updateClub
 };
