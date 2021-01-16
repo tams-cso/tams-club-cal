@@ -153,10 +153,20 @@ export function formatVolunteeringFilters(filters, signupTime) {
     return filterObjects;
 }
 
+/**
+ * Retruns the month spelled out and full year
+ * @param {dayjs} [date=undefined] dayjs object of the desired day
+ * @returns {string} Formated month and year
+ */
 export function getMonthAndYear(date = undefined) {
     return dayjs(date).format('MMMM YYYY');
 }
 
+/**
+ * Retruns the month spelled out and full year
+ * @param {dayjs} [currDate=undefined] dayjs object of the desired day
+ * @returns {{calendar: number[], previous: number[], after: number[], date: dayjs}} Object used to generate calendar
+ */
 export function calendarDays(currDate = undefined) {
     const date = dayjs(currDate).date(1);
     const calendar = [];
@@ -168,6 +178,9 @@ export function calendarDays(currDate = undefined) {
     return { calendar, previous, after, date: date.subtract(1, 'month') };
 }
 
+/**
+ * @returns {string[]} Array of days of the week
+ */
 export function daysOfWeek() {
     const date = dayjs().day(0);
     const header = [];
@@ -234,7 +247,8 @@ export async function compressUploadedImage(imageFile, maxWidthOrHeight) {
 }
 
 /**
- * 
+ * Converts a dropbox image path to the correct image url
+ *
  * @param {string} path Path of file (eg. /7ad67e9c87f78de90d.png)
  */
 export const imgUrl = (path) => `${config.backend}/static${path}`;
