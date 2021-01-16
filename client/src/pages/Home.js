@@ -150,8 +150,7 @@ class Home extends React.Component {
 
         // Remove events that have already passed
         while (events.length > 0)
-            if (dayjs(events[0].end === null ? events[0].start : events[0].end).isBefore(dayjs()))
-                events.shift();
+            if (dayjs(events[0].end === null ? events[0].start : events[0].end).isBefore(dayjs())) events.shift();
             else break;
 
         // Insert the date objects
