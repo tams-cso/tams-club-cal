@@ -108,8 +108,8 @@ function getFormattedDate(event, noName = false) {
  */
 function addDayjsElement(e) {
     // TODO: Add place to change time zone
-    e.startDayjs = convertToTimeZone(e.start, 'America/Chicago');
-    if (e.type === 'event') e.endDayjs = convertToTimeZone(e.end, 'America/Chicago');
+    e.startDayjs = convertToTimeZone(e.start, getTimezone());
+    if (e.type === 'event') e.endDayjs = convertToTimeZone(e.end, getTimezone());
 }
 
 /**
@@ -192,7 +192,7 @@ function daysOfWeek() {
  * @returns {DateAndTime} The date and time objects
  */
 function millisToDateAndTime(millis) {
-    var dayObj = convertToTimeZone(millis, 'America/Chicago');
+    var dayObj = convertToTimeZone(millis, getTimezone());
     return {
         date: dayObj.format('YYYY-MM-DD'),
         time: dayObj.format('HH:mm'),
@@ -213,6 +213,10 @@ async function getOrFetchVolList() {
     return volList;
 }
 
+function getTimezone() {
+    return dayjs.tz.guess();
+}
+
 export {
     getParams,
     parseTimeZone,
@@ -228,4 +232,5 @@ export {
     daysOfWeek,
     getOrFetchVolList,
     millisToDateAndTime,
+    getTimezone,
 };
