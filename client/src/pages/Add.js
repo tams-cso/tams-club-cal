@@ -2,7 +2,7 @@ import React from 'react';
 
 import { postEvent } from '../functions/api';
 import { Event } from '../functions/entries';
-import { parseTimeZone } from '../functions/util';
+import { parseTimeZone, getTimezone } from '../functions/util';
 
 import './Add.scss';
 
@@ -55,9 +55,9 @@ class Add extends React.Component {
 
             // Calculate milliseconds from starting/ending datetimes
             var end = null;
-            var start = parseTimeZone(`${this.state.startDate} ${this.state.startTime}`, 'America/Chicago');
+            var start = parseTimeZone(`${this.state.startDate} ${this.state.startTime}`, getTimezone());
             if (this.state.type === 'event')
-                var end = parseTimeZone(`${this.state.endDate} ${this.state.endTime}`, 'America/Chicago');
+                var end = parseTimeZone(`${this.state.endDate} ${this.state.endTime}`, getTimezone());
 
             // POST event
             console.log('submitted!');
@@ -207,6 +207,7 @@ class Add extends React.Component {
                 ></input>
                 <br />
                 {endObj}
+                {/* TODO timezone edit */}
                 <p className="timezone-message">** Timezone is America/Chicago [CST/CDT] **</p>
                 <label htmlFor="links-0">Links</label>
                 <input

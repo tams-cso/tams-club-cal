@@ -110,8 +110,8 @@ export function getFormattedDate(event, noName = false) {
  */
 export function addDayjsElement(e) {
     // TODO: Add place to change time zone
-    e.startDayjs = convertToTimeZone(e.start, 'America/Chicago');
-    if (e.type === 'event') e.endDayjs = convertToTimeZone(e.end, 'America/Chicago');
+    e.startDayjs = convertToTimeZone(e.start, getTimezone());
+    if (e.type === 'event') e.endDayjs = convertToTimeZone(e.end, getTimezone());
 }
 
 /**
@@ -194,7 +194,7 @@ export function daysOfWeek() {
  * @returns {DateAndTime} The date and time objects
  */
 export function millisToDateAndTime(millis) {
-    var dayObj = convertToTimeZone(millis, 'America/Chicago');
+    var dayObj = convertToTimeZone(millis, getTimezone());
     return {
         date: dayObj.format('YYYY-MM-DD'),
         time: dayObj.format('HH:mm'),
@@ -252,3 +252,7 @@ export async function compressUploadedImage(imageFile, maxWidthOrHeight) {
  * @param {string} path Path of file (eg. /7ad67e9c87f78de90d.png)
  */
 export const imgUrl = (path) => `${config.backend}/static${path}`;
+
+export function getTimezone() {
+    return dayjs.tz.guess();
+}

@@ -9,6 +9,7 @@ import {
     getFormattedTime,
     millisToDateAndTime,
     parseTimeZone,
+    getTimezone,
 } from '../functions/util';
 import { getEvent, postEvent } from '../functions/api';
 import ActionButton from './ActionButton';
@@ -100,9 +101,9 @@ class EventPopup extends React.Component {
 
             // Calculate milliseconds from starting/ending datetimes
             var end = null;
-            var start = parseTimeZone(`${this.state.startDate} ${this.state.startTime}`, 'America/Chicago');
+            var start = parseTimeZone(`${this.state.startDate} ${this.state.startTime}`, getTimezone());
             if (this.state.type === 'event')
-                var end = parseTimeZone(`${this.state.endDate} ${this.state.endTime}`, 'America/Chicago');
+                var end = parseTimeZone(`${this.state.endDate} ${this.state.endTime}`, getTimezone());
 
             var editedBy = [...this.state.event.editedBy];
             editedBy.push(this.state.editedBy);
@@ -300,6 +301,7 @@ class EventPopup extends React.Component {
                     ></input>
                     <br />
                     {endObj}
+                    {/* TODO timezone edit */}
                     <p className="timezone-message">** Timezone is America/Chicago [CST/CDT] **</p>
                     <label htmlFor="links-0">Links</label>
                     <input
