@@ -208,7 +208,7 @@ class Add extends React.Component {
                 <br />
                 {endObj}
                 {/* TODO timezone edit */}
-                <p className="timezone-message">** Timezone is America/Chicago [CST/CDT] **</p> 
+                <p className="timezone-message">** Timezone is America/Chicago [CST/CDT] **</p>
                 <label htmlFor="links-0">Links</label>
                 <input
                     name="links-0"
