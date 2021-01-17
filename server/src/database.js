@@ -174,8 +174,8 @@ async function updateClub(club, id) {
                     description: club.description,
                     execs: club.execs,
                     committees: club.committees,
-                    coverImg: club.coverImg
-                }
+                    coverImg: club.coverImg,
+                },
             }
         );
         infoCollection.updateOne(
@@ -186,8 +186,8 @@ async function updateClub(club, id) {
                     advised: club.advised,
                     fb: club.fb,
                     website: club.website,
-                    coverImgThumbnail: club.coverImgThumbnail
-                }
+                    coverImgThumbnail: club.coverImgThumbnail,
+                },
             }
         );
     } catch (error) {
@@ -206,5 +206,5 @@ module.exports = {
     updateEvent,
     getVolunteering,
     updateVolunteering,
-    updateClub
+    updateClub,
 };

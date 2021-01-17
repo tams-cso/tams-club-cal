@@ -74,7 +74,19 @@ function EventData(objId, links, description, addedBy, editedBy) {
  * @param {string} coverImgBlobs.thumb The super compressed cover image thumbnail
  * @param {string[]} execProfilePicBlobs Base64 encoded strings of the exec profile pics in the order of the execs (null if missing)
  */
-function Club(name, advised, fb, website, coverImgThumbnail, coverImg, description, execs, committees, coverImgBlobs = null, execProfilePicBlobs = null) {
+function Club(
+    name,
+    advised,
+    fb,
+    website,
+    coverImgThumbnail,
+    coverImg,
+    description,
+    execs,
+    committees,
+    coverImgBlobs = null,
+    execProfilePicBlobs = null
+) {
     this.name = name;
     this.advised = advised;
     this.fb = fb;
