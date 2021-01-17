@@ -158,11 +158,15 @@ class Home extends React.Component {
 
         // Generate the list of events
         var eventComponents = [];
-        
+
         var tempComponents = [];
         events.forEach((e) => {
             if (e.isDate) {
-                eventComponents.push(<div className="schedule-view-sticky-container" key={eventComponents.length}>{tempComponents}</div>);
+                eventComponents.push(
+                    <div className="schedule-view-sticky-container" key={eventComponents.length}>
+                        {tempComponents}
+                    </div>
+                );
                 tempComponents = [];
                 tempComponents.push(<DateSection date={createDateHeader(e.day)} key={e.day}></DateSection>);
             } else {
@@ -177,7 +181,11 @@ class Home extends React.Component {
                 );
             }
         });
-        eventComponents.push(<div className="schedule-view-sticky-container" key={eventComponents.length}>{tempComponents}</div>);
+        eventComponents.push(
+            <div className="schedule-view-sticky-container" key={eventComponents.length}>
+                {tempComponents}
+            </div>
+        );
         eventComponents.shift();
         this.setState({ eventComponents });
     };
