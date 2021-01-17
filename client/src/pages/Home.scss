@@ -6,7 +6,7 @@
 }
 
 .schedule-view {
-    margin: 0 14vw;
+    margin: 2rem 14vw 0 14vw;
     padding-bottom: 0.5rem;
 }
 
@@ -45,10 +45,16 @@ $rh: 5rem;
 }
 
 .home-top {
-    padding: 1.25rem 0 0.25rem 0;
-    margin: 0 5rem;
+    position: fixed;
+    padding-top: 0.5rem;
+    top: 2.5rem;
+    height: 1.5rem;
     display: flex;
-    justify-content: space-around;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    background-color: $background;
+    z-index: 1;
 }
 
 .days-of-week {
@@ -105,6 +111,7 @@ $rh: 5rem;
     font-size: 0.75rem;
     border-radius: 0.25rem;
     transition: 0.2s;
+    margin-left: 5vw;
 }
 
 .view-switch:hover {
@@ -113,6 +120,7 @@ $rh: 5rem;
 }
 
 .dummy {
+    margin-right: 5vw;
     width: 7.7rem;
 }
 
