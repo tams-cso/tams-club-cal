@@ -228,7 +228,7 @@ export function isActive(className, state) {
 /**
  * Compresses the image to a specific max width or height
  * Cover Photos: 1728x756
- * Cover Photo Thumbnails: 288x126
+ * Cover Photo Thumbnails: 432x189
  * Exec Profile Pictures: 256x256
  *
  * @param {Blob} imageFile Image file object

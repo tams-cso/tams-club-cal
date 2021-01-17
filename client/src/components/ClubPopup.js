@@ -83,7 +83,7 @@ class ClubPopup extends React.Component {
         }
 
         var coverThumb = null;
-        if (this.state.compressed) coverThumb = await compressUploadedImage(this.state.compressed, 288);
+        if (this.state.compressed) coverThumb = await compressUploadedImage(this.state.compressed, 432);
 
         var fullClub = new Club(
             this.state.name,
@@ -103,24 +103,22 @@ class ClubPopup extends React.Component {
         fullClub.oldCommittees = this.state.club.committees;
 
         // POST Club
-        postClub(fullClub, this.state.club.objId).then(({ url, execs }) => {
-            if (url !== null) {
+        postClub(fullClub, this.state.club.objId).then(async (status) => {
+            if (status === 200) {
                 var clubObj = new ClubInfo(
                     this.state.club.objId,
                     this.state.name,
                     this.state.advised,
                     this.state.fb,
                     this.state.website,
-                    url
+                    coverThumb || this.state.club.coverImgThumbnail
                 );
                 
-                for (var i = 0; i < execs.length; i++) {
-                    fullClub.execs[i].img = execs[i].img;
-                }
+                var newClub = await getClub(this.props.id);
 
                 this.props.updateClub(this.state.club.objId, clubObj);
                 this.props.setPopupEdit(false);
-                this.setState({ club: fullClub });
+                this.resetState(newClub);
                 alert('Successfully added!');
             } else alert('Adding club failed :(');
         });
@@ -226,12 +224,11 @@ class ClubPopup extends React.Component {
 
         var coverImg = this.state.coverImg;
         if (coverImg.startsWith('/')) coverImg = imgUrl(coverImg);
-        console.log(coverImg);
 
         return (
             <div className="club-popup">
                 <div className={isActive('club-popup-view', !this.props.edit)}>
-                    <img className="club-popup-image" src={imgUrl(this.state.club.coverImg)} alt="cover image"></img>
+                    <img className="club-popup-image" src={coverImg} alt="cover image"></img>
                     <p className="club-popup-name">{this.state.club.name}</p>
                     <p className="club-popup-description">{this.state.club.description}</p>
                     <div className="club-popup-links">
