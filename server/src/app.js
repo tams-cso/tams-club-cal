@@ -2,6 +2,8 @@ require('dotenv').config();
 
 const express = require('express');
 const app = express();
+const fs = require('fs');
+const path = require('path');
 const cors = require('cors');
 const bodyParser = require('body-parser');
 const formidable = require('formidable');
@@ -19,6 +21,19 @@ const {
     updateClub,
 } = require('./database');
 const { uploadImage, getImage } = require('./images');
+
+// Clean up the 'cache' folder
+fs.readdir(path.join(__dirname, 'cache'), (err, files) => {
+    if (err) throw err;
+
+    for (const file of files) {
+        if (file !== '.placeholder') {
+            fs.unlink(path.join(__dirname, 'cache', file), (err) => {
+                if (err) throw err;
+            });
+        }
+    }
+});
 
 app.use(cors());
 app.use(bodyParser.json());
