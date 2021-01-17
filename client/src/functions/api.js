@@ -93,7 +93,7 @@ async function postClub(club, id = null) {
         method: 'POST',
         body: data,
     });
-    if (res.status !== 200) return null;
+    if (res.status !== 200) return { url: null };
     return res.json();
 }
 

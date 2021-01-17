@@ -113,6 +113,7 @@ class ClubPopup extends React.Component {
                     this.state.website,
                     url
                 );
+                
                 for (var i = 0; i < execs.length; i++) {
                     fullClub.execs[i].img = execs[i].img;
                 }
@@ -140,8 +141,7 @@ class ClubPopup extends React.Component {
 
     handleInputChange = (event) => {
         const target = event.target;
-        if (target.name.startsWith('links-')) this.linksInputChange(target);
-        else this.setState({ [target.name]: target.value });
+        this.setState({ [target.name]: target.value });
     };
 
     handleImageUpload = async (event) => {
