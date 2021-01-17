@@ -149,20 +149,24 @@ class Home extends React.Component {
         this.setCalendar([...events]);
 
         // Remove events that have already passed
-        while (events.length > 0)
-            if (dayjs(events[0].end === null ? events[0].start : events[0].end).isBefore(dayjs())) events.shift();
-            else break;
+        // while (events.length > 0)
+        //     if (dayjs(events[0].end === null ? events[0].start : events[0].end).isBefore(dayjs())) events.shift();
+        //     else break;
 
         // Insert the date objects
         divideByDate(events);
 
         // Generate the list of events
         var eventComponents = [];
+        
+        var tempComponents = [];
         events.forEach((e) => {
             if (e.isDate) {
-                eventComponents.push(<DateSection date={createDateHeader(e.day)} key={e.day}></DateSection>);
+                eventComponents.push(<div className="schedule-view-sticky-container" key={eventComponents.length}>{tempComponents}</div>);
+                tempComponents = [];
+                tempComponents.push(<DateSection date={createDateHeader(e.day)} key={e.day}></DateSection>);
             } else {
-                eventComponents.push(
+                tempComponents.push(
                     <ScheduleEvent
                         event={e}
                         key={e.objId}
@@ -173,6 +177,8 @@ class Home extends React.Component {
                 );
             }
         });
+        eventComponents.push(<div className="schedule-view-sticky-container" key={eventComponents.length}>{tempComponents}</div>);
+        eventComponents.shift();
         this.setState({ eventComponents });
     };
 
