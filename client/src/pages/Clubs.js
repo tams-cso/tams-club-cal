@@ -3,7 +3,6 @@ import { connect } from 'react-redux';
 
 import ClubCard from '../components/ClubCard';
 import ClubPopup from '../components/ClubPopup';
-import CommitteeCard from '../components/CommitteeCard';
 import Popup from '../components/Popup';
 
 import { getClubList } from '../functions/api';

@@ -1,0 +1,77 @@
+/**
+ * Exec Edit component for editing execs of a club
+ * // TODO: Add more to this desc
+ */
+
+@import '../custom.scss';
+
+// Entire element is flexbox with left and right components
+.exec-edit {
+    width: 99%;
+    flex-direction: row;
+    display: flex;
+    padding-top: 0.1rem;
+    box-shadow: 0 0 0.2rem $background-tint;
+}
+
+/*
+ * #############################
+ * ##### LEFT SIDE (IMAGE) #####
+ * #############################
+ */
+
+// Again, relative positioning for ImageUpload component
+.exec-edit-left {
+    position: relative;
+    margin-left: 0.25rem;
+    justify-self: center;
+    align-self: center;
+}
+
+.exec-edit-img {
+    margin-right: 0.5rem;
+}
+
+.exec-edit-img-upload {
+    position: absolute;
+    top: 2.75rem;
+    left: 0rem;
+    width: 1.5rem;
+    padding: 0.25rem;
+
+    font-size: 0.5rem;
+    text-align: center;
+}
+
+/*
+ * #############################
+ * ##### RIGHT SIDE (INFO) #####
+ * #############################
+ */
+
+// Right side will expand to the rest of the flexbox width
+.exec-edit-right {
+    flex-grow: 1;
+}
+
+.exec-edit-name-input {
+    margin: 0 !important;
+    width: 85%;
+    font-size: 0.75rem;
+}
+
+.exec-edit-position-label {
+    margin-right: 0.25rem;
+    font-size: 0.65rem;
+}
+
+.exec-edit-position-input {
+    margin: 0 !important;
+    width: 70%;
+    font-size: 0.65rem;
+}
+
+.exec-edit-description-input {
+    height: 3rem;
+    width: 95%;
+}

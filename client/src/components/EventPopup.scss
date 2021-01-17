@@ -79,7 +79,7 @@
     white-space: pre-line;
 }
 
-.EventPopup .ActionButton {
+.EventPopup .action-button {
     font-size: 0.65rem;
     padding: 0.1rem 0.25rem;
 }
@@ -119,14 +119,6 @@
     margin-left: 2rem;
 }
 
-.action-button-box .ActionButton {
+.action-button-box .action-button {
     margin: 0.25rem 0.25rem 0;
-}
-
-.ActionButton.submit {
-    color: $primary;
-}
-
-.ActionButton.cancel {
-    color: $bad;
 }

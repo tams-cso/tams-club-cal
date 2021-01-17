@@ -9,6 +9,7 @@ import {
     UPDATE_VOLUNTEERING,
     SET_CLUB_LIST,
     UPDATE_EVENT,
+    UPDATE_CLUB,
 } from './actionTypes';
 
 export const resetDataState = () => ({
@@ -57,4 +58,9 @@ export const setClubList = (clubList) => ({
 export const updateEvent = (id, event) => ({
     type: UPDATE_EVENT,
     payload: { id, event },
+});
+
+export const updateClub = (id, club) => ({
+    type: UPDATE_CLUB,
+    payload: { id, club },
 });

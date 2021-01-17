@@ -3,6 +3,7 @@ import {
     SET_CLUB_LIST,
     SET_EVENT_LIST,
     SET_VOLUNTEERING_LIST,
+    UPDATE_CLUB,
     UPDATE_EVENT,
     UPDATE_VOLUNTEERING,
 } from '../actionTypes';
@@ -62,6 +63,20 @@ export default function data(state = initialState, action) {
         }
         case SET_CLUB_LIST: {
             const { clubList } = action.payload;
+            return {
+                ...state,
+                clubList,
+            };
+        }
+        case UPDATE_CLUB: {
+            const { id, club } = action.payload;
+            var clubList = [...state.clubList];
+            for (var i = 0; i < clubList.length; i++) {
+                if (clubList[i].objId === id) {
+                    clubList[i] = { _id: clubList[i]._id, ...club };
+                    break;
+                }
+            }
             return {
                 ...state,
                 clubList,

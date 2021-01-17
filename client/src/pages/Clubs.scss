@@ -1,11 +1,11 @@
 @import '../custom.scss';
 
 .club-card-list {
-    padding: 1.25rem 7rem 1rem;
+    padding: 1.25rem 7vw 1rem;
     display: grid;
     grid-template-columns: repeat(auto-fill, 9rem);
     row-gap: 1rem;
-    justify-content: center;
+    justify-content: center; 
 }
 
 .club-card-list > .ClubCard {

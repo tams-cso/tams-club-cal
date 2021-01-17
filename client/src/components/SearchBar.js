@@ -40,7 +40,7 @@ class SearchBar extends React.Component {
                     name="query"
                     className="search-bar"
                     type="text"
-                    placeholder="Search..."
+                    placeholder="Search events..."
                     onKeyDown={(e) => {
                         this.handleClick(e);
                     }}

@@ -3,7 +3,7 @@
 
 // TODO: change fonts to use these variables
 $main-font: 'Bubblegum Sans', sans-serif;
-$cal-font: 'Montserrat', sans-serif;
+$alt-font: 'Montserrat', sans-serif;
 
 // Color Variables
 
@@ -18,58 +18,3 @@ $type-signup: #d49dff;
 $text-primary: black;
 $text-light: #777777;
 $text-lighter: #9e9e9e;
-
-// General formats
-
-::placeholder {
-    color: $text-lighter;
-    opacity: 1;
-}
-
-h1 {
-    margin: 0 0 0.5rem 0;
-    text-align: center;
-    font-weight: 300;
-}
-
-input,
-textarea {
-    font-family: $main-font;
-    border: 0.05rem solid $background-tint;
-    border-radius: 0.1rem;
-    padding: 0.1rem;
-}
-
-label {
-    margin-right: 1rem;
-    color: $text-light;
-}
-
-button {
-    font-family: $main-font;
-    outline: none;
-}
-
-p {
-    margin: 0.1rem;
-    font-size: 0.75rem;
-}
-
-.smol-spacer {
-    height: 0.25rem;
-}
-
-.line-in {
-    border: none;
-    border-bottom: 0.05rem solid $background-tint;
-    font-size: 1rem;
-    margin-bottom: 0.5rem;
-}
-
-.line-in::placeholder {
-    color: $background-tint;
-}
-
-:focus {
-    outline: none;
-}

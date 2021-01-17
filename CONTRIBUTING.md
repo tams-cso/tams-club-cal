@@ -43,6 +43,15 @@ Once you've made the changes that you need, please use the pull request template
 
 We will auto-format code with [Prettier](https://prettier.io/) when a pull request is merged, but you can also use it if you install the [extension on VSCode](https://marketplace.visualstudio.com/items?itemName=esbenp.prettier-vscode) (and probably other IDEs as well).
 
+### JS/JSX Conventions
+
+Most of the standard JS formatting will be taken care of by the extension (such as spaces around operators, bracket style, and whitespace). However, there are a few rules that cannot be detected by a formatter:
+
+- There should be a space around each function/method definition
+- In the React classes, keep all lifecycle methods at the bottom, in the order that they happen (ie. `componentDidMount` will go before `componentWillUpdate`); the `render` method should be at the end
+- If code is used multiple times across components or js files, place it in the `util.js` file in its own function
+- All functions outside of React components **must** have JSDoc written, describing in detail what the function does, its parameters, and the return methods. For standard functions, see the [basic JSDoc instructions](https://jsdoc.app/about-getting-started.html). If you are returning an object, please define a [typedef](https://jsdoc.app/tags-typedef.html)
+
 ### CSS Formatting
 
 CSS is generally extremely difficult to format, and it can be extremely hard to read your own written css, let alone someone else's! That's why I am going to outline the css convention that will be used in _this project_. Remember that a lot of these standards are my personal preference, and there are many ways that people will format css. My main inspiration for this styling comes from [css-tricks.com](https://css-tricks.com/poll-results-how-do-you-order-your-css-properties/) and [cssguidelin.es](https://cssguidelin.es/):
@@ -214,3 +223,7 @@ Here is a list of suggestions or style things that you should keep in mind:
 -   Use dashes instead of camelcase for class names
 -   Extra Sass variables and mixin definitions can go at the top of the stylesheet
 -   Again, a lot of the formatting still comes down to coder discretion but just keep in mind that you won't be the only person reading the code!
+
+### Final Coding Tips
+
+Remember that these coding conventions are put in place not neccessarily to help you code faster, but to make your code more readable and easier to follow for *other people*. Especially given that this is an open-source project, it's imperative that your code can be understood quickly and easily by others! If there is a place where you need to break away from the above formatting because it makes more sense to, feel free to do it. Again, we are going for maximum re-readability. Have fun working on our project, and we look forward to your contributions!

@@ -12,6 +12,7 @@ class VolunteeringPopup extends React.Component {
     constructor(props) {
         super(props);
         this.state = { open: false, name: '', club: '', description: '', filters: {} };
+        this.handleInputChange = this.handleInputChange.bind(this);
     }
 
     handleInputChange = (event) => {
