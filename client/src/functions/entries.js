@@ -167,7 +167,7 @@ function Exec(name, position, description, img) {
     this.name = name;
     this.position = position;
     this.description = description;
-    this.image = img;
+    this.img = img;
 }
 
 /**
