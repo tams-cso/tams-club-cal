@@ -6,12 +6,11 @@ import './CommitteeCard.scss';
 class CommitteeCard extends React.Component {
     render() {
         return (
-            <div className="CommitteeCard">
-                <div className="committee-name">{this.props.committee.name}</div>
-                <div className="committee-description">{this.props.committee.description}</div>
+            <div className="committee-card">
+                <div className="committee-card-name">{this.props.committee.name}</div>
+                <div className="committee-card-description">{this.props.committee.description}</div>
                 {/* TODO: Extract this to a component bc it's used by club card as well? */}
-                {/* TODO: Change the font of the tiny text on the committee card? */}
-                <div className="committee-icons">
+                <div className="committee-card-icons">
                     <WebIcon
                         onClick={() => {
                             if (this.props.committee.website != '') window.open(this.props.committee.website);
