@@ -113,7 +113,7 @@ class ClubPopup extends React.Component {
                     this.state.website,
                     coverThumb || this.state.club.coverImgThumbnail
                 );
-                
+
                 var newClub = await getClub(this.props.id);
 
                 this.props.updateClub(this.state.club.objId, clubObj);
