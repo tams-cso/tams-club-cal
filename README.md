@@ -29,6 +29,7 @@ Create the environmental variable file at `server/.env`:
 ```.env
 MONGO_USER="[Username for cluster]"
 MONGO_PASS="[Password for cluster]"
+DROPBOX_TOKEN="[Token for dropbox app]"
 ```
 
 ## Execution
