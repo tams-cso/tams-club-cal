@@ -182,7 +182,7 @@ class ClubPopup extends React.Component {
         if (this.props.popupOpen && this.props.id !== null) {
             this.getClubData();
         } else {
-            this.setState({ event: null });
+            this.setState({ club: null });
         }
     }
 
