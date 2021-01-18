@@ -11,7 +11,7 @@ import { compressUploadedImage, imgUrl, isActive } from '../functions/util';
 import ImageUpload from './ImageUpload';
 import ExecEdit from './ExecEdit';
 import CommitteeEdit from './CommitteeEdit';
-import { Club, ClubInfo } from '../functions/entries';
+import { Club, ClubInfo, Exec } from '../functions/entries';
 
 class ClubPopup extends React.Component {
     constructor(props) {
@@ -177,6 +177,24 @@ class ClubPopup extends React.Component {
         this.setState({ committees });
     };
 
+    handleExecDelete = (num) => {
+        var execs = this.state.execs;
+        var execBlobs = this.state.execBlobs;
+        if (confirm(`Are you sure you want to delete Exec #${num + 1}?`)) {
+            execs.splice(num, 1);
+            execBlobs.splice(num, 1);
+            this.setState({ execs, execBlobs });
+        }
+    };
+
+    addExec = () => {
+        var execs = this.state.execs;
+        var execBlobs = this.state.execBlobs;
+        execs.push(new Exec('', '', '', ''));
+        execBlobs.push(null);
+        this.setState({ execs, execBlobs });
+    };
+
     componentDidUpdate(prevProps) {
         if (prevProps.popupOpen === this.props.popupOpen) return;
         if (this.props.popupOpen && this.props.id !== null) {
@@ -208,6 +226,7 @@ class ClubPopup extends React.Component {
                     exec={this.state.execs[i]}
                     onImgChange={this.handleProfPicUpload}
                     onChange={this.handleExecChange}
+                    onDelete={this.handleExecDelete.bind(this, i)}
                 ></ExecEdit>
             );
         }
@@ -226,7 +245,6 @@ class ClubPopup extends React.Component {
 
         var coverImg = this.state.coverImg;
         if (coverImg.startsWith('/')) coverImg = imgUrl(coverImg);
-        console.log(coverImg);
 
         return (
             <div className="club-popup">

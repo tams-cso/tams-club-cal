@@ -1,5 +1,6 @@
 import React from 'react';
 import { imgUrl } from '../functions/util';
+import { ReactComponent as TrashIcon } from '../files/trash-can.svg';
 import './ExecEdit.scss';
 import ImageUpload from './ImageUpload';
 
@@ -23,16 +24,18 @@ class ExecEdit extends React.Component {
                     ></ImageUpload>
                 </div>
                 <div className="exec-edit-right">
-                    <input
-                        name="name"
-                        num={this.props.num}
-                        className="line-in exec-edit-name-input"
-                        type="text"
-                        placeholder="Exec name..."
-                        value={this.props.exec.name}
-                        onChange={this.props.onChange}
-                    ></input>
-                    <br />
+                    <div className="exec-edit-name-trash-container">
+                        <input
+                            name="name"
+                            num={this.props.num}
+                            className="line-in exec-edit-name-input"
+                            type="text"
+                            placeholder="Exec name..."
+                            value={this.props.exec.name}
+                            onChange={this.props.onChange}
+                        ></input>
+                        <TrashIcon className="exec-edit-trash-icon" onClick={this.props.onDelete} />
+                    </div>
                     <label htmlFor="position" className="exec-edit-position-label">
                         Position:
                     </label>
