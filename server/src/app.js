@@ -78,8 +78,7 @@ app.post('/add-club', async (req, res, next) => {
         }
 
         if (req.query.update === 'true') await updateClub(club, req.query.id);
-        res.status(200);
-        res.send({ url: club.coverImgThumbnail, execs: club.execs });
+        res.sendStatus(200);
     });
 });
 
