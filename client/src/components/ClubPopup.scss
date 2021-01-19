@@ -165,7 +165,7 @@
  */
 
 .club-popup-card-edit-heading {
-    margin-bottom: 0.25rem;
+    margin: 1rem 0 0.25rem;
     font-size: 1rem;
     text-align: center;
     color: $text-light;
@@ -180,4 +180,8 @@
 .club-popup-card-edit-list {
     display: flex;
     flex-direction: column;
+}
+
+.club-popup-add-container {
+    text-align: center;
 }

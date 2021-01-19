@@ -335,8 +335,18 @@ class ClubPopup extends React.Component {
                         ></input>
                         <p className="club-popup-card-edit-heading">Execs</p>
                         <div className="club-popup-card-edit-list">{execEditList}</div>
+                        <div className="club-popup-add-container">
+                            <ActionButton className="club-popup-add" onClick={this.addExec}>
+                                Add Exec
+                            </ActionButton>
+                        </div>
                         <p className="club-popup-card-edit-heading">Committees</p>
                         <div className="club-popup-card-edit-list">{committeeEditList}</div>
+                        <div className="club-popup-add-container">
+                            <ActionButton className="club-popup-add" onClick={this.addExec}>
+                                Add Exec
+                            </ActionButton>
+                        </div>
                         <div className="action-button-box">
                             <ActionButton className="cancel" onClick={this.closeEdit}>
                                 Cancel
