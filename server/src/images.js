@@ -23,12 +23,14 @@ async function uploadImage(file, oldId) {
     const data = fs.readFileSync(file.path);
     await dbx.filesUpload({ path: id, contents: data });
 
-    // Deletes old image
-    try {
-        const res = await dbx.filesDeleteV2({ path: oldId });
-        console.log(res);
-    } catch (error) {
-        console.dir(error);
+    // Deletes old image if it was in the database
+    if (oldId.startsWith('/')) {
+        try {
+            const res = await dbx.filesDeleteV2({ path: oldId });
+            console.log(res);
+        } catch (error) {
+            console.dir(error);
+        }
     }
 
     return id;
