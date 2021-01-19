@@ -89,7 +89,7 @@ class Home extends React.Component {
             calendarComponents.push(
                 <CalendarDay
                     day={this.pad(currDay)}
-                    key={date.month() + '-' + currDay}
+                    key={month + year + '-' + currDay}
                     events={calEvents}
                     activatePopup={this.activatePopup}
                     currentDay={currDay === dayjs().date() && month === dayjs().month() && year == dayjs().year()}
@@ -114,7 +114,7 @@ class Home extends React.Component {
             calendarComponents.push(
                 <CalendarDay
                     day={this.pad(currDay)}
-                    key={date.month() + '-' + currDay}
+                    key={month + year + '-' + currDay}
                     events={calEvents}
                     activatePopup={this.activatePopup}
                     currentDay={currDay === dayjs().date() && month === dayjs().month() && year == dayjs().year()}
@@ -137,7 +137,7 @@ class Home extends React.Component {
             calendarComponents.push(
                 <CalendarDay
                     day={this.pad(currDay)}
-                    key={date.month() + '-' + currDay}
+                    key={month + year + '-' + currDay}
                     events={calEvents}
                     activatePopup={this.activatePopup}
                     currentDay={currDay === dayjs().date() && month === dayjs().month() && year == dayjs().year()}
