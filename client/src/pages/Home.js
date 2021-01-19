@@ -71,7 +71,7 @@ class Home extends React.Component {
         }
         const first = dayjs([year, month, previous.length === 0 ? 1 : previous[0]]);
         for (i = 0; i < eventList.length; i++) {
-            const day = dayjs(eventList[i].start);
+            const day = eventList[i].startDayjs;
             if (day.isAfter(first)) break;
         }
 
@@ -80,7 +80,7 @@ class Home extends React.Component {
         previous.forEach((currDay) => {
             var calEvents = [];
             while (i < eventList.length) {
-                const day = dayjs(eventList[i].start);
+                const day = eventList[i].startDayjs;
                 if (dayjs(day).year() === year && dayjs(day).month() === month && dayjs(day).date() === currDay) {
                     calEvents.push(eventList[i]);
                     i++;
@@ -105,7 +105,7 @@ class Home extends React.Component {
         calendar.forEach((currDay) => {
             var calEvents = [];
             while (i < eventList.length) {
-                const day = dayjs(eventList[i].start);
+                const day = eventList[i].startDayjs;
                 if (dayjs(day).year() === year && dayjs(day).month() === month && dayjs(day).date() === currDay) {
                     calEvents.push(eventList[i]);
                     i++;
@@ -128,7 +128,7 @@ class Home extends React.Component {
         after.forEach((currDay) => {
             var calEvents = [];
             while (i < eventList.length) {
-                const day = dayjs(eventList[i].start);
+                const day = eventList[i].startDayjs;
                 if (dayjs(day).year() === year && dayjs(day).month() === month && dayjs(day).date() === currDay) {
                     calEvents.push(eventList[i]);
                     i++;
