@@ -37,7 +37,7 @@ class ExecEdit extends React.Component {
                             value={this.props.exec.name}
                             onChange={this.props.onChange}
                         ></input>
-                        <TrashIcon className="exec-edit-trash-icon" onClick={this.props.onDelete} />
+                        <TrashIcon className="trash-icon exec-edit-trash-icon" onClick={this.props.onDelete} />
                     </div>
                     <label htmlFor="position" className="exec-edit-position-label">
                         Position:

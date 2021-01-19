@@ -66,20 +66,7 @@
 }
 
 .exec-edit-trash-icon {
-    height: 0.75rem;
-    padding: 0.25rem 0;
     margin-left: 1rem;
-
-    cursor: pointer;
-}
-
-// Svg color manipulation on hover
-.trash-can-path {
-    transition: 0.2s;
-}
-
-.exec-edit-trash-icon:hover .trash-can-path {
-    fill: $bad;
 }
 
 .exec-edit-position-label {
