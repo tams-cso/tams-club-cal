@@ -92,6 +92,8 @@ class Home extends React.Component {
                     key={date.month() + '-' + currDay}
                     events={calEvents}
                     activatePopup={this.activatePopup}
+                    currentDay={currDay === dayjs().date() && month === dayjs().month() && year == dayjs().year()}
+                    sideMonth={true}
                 ></CalendarDay>
             );
         });
@@ -115,6 +117,8 @@ class Home extends React.Component {
                     key={date.month() + '-' + currDay}
                     events={calEvents}
                     activatePopup={this.activatePopup}
+                    currentDay={currDay === dayjs().date() && month === dayjs().month() && year == dayjs().year()}
+                    sideMonth={false}
                 ></CalendarDay>
             );
         });
@@ -136,6 +140,8 @@ class Home extends React.Component {
                     key={date.month() + '-' + currDay}
                     events={calEvents}
                     activatePopup={this.activatePopup}
+                    currentDay={currDay === dayjs().date() && month === dayjs().month() && year == dayjs().year()}
+                    sideMonth={true}
                 ></CalendarDay>
             );
         });
@@ -153,9 +159,9 @@ class Home extends React.Component {
         this.setCalendar([...events]);
 
         // Remove events that have already passed
-        // while (events.length > 0)
-        //     if (dayjs(events[0].end === null ? events[0].start : events[0].end).isBefore(dayjs())) events.shift();
-        //     else break;
+        while (events.length > 0)
+            if (dayjs(events[0].end === null ? events[0].start : events[0].end).isBefore(dayjs())) events.shift();
+            else break;
 
         // Insert the date objects
         divideByDate(events);
