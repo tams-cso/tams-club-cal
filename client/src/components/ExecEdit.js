@@ -1,7 +1,10 @@
 import React from 'react';
 import { imgUrl } from '../functions/util';
+import { ReactComponent as TrashIcon } from '../files/trash-can.svg';
 import './ExecEdit.scss';
+import defaultProfile from '../files/default-profile.png';
 import ImageUpload from './ImageUpload';
+import Image from './Image';
 
 class ExecEdit extends React.Component {
     render() {
@@ -10,12 +13,13 @@ class ExecEdit extends React.Component {
         return (
             <div className="exec-edit">
                 <div className="exec-edit-left">
-                    <img
+                    <Image
                         className="exec-img exec-edit-img"
                         id={`exec-img-${this.props.num}`}
                         src={execImg}
                         alt="profile pic"
-                    ></img>
+                        default={defaultProfile}
+                    ></Image>
                     <ImageUpload
                         className="exec-edit-img-upload"
                         name={`exec-edit-img-upload-${this.props.num}`}
@@ -23,16 +27,18 @@ class ExecEdit extends React.Component {
                     ></ImageUpload>
                 </div>
                 <div className="exec-edit-right">
-                    <input
-                        name="name"
-                        num={this.props.num}
-                        className="line-in exec-edit-name-input"
-                        type="text"
-                        placeholder="Exec name..."
-                        value={this.props.exec.name}
-                        onChange={this.props.onChange}
-                    ></input>
-                    <br />
+                    <div className="exec-edit-name-trash-container">
+                        <input
+                            name="name"
+                            num={this.props.num}
+                            className="line-in exec-edit-name-input"
+                            type="text"
+                            placeholder="Exec name..."
+                            value={this.props.exec.name}
+                            onChange={this.props.onChange}
+                        ></input>
+                        <TrashIcon className="trash-icon exec-edit-trash-icon" onClick={this.props.onDelete} />
+                    </div>
                     <label htmlFor="position" className="exec-edit-position-label">
                         Position:
                     </label>

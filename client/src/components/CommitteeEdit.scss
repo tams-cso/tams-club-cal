@@ -11,9 +11,18 @@
     box-shadow: 0 0 0.2rem $background-tint;
 }
 
+.committee-edit-name-trash-container {
+    display: flex;
+    flex-direction: row;
+}
+
 .committee-edit-name-input {
     margin: 0 !important;
-    width: 95%;
+    width: 90%;
+}
+
+.committee-edit-trash-icon {
+    margin-left: 0.5rem;
 }
 
 .committee-edit-label {

@@ -54,10 +54,19 @@
     flex-grow: 1;
 }
 
+.exec-edit-name-trash-container {
+    display: flex;
+    flex-direction: row;
+}
+
 .exec-edit-name-input {
     margin: 0 !important;
     width: 85%;
     font-size: 0.75rem;
+}
+
+.exec-edit-trash-icon {
+    margin-left: 1rem;
 }
 
 .exec-edit-position-label {

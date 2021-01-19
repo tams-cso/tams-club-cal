@@ -68,7 +68,6 @@ CSS is generally extremely difficult to format, and it can be extremely hard to 
     bottom: 0;
     left: 0;
     right: 0;
-    flex-direction: row; // And other flexbox/grid props
 
     /* Display and Box Model */
     display: flex;
@@ -79,6 +78,7 @@ CSS is generally extremely difficult to format, and it can be extremely hard to 
     padding: 0.5rem;
     border: 0.1rem solid $background;
     margin: 0;
+    flex-direction: row; // And other flexbox/grid props
 
     /* Color */
     background: $background;

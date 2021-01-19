@@ -11,7 +11,7 @@ class ClubCard extends React.Component {
         return (
             <div className="club-card" onClick={this.props.onClick}>
                 <div className="club-card-image-container">
-                    <div className="club-card-image-placeholder">Club Image here</div>
+                    <div className="club-card-image-placeholder"></div>
                     <img className="club-card-image" src={thumbnail} alt="club image"></img>
                 </div>
                 <div className={'club-card-type' + (this.props.club.advised != 'true' ? ' club-card-independent' : '')}>

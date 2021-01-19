@@ -1,19 +1,23 @@
 import React from 'react';
+import { ReactComponent as TrashIcon } from '../files/trash-can.svg';
 import './CommitteeEdit.scss';
 
 class CommitteeEdit extends React.Component {
     render() {
         return (
             <div className="committee-edit">
-                <input
-                    name="name"
-                    num={this.props.num}
-                    className="line-in committee-edit-name-input"
-                    type="text"
-                    placeholder="Exec name..."
-                    value={this.props.committee.name}
-                    onChange={this.props.onChange}
-                ></input>
+                <div className="committee-edit-name-trash-container">
+                    <input
+                        name="name"
+                        num={this.props.num}
+                        className="line-in committee-edit-name-input"
+                        type="text"
+                        placeholder="Exec name..."
+                        value={this.props.committee.name}
+                        onChange={this.props.onChange}
+                    ></input>
+                    <TrashIcon className="trash-icon committee-edit-trash-icon" onClick={this.props.onDelete}></TrashIcon>
+                </div>
                 <br />
                 <label htmlFor="fb" className="committee-edit-label">
                     Facebook:

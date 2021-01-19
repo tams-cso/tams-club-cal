@@ -72,6 +72,22 @@ button {
     color: $background-tint;
 }
 
+
+.trash-icon {
+    height: 0.75rem;
+    padding: 0.25rem 0;
+    cursor: pointer;
+}
+
+// Svg color manipulation on hover
+.trash-can-path {
+    transition: 0.2s;
+}
+
+.trash-icon:hover .trash-can-path {
+    fill: $bad;
+}
+
 /*
  * ############################
  * ##### PSEUDO-SELECTORS #####

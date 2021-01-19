@@ -1,32 +1,34 @@
 @import '../custom.scss';
 
-.CommitteeCard {
+.committee-card {
+    position: relative;
     width: 10rem;
     height: 9rem;
-    box-shadow: 0 0 0.1rem $background-tint;
-    filter: drop-shadow(0 0 0.08rem $background-tint);
-    background-color: $background;
+
     text-align: center;
+    background-color: $background;
+    box-shadow: 0 0 0.2rem $background-tint;
     transition: 0.2s;
 }
 
-.CommitteeCard > .committee-name {
-    color: $text-primary;
-    font-size: 0.85rem;
+.committee-card-name {
     padding: 0.25rem 0.5rem;
+    font-size: 0.85rem;
+    color: $text-primary;
 }
 
-.committee-description {
+.committee-card-description {
+    padding: 0 0.25rem;
     font-size: 0.45rem;
     font-family: $alt-font;
-    padding: 0 0.25rem;
 }
 
-.committee-icons {
-    position: fixed;
+.committee-card-icons {
+    position: absolute;
     bottom: 0.5rem;
     left: 0;
     right: 0;
+
     display: flex;
     flex-direction: row;
     justify-content: center;

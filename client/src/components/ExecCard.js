@@ -1,18 +1,25 @@
 import React from 'react';
 import { imgUrl } from '../functions/util';
+import defaultProfile from '../files/default-profile.png';
 import './ExecCard.scss';
+import Image from './Image';
 
 class ExecCard extends React.Component {
     render() {
         return (
-            <div className="ExecCard">
-                <img className="exec-img" src={imgUrl(this.props.exec.img)} alt="profile pic"></img>
-                <div className="info">
-                    <div className="name-position-group">
-                        <div className="name">{this.props.exec.name}</div>
-                        <div className="position">{this.props.exec.position}</div>
+            <div className="exec-card">
+                <Image
+                    className="exec-img"
+                    src={imgUrl(this.props.exec.img)}
+                    alt="profile pic"
+                    default={defaultProfile}
+                ></Image>
+                <div className="exec-card-info">
+                    <div className="exec-card-name-position-group">
+                        <div className="exec-card-name">{this.props.exec.name}</div>
+                        <div className="exec-card-position">{this.props.exec.position}</div>
                     </div>
-                    <div className="description">{this.props.exec.description}</div>
+                    <div className="exec-card-description">{this.props.exec.description}</div>
                 </div>
             </div>
         );

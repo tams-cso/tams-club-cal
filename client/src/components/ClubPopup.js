@@ -11,7 +11,7 @@ import { compressUploadedImage, imgUrl, isActive } from '../functions/util';
 import ImageUpload from './ImageUpload';
 import ExecEdit from './ExecEdit';
 import CommitteeEdit from './CommitteeEdit';
-import { Club, ClubInfo } from '../functions/entries';
+import { Club, ClubInfo, Committee, Exec } from '../functions/entries';
 
 class ClubPopup extends React.Component {
     constructor(props) {
@@ -175,12 +175,45 @@ class ClubPopup extends React.Component {
         this.setState({ committees });
     };
 
+    handleExecDelete = (num) => {
+        var execs = this.state.execs;
+        var execBlobs = this.state.execBlobs;
+        if (confirm(`Are you sure you want to delete Exec #${num + 1}?`)) {
+            execs.splice(num, 1);
+            execBlobs.splice(num, 1);
+            this.setState({ execs, execBlobs });
+        }
+    };
+
+    addExec = () => {
+        var execs = this.state.execs;
+        var execBlobs = this.state.execBlobs;
+        // TODO: Add default constructor for exec & committee (prob convert to classes in entries.js)
+        execs.push(new Exec('', '', '', ''));
+        execBlobs.push(null);
+        this.setState({ execs, execBlobs });
+    };
+
+    handleCommitteeDelete = (num) => {
+        var committees = this.state.committees;
+        if (confirm(`Are you sure you want to delete Committee #${num + 1}?`)) {
+            committees.splice(num, 1);
+            this.setState({ committees });
+        }
+    };
+
+    addCommittee = () => {
+        var committees = this.state.committees;
+        committees.push(new Committee('', '', '', ''));
+        this.setState({ committees });
+    };
+
     componentDidUpdate(prevProps) {
         if (prevProps.popupOpen === this.props.popupOpen) return;
         if (this.props.popupOpen && this.props.id !== null) {
             this.getClubData();
         } else {
-            this.setState({ event: null });
+            this.setState({ club: null });
         }
     }
 
@@ -206,6 +239,7 @@ class ClubPopup extends React.Component {
                     exec={this.state.execs[i]}
                     onImgChange={this.handleProfPicUpload}
                     onChange={this.handleExecChange}
+                    onDelete={this.handleExecDelete.bind(this, i)}
                 ></ExecEdit>
             );
         }
@@ -218,6 +252,7 @@ class ClubPopup extends React.Component {
                     key={i}
                     committee={this.state.committees[i]}
                     onChange={this.handleCommitteeChange}
+                    onDelete={this.handleCommitteeDelete.bind(this, i)}
                 ></CommitteeEdit>
             );
         }
@@ -316,8 +351,18 @@ class ClubPopup extends React.Component {
                         ></input>
                         <p className="club-popup-card-edit-heading">Execs</p>
                         <div className="club-popup-card-edit-list">{execEditList}</div>
+                        <div className="club-popup-add-container">
+                            <ActionButton className="club-popup-add" onClick={this.addExec}>
+                                Add Exec
+                            </ActionButton>
+                        </div>
                         <p className="club-popup-card-edit-heading">Committees</p>
                         <div className="club-popup-card-edit-list">{committeeEditList}</div>
+                        <div className="club-popup-add-container">
+                            <ActionButton className="club-popup-add" onClick={this.addCommittee}>
+                                Add Committee
+                            </ActionButton>
+                        </div>
                         <div className="action-button-box">
                             <ActionButton className="cancel" onClick={this.closeEdit}>
                                 Cancel
