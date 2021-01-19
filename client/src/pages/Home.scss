@@ -72,6 +72,31 @@ $rh: 5rem;
     width: 1.3rem;
 }
 
+.today {
+    display: none;
+    font-family: $main-font;
+    text-align: center;
+    background-color: $background;
+    width: 2.5rem;
+    border: 0.1rem solid $text-primary;
+    padding: 0.1rem 0.25rem;
+    font-size: 0.75rem;
+    border-radius: 0.25rem;
+    transition: 0.2s;
+    // margin-right: 15vw;
+}
+
+.today:hover {
+    cursor: pointer;
+    background-color: $background-tint;
+}
+
+.dummy-today {
+    display: none;
+    margin-right: 5vw;
+    width: 5.2rem;
+}
+
 .change-month {
     display: none;
     font-family: $main-font;
@@ -87,10 +112,6 @@ $rh: 5rem;
 .change-month:hover {
     cursor: pointer;
     background-color: $background-tint;
-}
-
-.view-active {
-    display: block;
 }
 
 .month-back {
@@ -120,8 +141,13 @@ $rh: 5rem;
 }
 
 .dummy {
+    display: none;
     margin-right: 5vw;
     width: 7.7rem;
+}
+
+.view-active {
+    display: block;
 }
 
 @media handheld and (max-width: 992px), screen and (max-device-width: 992px), screen and (max-width: 992px) {

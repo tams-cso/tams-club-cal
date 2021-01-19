@@ -41,10 +41,14 @@ class Home extends React.Component {
         this.setState({ schedule: !this.state.schedule, currentDate: dayjs() });
     };
 
-    changeMonth = (amount) => {
+    changeMonth = (amount = null) => {
         var currentDate;
-        if (amount < 0) currentDate = this.state.currentDate.subtract(-amount, 'month');
-        else currentDate = this.state.currentDate.add(amount, 'month');
+        if (amount === null) {
+            currentDate = dayjs();
+        } else {
+            if (amount < 0) currentDate = this.state.currentDate.subtract(-amount, 'month');
+            else currentDate = this.state.currentDate.add(amount, 'month');
+        }
         this.setState({ currentDate });
     };
 
@@ -149,9 +153,9 @@ class Home extends React.Component {
         this.setCalendar([...events]);
 
         // Remove events that have already passed
-        while (events.length > 0)
-            if (dayjs(events[0].end === null ? events[0].start : events[0].end).isBefore(dayjs())) events.shift();
-            else break;
+        // while (events.length > 0)
+        //     if (dayjs(events[0].end === null ? events[0].start : events[0].end).isBefore(dayjs())) events.shift();
+        //     else break;
 
         // Insert the date objects
         divideByDate(events);
@@ -222,7 +226,16 @@ class Home extends React.Component {
                     <EventPopup></EventPopup>
                 </Popup>
                 <div className="home-top">
-                    <div className="dummy"></div>
+                    <div className={'dummy' + (this.state.schedule ? ' view-active' : '')}></div>
+                    <button
+                        className={'today' + (!this.state.schedule ? ' view-active' : '')}
+                        onClick={() => {
+                            this.changeMonth();
+                        }}
+                    >
+                        Today
+                    </button>
+                    <div className={'dummy-today' + (!this.state.schedule ? ' view-active' : '')}></div>
                     <div
                         className={'dummy-change-month month-back' + (this.state.schedule ? ' view-active' : '')}
                     ></div>
