@@ -10,6 +10,10 @@
     padding-bottom: 0.5rem;
 }
 
+.calendar-view {
+    margin-top: 2.5rem;
+}
+
 .schedule-view > .ScheduleEvent:hover {
     cursor: pointer;
     background-color: $background-tint;
