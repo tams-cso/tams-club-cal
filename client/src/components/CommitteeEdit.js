@@ -16,7 +16,10 @@ class CommitteeEdit extends React.Component {
                         value={this.props.committee.name}
                         onChange={this.props.onChange}
                     ></input>
-                    <TrashIcon className="trash-icon committee-edit-trash-icon" onClick={this.props.onDelete}></TrashIcon>
+                    <TrashIcon
+                        className="trash-icon committee-edit-trash-icon"
+                        onClick={this.props.onDelete}
+                    ></TrashIcon>
                 </div>
                 <br />
                 <label htmlFor="fb" className="committee-edit-label">
