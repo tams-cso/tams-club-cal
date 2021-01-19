@@ -5,6 +5,10 @@
     border-style: solid;
 }
 
+.side-month {
+    background-color: $background-tint;
+}
+
 /***** DON'T TOUCH THIS *****/
 // .CalendarDay:hover {
 //     overflow: visible;
@@ -13,6 +17,10 @@
 .day {
     font-size: 0.6rem;
     margin: 0.25rem;
+}
+
+.current-day {
+    color: $primary;
 }
 
 .calendar-event {

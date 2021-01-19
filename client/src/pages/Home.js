@@ -41,10 +41,14 @@ class Home extends React.Component {
         this.setState({ schedule: !this.state.schedule, currentDate: dayjs() });
     };
 
-    changeMonth = (amount) => {
+    changeMonth = (amount = null) => {
         var currentDate;
-        if (amount < 0) currentDate = this.state.currentDate.subtract(-amount, 'month');
-        else currentDate = this.state.currentDate.add(amount, 'month');
+        if (amount === null) {
+            currentDate = dayjs();
+        } else {
+            if (amount < 0) currentDate = this.state.currentDate.subtract(-amount, 'month');
+            else currentDate = this.state.currentDate.add(amount, 'month');
+        }
         this.setState({ currentDate });
     };
 
@@ -67,7 +71,7 @@ class Home extends React.Component {
         }
         const first = dayjs([year, month, previous.length === 0 ? 1 : previous[0]]);
         for (i = 0; i < eventList.length; i++) {
-            const day = dayjs(eventList[i].start);
+            const day = eventList[i].startDayjs;
             if (day.isAfter(first)) break;
         }
 
@@ -76,7 +80,7 @@ class Home extends React.Component {
         previous.forEach((currDay) => {
             var calEvents = [];
             while (i < eventList.length) {
-                const day = dayjs(eventList[i].start);
+                const day = eventList[i].startDayjs;
                 if (dayjs(day).year() === year && dayjs(day).month() === month && dayjs(day).date() === currDay) {
                     calEvents.push(eventList[i]);
                     i++;
@@ -88,6 +92,8 @@ class Home extends React.Component {
                     key={date.month() + '-' + currDay}
                     events={calEvents}
                     activatePopup={this.activatePopup}
+                    currentDay={currDay === dayjs().date() && month === dayjs().month() && year == dayjs().year()}
+                    sideMonth={true}
                 ></CalendarDay>
             );
         });
@@ -99,7 +105,7 @@ class Home extends React.Component {
         calendar.forEach((currDay) => {
             var calEvents = [];
             while (i < eventList.length) {
-                const day = dayjs(eventList[i].start);
+                const day = eventList[i].startDayjs;
                 if (dayjs(day).year() === year && dayjs(day).month() === month && dayjs(day).date() === currDay) {
                     calEvents.push(eventList[i]);
                     i++;
@@ -111,6 +117,8 @@ class Home extends React.Component {
                     key={date.month() + '-' + currDay}
                     events={calEvents}
                     activatePopup={this.activatePopup}
+                    currentDay={currDay === dayjs().date() && month === dayjs().month() && year == dayjs().year()}
+                    sideMonth={false}
                 ></CalendarDay>
             );
         });
@@ -120,7 +128,7 @@ class Home extends React.Component {
         after.forEach((currDay) => {
             var calEvents = [];
             while (i < eventList.length) {
-                const day = dayjs(eventList[i].start);
+                const day = eventList[i].startDayjs;
                 if (dayjs(day).year() === year && dayjs(day).month() === month && dayjs(day).date() === currDay) {
                     calEvents.push(eventList[i]);
                     i++;
@@ -132,6 +140,8 @@ class Home extends React.Component {
                     key={date.month() + '-' + currDay}
                     events={calEvents}
                     activatePopup={this.activatePopup}
+                    currentDay={currDay === dayjs().date() && month === dayjs().month() && year == dayjs().year()}
+                    sideMonth={true}
                 ></CalendarDay>
             );
         });
@@ -149,9 +159,9 @@ class Home extends React.Component {
         this.setCalendar([...events]);
 
         // Remove events that have already passed
-        // while (events.length > 0)
-        //     if (dayjs(events[0].end === null ? events[0].start : events[0].end).isBefore(dayjs())) events.shift();
-        //     else break;
+        while (events.length > 0)
+            if (dayjs(events[0].end === null ? events[0].start : events[0].end).isBefore(dayjs())) events.shift();
+            else break;
 
         // Insert the date objects
         divideByDate(events);
@@ -222,7 +232,16 @@ class Home extends React.Component {
                     <EventPopup></EventPopup>
                 </Popup>
                 <div className="home-top">
-                    <div className="dummy"></div>
+                    <div className={'dummy' + (this.state.schedule ? ' view-active' : '')}></div>
+                    <button
+                        className={'today' + (!this.state.schedule ? ' view-active' : '')}
+                        onClick={() => {
+                            this.changeMonth();
+                        }}
+                    >
+                        Today
+                    </button>
+                    <div className={'dummy-today' + (!this.state.schedule ? ' view-active' : '')}></div>
                     <div
                         className={'dummy-change-month month-back' + (this.state.schedule ? ' view-active' : '')}
                     ></div>
