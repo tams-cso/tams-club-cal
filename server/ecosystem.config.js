@@ -4,8 +4,8 @@ module.exports = {
             name: 'tams-club-cal-server',
             script: 'src/app.js',
             watch: '.',
-            watch_delay: 1000,
-            ignore_watch: ['node_modules'],
+            watch_delay: 5000,
+            ignore_watch: ['node_modules', 'src/cache'],
         },
     ],
     env: {
