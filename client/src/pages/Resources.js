@@ -29,10 +29,14 @@ class Resources extends React.Component {
         this.createCards(null);
     }
 
-    createCards = (currFilter) => {
+    updateFilter = (filter) => {
+        this.setState({ filter });
+    }
+
+    createCards = () => {
         var volCards = [];
         this.props.volunteeringList.forEach((vol) => {
-            if (currFilter === null || vol.filters[currFilter])
+            if (this.state.filter === null || vol.filters[this.state.filter])
                 volCards.push(
                     <VolunteeringCard
                         vol={vol}
@@ -43,10 +47,11 @@ class Resources extends React.Component {
                     ></VolunteeringCard>
                 );
         });
-        this.setState({ volCards, filter: currFilter });
+        return volCards;
     };
 
     render() {
+        var volCards = this.createCards();
         return (
             <div className="Resources">
                 <Popup history={this.props.history} noscroll>
@@ -65,43 +70,43 @@ class Resources extends React.Component {
                 <h1>Volunteering</h1>
                 <div className="volunteering-filters">
                     <button
-                        onClick={() => this.createCards(null)}
+                        onClick={this.updateFilter.bind(this, null)}
                         className={'vol-filter all' + (this.state.filter === null ? ' active' : '')}
                     >
                         All
                     </button>
                     <button
-                        onClick={() => this.createCards('limited')}
+                        onClick={this.updateFilter.bind(this, 'limited')}
                         className={'vol-filter limited' + (this.state.filter === 'limited' ? ' active' : '')}
                     >
                         Limited Slots
                     </button>
                     <button
-                        onClick={() => this.createCards('semester')}
+                        onClick={this.updateFilter.bind(this, 'semester')}
                         className={'vol-filter semester' + (this.state.filter === 'semester' ? ' active' : '')}
                     >
                         Semester Long
                     </button>
                     <button
-                        onClick={() => this.createCards('setTimes')}
+                        onClick={this.updateFilter.bind(this, 'setTimes')}
                         className={'vol-filter set-times' + (this.state.filter === 'setTimes' ? ' active' : '')}
                     >
                         Set Volunteering Times
                     </button>
                     <button
-                        onClick={() => this.createCards('weekly')}
+                        onClick={this.updateFilter.bind(this, 'weekly')}
                         className={'vol-filter weekly' + (this.state.filter === 'weekly' ? ' active' : '')}
                     >
                         Weekly Signups
                     </button>
                     <button
-                        onClick={() => this.createCards('open')}
+                        onClick={this.updateFilter.bind(this, 'open')}
                         className={'vol-filter open' + (this.state.filter === 'open' ? ' active' : '')}
                     >
                         Open
                     </button>
                 </div>
-                <div className="volunteering-section">{this.state.volCards}</div>
+                <div className="volunteering-section">{volCards}</div>
             </div>
         );
     }
