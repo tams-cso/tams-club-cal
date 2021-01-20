@@ -1,5 +1,5 @@
 import React from 'react';
-import { getParams, isActive } from '../functions/util';
+import { getParams, isActive, isPopupInvalid } from '../functions/util';
 import { getPopupEdit, getPopupId, getPopupOpen } from '../redux/selectors';
 import { setPopupOpen, setPopupId, setPopupEdit, resetPopupState } from '../redux/actions';
 import './Popup.scss';
@@ -26,6 +26,12 @@ class Popup extends React.Component {
                 this.close();
             }
         });
+    }
+
+    componentDidUpdate() {
+        if (isPopupInvalid()) {
+            this.props.setPopupOpen(false);
+        }
     }
 
     render() {

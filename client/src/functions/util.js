@@ -256,3 +256,13 @@ export const imgUrl = (path) => `${config.backend}/static${path}`;
 export function getTimezone() {
     return dayjs.tz.guess();
 }
+
+/**
+ * Checks for a valid id in the url or else the popup will not be opened
+ *
+ * @returns {boolean} True if the popup is invalid
+ */
+export function isPopupInvalid() {
+    const id = getParams('id');
+    return id === null || id === undefined;
+}
