@@ -98,8 +98,10 @@ async function postClub(club, id = null) {
 
 /**
  * POST to /add-volunteering - Adds or updates a volunteering event
+ * 
  * @param {Volunteering} vol The volunteering object
  * @param {string} [id] ID to update
+ * @returns {Promise<string>} The generated id or the id that was updated
  */
 async function postVolunteering(vol, id) {
     var update = id !== undefined && id !== null ? `?update=true&id=${id}` : '';
@@ -109,7 +111,7 @@ async function postVolunteering(vol, id) {
             body: JSON.stringify(vol),
             headers: { 'Content-Type': 'application/json' },
         });
-        return res.status;
+        return res.json();
     } catch (error) {
         console.dir(error);
     }

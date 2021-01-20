@@ -1,9 +1,16 @@
 import React from 'react';
 import { postVolunteering } from '../functions/api';
-import { Volunteering } from '../functions/entries';
+import { Volunteering, VolunteeringDefault } from '../functions/entries';
 import { formatVolunteeringFilters, getOrFetchVolList } from '../functions/util';
-import { getPopupEdit, getPopupId, getPopupOpen, getSavedVolunteeringList } from '../redux/selectors';
-import { setPopupOpen, setPopupId, setPopupEdit, updateVolunteering } from '../redux/actions';
+import { getPopupEdit, getPopupId, getPopupOpen, getPopupNew, getSavedVolunteeringList } from '../redux/selectors';
+import {
+    setPopupOpen,
+    setPopupId,
+    setPopupEdit,
+    updateVolunteering,
+    setPopupNew,
+    addVolunteering,
+} from '../redux/actions';
 import ActionButton from './ActionButton';
 import './VolunteeringPopup.scss';
 import { connect } from 'react-redux';
@@ -36,6 +43,7 @@ class VolunteeringPopup extends React.Component {
 
     closeEdit = () => {
         this.props.setPopupEdit(false);
+        if (this.props.new) this.props.setPopupOpen(false);
         this.resetState(null);
     };
 
@@ -61,8 +69,15 @@ class VolunteeringPopup extends React.Component {
             this.state.signupTime || null
         );
 
-        await postVolunteering(volunteeringObj, this.state.vol._id);
-        this.props.updateVolunteering(this.state.vol._id, volunteeringObj);
+        if (this.props.id === 'new') {
+            var id = await postVolunteering(volunteeringObj);
+            volunteeringObj._id = id;
+            this.props.addVolunteering(volunteeringObj);
+        } else {
+            await postVolunteering(volunteeringObj, this.state.vol._id);
+            this.props.updateVolunteering(this.state.vol._id, volunteeringObj);
+        }
+
         this.setState({ vol: volunteeringObj });
         this.props.setPopupEdit(false);
     };
@@ -98,7 +113,11 @@ class VolunteeringPopup extends React.Component {
 
     componentDidMount() {
         if (this.props.id === null || this.props.id === undefined || !this.props.popupOpen) return;
-        this.getVol();
+        if (this.props.new) {
+            this.resetState(new VolunteeringDefault());
+        } else {
+            this.getVol();
+        }
     }
 
     componentDidUpdate(prevProps) {
@@ -108,7 +127,11 @@ class VolunteeringPopup extends React.Component {
             this.props.id !== null &&
             this.props.popupOpen
         ) {
-            this.getVol();
+            if (this.props.new) {
+                this.resetState(new VolunteeringDefault());
+            } else {
+                this.getVol();
+            }
         }
     }
 
@@ -243,9 +266,10 @@ const mapStateToProps = (state) => {
         popupOpen: getPopupOpen(state),
         id: getPopupId(state),
         edit: getPopupEdit(state),
+        new: getPopupNew(state),
         volList: getSavedVolunteeringList(state),
     };
 };
-const mapDispatchToProps = { setPopupOpen, setPopupId, setPopupEdit, updateVolunteering };
+const mapDispatchToProps = { setPopupOpen, setPopupId, setPopupEdit, updateVolunteering, setPopupNew, addVolunteering };
 
 export default connect(mapStateToProps, mapDispatchToProps)(VolunteeringPopup);

@@ -157,8 +157,29 @@ async function updateVolunteering(vol, id) {
                 },
             }
         );
+        return id;
     } catch (error) {
         console.dir(error);
+        return null;
+    }
+}
+
+async function addVolunteering(vol) {
+    try {
+        const db = client.db('volunteering');
+        const collection = db.collection('data');
+        var data = {
+            name: vol.name,
+            club: vol.club,
+            description: vol.description,
+            filters: vol.filters,
+            signupTime: vol.signupTime,
+        };
+        collection.insertOne(data);
+        return data._id;
+    } catch (error) {
+        console.dir(error);
+        return null;
     }
 }
 
@@ -207,4 +228,5 @@ module.exports = {
     getVolunteering,
     updateVolunteering,
     updateClub,
+    addVolunteering,
 };

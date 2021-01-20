@@ -8,9 +8,10 @@ import VolunteeringPopup from '../components/VolunteeringPopup';
 
 import { getOrFetchVolList } from '../functions/util';
 import { getSavedVolunteeringList } from '../redux/selectors';
-import { setVolunteeringList, setPopupOpen, setPopupId } from '../redux/actions';
+import { setVolunteeringList, setPopupOpen, setPopupId, setPopupNew, setPopupEdit } from '../redux/actions';
 
 import './Resources.scss';
+import ActionButton from '../components/ActionButton';
 
 class Resources extends React.Component {
     constructor(props) {
@@ -24,16 +25,18 @@ class Resources extends React.Component {
         this.props.setPopupOpen(true);
     };
 
-    async componentDidMount() {
-        await getOrFetchVolList();
-        this.createCards(null);
+    addVolunteering = () => {
+        this.props.setPopupNew(true);
+        this.props.setPopupEdit(true);
+        this.activatePopup('new');
     }
 
     updateFilter = (filter) => {
         this.setState({ filter });
-    }
+    };
 
     createCards = () => {
+        if (this.props.volunteeringList === null) return;
         var volCards = [];
         this.props.volunteeringList.forEach((vol) => {
             if (this.state.filter === null || vol.filters[this.state.filter])
@@ -49,6 +52,10 @@ class Resources extends React.Component {
         });
         return volCards;
     };
+
+    async componentDidMount() {
+        await getOrFetchVolList();
+    }
 
     render() {
         var volCards = this.createCards();
@@ -107,6 +114,11 @@ class Resources extends React.Component {
                     </button>
                 </div>
                 <div className="volunteering-section">{volCards}</div>
+                <div className="resources-add-volunteering-container">
+                    <ActionButton className="resources-add-volunteering" onClick={this.addVolunteering}>
+                        Add Volunteering
+                    </ActionButton>
+                </div>
             </div>
         );
     }
@@ -117,6 +129,6 @@ const mapStateToProps = (state) => {
         volunteeringList: getSavedVolunteeringList(state),
     };
 };
-const mapDispatchToProps = { setVolunteeringList, setPopupOpen, setPopupId };
+const mapDispatchToProps = { setVolunteeringList, setPopupOpen, setPopupId, setPopupNew, setPopupEdit };
 
 export default connect(mapStateToProps, mapDispatchToProps)(Resources);

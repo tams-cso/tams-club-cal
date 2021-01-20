@@ -10,6 +10,8 @@ import {
     SET_CLUB_LIST,
     UPDATE_EVENT,
     UPDATE_CLUB,
+    SET_NEW,
+    ADD_VOLUNTEERING,
 } from './actionTypes';
 
 export const resetDataState = () => ({
@@ -40,6 +42,11 @@ export const setPopupEdit = (edit) => ({
     payload: { edit },
 });
 
+export const setPopupNew = (newPopup) => ({
+    type: SET_NEW,
+    payload: { newPopup },
+});
+
 export const setPopupId = (id) => ({
     type: SET_ID,
     payload: { id },
@@ -63,4 +70,9 @@ export const updateEvent = (id, event) => ({
 export const updateClub = (id, club) => ({
     type: UPDATE_CLUB,
     payload: { id, club },
+});
+
+export const addVolunteering = (vol) => ({
+    type: ADD_VOLUNTEERING,
+    payload: { vol },
 });
