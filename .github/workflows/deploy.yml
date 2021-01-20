@@ -56,8 +56,8 @@ jobs:
           key: ${{ secrets.KEY }}
           script: |
             cd /var/www
-            rm -rf tams-club-cal-client/*
-            rm -rf tams-club-cal-server/*
+            rm -rf tams-club-cal-client/{*,.*}
+            rm -rf tams-club-cal-server/{*,.*}
             unzip tams-club-cal-client.zip -d tams-club-cal-client
             unzip tams-club-cal-server.zip -d tams-club-cal-server
             rm tams-club-cal-client.zip
