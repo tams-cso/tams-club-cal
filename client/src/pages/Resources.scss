@@ -46,13 +46,6 @@
     transition: 0.2s;
 }
 
-$filter-all: $background-tint;
-$filter-limited: #ffb258;
-$filter-semester: #ff8b99;
-$filter-set-times: #abb8ff;
-$filter-weekly: #d38fff;
-$filter-open: #82ee9a;
-
 .vol-filter.all {
     border-color: $filter-all;
 }
@@ -110,4 +103,9 @@ $filter-open: #82ee9a;
 .vol-filter:hover {
     cursor: pointer;
     box-shadow: 0 0 0.2rem 0.05rem $background-tint;
+}
+
+.resources-add-volunteering-container {
+    text-align: center;
+    margin-bottom: 1rem;
 }

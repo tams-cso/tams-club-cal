@@ -1,4 +1,5 @@
 import {
+    ADD_VOLUNTEERING,
     RESET_DATA_STATE,
     SET_CLUB_LIST,
     SET_EVENT_LIST,
@@ -80,6 +81,15 @@ export default function data(state = initialState, action) {
             return {
                 ...state,
                 clubList,
+            };
+        }
+        case ADD_VOLUNTEERING: {
+            const { vol } = action.payload;
+            var volunteeringList = [...state.volunteeringList];
+            volunteeringList.push(vol);
+            return {
+                ...state,
+                volunteeringList,
             };
         }
         default:

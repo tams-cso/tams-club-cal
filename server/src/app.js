@@ -19,6 +19,7 @@ const {
     updateVolunteering,
     updateEvent,
     updateClub,
+    addVolunteering,
 } = require('./database');
 const { uploadImage, getImage } = require('./images');
 
@@ -116,8 +117,15 @@ app.post('/add-event', async (req, res, next) => {
 });
 
 app.post('/add-volunteering', async (req, res, next) => {
-    if (req.query.update === 'true') await updateVolunteering(req.body, req.query.id);
-    res.sendStatus(200);
+    var id = null;
+    if (req.query.update === 'true') id = await updateVolunteering(req.body, req.query.id);
+    else id = await addVolunteering(req.body);
+    if (id !== null) {
+        res.status(200);
+        res.send({ id });
+    } else {
+        res.sendStatus(400);
+    }
 });
 
 app.get(/\/static\/.*/, async (req, res, next) => {

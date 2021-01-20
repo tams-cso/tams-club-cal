@@ -1,12 +1,16 @@
 import React from 'react';
 import { getParams, isActive, isPopupInvalid } from '../functions/util';
-import { getPopupEdit, getPopupId, getPopupOpen } from '../redux/selectors';
-import { setPopupOpen, setPopupId, setPopupEdit, resetPopupState } from '../redux/actions';
+import { getPopupEdit, getPopupId, getPopupOpen, getPopupNew } from '../redux/selectors';
+import { setPopupOpen, setPopupId, setPopupEdit, resetPopupState, setPopupNew } from '../redux/actions';
 import './Popup.scss';
 import { connect } from 'react-redux';
 
 class Popup extends React.Component {
     activate = (id) => {
+        if (id === 'new') {
+            this.props.setPopupNew(true);
+            this.props.setPopupEdit(true);
+        }
         this.props.setPopupId(id);
         this.props.setPopupOpen(true);
     };
@@ -41,6 +45,9 @@ class Popup extends React.Component {
         if (isPopupInvalid()) {
             this.props.setPopupOpen(false);
         }
+        if (this.props.new && getParams('id') !== 'new') {
+            this.props.setPopupNew(false);
+        }
     }
 
     render() {
@@ -58,8 +65,9 @@ const mapStateToProps = (state) => {
         open: getPopupOpen(state),
         id: getPopupId(state),
         edit: getPopupEdit(state),
+        new: getPopupNew(state),
     };
 };
-const mapDispatchToProps = { setPopupOpen, setPopupId, setPopupEdit, resetPopupState };
+const mapDispatchToProps = { setPopupOpen, setPopupId, setPopupEdit, resetPopupState, setPopupNew };
 
 export default connect(mapStateToProps, mapDispatchToProps)(Popup);

@@ -8,4 +8,6 @@ export const getPopupOpen = (store) => store.popup.open;
 
 export const getPopupEdit = (store) => store.popup.edit;
 
+export const getPopupNew = (store) => store.popup.new;
+
 export const getPopupId = (store) => store.popup.id;
