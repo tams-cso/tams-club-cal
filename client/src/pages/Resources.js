@@ -31,7 +31,7 @@ class Resources extends React.Component {
 
     updateFilter = (filter) => {
         this.setState({ filter });
-    }
+    };
 
     createCards = () => {
         var volCards = [];
