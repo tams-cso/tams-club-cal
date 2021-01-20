@@ -7,8 +7,8 @@ import { connect } from 'react-redux';
 
 class Popup extends React.Component {
     activate = (id) => {
-        this.props.setPopupOpen(true);
         this.props.setPopupId(id);
+        this.props.setPopupOpen(true);
     };
 
     close = () => {
@@ -26,6 +26,15 @@ class Popup extends React.Component {
                 this.close();
             }
         });
+
+        this.unlisten = this.props.history.listen(() => {
+            const id = getParams('id');
+            if (id !== undefined && id !== null) this.activate(id);
+        });
+    }
+
+    componentWillUnmount() {
+        this.unlisten();
     }
 
     componentDidUpdate() {
