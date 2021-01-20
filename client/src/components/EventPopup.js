@@ -10,6 +10,7 @@ import {
     millisToDateAndTime,
     parseTimeZone,
     getTimezone,
+    isPopupInvalid,
 } from '../functions/util';
 import { getEvent, postEvent } from '../functions/api';
 import ActionButton from './ActionButton';
@@ -156,7 +157,7 @@ class EventPopup extends React.Component {
     };
 
     componentDidMount() {
-        if (this.props.id !== null && this.props.id !== '') this.getEventData();
+        if (this.props.id !== null && this.props.id !== '' && !isPopupInvalid()) this.getEventData();
     }
 
     componentDidUpdate(prevProps) {
@@ -170,7 +171,9 @@ class EventPopup extends React.Component {
 
     render() {
         // Return empty div if the current popup is not defined
-        if (!this.props.popupOpen || this.state.event === null) return <div className="EventPopup"></div>;
+        if (!this.props.popupOpen || this.state.event === null || isPopupInvalid())
+            return <div className="EventPopup"></div>;
+
         // Add a Dayjs attribute
         addDayjsElement(this.state.event);
 
