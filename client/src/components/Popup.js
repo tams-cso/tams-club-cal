@@ -1,5 +1,5 @@
 import React from 'react';
-import { getParams } from '../functions/util';
+import { getParams, isActive } from '../functions/util';
 import { getPopupEdit, getPopupId, getPopupOpen } from '../redux/selectors';
 import { setPopupOpen, setPopupId, setPopupEdit, resetPopupState } from '../redux/actions';
 import './Popup.scss';
@@ -30,8 +30,8 @@ class Popup extends React.Component {
 
     render() {
         return (
-            <div className={`Popup ${this.props.open ? 'active' : ''} ${this.props.noscroll ? 'noscroll' : ''}`}>
-                <div className="close-bkgd" onClick={this.close}></div>
+            <div className={`popup ${isActive('', this.props.open)} ${this.props.noscroll ? 'noscroll' : ''}`}>
+                <div className="popup-close-bkgd" onClick={this.close}></div>
                 <div className="popup-content">{this.props.children}</div>
             </div>
         );
