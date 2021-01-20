@@ -98,7 +98,7 @@ async function postClub(club, id = null) {
 
 /**
  * POST to /add-volunteering - Adds or updates a volunteering event
- * 
+ *
  * @param {Volunteering} vol The volunteering object
  * @param {string} [id] ID to update
  * @returns {Promise<string>} The generated id or the id that was updated

@@ -29,7 +29,7 @@ class Resources extends React.Component {
         this.props.setPopupNew(true);
         this.props.setPopupEdit(true);
         this.activatePopup('new');
-    }
+    };
 
     updateFilter = (filter) => {
         this.setState({ filter });
