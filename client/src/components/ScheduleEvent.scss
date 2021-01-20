@@ -11,6 +11,11 @@
     transition: 0.2s;
 }
 
+.ScheduleEvent:hover {
+    cursor: pointer;
+    background-color: $background-tint;
+}
+
 .ScheduleEvent .event-type {
     height: 0.8rem;
     width: 0.8rem;
