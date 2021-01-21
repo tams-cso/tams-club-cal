@@ -18,6 +18,7 @@ class ClubCard extends React.Component {
                     {this.props.club.advised == 'true' ? 'Advised' : 'Independent'}
                 </div>
                 <div className="club-card-name">{this.props.club.name}</div>
+                {/* TODO: Extract icons to seperate component */}
                 <div className="club-card-icons">
                     <WebIcon
                         onClick={() => {

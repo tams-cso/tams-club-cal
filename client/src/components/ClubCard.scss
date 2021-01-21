@@ -89,7 +89,6 @@
  * ################################
  */
 
-// TODO: Extract icons to seperate component
 .club-card-icons {
     display: flex;
     position: fixed;
@@ -124,7 +123,7 @@
 
 .web-icon:hover,
 .fb-icon:hover {
-    filter: drop-shadow(0 0 0.03rem #aaaaaa);
+    filter: drop-shadow(0 0 0.03rem $background-dark);
 }
 
 .fb-icon:hover > path {
