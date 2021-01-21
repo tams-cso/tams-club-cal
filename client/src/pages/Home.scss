@@ -33,13 +33,13 @@ $rh: 5rem;
     margin: 0 4rem 1rem 4rem;
 }
 
-.calendar-days > .CalendarDay {
+.calendar-days > .calendar-day {
     border: 0;
     border-top: $grid-border;
     border-left: $grid-border;
 }
 
-.CalendarDay:nth-child(7n) {
+.calendar-day:nth-child(7n) {
     border-right: $grid-border;
 }
 
