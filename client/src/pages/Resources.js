@@ -5,13 +5,14 @@ import LinkBox from '../components/LinkBox';
 import Popup from '../components/Popup';
 import VolunteeringCard from '../components/VolunteeringCard';
 import VolunteeringPopup from '../components/VolunteeringPopup';
+import ActionButton from '../components/ActionButton';
 
 import { getOrFetchVolList } from '../functions/util';
 import { getSavedVolunteeringList } from '../redux/selectors';
 import { setVolunteeringList, setPopupOpen, setPopupId, setPopupNew, setPopupEdit } from '../redux/actions';
 
+import data from '../files/data.json';
 import './Resources.scss';
-import ActionButton from '../components/ActionButton';
 
 class Resources extends React.Component {
     constructor(props) {
@@ -65,14 +66,17 @@ class Resources extends React.Component {
                     <VolunteeringPopup></VolunteeringPopup>
                 </Popup>
                 <h1 className="links-title">Links</h1>
-                <div className="link-container">
-                    <LinkBox href="https://docs.google.com/presentation/d/18ZPbYD5iH_2faGDtRRZUGOd70fmo8aRlWDb08qHxGas/edit?usp=sharing">
+                {/* // TODO: Extract to array in data.json */}
+                <div className="resources-link-container">
+                    <LinkBox className="resources-link" href={data.examCalendar}>
                         Exam Calendar
                     </LinkBox>
-                    <LinkBox href="https://docs.google.com/document/d/1gi7-K81MN4KLEBPCF9bv-nVxg2HMnH8ub5IXKeFM7fc/edit?usp=sharing">
+                    <LinkBox className="resources-link" href={data.academicsGuide}>
                         Academics Guide
                     </LinkBox>
-                    <LinkBox href="https://tams.unt.edu/studentlife/clubs#clubresources">Club Leader Resources</LinkBox>
+                    <LinkBox className="resources-link" href={data.clubLeaderResources}>
+                        Club Leader Resources
+                    </LinkBox>
                 </div>
                 <h1>Volunteering</h1>
                 <div className="volunteering-filters">

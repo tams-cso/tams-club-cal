@@ -1,15 +1,22 @@
+/**
+ * The LinkBox component is a simple button, with a solid black border and
+ * an added box-shadow on hover
+ */
+
 @import '../custom.scss';
 
-.LinkBox {
+.link-box {
     border: 0.1rem solid $text-primary;
     padding: 0.25rem;
-    font-size: 1rem;
+    width: fit-content;
+
     text-align: center;
-    transition: 0.3s;
+    font-size: 1rem;
     background-color: $background;
+    cursor: pointer;
+    transition: 0.3s;
 }
 
-.LinkBox:hover {
-    cursor: pointer;
-    filter: drop-shadow(0 0 0.1rem $text-primary);
+.link-box:hover {
+    box-shadow: 0 0 0.3rem $text-light;
 }

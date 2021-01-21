@@ -9,7 +9,7 @@ class LinkBox extends React.Component {
     render() {
         return (
             <div
-                className="LinkBox"
+                className={`link-box ${this.props.className}`}
                 onClick={() => {
                     window.open(this.props.href);
                 }}
