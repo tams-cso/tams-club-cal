@@ -1,19 +1,21 @@
 @import '../custom.scss';
 
-.About {
+.about {
     margin: 1rem 8rem 0;
 }
 
-.info-p {
+.about-info-p {
     text-align: center;
     font-size: 0.9rem;
 }
 
-.About > .link-container {
+.about-link-container {
+    display: flex;
+    justify-content: center;
     margin: 1rem 0;
 }
 
-.About > .link-container > .LinkBox {
+.about-link-box {
     margin-left: 1rem;
     margin-right: 1rem;
 }
