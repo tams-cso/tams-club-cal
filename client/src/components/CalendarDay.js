@@ -30,8 +30,8 @@ class CalendarDay extends React.Component {
 
     render() {
         return (
-            <div className={'CalendarDay' + (this.props.sideMonth ? ' side-month' : '')}>
-                <div className={'day' + (this.props.currentDay ? ' current-day' : '')}>{this.props.day}</div>
+            <div className={'calendar-day' + (this.props.sideMonth ? ' side-month' : '')}>
+                <div className={'calendar-date' + (this.props.currentDay ? ' current-day' : '')}>{this.props.day}</div>
                 <div className="calendar-event">{this.state.events}</div>
             </div>
         );
