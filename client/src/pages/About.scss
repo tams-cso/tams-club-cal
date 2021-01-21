@@ -1,3 +1,9 @@
+/**
+ * This is the About page, with a simple description of the site in paragraph tags
+ * along with a link to the Github, which is just in a LinkBox.
+ * The form at the bottom is a simple textarea with a submit button.
+ */
+
 @import '../custom.scss';
 
 .about {
@@ -20,17 +26,18 @@
     margin-right: 1rem;
 }
 
+/*
+ * ####################
+ * ##### FEEDBACK #####
+ * ####################
+ */
+
 #feedback-form {
     padding: 0.25rem;
     font-size: 0.75rem;
     width: 100%;
     height: 10rem;
     margin-top: 1rem;
-}
-
-.center-div {
-    margin: 0.75rem;
-    text-align: center;
 }
 
 #feedback-submit {
