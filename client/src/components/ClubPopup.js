@@ -40,6 +40,11 @@ class ClubPopup extends React.Component {
     getClubData = async () => {
         const club = await getClub(this.props.id);
         if (club !== null) this.resetState(club);
+        else {
+            this.props.setPopupOpen(false);
+            this.props.setPopupId(null);
+            alert('ERROR: No club data found');
+        }
     };
 
     switchTab = (tab) => this.setState({ execTab: tab === 'execs' });
