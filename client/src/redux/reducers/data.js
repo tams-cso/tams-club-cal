@@ -1,4 +1,5 @@
 import {
+    ADD_CLUB,
     ADD_VOLUNTEERING,
     RESET_DATA_STATE,
     SET_CLUB_LIST,
@@ -90,6 +91,15 @@ export default function data(state = initialState, action) {
             return {
                 ...state,
                 volunteeringList,
+            };
+        }
+        case ADD_CLUB: {
+            const { club } = action.payload;
+            var clubList = [...state.clubList];
+            clubList.push(club);
+            return {
+                ...state,
+                clubList,
             };
         }
         default:

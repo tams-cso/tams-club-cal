@@ -93,7 +93,8 @@ async function postClub(club, id = null) {
         method: 'POST',
         body: data,
     });
-    return res.status;
+    const jsonData = await res.json();
+    return { status: res.status, id: jsonData.id };
 }
 
 /**

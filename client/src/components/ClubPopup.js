@@ -2,8 +2,8 @@ import React from 'react';
 import { connect } from 'react-redux';
 import ExecCard from './ExecCard';
 import CommitteeCard from './CommitteeCard';
-import { getPopupEdit, getPopupId, getPopupOpen } from '../redux/selectors';
-import { setPopupOpen, setPopupId, setPopupEdit, updateClub } from '../redux/actions';
+import { getPopupEdit, getPopupId, getPopupNew, getPopupOpen } from '../redux/selectors';
+import { setPopupOpen, setPopupId, setPopupEdit, updateClub, setPopupNew, addClub } from '../redux/actions';
 import './ClubPopup.scss';
 import { getClub, postClub } from '../functions/api';
 import ActionButton from './ActionButton';
@@ -50,6 +50,7 @@ class ClubPopup extends React.Component {
 
     closeEdit = () => {
         this.props.setPopupEdit(false);
+        if (this.props.new) this.props.setPopupOpen(false);
         this.resetState();
     };
 
@@ -99,29 +100,41 @@ class ClubPopup extends React.Component {
             this.state.execBlobs
         );
 
-        fullClub.oldExecs = this.state.club.execs;
-        fullClub.oldCommittees = this.state.club.committees;
-
         // POST Club
-        postClub(fullClub, this.state.club.objId).then(async (status) => {
-            if (status === 200) {
-                var clubObj = new ClubInfo(
-                    this.state.club.objId,
-                    this.state.name,
-                    this.state.advised,
-                    this.state.fb,
-                    this.state.website,
-                    coverThumb || this.state.club.coverImgThumbnail
-                );
+        var res;
+        if (this.props.id === 'new') {
+            res = await postClub(fullClub);
+            fullClub.objId = res.id;
+        } else {
+            fullClub.oldExecs = this.state.club.execs;
+            fullClub.oldCommittees = this.state.club.committees;
+            res = await postClub(fullClub, this.state.club.objId);
+        }
 
-                var newClub = await getClub(this.props.id);
+        if (res.status === 200) {
+            var objId = this.state.club.objId;
+            if (this.props.new) objId = res.id;
+            var clubObj = new ClubInfo(
+                objId,
+                this.state.name,
+                this.state.advised,
+                this.state.fb,
+                this.state.website,
+                this.state.coverImg,
+            );
 
-                this.props.updateClub(this.state.club.objId, clubObj);
-                this.props.setPopupEdit(false);
-                this.resetState(newClub);
-                alert('Successfully added!');
-            } else alert('Adding club failed :(');
-        });
+            var newClub = await getClub(this.props.id);
+
+            if (this.props.new) this.props.addClub(clubObj);
+            else this.props.updateClub(this.state.club.objId, clubObj);
+
+            this.props.setPopupEdit(false);
+
+            if (this.props.new) this.props.setPopupOpen(false);
+            else this.resetState(newClub);
+            
+            alert('Successfully added!');
+        } else alert('Adding club failed :(');
     };
 
     testValid = () => {
@@ -211,7 +224,11 @@ class ClubPopup extends React.Component {
     componentDidUpdate(prevProps) {
         if (prevProps.popupOpen === this.props.popupOpen) return;
         if (this.props.popupOpen && this.props.id !== null) {
-            this.getClubData();
+            if (this.props.new) {
+                this.resetState(new Club());
+            } else {
+                this.getClubData();
+            }
         } else {
             this.setState({ club: null });
         }
@@ -383,8 +400,9 @@ const mapStateToProps = (state) => {
         popupOpen: getPopupOpen(state),
         id: getPopupId(state),
         edit: getPopupEdit(state),
+        new: getPopupNew(state),
     };
 };
-const mapDispatchToProps = { setPopupOpen, setPopupId, setPopupEdit, updateClub };
+const mapDispatchToProps = { setPopupOpen, setPopupId, setPopupEdit, updateClub, setPopupNew, addClub };
 
 export default connect(mapStateToProps, mapDispatchToProps)(ClubPopup);
