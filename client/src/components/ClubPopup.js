@@ -274,13 +274,10 @@ class ClubPopup extends React.Component {
             );
         }
 
-        var coverImg = this.state.coverImg;
-        if (coverImg.startsWith('/')) coverImg = imgUrl(coverImg);
-
         return (
             <div className="club-popup">
                 <div className={isActive('club-popup-view', !this.props.edit)}>
-                    <img className="club-popup-image" src={coverImg} alt="cover image"></img>
+                    <img className="club-popup-image" src={imgUrl(this.state.coverImg)} alt="cover image"></img>
                     <p className="club-popup-name">{this.state.club.name}</p>
                     <p className="club-popup-description">{this.state.club.description}</p>
                     <div className="club-popup-links">
@@ -316,7 +313,7 @@ class ClubPopup extends React.Component {
                 </div>
                 <div className={isActive('club-popup-edit', this.props.edit)}>
                     <div className="club-popup-edit-image-container">
-                        <img className="club-popup-image" src={coverImg} alt="cover image"></img>
+                        <img className="club-popup-image" src={imgUrl(this.state.coverImg)} alt="cover image"></img>
                         <ImageUpload
                             name="coverImage"
                             className="club-popup-cover-photo-upload"

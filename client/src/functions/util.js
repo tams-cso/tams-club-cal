@@ -251,7 +251,10 @@ export async function compressUploadedImage(imageFile, maxWidthOrHeight) {
  *
  * @param {string} path Path of file (eg. /7ad67e9c87f78de90d.png)
  */
-export const imgUrl = (path) => `${config.backend}/static${path}`;
+export function imgUrl(path) {
+    if (path.startsWith('/')) return `${config.backend}/static${path}`;
+    return path;
+}
 
 export function getTimezone() {
     return dayjs.tz.guess();
