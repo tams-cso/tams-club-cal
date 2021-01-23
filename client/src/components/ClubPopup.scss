@@ -25,7 +25,11 @@
 .club-popup-image {
     width: 24rem;
     height: 10.5rem;
+    display: block;
     object-fit: cover;
+
+    background-color: $background-tint;
+    color: $background-tint;
 }
 
 .club-popup-name {
@@ -143,9 +147,10 @@
 }
 
 .club-popup-description-input {
-    width: 98%;
+    width: 97%;
     height: 6rem;
     margin: 0.25rem 0 0.5rem;
+    padding: 0.25rem;
     font-size: 0.5rem;
 }
 
