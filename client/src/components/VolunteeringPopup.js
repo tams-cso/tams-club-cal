@@ -1,6 +1,6 @@
 import React from 'react';
 import { postVolunteering } from '../functions/api';
-import { Volunteering, VolunteeringDefault } from '../functions/entries';
+import { Volunteering } from '../functions/entries';
 import { formatVolunteeringFilters, getOrFetchVolList } from '../functions/util';
 import { getPopupEdit, getPopupId, getPopupOpen, getPopupNew, getSavedVolunteeringList } from '../redux/selectors';
 import {
@@ -128,7 +128,7 @@ class VolunteeringPopup extends React.Component {
             this.props.popupOpen
         ) {
             if (this.props.new) {
-                this.resetState(new VolunteeringDefault());
+                this.resetState(new Volunteering());
             } else {
                 this.getVol();
             }
