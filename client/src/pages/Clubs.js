@@ -53,7 +53,6 @@ class Clubs extends React.Component {
         if (prevProps.clubList !== this.props.clubList) {
             this.createCards(this.props.clubList);
         }
-
     }
 
     render() {
