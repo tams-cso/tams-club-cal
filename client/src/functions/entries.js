@@ -149,19 +149,11 @@ export function ClubData(infoId, description, execs, committee, coverImg) {
  * @param {string} signupTime Time of weekly signups, null if no weekly signups
  */
 export function Volunteering(name, club, description, filters, signupTime) {
-    this.name = name;
-    this.club = club;
-    this.description = description;
-    this.filters = filters;
-    this.signupTime = signupTime;
-}
-
-export function VolunteeringDefault() {
-    this.name = '';
-    this.club = '';
-    this.description = '';
-    this.filters = { limited: false, semester: false, setTimes: false, weekly: false, open: true };
-    this.signupTime = '';
+    this.name = name || '';
+    this.club = club || '';
+    this.description = description || '';
+    this.filters = filters || { limited: false, semester: false, setTimes: false, weekly: false, open: true };
+    this.signupTime = signupTime || '';
 }
 
 /**
@@ -172,10 +164,10 @@ export function VolunteeringDefault() {
  * @param {string} img The image URL of the exec
  */
 export function Exec(name, position, description, img) {
-    this.name = name;
-    this.position = position;
-    this.description = description;
-    this.img = img;
+    this.name = name || '';
+    this.position = position || '';
+    this.description = description || '';
+    this.img = img || '';
 }
 
 /**
@@ -186,10 +178,10 @@ export function Exec(name, position, description, img) {
  * @param {string} website The website link of the committee
  */
 export function Committee(name, description, fb, website) {
-    this.name = name;
-    this.description = description;
-    this.fb = fb;
-    this.website = website;
+    this.name = name || '';
+    this.description = description || '';
+    this.fb = fb || '';
+    this.website = website || '';
 }
 
 /**

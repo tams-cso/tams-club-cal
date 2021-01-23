@@ -189,7 +189,7 @@ class ClubPopup extends React.Component {
         var execs = this.state.execs;
         var execBlobs = this.state.execBlobs;
         // TODO: Add default constructor for exec & committee (prob convert to classes in entries.js)
-        execs.push(new Exec('', '', '', ''));
+        execs.push(new Exec());
         execBlobs.push(null);
         this.setState({ execs, execBlobs });
     };
@@ -204,7 +204,7 @@ class ClubPopup extends React.Component {
 
     addCommittee = () => {
         var committees = this.state.committees;
-        committees.push(new Committee('', '', '', ''));
+        committees.push(new Committee());
         this.setState({ committees });
     };
 
