@@ -30,6 +30,7 @@
 
 .exec-edit-img {
     margin-right: 0.5rem;
+    color: $background;
 }
 
 .exec-edit-img-upload {
@@ -83,4 +84,6 @@
 .exec-edit-description-input {
     height: 3rem;
     width: 95%;
+    font-family: $alt-font;
+    font-size: 0.45rem;
 }

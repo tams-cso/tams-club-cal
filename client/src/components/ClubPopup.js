@@ -120,7 +120,7 @@ class ClubPopup extends React.Component {
                 this.state.advised,
                 this.state.fb,
                 this.state.website,
-                this.state.coverImg,
+                this.state.coverImg
             );
 
             var newClub = await getClub(this.props.id);
@@ -132,7 +132,7 @@ class ClubPopup extends React.Component {
 
             if (this.props.new) this.props.setPopupOpen(false);
             else this.resetState(newClub);
-            
+
             alert('Successfully added!');
         } else alert('Adding club failed :(');
     };
@@ -278,6 +278,9 @@ class ClubPopup extends React.Component {
             <div className="club-popup">
                 <div className={isActive('club-popup-view', !this.props.edit)}>
                     <img className="club-popup-image" src={imgUrl(this.state.coverImg)} alt="cover image"></img>
+                    <p className={isActive('club-popup-advised', this.state.club.advised)}>
+                        {this.state.club.advised ? 'Advised' : 'Independent'}
+                    </p>
                     <p className="club-popup-name">{this.state.club.name}</p>
                     <p className="club-popup-description">{this.state.club.description}</p>
                     <div className="club-popup-links">
