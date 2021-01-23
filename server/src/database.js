@@ -216,6 +216,42 @@ async function updateClub(club, id) {
     }
 }
 
+async function addClub(club) {
+    try {
+        const db = client.db('clubs');
+        const dataCollection = db.collection('data');
+        const infoCollection = db.collection('info');
+
+        // Generate an object ID
+        var objId;
+        while (true) {
+            objId = crypto.randomBytes(16).toString('hex');
+            const clubTest = await infoCollection.find({ objId }).toArray();
+            if (clubTest.length == 0) break;
+        }
+
+        infoCollection.insertOne({
+            objId,
+            name: club.name,
+            advised: club.advised,
+            fb: club.fb,
+            website: club.website,
+            coverImgThumbnail: club.coverImgThumbnail,
+        });
+        dataCollection.insertOne({
+            objId,
+            description: club.description,
+            execs: club.execs,
+            committees: club.committees,
+            coverImg: club.coverImg,
+        });
+        return objId;
+    } catch (error) {
+        console.dir(error);
+        return null;
+    }
+}
+
 module.exports = {
     getClubList,
     getClub,
@@ -229,4 +265,5 @@ module.exports = {
     updateVolunteering,
     updateClub,
     addVolunteering,
+    addClub,
 };

@@ -7,9 +7,10 @@ import Popup from '../components/Popup';
 
 import { getClubList } from '../functions/api';
 import { getSavedClubList } from '../redux/selectors';
-import { setClubList, setPopupOpen, setPopupId } from '../redux/actions';
+import { setClubList, setPopupOpen, setPopupId, setPopupNew, setPopupEdit } from '../redux/actions';
 
 import './Clubs.scss';
+import ActionButton from '../components/ActionButton';
 
 class Clubs extends React.Component {
     constructor(props) {
@@ -21,6 +22,12 @@ class Clubs extends React.Component {
         this.props.history.push(`/clubs?id=${id}`);
         this.props.setPopupId(id);
         this.props.setPopupOpen(true);
+    };
+
+    addClub = () => {
+        this.props.setPopupNew(true);
+        this.props.setPopupEdit(true);
+        this.activatePopup('new');
     };
 
     createCards = (data) => {
@@ -42,6 +49,13 @@ class Clubs extends React.Component {
         this.createCards(clubList);
     }
 
+    async componentDidUpdate(prevProps) {
+        if (prevProps.clubList !== this.props.clubList) {
+            this.createCards(this.props.clubList);
+        }
+
+    }
+
     render() {
         return (
             <div className="Clubs">
@@ -49,6 +63,11 @@ class Clubs extends React.Component {
                     <ClubPopup></ClubPopup>
                 </Popup>
                 <div className="club-card-list">{this.state.clubCards}</div>
+                <div className="clubs-add-club-container">
+                    <ActionButton className="clubs-add-club" onClick={this.addClub}>
+                        Add Club
+                    </ActionButton>
+                </div>
             </div>
         );
     }
@@ -59,6 +78,6 @@ const mapStateToProps = (state) => {
         clubList: getSavedClubList(state),
     };
 };
-const mapDispatchToProps = { setClubList, setPopupOpen, setPopupId };
+const mapDispatchToProps = { setClubList, setPopupOpen, setPopupId, setPopupNew, setPopupEdit };
 
 export default connect(mapStateToProps, mapDispatchToProps)(Clubs);

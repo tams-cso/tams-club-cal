@@ -8,15 +8,13 @@ import Image from './Image';
 
 class ExecEdit extends React.Component {
     render() {
-        var execImg = this.props.exec.img;
-        if (execImg.startsWith('/')) execImg = imgUrl(execImg);
         return (
             <div className="exec-edit">
                 <div className="exec-edit-left">
                     <Image
                         className="exec-img exec-edit-img"
                         id={`exec-img-${this.props.num}`}
-                        src={execImg}
+                        src={imgUrl(this.props.exec.img)}
                         alt="profile pic"
                         default={defaultProfile}
                     ></Image>

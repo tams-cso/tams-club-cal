@@ -20,6 +20,7 @@ const {
     updateEvent,
     updateClub,
     addVolunteering,
+    addClub,
 } = require('./database');
 const { uploadImage, getImage } = require('./images');
 
@@ -74,12 +75,23 @@ app.post('/add-club', async (req, res, next) => {
         }
         for (var i = 0; i < club.execProfilePicBlobs.length; i++) {
             if (club.execProfilePicBlobs[i] !== null) {
-                club.execs[i].img = await uploadImage(files[`exec${i}`], club.oldExecs[i].img);
+                if (req.query.update) club.execs[i].img = await uploadImage(files[`exec${i}`], club.oldExecs[i].img);
+                else club.execs[i].img = await uploadImage(files[`exec${i}`]);
             }
         }
 
-        if (req.query.update === 'true') await updateClub(club, req.query.id);
-        res.sendStatus(200);
+        if (req.query.update === 'true') {
+            const id = await updateClub(club, req.query.id);
+            res.status(200);
+            res.send({ id });
+        } else {
+            const id = await addClub(club);
+            if (id === null) res.sendStatus(400);
+            else {
+                res.status(200);
+                res.send({ id });
+            }
+        }
     });
 });
 

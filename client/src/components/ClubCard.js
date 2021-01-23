@@ -6,13 +6,11 @@ import { imgUrl } from '../functions/util';
 
 class ClubCard extends React.Component {
     render() {
-        var thumbnail = this.props.club.coverImgThumbnail;
-        if (thumbnail.startsWith('/')) thumbnail = imgUrl(thumbnail);
         return (
             <div className="club-card" onClick={this.props.onClick}>
                 <div className="club-card-image-container">
                     <div className="club-card-image-placeholder"></div>
-                    <img className="club-card-image" src={thumbnail} alt="club image"></img>
+                    <img className="club-card-image" src={imgUrl(this.props.club.coverImgThumbnail)} alt="club image"></img>
                 </div>
                 <div className={'club-card-type' + (this.props.club.advised != 'true' ? ' club-card-independent' : '')}>
                     {this.props.club.advised == 'true' ? 'Advised' : 'Independent'}

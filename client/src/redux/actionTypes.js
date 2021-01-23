@@ -7,6 +7,7 @@ export const UPDATE_VOLUNTEERING = 'UPDATE_VOLUNTEERING';
 export const ADD_VOLUNTEERING = 'ADD_VOLUNTEERING';
 export const SET_CLUB_LIST = 'SET_CLUB_LIST';
 export const UPDATE_CLUB = 'UPDATE_CLUB';
+export const ADD_CLUB = 'ADD_CLUB';
 
 // Popup
 export const RESET_POPUP_STATE = 'RESET_POPUP_STATE';

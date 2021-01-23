@@ -25,7 +25,21 @@
 .club-popup-image {
     width: 24rem;
     height: 10.5rem;
+    display: block;
     object-fit: cover;
+
+    background-color: $background-tint;
+    color: $background-tint;
+}
+
+.club-popup-advised {
+    margin-top: 0.25rem;
+    color: $primary;
+}
+
+.club-popup-advised.inactive {
+    color: $type-signup;
+    display: block;
 }
 
 .club-popup-name {
@@ -34,8 +48,9 @@
 }
 
 .club-popup-description {
-    font-size: 0.65rem;
     padding: 0.5rem 1.75rem;
+    font-family: $alt-font;
+    font-size: 0.5rem;
 }
 
 /*
@@ -143,10 +158,13 @@
 }
 
 .club-popup-description-input {
-    width: 98%;
+    width: 97%;
     height: 6rem;
     margin: 0.25rem 0 0.5rem;
-    font-size: 0.5rem;
+    padding: 0.25rem;
+
+    font-family: $alt-font;
+    font-size: 0.45rem;
 }
 
 .club-popup-link-input,

@@ -87,17 +87,17 @@ export function Club(
     coverImgBlobs = null,
     execProfilePicBlobs = null
 ) {
-    this.name = name;
-    this.advised = advised;
-    this.fb = fb;
-    this.website = website;
-    this.coverImgThumbnail = coverImgThumbnail;
-    this.coverImg = coverImg;
-    this.description = description;
-    this.execs = execs;
-    this.committees = committees;
-    this.coverImgBlobs = coverImgBlobs;
-    this.execProfilePicBlobs = execProfilePicBlobs;
+    this.name = name || '';
+    this.advised = advised || false;
+    this.fb = fb || '';
+    this.website = website || '';
+    this.coverImgThumbnail = coverImgThumbnail || '';
+    this.coverImg = coverImg || '';
+    this.description = description || '';
+    this.execs = execs || [new Exec()];
+    this.committees = committees || [new Committee()];
+    this.coverImgBlobs = coverImgBlobs || [];
+    this.execProfilePicBlobs = execProfilePicBlobs || [];
 }
 
 /**

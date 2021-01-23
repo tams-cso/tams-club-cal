@@ -11,9 +11,10 @@ var cache = {};
  * Uploads an image to dropbox, naming it with a 16 digit hex ID
  *
  * @param {import('formidable').File} file File path from Formidable
+ * @param {string} oldId The id of the image to replace
  * @returns {Promise<string>} Final relative path to retrive images from (eg. /static/2hjf724hfw8ufbn249fhnwe9ugh2)
  */
-async function uploadImage(file, oldId) {
+async function uploadImage(file, oldId = null) {
     var id = '/' + crypto.randomBytes(16).toString('hex');
     if (file.type.includes('png')) id += '.png';
     else id += '.jpg';
@@ -24,7 +25,7 @@ async function uploadImage(file, oldId) {
     await dbx.filesUpload({ path: id, contents: data });
 
     // Deletes old image if it was in the database
-    if (oldId.startsWith('/')) {
+    if (oldId !== null && oldId !== undefined && oldId.startsWith('/')) {
         try {
             const res = await dbx.filesDeleteV2({ path: oldId });
             console.log(res);
