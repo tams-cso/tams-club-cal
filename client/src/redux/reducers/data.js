@@ -1,6 +1,7 @@
 import {
     ADD_CLUB,
     ADD_VOLUNTEERING,
+    DELETE_CLUB,
     RESET_DATA_STATE,
     SET_CLUB_LIST,
     SET_EVENT_LIST,
@@ -97,6 +98,20 @@ export default function data(state = initialState, action) {
             const { club } = action.payload;
             var clubList = [...state.clubList];
             clubList.push(club);
+            return {
+                ...state,
+                clubList,
+            };
+        }
+        case DELETE_CLUB: {
+            const { id } = action.payload;
+            var clubList = [...state.clubList];
+            for (var i = 0; i < clubList.length; i++) {
+                if (clubList[i].objId === id) {
+                    clubList.splice(i, 1);
+                    break;
+                }
+            }
             return {
                 ...state,
                 clubList,

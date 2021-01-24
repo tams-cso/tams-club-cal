@@ -1,7 +1,14 @@
 import React from 'react';
 import { getParams, isActive, isPopupInvalid } from '../functions/util';
-import { getPopupEdit, getPopupId, getPopupOpen, getPopupNew } from '../redux/selectors';
-import { setPopupOpen, setPopupId, setPopupEdit, resetPopupState, setPopupNew } from '../redux/actions';
+import { getPopupEdit, getPopupId, getPopupOpen, getPopupNew, getPopupDeleted, getPopupType } from '../redux/selectors';
+import {
+    setPopupOpen,
+    setPopupId,
+    setPopupEdit,
+    resetPopupState,
+    setPopupNew,
+    deleteSavedClub,
+} from '../redux/actions';
 import './Popup.scss';
 import { connect } from 'react-redux';
 
@@ -42,6 +49,13 @@ class Popup extends React.Component {
     }
 
     componentDidUpdate() {
+        if (this.props.deleted) {
+            if (this.props.type === 'club') {
+                this.props.deleteSavedClub(this.props.id);
+                this.props.history.push('/clubs');
+            }
+            this.props.resetPopupState();
+        }
         if (isPopupInvalid()) {
             this.props.setPopupOpen(false);
         }
@@ -66,8 +80,10 @@ const mapStateToProps = (state) => {
         id: getPopupId(state),
         edit: getPopupEdit(state),
         new: getPopupNew(state),
+        deleted: getPopupDeleted(state),
+        type: getPopupType(state),
     };
 };
-const mapDispatchToProps = { setPopupOpen, setPopupId, setPopupEdit, resetPopupState, setPopupNew };
+const mapDispatchToProps = { setPopupOpen, setPopupId, setPopupEdit, resetPopupState, setPopupNew, deleteSavedClub };
 
 export default connect(mapStateToProps, mapDispatchToProps)(Popup);

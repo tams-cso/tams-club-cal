@@ -252,6 +252,20 @@ async function addClub(club) {
     }
 }
 
+async function deleteClub(id) {
+    try {
+        const db = client.db('clubs');
+        const dataCollection = db.collection('data');
+        const infoCollection = db.collection('info');
+        dataCollection.deleteOne({ objId: id });
+        infoCollection.deleteOne({ objId: id });
+        return true;
+    } catch (error) {
+        console.dir(error);
+        return false;
+    }
+}
+
 module.exports = {
     getClubList,
     getClub,
@@ -266,4 +280,5 @@ module.exports = {
     updateClub,
     addVolunteering,
     addClub,
+    deleteClub,
 };

@@ -1,10 +1,12 @@
-import { RESET_POPUP_STATE, SET_EDIT, SET_ID, SET_NEW, SET_OPEN } from '../actionTypes';
+import { RESET_POPUP_STATE, SET_EDIT, SET_ID, SET_NEW, SET_OPEN, SET_DELETED, SET_TYPE } from '../actionTypes';
 
 const initialState = {
     open: false,
     edit: false,
     new: false,
     id: '',
+    deleted: false,
+    type: '',
 };
 
 export default function popup(state = initialState, action) {
@@ -38,6 +40,20 @@ export default function popup(state = initialState, action) {
             return {
                 ...state,
                 id,
+            };
+        }
+        case SET_DELETED: {
+            const { deleted } = action.payload;
+            return {
+                ...state,
+                deleted,
+            };
+        }
+        case SET_TYPE: {
+            const { type } = action.payload;
+            return {
+                ...state,
+                type,
             };
         }
         default:

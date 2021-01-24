@@ -203,3 +203,48 @@
 .club-popup-add-container {
     text-align: center;
 }
+
+/*
+ * #####################################
+ * ##### SUBMIT AND DELETE BUTTONS #####
+ * #####################################
+ */
+
+.club-popup-action-button-box {
+    margin-top: 0.5rem;
+    align-items: center;
+}
+
+.club-popup-trash-group {
+    height: fit-content;
+    flex-grow: 1;
+    display: flex;
+}
+
+.club-popup-trash-group.inactive {
+    display: none !important;
+}
+
+.club-popup-delete-text {
+    margin-top: 0.25rem;
+    margin-left: 0.25rem;
+    transition: 0.2s;
+}
+
+.club-popup-delete-box {
+    display: flex;
+    cursor: pointer;
+}
+
+.club-popup-delete-box:hover .club-popup-delete-text {
+    color: $bad;
+}
+
+.club-popup-delete-box:hover .trash-can-path {
+    fill: $bad;
+}
+
+.club-popup-action-button {
+    margin-top: 0 !important;
+    flex-grow: 0;
+}

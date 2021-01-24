@@ -8,6 +8,7 @@ export const ADD_VOLUNTEERING = 'ADD_VOLUNTEERING';
 export const SET_CLUB_LIST = 'SET_CLUB_LIST';
 export const UPDATE_CLUB = 'UPDATE_CLUB';
 export const ADD_CLUB = 'ADD_CLUB';
+export const DELETE_CLUB = 'DELETE_CLUB';
 
 // Popup
 export const RESET_POPUP_STATE = 'RESET_POPUP_STATE';
@@ -15,3 +16,5 @@ export const SET_OPEN = 'SET_OPEN';
 export const SET_EDIT = 'SET_EDIT';
 export const SET_NEW = 'SET_NEW';
 export const SET_ID = 'SET_ID';
+export const SET_DELETED = 'SET_DELETED';
+export const SET_TYPE = 'SET_TYPE';
