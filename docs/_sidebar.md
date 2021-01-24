@@ -1,7 +1,4 @@
-- Home
-
-    - [README](README.md)
-
+- [Home](README.md)
 - Frontend
 
     - [Components](components.md)
