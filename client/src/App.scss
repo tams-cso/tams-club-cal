@@ -44,6 +44,16 @@ button {
     outline: none;
 }
 
+a {
+    text-decoration: none;
+    color: $primary-dark;
+    transition: 0.2s;
+}
+
+a:hover {
+    color: $primary;
+}
+
 .menu-bkgd {
     position: fixed;
     z-index: 99;
