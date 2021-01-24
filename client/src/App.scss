@@ -46,12 +46,12 @@ button {
 
 a {
     text-decoration: none;
-    color: $primary-dark;
+    color: $primary;
     transition: 0.2s;
 }
 
 a:hover {
-    color: $primary;
+    color: $primary-dark;
 }
 
 .menu-bkgd {
