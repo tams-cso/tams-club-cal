@@ -6,6 +6,12 @@ An unofficial calendar for the [Texas Academy of Mathematics and Science (TAMS)]
 
 Find out how to contribute [here](CONTRIBUTING.md)! You can look through the issues, comment on the ones you like, and make a pull request to resolve them :grinning: We also welcome any bug reports or feature requests ➔ create a new issue [here](https://github.com/MichaelZhao21/tams-club-cal/issues/new)!
 
+## Documentation
+
+More information and general documentation can be found on our [documentation site](https://docs.tams.club). This project is still being actively developed, so expect a lot of missing and/or incorrect information.
+
+For now, here are the links to the [planning Google Doc](https://docs.google.com/document/d/1U_zqoEiplk0ODeGdMTzK1aLhz9OYFQV0FlhSI52VSBo/edit?usp=sharing) and the [Figma prototype](https://www.figma.com/file/yp3mDSciGjMZBZknjbog49/TAMS-Club-Calendar?node-id=0%3A1)
+
 ## Setup
 
 ```bash
@@ -48,9 +54,16 @@ cd server
 yarn start
 ```
 
-## Documentation
+## Deployment Notes
 
-More information and general documentation can be found on our [documentation site](https://docs.tams.club). This project is still being actively developed, so expect a lot of missing and/or incorrect information.
+To run a deployment, go into the `server` folder and run `pm2 start ecosystem.config.js`.
 
-For now, here are the links to the [planning Google Doc](https://docs.google.com/document/d/1U_zqoEiplk0ODeGdMTzK1aLhz9OYFQV0FlhSI52VSBo/edit?usp=sharing) and the [Figma prototype](https://www.figma.com/file/yp3mDSciGjMZBZknjbog49/TAMS-Club-Calendar?node-id=0%3A1)
+**PM2 will not ignore watches unless you increase the number of inotify watches:**
 
+```bash
+echo fs.inotify.max_user_watches=524288 | sudo tee -a /etc/sysctl.conf && sudo sysctl -p
+```
+
+To create a production version of the frontend, go into the `client` folder and run `yarn build`. This will create a production release of the site in the `/build` folder. Simply serve the static index.html and it should be up and running.
+
+Don't forget to set the correct backend environmental variables and frontend config variables!
