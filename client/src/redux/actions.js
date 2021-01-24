@@ -16,6 +16,7 @@ import {
     DELETE_CLUB,
     SET_DELETED,
     SET_TYPE,
+    ADD_EVENT,
 } from './actionTypes';
 
 export const resetDataState = () => ({
@@ -99,4 +100,9 @@ export const setPopupDeleted = (deleted) => ({
 export const setPopupType = (type) => ({
     type: SET_TYPE,
     payload: { type },
+});
+
+export const addEvent = (event) => ({
+    type: ADD_EVENT,
+    payload: { event },
 });

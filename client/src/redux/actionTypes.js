@@ -9,6 +9,7 @@ export const SET_CLUB_LIST = 'SET_CLUB_LIST';
 export const UPDATE_CLUB = 'UPDATE_CLUB';
 export const ADD_CLUB = 'ADD_CLUB';
 export const DELETE_CLUB = 'DELETE_CLUB';
+export const ADD_EVENT = 'ADD_EVENT';
 
 // Popup
 export const RESET_POPUP_STATE = 'RESET_POPUP_STATE';
