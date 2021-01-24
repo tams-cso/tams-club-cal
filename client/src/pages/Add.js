@@ -76,7 +76,7 @@ class Add extends React.Component {
             this.state.addedBy
         );
         const status = await postEvent(newEvent);
-        
+
         if (status === 200) {
             this.props.addEvent(newEvent);
             this.setState({
