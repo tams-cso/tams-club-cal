@@ -7,7 +7,7 @@ import Popup from '../components/Popup';
 
 import { getClubList } from '../functions/api';
 import { getSavedClubList } from '../redux/selectors';
-import { setClubList, setPopupOpen, setPopupId, setPopupNew, setPopupEdit } from '../redux/actions';
+import { setClubList, setPopupOpen, setPopupId, setPopupNew, setPopupEdit, setPopupType } from '../redux/actions';
 
 import './Clubs.scss';
 import ActionButton from '../components/ActionButton';
@@ -21,6 +21,7 @@ class Clubs extends React.Component {
     activatePopup = (id) => {
         this.props.history.push(`/clubs?id=${id}`);
         this.props.setPopupId(id);
+        this.props.setPopupType('club');
         this.props.setPopupOpen(true);
     };
 
@@ -77,6 +78,6 @@ const mapStateToProps = (state) => {
         clubList: getSavedClubList(state),
     };
 };
-const mapDispatchToProps = { setClubList, setPopupOpen, setPopupId, setPopupNew, setPopupEdit };
+const mapDispatchToProps = { setClubList, setPopupOpen, setPopupId, setPopupNew, setPopupEdit, setPopupType };
 
 export default connect(mapStateToProps, mapDispatchToProps)(Clubs);

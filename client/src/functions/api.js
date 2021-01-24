@@ -149,6 +149,19 @@ async function postFeedback(feedback) {
     }
 }
 
+async function deleteClub(id) {
+    try {
+        const res = await fetch(`${config.backend}/delete-club`, {
+            method: 'POST',
+            body: JSON.stringify({ id }),
+            headers: { 'Content-Type': 'application/json' },
+        });
+        return res.status;
+    } catch (error) {
+        console.dir(error);
+    }
+}
+
 export {
     getClub,
     getClubList,
@@ -159,4 +172,5 @@ export {
     getVolunteering,
     postVolunteering,
     postClub,
+    deleteClub,
 };

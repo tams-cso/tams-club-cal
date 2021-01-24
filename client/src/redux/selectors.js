@@ -11,3 +11,7 @@ export const getPopupEdit = (store) => store.popup.edit;
 export const getPopupNew = (store) => store.popup.new;
 
 export const getPopupId = (store) => store.popup.id;
+
+export const getPopupDeleted = (store) => store.popup.deleted;
+
+export const getPopupType = (store) => store.popup.type;

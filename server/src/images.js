@@ -2,6 +2,7 @@ const fs = require('fs');
 const crypto = require('crypto');
 const path = require('path');
 const Dropbox = require('dropbox');
+const { getClub } = require('./database');
 const dbx = new Dropbox.Dropbox({ accessToken: process.env.DROPBOX_TOKEN });
 
 const CACHE_TIMEOUT = 3600000; // Cache gets deleted after an hour (3,600,000 ms)
@@ -68,4 +69,18 @@ async function getImage(id, res) {
     }
 }
 
-module.exports = { uploadImage, getImage };
+async function deleteClubImages(id) {
+    const club = await getClub(id);
+    var toDelete = [];
+    if (club.coverImg !== null) {
+        toDelete.push({ path: club.coverImg });
+        toDelete.push({ path: club.coverImgThumbnail });
+    }
+    club.execs.forEach((e) => {
+        if (e.img !== null) toDelete.push({ path: e.img });
+    });
+    const res = await dbx.filesDeleteBatch({ entries: toDelete });
+    return res.status;
+}
+
+module.exports = { uploadImage, getImage, deleteClubImages };

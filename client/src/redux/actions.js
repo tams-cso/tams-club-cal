@@ -13,6 +13,9 @@ import {
     SET_NEW,
     ADD_VOLUNTEERING,
     ADD_CLUB,
+    DELETE_CLUB,
+    SET_DELETED,
+    SET_TYPE,
     ADD_EVENT,
 } from './actionTypes';
 
@@ -82,6 +85,21 @@ export const addVolunteering = (vol) => ({
 export const addClub = (club) => ({
     type: ADD_CLUB,
     payload: { club },
+});
+
+export const deleteSavedClub = (id) => ({
+    type: DELETE_CLUB,
+    payload: { id },
+});
+
+export const setPopupDeleted = (deleted) => ({
+    type: SET_DELETED,
+    payload: { deleted },
+});
+
+export const setPopupType = (type) => ({
+    type: SET_TYPE,
+    payload: { type },
 });
 
 export const addEvent = (event) => ({

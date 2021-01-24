@@ -3,15 +3,25 @@ import { connect } from 'react-redux';
 import ExecCard from './ExecCard';
 import CommitteeCard from './CommitteeCard';
 import { getPopupEdit, getPopupId, getPopupNew, getPopupOpen } from '../redux/selectors';
-import { setPopupOpen, setPopupId, setPopupEdit, updateClub, setPopupNew, addClub } from '../redux/actions';
+import {
+    setPopupOpen,
+    setPopupId,
+    setPopupEdit,
+    updateClub,
+    setPopupNew,
+    addClub,
+    deleteSavedClub,
+    setPopupDeleted,
+} from '../redux/actions';
 import './ClubPopup.scss';
-import { getClub, postClub } from '../functions/api';
+import { deleteClub, getClub, postClub } from '../functions/api';
 import ActionButton from './ActionButton';
 import { compressUploadedImage, imgUrl, isActive } from '../functions/util';
 import ImageUpload from './ImageUpload';
 import ExecEdit from './ExecEdit';
 import CommitteeEdit from './CommitteeEdit';
 import { Club, ClubInfo, Committee, Exec } from '../functions/entries';
+import { ReactComponent as TrashIcon } from '../files/trash-can.svg';
 
 class ClubPopup extends React.Component {
     constructor(props) {
@@ -40,11 +50,6 @@ class ClubPopup extends React.Component {
     getClubData = async () => {
         const club = await getClub(this.props.id);
         if (club !== null) this.resetState(club);
-        else {
-            this.props.setPopupOpen(false);
-            this.props.setPopupId(null);
-            alert('ERROR: No club data found');
-        }
     };
 
     switchTab = (tab) => this.setState({ execTab: tab === 'execs' });
@@ -226,6 +231,25 @@ class ClubPopup extends React.Component {
         this.setState({ committees });
     };
 
+    deleteClub = async () => {
+        const confirmDelete = prompt(
+            `Are you SURE you want to delete this club? Please type the name of the club (${this.state.club.name}) below to confirm:`
+        );
+        const currObjId = this.state.club.objId;
+        if (
+            confirmDelete !== null &&
+            confirmDelete.toLowerCase().trim() === this.state.club.name.toLowerCase().trim()
+        ) {
+            const status = await deleteClub(currObjId);
+            if (status === 200) {
+                alert('Club successfully deleted!');
+                this.props.setPopupDeleted(true);
+            } else {
+                alert('ERROR: Club could not be deleted');
+            }
+        }
+    };
+
     componentDidUpdate(prevProps) {
         if (prevProps.popupOpen === this.props.popupOpen) return;
         if (this.props.popupOpen && this.props.id !== null) {
@@ -385,11 +409,17 @@ class ClubPopup extends React.Component {
                                 Add Committee
                             </ActionButton>
                         </div>
-                        <div className="action-button-box">
-                            <ActionButton className="cancel" onClick={this.closeEdit}>
+                        <div className="action-button-box club-popup-action-button-box">
+                            <div className={isActive('club-popup-trash-group', !this.props.new)}>
+                                <div className="club-popup-delete-box" onClick={this.deleteClub}>
+                                    <TrashIcon className="trash-icon club-popup-trash-icon"></TrashIcon>
+                                    <p className="club-popup-delete-text">Delete this Club</p>
+                                </div>
+                            </div>
+                            <ActionButton className="cancel club-popup-action-button" onClick={this.closeEdit}>
                                 Cancel
                             </ActionButton>
-                            <ActionButton className="submit" onClick={this.submit}>
+                            <ActionButton className="submit club-popup-action-button" onClick={this.submit}>
                                 Submit
                             </ActionButton>
                         </div>
@@ -408,6 +438,15 @@ const mapStateToProps = (state) => {
         new: getPopupNew(state),
     };
 };
-const mapDispatchToProps = { setPopupOpen, setPopupId, setPopupEdit, updateClub, setPopupNew, addClub };
+const mapDispatchToProps = {
+    setPopupOpen,
+    setPopupId,
+    setPopupEdit,
+    updateClub,
+    setPopupNew,
+    addClub,
+    deleteSavedClub,
+    setPopupDeleted,
+};
 
 export default connect(mapStateToProps, mapDispatchToProps)(ClubPopup);

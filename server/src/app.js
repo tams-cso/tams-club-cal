@@ -21,8 +21,9 @@ const {
     updateClub,
     addVolunteering,
     addClub,
+    deleteClub,
 } = require('./database');
-const { uploadImage, getImage } = require('./images');
+const { uploadImage, getImage, deleteClubImages } = require('./images');
 
 // Clean up the 'cache' folder
 fs.readdir(path.join(__dirname, 'cache'), (err, files) => {
@@ -138,6 +139,12 @@ app.post('/add-volunteering', async (req, res, next) => {
     } else {
         res.sendStatus(400);
     }
+});
+
+app.post('/delete-club', async (req, res, next) => {
+    var good = (await deleteClubImages(req.body.id)) === 200 && (await deleteClub(req.body.id));
+    if (good) res.sendStatus(200);
+    else res.sendStatus(400);
 });
 
 app.get(/\/static\/.*/, async (req, res, next) => {
