@@ -1,5 +1,6 @@
 import {
     ADD_CLUB,
+    ADD_EVENT,
     ADD_VOLUNTEERING,
     RESET_DATA_STATE,
     SET_CLUB_LIST,
@@ -37,6 +38,15 @@ export default function data(state = initialState, action) {
                     break;
                 }
             }
+            return {
+                ...state,
+                eventList,
+            };
+        }
+        case ADD_EVENT: {
+            const { event } = action.payload;
+            var eventList = [...state.eventList];
+            eventList.push(event);
             return {
                 ...state,
                 eventList,

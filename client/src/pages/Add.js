@@ -1,8 +1,10 @@
 import React from 'react';
+import { connect } from 'react-redux';
 
 import { postEvent } from '../functions/api';
 import { Event } from '../functions/entries';
 import { parseTimeZone, getTimezone } from '../functions/util';
+import { addEvent } from '../redux/actions';
 
 import './Add.scss';
 
@@ -42,54 +44,57 @@ class Add extends React.Component {
         this.setState({ links: oldLinkList });
     }
 
-    add = () => {
+    add = async () => {
         var invalid = this.testValid();
-        if (invalid.length == 0) {
-            // Filter out empty links
-            var currLinks = this.state.links;
-            var i = 0;
-            while (i != currLinks.length) {
-                if (currLinks[i] == '') currLinks.splice(i, 1);
-                else i++;
-            }
-
-            // Calculate milliseconds from starting/ending datetimes
-            var end = null;
-            var start = parseTimeZone(`${this.state.startDate} ${this.state.startTime}`, getTimezone());
-            if (this.state.type === 'event')
-                var end = parseTimeZone(`${this.state.endDate} ${this.state.endTime}`, getTimezone());
-
-            // POST event
-            console.log('submitted!');
-            postEvent(
-                new Event(
-                    this.state.type,
-                    this.state.name,
-                    this.state.clubName,
-                    start,
-                    end,
-                    currLinks,
-                    this.state.description,
-                    this.state.addedBy
-                )
-            ).then((status) => {
-                this.setState({
-                    name: '',
-                    clubName: '',
-                    startDate: '',
-                    startTime: '',
-                    endDate: '',
-                    endTime: '',
-                    links: [''],
-                    description: '',
-                    addedBy: '',
-                    type: 'event',
-                    invalid: [],
-                });
-                alert(status == 200 ? 'Successfully added!' : 'Adding event failed :((');
-            });
-        } else {
+        if (invalid.length !== 0) {
             this.setState({ invalid });
+            return;
+        }
+        // Filter out empty links
+        var currLinks = this.state.links;
+        var i = 0;
+        while (i != currLinks.length) {
+            if (currLinks[i] == '') currLinks.splice(i, 1);
+            else i++;
+        }
+
+        // Calculate milliseconds from starting/ending datetimes
+        var end = null;
+        var start = parseTimeZone(`${this.state.startDate} ${this.state.startTime}`, getTimezone());
+        if (this.state.type === 'event')
+            var end = parseTimeZone(`${this.state.endDate} ${this.state.endTime}`, getTimezone());
+
+        // POST event
+        const newEvent = new Event(
+            this.state.type,
+            this.state.name,
+            this.state.clubName,
+            start,
+            end,
+            currLinks,
+            this.state.description,
+            this.state.addedBy
+        );
+        const status = await postEvent(newEvent);
+        
+        if (status === 200) {
+            this.props.addEvent(newEvent);
+            this.setState({
+                name: '',
+                clubName: '',
+                startDate: '',
+                startTime: '',
+                endDate: '',
+                endTime: '',
+                links: [''],
+                description: '',
+                addedBy: '',
+                type: 'event',
+                invalid: [],
+            });
+            alert('Sucessfully added event!');
+        } else {
+            alert('Adding event failed :((');
         }
     };
 
@@ -251,4 +256,4 @@ class Add extends React.Component {
     }
 }
 
-export default Add;
+export default connect(null, { addEvent })(Add);
