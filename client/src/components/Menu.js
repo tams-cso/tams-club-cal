@@ -13,16 +13,16 @@ class Menu extends React.Component {
         this.setState({ mobileDropdown: !this.state.mobileDropdown });
     };
 
-    componentWillUnmount() {
-        this.unlisten();
-    }
-
     componentDidMount() {
         if (location.pathname.includes('/search')) this.setState({ searchBar: null });
-        this.unlisten = this.props.history.listen((location, action) => {
-            if (location.pathname.includes('/search')) this.setState({ searchBar: null });
-            else this.setState({ searchBar: <SearchBar className="menu-item"></SearchBar> });
-        });
+    }
+    
+    componentDidUpdate(prevProps) {
+        if (this.props.location === prevProps.location) return;
+
+        if (this.props.location.pathname.includes('/search')) this.setState({ searchBar: null });
+        else this.setState({ searchBar: <SearchBar className="menu-item"></SearchBar> });
+        if (this.props.location.search === '') window.scrollTo(0, 0);
     }
 
     render() {

@@ -7,23 +7,20 @@
 @import '../custom.scss';
 
 .about {
-    margin: 1rem 8rem 0;
+    margin: 1rem 15vw 0;
+}
+
+.about-header {
+    height: 6rem;
+    display: block;
+    margin: 0 auto 0.5rem;
 }
 
 .about-info-p {
+    margin-bottom: 1rem;
     text-align: center;
-    font-size: 0.9rem;
-}
-
-.about-link-container {
-    display: flex;
-    justify-content: center;
-    margin: 1rem 0;
-}
-
-.about-link-box {
-    margin-left: 1rem;
-    margin-right: 1rem;
+    font-size: 0.8rem;
+    font-family: $alt-font;
 }
 
 /*
@@ -33,19 +30,19 @@
  */
 
 #feedback-form {
-    padding: 0.25rem;
-    font-size: 0.75rem;
     width: 100%;
     height: 10rem;
-    margin-top: 1rem;
+    padding: 0.25rem;
+    font-size: 0.75rem;
 }
 
 #feedback-submit {
-    border: 0;
-    background-color: $background;
-    color: $primary;
     padding: 0.25rem 0.75rem;
+    border: 0;
     font-size: 1rem;
+
+    color: $primary;
+    background-color: $background;
     filter: drop-shadow(0 0 0.05rem $background-tint);
     transition: 0.3s;
 }
