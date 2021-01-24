@@ -16,7 +16,7 @@ class Menu extends React.Component {
     componentDidMount() {
         if (location.pathname.includes('/search')) this.setState({ searchBar: null });
     }
-    
+
     componentDidUpdate(prevProps) {
         if (this.props.location === prevProps.location) return;
 

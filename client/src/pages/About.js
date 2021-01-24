@@ -35,12 +35,14 @@ class About extends React.Component {
                 <div className="about-info-p">
                     We are an open-source project, meaning that anyone and everyone can help contribute to the
                     development of the website! You can go to the&nbsp;
-                    <b><a href="https://github.com/MichaelZhao21/tams-club-cal">Github repository</a></b>&nbsp;where this
-                    project is being hosted. There is more information on that page on how to contribute and help code.
-                    If you can't code and still want to help, there is a feedback form below where you can write
-                    whatever you would like! The way programs like these get better, after all, is through independent
-                    user feedback. Thank you once again for checking out tams.club, and we hope you enjoy the rest of
-                    your day! :D
+                    <b>
+                        <a href="https://github.com/MichaelZhao21/tams-club-cal">Github repository</a>
+                    </b>
+                    &nbsp;where this project is being hosted. There is more information on that page on how to
+                    contribute and help code. If you can't code and still want to help, there is a feedback form below
+                    where you can write whatever you would like! The way programs like these get better, after all, is
+                    through independent user feedback. Thank you once again for checking out tams.club, and we hope you
+                    enjoy the rest of your day! :D
                 </div>
                 <h1 className="feedback-header">Feedback</h1>
                 <div className="about-info-p">
