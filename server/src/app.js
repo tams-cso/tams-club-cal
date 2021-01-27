@@ -124,9 +124,11 @@ app.get('/event-list', async (req, res, next) => {
 });
 
 app.post('/add-event', async (req, res, next) => {
-    if (req.query.update === 'true') updateEvent(req.body, req.query.id);
-    else addEvent(req.body);
-    res.sendStatus(200);
+    var id = null;
+    if (req.query.update === 'true') id = await updateEvent(req.body, req.query.id);
+    else id = await addEvent(req.body);
+    res.status(200);
+    res.send({ id });
 });
 
 app.post('/add-volunteering', async (req, res, next) => {

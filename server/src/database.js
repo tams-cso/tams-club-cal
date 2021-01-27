@@ -103,6 +103,7 @@ async function addEvent(event) {
             editedBy: [],
             description: event.description,
         });
+        return objId;
     } catch (error) {
         console.dir(error);
     }
@@ -136,6 +137,7 @@ async function updateEvent(event, id) {
                 },
             }
         );
+        return id;
     } catch (error) {
         console.dir(error);
     }
@@ -211,6 +213,7 @@ async function updateClub(club, id) {
                 },
             }
         );
+        return id;
     } catch (error) {
         console.dir(error);
     }

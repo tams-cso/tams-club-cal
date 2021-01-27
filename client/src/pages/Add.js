@@ -75,10 +75,12 @@ class Add extends React.Component {
             this.state.description,
             this.state.addedBy
         );
-        const status = await postEvent(newEvent);
+        const res = await postEvent(newEvent);
 
-        if (status === 200) {
+        if (res.status === 200) {
+            newEvent.objId = res.id;
             this.props.addEvent(newEvent);
+            
             this.setState({
                 name: '',
                 clubName: '',

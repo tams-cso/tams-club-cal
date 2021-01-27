@@ -40,9 +40,11 @@ async function postEvent(event, id = null) {
             body: JSON.stringify(event),
             headers: { 'Content-Type': 'application/json' },
         });
-        return res.status;
+        const jsonData = await res.json();
+        return { status: res.status, id: jsonData.id };
     } catch (error) {
         console.dir(error);
+        return { status: 400, id: null };
     }
 }
 
@@ -89,12 +91,17 @@ async function postClub(club, id = null) {
     }
 
     var update = id !== undefined && id !== null ? `?update=true&id=${id}` : '';
-    const res = await fetch(`${config.backend}/add-club${update}`, {
-        method: 'POST',
-        body: data,
-    });
-    const jsonData = await res.json();
-    return { status: res.status, id: jsonData.id };
+    try {
+        const res = await fetch(`${config.backend}/add-club${update}`, {
+            method: 'POST',
+            body: data,
+        });
+        const jsonData = await res.json();
+        return { status: res.status, id: jsonData.id };
+    } catch (error) {
+        console.dir(error);
+        return { status: 400, id: null };
+    }
 }
 
 /**
