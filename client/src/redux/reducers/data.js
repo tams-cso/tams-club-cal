@@ -46,7 +46,7 @@ export default function data(state = initialState, action) {
         }
         case ADD_EVENT: {
             if (state.eventList === null) return state;
-            
+
             const { event } = action.payload;
             var eventList = [...state.eventList];
             eventList.push(event);

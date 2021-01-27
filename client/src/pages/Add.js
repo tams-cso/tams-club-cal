@@ -80,7 +80,7 @@ class Add extends React.Component {
         if (res.status === 200) {
             newEvent.objId = res.id;
             this.props.addEvent(newEvent);
-            
+
             this.setState({
                 name: '',
                 clubName: '',
