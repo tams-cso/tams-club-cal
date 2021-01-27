@@ -160,6 +160,10 @@ class ClubPopup extends React.Component {
         return invalid;
     };
 
+    changeAdvised = () => {
+        this.setState({ advised: !this.state.advised });
+    };
+
     handleInputChange = (event) => {
         const target = event.target;
         this.setState({ [target.name]: target.value });
@@ -353,15 +357,22 @@ class ClubPopup extends React.Component {
                         ></ImageUpload>
                     </div>
                     <div className="club-popup-edit-bottom">
-                        <input
-                            name="name"
-                            className="line-in club-popup-name-input"
-                            type="text"
-                            placeholder="Club name..."
-                            value={this.state.name}
-                            onChange={this.handleInputChange}
-                        ></input>
-                        <br />
+                        <div className="club-popup-name-advised-div">
+                            <input
+                                name="name"
+                                className="line-in club-popup-name-input"
+                                type="text"
+                                placeholder="Club name..."
+                                value={this.state.name}
+                                onChange={this.handleInputChange}
+                            ></input>
+                            <ActionButton
+                                className={isActive('club-popup-advised club-popup-advised-edit', this.state.advised)}
+                                onClick={this.changeAdvised}
+                            >
+                                {this.state.advised ? 'Advised' : 'Independent'}
+                            </ActionButton>
+                        </div>
                         <label htmlFor="description">Description</label>
                         <br />
                         <textarea

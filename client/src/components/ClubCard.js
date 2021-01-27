@@ -16,8 +16,8 @@ class ClubCard extends React.Component {
                         alt="club image"
                     ></img>
                 </div>
-                <div className={'club-card-type' + (this.props.club.advised != 'true' ? ' club-card-independent' : '')}>
-                    {this.props.club.advised == 'true' ? 'Advised' : 'Independent'}
+                <div className={'club-card-type' + (!this.props.club.advised ? ' club-card-independent' : '')}>
+                    {this.props.club.advised ? 'Advised' : 'Independent'}
                 </div>
                 <div className="club-card-name">{this.props.club.name}</div>
                 {/* TODO: Extract icons to seperate component */}
