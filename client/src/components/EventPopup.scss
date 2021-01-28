@@ -68,10 +68,11 @@
     color: $primary;
 }
 
-.EventPopup .event-added-by {
+.EventPopup .event-edited-by {
     margin-top: 3rem;
     font-size: 0.45rem;
     color: $text-lighter;
+    cursor: pointer;
 }
 
 .EventPopup .event-description {

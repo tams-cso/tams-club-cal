@@ -73,7 +73,7 @@ class Add extends React.Component {
             end,
             currLinks,
             this.state.description,
-            this.state.addedBy
+            [this.state.addedBy]
         );
         const res = await postEvent(newEvent);
 

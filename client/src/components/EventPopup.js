@@ -31,6 +31,7 @@ class EventPopup extends React.Component {
             description: '',
             editedBy: '',
             type: 'event',
+            showEditedBy: false,
         };
         this.handleInputChange = this.handleInputChange.bind(this);
     }
@@ -117,12 +118,11 @@ class EventPopup extends React.Component {
                 end,
                 currLinks,
                 this.state.description,
-                this.state.event.addedBy,
                 editedBy
             );
             // POST event
-            postEvent(fullEvent, this.state.event.objId).then((status) => {
-                if (status === 200) {
+            postEvent(fullEvent, this.state.event.objId).then((res) => {
+                if (res.status === 200) {
                     var eventObj = new EventInfo(
                         this.state.event.objId,
                         this.state.type,
@@ -154,6 +154,10 @@ class EventPopup extends React.Component {
         if (this.state.endTime == '' && this.state.type == 'event') invalid.push('End Time');
         if (this.state.editedBy == '') invalid.push('Edited By Name');
         return invalid;
+    };
+
+    toggleEditedBy = () => {
+        this.setState({ showEditedBy: !this.state.showEditedBy });
     };
 
     componentDidMount() {
@@ -230,6 +234,14 @@ class EventPopup extends React.Component {
         }
         if (extraLinks.length > 0) extraLinks.push(<br key="links-break" />);
 
+        // Create edited by display (if set to true or else just display added by)
+        var editedByDisplay = `Added by: ${this.state.event.editedBy[0]}`;
+        if (this.state.showEditedBy) {
+            for (var i = 1; i < this.state.event.editedBy.length; i++) {
+                editedByDisplay += `<br />Edited by: ${this.state.event.editedBy[i]}`;
+            }
+        }
+
         return (
             <div className="EventPopup">
                 <div className={'display' + (!this.props.edit ? ' active' : ' inactive')}>
@@ -245,7 +257,11 @@ class EventPopup extends React.Component {
                             <p className="event-date">{getFormattedDate(this.state.event)}</p>
                             <p className="event-time">{getFormattedTime(this.state.event)}</p>
                             {linkData}
-                            <p className="event-added-by">{'Added by: ' + this.state.event.addedBy}</p>
+                            <p
+                                className="event-edited-by"
+                                onClick={this.toggleEditedBy}
+                                dangerouslySetInnerHTML={{ __html: editedByDisplay }}
+                            ></p>
                             <ActionButton onClick={this.openEdit}>Edit</ActionButton>
                         </div>
                         <div className="event-right home-side">
