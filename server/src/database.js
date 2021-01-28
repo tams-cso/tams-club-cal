@@ -41,8 +41,6 @@ async function getVolunteering() {
     }
 }
 
-function updateClubs() {}
-
 async function addFeedback(feedback) {
     try {
         const db = client.db('feedback');
@@ -99,8 +97,7 @@ async function addEvent(event) {
         dataCollection.insertOne({
             objId,
             links: event.links,
-            addedBy: event.addedBy,
-            editedBy: [],
+            editedBy: event.editedBy,
             description: event.description,
         });
         return objId;
@@ -131,8 +128,7 @@ async function updateEvent(event, id) {
             {
                 $set: {
                     links: event.links,
-                    addedBy: event.addedBy,
-                    editedBy: [],
+                    editedBy: event.editedBy,
                     description: event.description,
                 },
             }
@@ -272,7 +268,6 @@ async function deleteClub(id) {
 module.exports = {
     getClubList,
     getClub,
-    updateClubs,
     addFeedback,
     addEvent,
     getEvent,

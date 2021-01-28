@@ -7,10 +7,9 @@
  * @param {string} end The time in UTC milliseconds that the event ends
  * @param {string[]} links The link to the zoom meeting/fb post of the event
  * @param {string} description The description of the event
- * @param {string} addedBy Who added the event
  * @param {string[]} editedBy The editors of the event
  */
-export function Event(type, name, club, start, end, links, description, addedBy, editedBy = []) {
+export function Event(type, name, club, start, end, links, description, editedBy = []) {
     this.type = type;
     this.name = name;
     this.club = club;
@@ -18,7 +17,6 @@ export function Event(type, name, club, start, end, links, description, addedBy,
     this.end = end;
     this.links = links;
     this.description = description;
-    this.addedBy = addedBy;
     this.editedBy = editedBy;
 }
 
@@ -47,14 +45,12 @@ export function EventInfo(objId, type, name, club, start, end) {
  * @param {string} objId The unique ID to match the info and data objects
  * @param {string[]} links The link to the zoom meeting/fb post of the event
  * @param {string} description The description of the event
- * @param {string} addedBy Who added the event
  * @param {string[]} editedBy List of people who edited the event
  */
-export function EventData(objId, links, description, addedBy, editedBy) {
+export function EventData(objId, links, description, editedBy) {
     this.objId = objId;
     this.links = links;
     this.description = description;
-    this.addedBy = addedBy;
     this.editedBy = editedBy;
 }
 
