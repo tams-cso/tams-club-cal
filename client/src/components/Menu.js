@@ -22,7 +22,9 @@ class Menu extends React.Component {
 
         if (this.props.location.pathname.includes('/search')) this.setState({ searchBar: null });
         else this.setState({ searchBar: <SearchBar className="menu-item"></SearchBar> });
-        if (this.props.location.search === '') window.scrollTo(0, 0);
+        if (this.props.location.search === '' && this.props.location.pathname !== prevProps.location.pathname) {
+            window.scrollTo(0, 0);
+        }
     }
 
     render() {
