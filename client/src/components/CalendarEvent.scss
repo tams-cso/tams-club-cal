@@ -1,1 +1,53 @@
+/**
+ * The CalendarEvent component is a simple component used inside of the CalendarDay component. Each
+ * of event will display an event and its relevant information with the following general format:
+ *
+ * A single line with the event type, start time, and event name
+ */
+
 @import '../custom.scss';
+
+.calendar-event {
+    display: flex;
+    justify-content: flex-start;
+    align-items: center;
+    margin: 0 0.15rem 0.15rem 0.15rem;
+
+    font-family: $alt-font;
+    font-weight: 800;
+}
+
+.calendar-event:hover {
+    cursor: pointer;
+    background-color: $background-tint;
+}
+
+.calendar-event-type {
+    height: 0.3rem;
+    width: 0.3rem;
+    flex-basis: 0.3rem;
+    flex-grow: 0;
+    flex-shrink: 0;
+    border-radius: 0.05rem;
+    margin: 0 0.15rem 0 0.1rem;
+
+    background-color: $type-event;
+}
+
+.event-type-signup {
+    background-color: $type-signup;
+}
+
+.calendar-event-time {
+    margin: 0 0.1rem 0 0.1rem;
+    color: $text-light;
+    font-size: 0.35rem;
+}
+
+.calendar-event-name {
+    margin: 0 0.1rem 0 0;
+    font-size: 0.4rem;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}

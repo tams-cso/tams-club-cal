@@ -1,17 +1,18 @@
 @import '../custom.scss';
 
-.Clubs {
-    margin: 1.25rem 7rem 1rem;
-
-}
-
 .club-card-list {
+    padding: 1.25rem 7vw 1rem;
     display: grid;
     grid-template-columns: repeat(auto-fill, 9rem);
     row-gap: 1rem;
-    justify-content: start;
+    justify-content: center;
 }
 
 .club-card-list > .ClubCard {
     margin: 0 0.5rem;
+}
+
+.clubs-add-club-container {
+    margin-bottom: 1rem;
+    text-align: center;
 }

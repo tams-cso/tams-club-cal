@@ -1,0 +1,64 @@
+name: 'Build and Deploy App'
+
+on:
+  push:
+    tags: 
+      - 'v-*'
+jobs:
+  deploy:
+    name: Deploy App
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+      
+      - name: Use NodeJS 14
+        uses: actions/setup-node@v2
+        with:
+          node-version: '14'
+      
+      - name: Build client and zip server files
+        env:
+          MONGO_USER: ${{ secrets.MONGO_USER }}
+          MONGO_PASS: ${{ secrets.MONGO_PASS }}
+          DROPBOX_TOKEN: ${{ secrets.DROPBOX_TOKEN }}
+        run: |
+          npm install -g yarn
+          cd $GITHUB_WORKSPACE && ls -la
+          cd client
+          echo "{\"backend\":\"https://api.tams.club\"}" >| src/files/config.json
+          yarn install && yarn build
+          cd build
+          zip -r ../../tams-club-cal-client.zip .
+          cd ../../server
+          echo "MONGO_USER=$MONGO_USER" >| .env
+          echo "MONGO_PASS=$MONGO_PASS" >> .env
+          echo "DROPBOX_TOKEN=$DROPBOX_TOKEN" >> .env
+          echo "PORT=8081" >> .env
+          yarn install
+          zip -r ../tams-club-cal-server.zip .
+          cd ..
+        
+      - name: Deploy to Droplet with scp
+        uses: appleboy/scp-action@master
+        with:
+          host: ${{ secrets.HOST }}
+          username: ${{ secrets.USERNAME }}
+          key: ${{ secrets.KEY }}
+          source: 'tams-club-cal-client.zip,tams-club-cal-server.zip'
+          target: '/var/www'
+      
+      - name: Unzip Files on Droplet
+        uses: appleboy/ssh-action@master
+        with:
+          host: ${{ secrets.HOST }}
+          username: ${{ secrets.USERNAME }}
+          key: ${{ secrets.KEY }}
+          script: |
+            cd /var/www
+            rm -rf tams-club-cal-client/{*,.*}
+            rm -rf tams-club-cal-server/{*,.*}
+            unzip tams-club-cal-client.zip -d tams-club-cal-client
+            unzip tams-club-cal-server.zip -d tams-club-cal-server
+            rm tams-club-cal-client.zip
+            rm tams-club-cal-server.zip

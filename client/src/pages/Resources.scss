@@ -1,10 +1,11 @@
 @import '../custom.scss';
 
 .links-title {
-    margin: 1rem 0 0.5rem;
+    padding-top: 1rem;
+    margin-bottom: 0.5rem;
 }
 
-.link-container {
+.resources-link-container {
     display: flex;
     flex-direction: row;
     justify-content: center;
@@ -12,7 +13,7 @@
     margin-bottom: 1rem;
 }
 
-.link-container > .LinkBox {
+.resources-link {
     width: 9rem;
     margin: 0.4rem 0.4rem;
 }
@@ -21,10 +22,9 @@
     display: grid;
     gap: 1rem;
     grid-template-columns: repeat(auto-fill, 9rem);
-    justify-items: center;
+    justify-content: center;
     align-items: center;
-    margin: 0 6rem 1rem;
-    justify-content: start;
+    margin: 0 6vw 1rem;
 }
 
 .volunteering-filters {
@@ -46,19 +46,12 @@
     transition: 0.2s;
 }
 
-$filter-all: $background-tint;
-$filter-limited: #FFB258;
-$filter-semester: #FF8B99;
-$filter-set-times: #ABB8FF;
-$filter-weekly: #D38CFF;
-$filter-open: #82EE9A;
-
 .vol-filter.all {
     border-color: $filter-all;
 }
 
 .vol-filter.all.active,
-.vol-filter.all:hover {
+.volunteering-filters .vol-filter.all:hover {
     background-color: $filter-all;
 }
 
@@ -67,7 +60,7 @@ $filter-open: #82EE9A;
 }
 
 .vol-filter.limited.active,
-.vol-filter.limited:hover {
+.volunteering-filters .vol-filter.limited:hover {
     background-color: $filter-limited;
 }
 
@@ -76,7 +69,7 @@ $filter-open: #82EE9A;
 }
 
 .vol-filter.semester.active,
-.vol-filter.semester:hover {
+.volunteering-filters .vol-filter.semester:hover {
     background-color: $filter-semester;
 }
 
@@ -85,7 +78,7 @@ $filter-open: #82EE9A;
 }
 
 .vol-filter.set-times.active,
-.vol-filter.set-times:hover {
+.volunteering-filters .vol-filter.set-times:hover {
     background-color: $filter-set-times;
 }
 
@@ -94,7 +87,7 @@ $filter-open: #82EE9A;
 }
 
 .vol-filter.weekly.active,
-.vol-filter.weekly:hover {
+.volunteering-filters .vol-filter.weekly:hover {
     background-color: $filter-weekly;
 }
 
@@ -103,10 +96,16 @@ $filter-open: #82EE9A;
 }
 
 .vol-filter.open.active,
-.vol-filter.open:hover {
+.volunteering-filters .vol-filter.open:hover {
     background-color: $filter-open;
 }
 
 .vol-filter:hover {
     cursor: pointer;
+    box-shadow: 0 0 0.2rem 0.05rem $background-tint;
+}
+
+.resources-add-volunteering-container {
+    text-align: center;
+    margin-bottom: 1rem;
 }

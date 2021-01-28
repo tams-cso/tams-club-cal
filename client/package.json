@@ -7,19 +7,25 @@
         "Dylan Li <dylanli.yitong@gmail.com> (https://github.com/The-Box-Lord/)"
     ],
     "dependencies": {
+        "browser-image-compression": "^1.0.14",
         "dayjs": "^1.9.8",
+        "fuse.js": "^6.4.6",
         "node-sass": "4.14.1",
+        "querystring": "^0.2.0",
         "react": "^17.0.1",
         "react-dom": "^17.0.1",
+        "react-redux": "^7.2.2",
         "react-router": "^5.2.0",
         "react-router-dom": "^5.2.0",
-        "react-scripts": "4.0.0"
+        "react-scripts": "4.0.0",
+        "redux": "^4.0.5"
     },
     "scripts": {
         "start": "react-scripts start",
         "build": "react-scripts build",
         "test": "react-scripts test",
-        "eject": "react-scripts eject"
+        "eject": "react-scripts eject",
+        "format": "prettier --config ../.prettierrc --write ."
     },
     "browserslist": {
         "production": [
@@ -32,5 +38,8 @@
             "last 1 firefox version",
             "last 1 safari version"
         ]
+    },
+    "devDependencies": {
+        "prettier": "^2.2.1"
     }
 }

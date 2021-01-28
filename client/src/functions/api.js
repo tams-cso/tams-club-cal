@@ -6,7 +6,11 @@ import { Club, ClubInfo, ClubData, Event, EventInfo, EventData, Volunteering } f
  * @returns {Promise<EventData>} An array of all events' basic information
  */
 async function getEvent(id) {
-    return await fetch(`${config.backend}/event?id=${id}`).then((res) => res.json());
+    try {
+        return await fetch(`${config.backend}/event?id=${id}`).then((res) => res.json());
+    } catch (error) {
+        console.dir(error);
+    }
 }
 
 /**
@@ -15,21 +19,33 @@ async function getEvent(id) {
  */
 async function getEventList() {
     // TODO: Add a start and end time range
-    return await fetch(`${config.backend}/event-list`).then((res) => res.json());
+    try {
+        return await fetch(`${config.backend}/event-list`).then((res) => res.json());
+    } catch (error) {
+        console.dir(error);
+    }
 }
 
 /**
- * POST to /add - Creates an event
+ * POST to /add - Creates or updates an event
  * @param {Event} event Event object
+ * @param {string} [id] ID to update
  * @returns {Promise<number>} POST status [200 for Success & 400 for Failure]
  */
-async function postEvent(event) {
-    const res = await fetch(`${config.backend}/add-event`, {
-        method: 'POST',
-        body: JSON.stringify(event),
-        headers: { 'Content-Type': 'application/json' },
-    });
-    return res.status;
+async function postEvent(event, id = null) {
+    var update = id !== undefined && id !== null ? `?update=true&id=${id}` : '';
+    try {
+        const res = await fetch(`${config.backend}/add-event${update}`, {
+            method: 'POST',
+            body: JSON.stringify(event),
+            headers: { 'Content-Type': 'application/json' },
+        });
+        const jsonData = await res.json();
+        return { status: res.status, id: jsonData.id };
+    } catch (error) {
+        console.dir(error);
+        return { status: 400, id: null };
+    }
 }
 
 /**
@@ -37,7 +53,14 @@ async function postEvent(event) {
  * @returns {Promise<ClubData>} Object of club specified by id
  */
 async function getClub(id) {
-    return await fetch(`${config.backend}/club?id=${id}`).then((res) => res.json());
+    try {
+        return await fetch(`${config.backend}/club?id=${id}`).then((res) => {
+            if (res.status === 400) return null;
+            else return res.json();
+        });
+    } catch (error) {
+        console.dir(error);
+    }
 }
 
 /**
@@ -45,7 +68,61 @@ async function getClub(id) {
  * @returns {Promise<ClubInfo[]>} An array of all clubs' basic information
  */
 async function getClubList() {
-    return await fetch(`${config.backend}/club-list`).then((res) => res.json());
+    try {
+        return await fetch(`${config.backend}/club-list`).then((res) => res.json());
+    } catch (error) {
+        console.dir(error);
+    }
+}
+
+/**
+ * POST to /add-club - Creates or updates a club
+ * @param {Club} club Club object
+ * @param {string} [id] ID to update
+ * @returns {Promise<object | null>} POST response of a string for the updated cover image thumbnail url
+ */
+async function postClub(club, id = null) {
+    var data = new FormData();
+    data.append('data', JSON.stringify(club));
+    data.append('img', club.coverImgBlobs.img);
+    data.append('thumb', club.coverImgBlobs.thumb);
+    for (var i = 0; i < club.execProfilePicBlobs.length; i++) {
+        if (club.execProfilePicBlobs[i] !== undefined) data.append(`exec${i}`, club.execProfilePicBlobs[i]);
+    }
+
+    var update = id !== undefined && id !== null ? `?update=true&id=${id}` : '';
+    try {
+        const res = await fetch(`${config.backend}/add-club${update}`, {
+            method: 'POST',
+            body: data,
+        });
+        const jsonData = await res.json();
+        return { status: res.status, id: jsonData.id };
+    } catch (error) {
+        console.dir(error);
+        return { status: 400, id: null };
+    }
+}
+
+/**
+ * POST to /add-volunteering - Adds or updates a volunteering event
+ *
+ * @param {Volunteering} vol The volunteering object
+ * @param {string} [id] ID to update
+ * @returns {Promise<string>} The generated id or the id that was updated
+ */
+async function postVolunteering(vol, id) {
+    var update = id !== undefined && id !== null ? `?update=true&id=${id}` : '';
+    try {
+        const res = await fetch(`${config.backend}/add-volunteering${update}`, {
+            method: 'POST',
+            body: JSON.stringify(vol),
+            headers: { 'Content-Type': 'application/json' },
+        });
+        return res.json();
+    } catch (error) {
+        console.dir(error);
+    }
 }
 
 /**
@@ -53,7 +130,11 @@ async function getClubList() {
  * @returns {Promise<Volunteering[]>} An array of all volunteering opportunities
  */
 async function getVolunteering() {
-    return await fetch(`${config.backend}/volunteering`).then((res) => res.json());
+    try {
+        return await fetch(`${config.backend}/volunteering`).then((res) => res.json());
+    } catch (error) {
+        console.dir(error);
+    }
 }
 
 /**
@@ -63,12 +144,40 @@ async function getVolunteering() {
  */
 async function postFeedback(feedback) {
     console.log(feedback);
-    const res = await fetch(`${config.backend}/feedback`, {
-        method: 'POST',
-        body: JSON.stringify({ feedback }),
-        headers: { 'Content-Type': 'application/json' },
-    });
-    return res.status;
+    try {
+        const res = await fetch(`${config.backend}/feedback`, {
+            method: 'POST',
+            body: JSON.stringify({ feedback }),
+            headers: { 'Content-Type': 'application/json' },
+        });
+        return res.status;
+    } catch (error) {
+        console.dir(error);
+    }
 }
 
-export { getClub, getClubList, postFeedback, postEvent, getEvent, getEventList, getVolunteering };
+async function deleteClub(id) {
+    try {
+        const res = await fetch(`${config.backend}/delete-club`, {
+            method: 'POST',
+            body: JSON.stringify({ id }),
+            headers: { 'Content-Type': 'application/json' },
+        });
+        return res.status;
+    } catch (error) {
+        console.dir(error);
+    }
+}
+
+export {
+    getClub,
+    getClubList,
+    postFeedback,
+    postEvent,
+    getEvent,
+    getEventList,
+    getVolunteering,
+    postVolunteering,
+    postClub,
+    deleteClub,
+};

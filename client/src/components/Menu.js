@@ -1,16 +1,31 @@
 import './Menu.scss';
 import React from 'react';
-import { NavLink } from 'react-router-dom';
+import { NavLink, withRouter } from 'react-router-dom';
+import SearchBar from './SearchBar';
 
 class Menu extends React.Component {
     constructor(props) {
         super(props);
-        this.state = { mobileDropdown: false };
+        this.state = { mobileDropdown: false, searchBar: <SearchBar className="menu-item"></SearchBar> };
     }
 
     clickDropdown = () => {
         this.setState({ mobileDropdown: !this.state.mobileDropdown });
     };
+
+    componentDidMount() {
+        if (location.pathname.includes('/search')) this.setState({ searchBar: null });
+    }
+
+    componentDidUpdate(prevProps) {
+        if (this.props.location === prevProps.location) return;
+
+        if (this.props.location.pathname.includes('/search')) this.setState({ searchBar: null });
+        else this.setState({ searchBar: <SearchBar className="menu-item"></SearchBar> });
+        if (this.props.location.search === '' && this.props.location.pathname !== prevProps.location.pathname) {
+            window.scrollTo(0, 0);
+        }
+    }
 
     render() {
         return (
@@ -20,7 +35,7 @@ class Menu extends React.Component {
                         className="menu-item menu-logo"
                         activeClassName="active"
                         to="/"
-                        isActive={() => ['/', '/event'].includes(window.location.pathname)}
+                        isActive={() => ['/', '/events'].includes(window.location.pathname)}
                         exact
                     >
                         <div className="menu-logo-tams">TAMS</div>
@@ -38,9 +53,7 @@ class Menu extends React.Component {
                     <NavLink className="menu-item" activeClassName="active" to="/about" exact>
                         About
                     </NavLink>
-                    <div className="menu-item menu-search">
-                        <input className="search-bar" type="text" placeholder="Search..."></input>
-                    </div>
+                    <div className="search-bar-wrapper menu-item">{this.state.searchBar}</div>
                 </div>
                 <div className="mobile-menu">
                     <div className="mobile-menu-title">TAMS Club Calendar</div>
@@ -78,4 +91,4 @@ class Menu extends React.Component {
     }
 }
 
-export default Menu;
+export default withRouter(Menu);

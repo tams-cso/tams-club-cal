@@ -1,13 +1,12 @@
 import React from 'react';
-import dayjs from 'dayjs';
-import utc from 'dayjs/plugin/utc';
-import timezone from 'dayjs/plugin/timezone';
+import { connect } from 'react-redux';
+
 import { postEvent } from '../functions/api';
 import { Event } from '../functions/entries';
-import './Add.scss';
+import { parseTimeZone, getTimezone } from '../functions/util';
+import { addEvent } from '../redux/actions';
 
-dayjs.extend(utc);
-dayjs.extend(timezone);
+import './Add.scss';
 
 class Add extends React.Component {
     constructor(props) {
@@ -45,52 +44,59 @@ class Add extends React.Component {
         this.setState({ links: oldLinkList });
     }
 
-    add = () => {
+    add = async () => {
         var invalid = this.testValid();
-        if (invalid.length == 0) {
-            // Filter out empty links
-            var currLinks = this.state.links;
-            var i = 0;
-            while (i != currLinks.length) {
-                if (currLinks[i] == '') currLinks.splice(i, 1);
-                else i++;
-            }
-
-            // Calculate milliseconds from starting/ending datetimes
-            var start = dayjs.tz(`${this.state.startDate} ${this.state.startTime}`, 'America/Chicago');
-            var end = dayjs.tz(`${this.state.endDate} ${this.state.endTime}`, 'America/Chicago');
-
-            // POST event
-            console.log('submitted!');
-            postEvent(
-                new Event(
-                    this.state.type,
-                    this.state.name,
-                    this.state.clubName,
-                    start.valueOf(),
-                    end.valueOf(),
-                    currLinks,
-                    this.state.description,
-                    this.state.addedBy
-                )
-            ).then((status) => {
-                this.setState({
-                    name: '',
-                    clubName: '',
-                    startDate: '',
-                    startTime: '',
-                    endDate: '',
-                    endTime: '',
-                    links: [''],
-                    description: '',
-                    addedBy: '',
-                    type: 'event',
-                    invalid: [],
-                });
-                alert(status == 200 ? 'Successfully added!' : 'Adding event failed :((');
-            });
-        } else {
+        if (invalid.length !== 0) {
             this.setState({ invalid });
+            return;
+        }
+        // Filter out empty links
+        var currLinks = this.state.links;
+        var i = 0;
+        while (i != currLinks.length) {
+            if (currLinks[i] == '') currLinks.splice(i, 1);
+            else i++;
+        }
+
+        // Calculate milliseconds from starting/ending datetimes
+        var end = null;
+        var start = parseTimeZone(`${this.state.startDate} ${this.state.startTime}`, getTimezone());
+        if (this.state.type === 'event')
+            var end = parseTimeZone(`${this.state.endDate} ${this.state.endTime}`, getTimezone());
+
+        // POST event
+        const newEvent = new Event(
+            this.state.type,
+            this.state.name,
+            this.state.clubName,
+            start,
+            end,
+            currLinks,
+            this.state.description,
+            [this.state.addedBy]
+        );
+        const res = await postEvent(newEvent);
+
+        if (res.status === 200) {
+            newEvent.objId = res.id;
+            this.props.addEvent(newEvent);
+
+            this.setState({
+                name: '',
+                clubName: '',
+                startDate: '',
+                startTime: '',
+                endDate: '',
+                endTime: '',
+                links: [''],
+                description: '',
+                addedBy: '',
+                type: 'event',
+                invalid: [],
+            });
+            alert('Sucessfully added event!');
+        } else {
+            alert('Adding event failed :((');
         }
     };
 
@@ -100,8 +106,8 @@ class Add extends React.Component {
         if (this.state.clubName == '') invalid.push('Club Name');
         if (this.state.startDate == '') invalid.push('Start Date');
         if (this.state.startTime == '') invalid.push('Start Time');
-        if (this.state.endDate == '') invalid.push('End Date');
-        if (this.state.endTime == '') invalid.push('End Time');
+        if (this.state.endDate == '' && this.state.type == 'event') invalid.push('End Date');
+        if (this.state.endTime == '' && this.state.type == 'event') invalid.push('End Time');
         if (this.state.addedBy == '') invalid.push('Added By Name');
         return invalid;
     };
@@ -208,6 +214,7 @@ class Add extends React.Component {
                 ></input>
                 <br />
                 {endObj}
+                {/* TODO timezone edit */}
                 <p className="timezone-message">** Timezone is America/Chicago [CST/CDT] **</p>
                 <label htmlFor="links-0">Links</label>
                 <input
@@ -251,4 +258,4 @@ class Add extends React.Component {
     }
 }
 
-export default Add;
+export default connect(null, { addEvent })(Add);

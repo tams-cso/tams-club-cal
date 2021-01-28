@@ -3,66 +3,28 @@
 
 // TODO: change fonts to use these variables
 $main-font: 'Bubblegum Sans', sans-serif;
-$cal-font: 'Montserrat', sans-serif;
+$alt-font: 'Montserrat', sans-serif;
 
 // Color Variables
 
 $background: white;
 $background-tint: #dddddd;
+$background-dark: #aaaaaa;
 $primary: #00cd2d;
+$primary-dark: #01831d;
 $bad: #ff482f;
 $type-event: #ffc178;
+$type-event-darker: #ff9a3d;
 $type-signup: #d49dff;
 $text-primary: black;
 $text-light: #777777;
 $text-lighter: #9e9e9e;
 
-// General formats
+// Volunteering Filter Colors
 
-::placeholder {
-    color: $text-lighter;
-    opacity: 1;
-}
-
-h1 {
-    margin: 0 0 0.5rem 0;
-    text-align: center;
-    font-weight: 300;
-}
-
-input,
-textarea {
-    font-family: $main-font;
-    border: 0.05rem solid $background-tint;
-    border-radius: 0.1rem;
-    padding: 0.1rem;
-}
-
-label {
-    margin-right: 1rem;
-    color: $text-light;
-}
-
-button {
-    font-family: $main-font;
-    outline: none;
-}
-
-.smol-spacer {
-    height: 0.25rem;
-}
-
-.line-in {
-    border: none;
-    border-bottom: 0.05rem solid $background-tint;
-    font-size: 1rem;
-    margin-bottom: 0.5rem;
-}
-
-.line-in::placeholder {
-    color: $background-tint;
-}
-
-.line-in:focus {
-    outline: none;
-}
+$filter-all: $background-tint;
+$filter-limited: #ffb258;
+$filter-semester: #ff8b99;
+$filter-set-times: #abb8ff;
+$filter-weekly: #d38fff;
+$filter-open: #82ee9a;

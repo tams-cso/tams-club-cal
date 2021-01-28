@@ -1,61 +1,137 @@
 @import '../custom.scss';
 
-.schedule-view, .calendar-view {
+.schedule-view,
+.calendar-view {
     display: none;
 }
 
 .schedule-view {
-    margin: 0 8rem;
+    margin: 2rem 14vw 0 14vw;
+    padding-bottom: 0.5rem;
 }
 
-.schedule-view > .ScheduleEvent:hover {
-    cursor: pointer;
-    background-color: $background-tint;
+.calendar-view {
+    margin-top: 2.5rem;
 }
 
-$grid-border: 0.025rem solid black;
+$grid-border: 0.025rem solid $text-primary;
 $rh: 5rem;
 
-.calendar {
+.calendar-header,
+.calendar-days {
     display: grid;
-    grid-template-columns: 1fr 1fr 1fr 1fr 1fr 1fr 1fr;
-    grid-template-rows: auto $rh $rh $rh $rh $rh;
-    border-bottom: $grid-border;
-    margin: 1rem 4rem;
+    grid-template-columns: repeat(7, 1fr);
 }
 
-.calendar > .CalendarDay {
+.calendar-header {
+    margin: 1rem 4rem 0 4rem;
+}
+
+.calendar-days {
+    grid-auto-rows: $rh;
+    border-bottom: $grid-border;
+    margin: 0 4rem 1rem 4rem;
+}
+
+.calendar-days > .calendar-day {
     border: 0;
     border-top: $grid-border;
     border-left: $grid-border;
 }
 
-.CalendarDay:nth-child(7n) {
+.calendar-day:nth-child(7n) {
     border-right: $grid-border;
+}
+
+.home-top {
+    position: fixed;
+    padding-top: 0.5rem;
+    top: 2.5rem;
+    height: 1.5rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    background-color: $background;
+    z-index: 1;
 }
 
 .days-of-week {
     text-align: center;
 }
 
-.view-active {
-    display: block;
-}
-
-// TODO: Change this thing to a flexbox
-
 .month-year {
     text-align: center;
+    width: 6.5rem;
+    padding: 0 0.2rem;
 }
 
-.view-switch {
+.dummy-change-month {
+    display: none;
+    width: 1.3rem;
+}
+
+.today {
+    display: none;
     font-family: $main-font;
+    text-align: center;
     background-color: $background;
-    border: 0.1rem solid black;
+    width: 2.5rem;
+    border: 0.1rem solid $text-primary;
     padding: 0.1rem 0.25rem;
     font-size: 0.75rem;
     border-radius: 0.25rem;
     transition: 0.2s;
+    // margin-right: 15vw;
+}
+
+.today:hover {
+    cursor: pointer;
+    background-color: $background-tint;
+}
+
+.dummy-today {
+    display: none;
+    margin-right: 5vw;
+    width: 5.2rem;
+}
+
+.change-month {
+    display: none;
+    font-family: $main-font;
+    background-color: $background;
+    width: 1.3rem;
+    border: 0.1rem solid $text-primary;
+    padding: 0.1rem 0.25rem;
+    font-size: 0.75rem;
+    border-radius: 0.25rem;
+    transition: 0.2s;
+}
+
+.change-month:hover {
+    cursor: pointer;
+    background-color: $background-tint;
+}
+
+.month-back {
+    margin-left: 3vw;
+}
+
+.month-forward {
+    margin-right: 3vw;
+}
+
+.view-switch {
+    font-family: $main-font;
+    text-align: center;
+    background-color: $background;
+    width: 7.7rem;
+    border: 0.1rem solid $text-primary;
+    padding: 0.1rem 0.25rem;
+    font-size: 0.75rem;
+    border-radius: 0.25rem;
+    transition: 0.2s;
+    margin-left: 5vw;
 }
 
 .view-switch:hover {
@@ -63,28 +139,23 @@ $rh: 5rem;
     background-color: $background-tint;
 }
 
-.home-top {
-    padding: 1.25rem 0 0.25rem 0;
-    margin: 0 5rem;
-    display: flex;
-    justify-content: space-around;
-}
-
 .dummy {
-    width: 7rem;
+    display: none;
+    margin-right: 5vw;
+    width: 7.7rem;
 }
 
-@media handheld and (max-width: 992px),
-screen and (max-device-width: 992px),
-screen and (max-width: 992px) {
+.view-active {
+    display: block;
+}
+
+@media handheld and (max-width: 992px), screen and (max-device-width: 992px), screen and (max-width: 992px) {
     .schedule-view {
         margin: 0 4rem;
     }
 }
 
-@media handheld and (max-width: 652px),
-screen and (max-device-width: 652px),
-screen and (max-width: 652px) {
+@media handheld and (max-width: 652px), screen and (max-device-width: 652px), screen and (max-width: 652px) {
     .schedule-view {
         margin: 0;
     }

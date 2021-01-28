@@ -7,9 +7,9 @@
  * @param {string} end The time in UTC milliseconds that the event ends
  * @param {string[]} links The link to the zoom meeting/fb post of the event
  * @param {string} description The description of the event
- * @param {string} addedBy Who added the event
+ * @param {string[]} editedBy The editors of the event
  */
-function Event(type, name, club, start, end, links, description, addedBy) {
+export function Event(type, name, club, start, end, links, description, editedBy = []) {
     this.type = type;
     this.name = name;
     this.club = club;
@@ -17,8 +17,7 @@ function Event(type, name, club, start, end, links, description, addedBy) {
     this.end = end;
     this.links = links;
     this.description = description;
-    this.addedBy = addedBy;
-    this.editedBy = "";
+    this.editedBy = editedBy;
 }
 
 /**
@@ -30,13 +29,15 @@ function Event(type, name, club, start, end, links, description, addedBy) {
  * @param {number} start The millisecond datetime that the event starts
  * @param {number} end The millisecond datetime that the event ends
  */
-function EventInfo(objId, type, name, club, start, end) {
+export function EventInfo(objId, type, name, club, start, end) {
     this.objId = objId;
     this.type = type;
     this.name = name;
     this.club = club;
     this.start = start;
     this.end = end;
+    this.startDayjs = null;
+    this.endDayjs = null;
 }
 
 /**
@@ -44,14 +45,12 @@ function EventInfo(objId, type, name, club, start, end) {
  * @param {string} objId The unique ID to match the info and data objects
  * @param {string[]} links The link to the zoom meeting/fb post of the event
  * @param {string} description The description of the event
- * @param {string} addedBy Who added the event
  * @param {string[]} editedBy List of people who edited the event
  */
-function EventData(objId, links, description, addedBy, editedBy) {
+export function EventData(objId, links, description, editedBy) {
     this.objId = objId;
     this.links = links;
     this.description = description;
-    this.addedBy = addedBy;
     this.editedBy = editedBy;
 }
 
@@ -61,20 +60,40 @@ function EventData(objId, links, description, addedBy, editedBy) {
  * @param {boolean} advised True if an advised club, otherwise false for independent club
  * @param {string} fb Link to facebook page
  * @param {string} website Link to website
- * @param {string} coverImg URL of cover image
+ * @param {string} coverImgThumbnail URL of cover image thumbnail
+ * @param {string} coverImg URL of the full-sized cover image
  * @param {string} description Description of the club
  * @param {Exec[]} execs Array of exec objects
- * @param {Committee[]} committee Array of committee objects
+ * @param {Committee[]} committees Array of committee objects
+ * @param {Object} coverImgBlobs Base64 encoded strings of the cover image
+ * @param {string} coverImgBlobs.img The compressed cover image
+ * @param {string} coverImgBlobs.thumb The super compressed cover image thumbnail
+ * @param {string[]} execProfilePicBlobs Base64 encoded strings of the exec profile pics in the order of the execs (null if missing)
  */
-function Club(name, advised, fb, website, coverImg, description, execs, committee) {
-    this.name = name;
-    this.advised = advised;
-    this.fb = fb;
-    this.website = website;
-    this.coverImg = coverImg;
-    this.description = description;
-    this.execs = execs;
-    this.committee = committee;
+export function Club(
+    name,
+    advised,
+    fb,
+    website,
+    coverImgThumbnail,
+    coverImg,
+    description,
+    execs,
+    committees,
+    coverImgBlobs = null,
+    execProfilePicBlobs = null
+) {
+    this.name = name || '';
+    this.advised = advised || false;
+    this.fb = fb || '';
+    this.website = website || '';
+    this.coverImgThumbnail = coverImgThumbnail || '';
+    this.coverImg = coverImg || '';
+    this.description = description || '';
+    this.execs = execs || [new Exec()];
+    this.committees = committees || [new Committee()];
+    this.coverImgBlobs = coverImgBlobs || [];
+    this.execProfilePicBlobs = execProfilePicBlobs || [];
 }
 
 /**
@@ -84,15 +103,15 @@ function Club(name, advised, fb, website, coverImg, description, execs, committe
  * @param {boolean} advised True if an advised club, otherwise false for independent club
  * @param {string} fb Link to facebook page
  * @param {string} website Link to website
- * @param {string} coverImg URL of cover image
+ * @param {string} coverImgThumbnail URL of cover image thumbnail
  */
-function ClubInfo(objId, name, advised, fb, website, coverImg) {
+export function ClubInfo(objId, name, advised, fb, website, coverImgThumbnail) {
     this.objId = objId;
     this.name = name;
     this.advised = advised;
     this.fb = fb;
     this.website = website;
-    this.coverImg = coverImg;
+    this.coverImgThumbnail = coverImgThumbnail;
 }
 
 /**
@@ -102,8 +121,9 @@ function ClubInfo(objId, name, advised, fb, website, coverImg) {
  * @param {string} description Description of the club
  * @param {Exec[]} execs Array of exec objects
  * @param {Committee[]} committee Array of committee objects
+ * @param {string} coverImg URL of the full-sized cover image
  */
-function ClubData(infoId, description, execs, committee) {
+export function ClubData(infoId, description, execs, committee, coverImg) {
     this.objId = objId;
     this.infoId = infoId;
     this.description = description;
@@ -124,12 +144,12 @@ function ClubData(infoId, description, execs, committee) {
  * @param {boolean} filters.open True if volunteering opportunity is currently available, otherwise false
  * @param {string} signupTime Time of weekly signups, null if no weekly signups
  */
-function Volunteering(name, club, description, filters, signupTime) {
-    this.name = name;
-    this.club = club;
-    this.description = description;
-    this.filters = filters;
-    this.signupTime = signupTime;
+export function Volunteering(name, club, description, filters, signupTime) {
+    this.name = name || '';
+    this.club = club || '';
+    this.description = description || '';
+    this.filters = filters || { limited: false, semester: false, setTimes: false, weekly: false, open: true };
+    this.signupTime = signupTime || '';
 }
 
 /**
@@ -137,13 +157,13 @@ function Volunteering(name, club, description, filters, signupTime) {
  * @param {string} name The name of the exec
  * @param {string} position The postition of the exec
  * @param {string} description The description of the exec
- * @param {string} image The image URL of the exec
+ * @param {string} img The image URL of the exec
  */
-function Exec(name, position, description, image) {
-    this.name = name;
-    this.position = position;
-    this.description = description;
-    this.image = image;
+export function Exec(name, position, description, img) {
+    this.name = name || '';
+    this.position = position || '';
+    this.description = description || '';
+    this.img = img || '';
 }
 
 /**
@@ -153,11 +173,15 @@ function Exec(name, position, description, image) {
  * @param {string} fb The facebook link of the committee
  * @param {string} website The website link of the committee
  */
-function Committee(name, description, fb, website) {
-    this.name = name;
-    this.description = description;
-    this.fb = fb;
-    this.website = website;
+export function Committee(name, description, fb, website) {
+    this.name = name || '';
+    this.description = description || '';
+    this.fb = fb || '';
+    this.website = website || '';
 }
 
-export { Event, EventInfo, EventData, Club, ClubInfo, ClubData, Volunteering, Exec, Committee };
+/**
+ * @typedef {Object} DateAndTime
+ * @property {string} date The date in the format (YYYY-MM-DD)
+ * @property {string} time The time in the format (HH:MM)
+ */

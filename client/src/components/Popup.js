@@ -1,51 +1,89 @@
 import React from 'react';
+import { getParams, isActive, isPopupInvalid } from '../functions/util';
+import { getPopupEdit, getPopupId, getPopupOpen, getPopupNew, getPopupDeleted, getPopupType } from '../redux/selectors';
+import {
+    setPopupOpen,
+    setPopupId,
+    setPopupEdit,
+    resetPopupState,
+    setPopupNew,
+    deleteSavedClub,
+} from '../redux/actions';
 import './Popup.scss';
+import { connect } from 'react-redux';
 
 class Popup extends React.Component {
-    constructor(props) {
-        super(props);
-        this.state = { active: '', id: null };
-    }
-
     activate = (id) => {
-        if (window.location.pathname == '/') this.props.history.push('/event?id=' + id);
-        else this.props.history.push(`${window.location.pathname}?id=${id}`);
-        this.setState({ active: ' active', id });
+        if (id === 'new') {
+            this.props.setPopupNew(true);
+            this.props.setPopupEdit(true);
+        }
+        this.props.setPopupId(id);
+        this.props.setPopupOpen(true);
     };
 
     close = () => {
         if (window.location.pathname == '/event') this.props.history.push('/');
         else this.props.history.push(`${window.location.pathname}`);
-        this.setState({ active: '' });
+        this.props.resetPopupState();
     };
 
     componentDidMount() {
-        const params = new URLSearchParams(window.location.search);
-        const id = params.get('id');
-        if (id == undefined || id == null) this.setState({ active: '' });
-        else this.setState({ active: ' active', id });
+        const id = getParams('id');
+        if (id !== undefined && id !== null) this.activate(id);
 
         addEventListener('keydown', (event) => {
-            if (event.key.toLowerCase() == 'escape' && this.state.active != '') {
+            if (event.key.toLowerCase() == 'escape' && this.props.open) {
                 this.close();
             }
         });
+
+        this.unlisten = this.props.history.listen(() => {
+            const id = getParams('id');
+            if (id !== undefined && id !== null) this.activate(id);
+        });
     }
 
-    componentDidUpdate(prevProps, prevState) {
-        if (this.props.active != prevProps.active) {
-            this.setState({ active: this.props.active ? ' active' : '' });
+    componentWillUnmount() {
+        this.unlisten();
+    }
+
+    componentDidUpdate() {
+        if (this.props.deleted) {
+            if (this.props.type === 'club') {
+                this.props.deleteSavedClub(this.props.id);
+                this.props.history.push('/clubs');
+            }
+            this.props.resetPopupState();
+        }
+        if (isPopupInvalid()) {
+            this.props.setPopupOpen(false);
+        }
+        if (this.props.new && getParams('id') !== 'new') {
+            this.props.setPopupNew(false);
         }
     }
 
     render() {
         return (
-            <div className={'Popup ' + this.state.active}>
-                <div className="close-bkgd" onClick={this.close}></div>
-                <div className="popup-content">{this.state.id}</div>
+            <div className={`popup ${isActive('', this.props.open)} ${this.props.noscroll ? 'noscroll' : ''}`}>
+                <div className="popup-close-bkgd" onClick={this.close}></div>
+                <div className="popup-content">{this.props.children}</div>
             </div>
         );
     }
 }
 
-export default Popup;
+const mapStateToProps = (state) => {
+    return {
+        open: getPopupOpen(state),
+        id: getPopupId(state),
+        edit: getPopupEdit(state),
+        new: getPopupNew(state),
+        deleted: getPopupDeleted(state),
+        type: getPopupType(state),
+    };
+};
+const mapDispatchToProps = { setPopupOpen, setPopupId, setPopupEdit, resetPopupState, setPopupNew, deleteSavedClub };
+
+export default connect(mapStateToProps, mapDispatchToProps)(Popup);

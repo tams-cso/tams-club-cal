@@ -1,10 +1,39 @@
+/**
+ * The CalendarDay component is a simple component used inside of the Home component on the calendar.
+ * Each day will contain the date and list of events (CalendarEvent) of that day with the following general format:
+ *
+ * 1) Date at the top left corner (color green if date is the current day)
+ * 2) List of events in the remaining space
+ * 3) Background color should be grey if not in current month
+ *
+ */
+
 @import '../custom.scss';
 
-.CalendarDay {
+.calendar-day {
+    overflow: hidden;
     border-style: solid;
 }
 
-.day {
-    font-size: 0.5rem;
+.side-month {
+    background-color: $background-tint;
+}
+
+/***** DON'T TOUCH THIS *****/
+// .CalendarDay:hover {
+//     overflow: visible;
+// }
+
+.calendar-date {
     margin: 0.25rem;
+    font-size: 0.6rem;
+}
+
+.calendar-events {
+    display: flex;
+    flex-direction: column;
+}
+
+.current-day {
+    color: $primary;
 }

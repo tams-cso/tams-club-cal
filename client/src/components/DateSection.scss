@@ -6,7 +6,10 @@
     align-items: center;
     justify-content: space-between;
     padding: 0.5rem 0;
-    font-size: 0.70rem;
+    font-size: 0.7rem;
+    position: sticky;
+    top: 4.5rem;
+    background-color: $background;
 }
 
 .line {

@@ -2,10 +2,16 @@
 
 .VolunteeringCard {
     background-color: $background;
-    filter: drop-shadow(0 0 0.1rem $background-tint);
+    box-shadow: 0 0 0.3rem $background-tint;
     text-align: center;
     width: 9rem;
     height: 7.5rem;
+    transition: 0.3s;
+}
+
+.VolunteeringCard:hover {
+    cursor: pointer;
+    box-shadow: 0 0 0.2rem 0.1rem $background-dark;
 }
 
 .overlay {
@@ -49,17 +55,17 @@
 }
 
 .f-limited {
-    color: #ffb258;
+    color: $filter-limited;
 }
 
 .f-semester {
-    color: #ff8b99;
+    color: $filter-semester;
 }
 
 .f-set-times {
-    color: #abb8ff;
+    color: $filter-set-times;
 }
 
 .f-weekly {
-    color: #d38cff;
+    color: $filter-weekly;
 }

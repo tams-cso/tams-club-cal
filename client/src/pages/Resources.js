@@ -1,96 +1,138 @@
 import React from 'react';
+import { connect } from 'react-redux';
+
 import LinkBox from '../components/LinkBox';
+import Popup from '../components/Popup';
 import VolunteeringCard from '../components/VolunteeringCard';
-import { getVolunteering } from '../functions/api';
+import VolunteeringPopup from '../components/VolunteeringPopup';
+import ActionButton from '../components/ActionButton';
+
+import { getOrFetchVolList } from '../functions/util';
+import { getSavedVolunteeringList } from '../redux/selectors';
+import { setVolunteeringList, setPopupOpen, setPopupId, setPopupNew, setPopupEdit } from '../redux/actions';
+
+import data from '../files/data.json';
 import './Resources.scss';
 
 class Resources extends React.Component {
     constructor(props) {
         super(props);
-        this.state = {};
+        this.state = { volCards: null, filter: null };
     }
 
-    createCards = (currFilter) => {
+    activatePopup = (id) => {
+        this.props.history.push(`/resources?id=${id}`);
+        this.props.setPopupId(id);
+        this.props.setPopupOpen(true);
+    };
+
+    addVolunteering = () => {
+        this.props.setPopupNew(true);
+        this.props.setPopupEdit(true);
+        this.activatePopup('new');
+    };
+
+    updateFilter = (filter) => {
+        this.setState({ filter });
+    };
+
+    createCards = () => {
+        if (this.props.volunteeringList === null) return;
         var volCards = [];
-        this.volList.forEach((volunteering) => {
-            if (currFilter === null || volunteering.filters[currFilter])
+        this.props.volunteeringList.forEach((vol) => {
+            if (this.state.filter === null || vol.filters[this.state.filter])
                 volCards.push(
                     <VolunteeringCard
-                        name={volunteering.name}
-                        club={volunteering.club}
-                        description={volunteering.description}
-                        filters={volunteering.filters}
-                        signupTime={volunteering.signupTime}
-                        key={volunteering.name}
+                        vol={vol}
+                        key={vol._id}
+                        onClick={() => {
+                            this.activatePopup(vol._id);
+                        }}
                     ></VolunteeringCard>
                 );
         });
-        this.setState({ volCards, filter: currFilter });
+        return volCards;
     };
 
-    componentDidMount() {
-        getVolunteering().then((data) => {
-            this.volList = data;
-            this.createCards(null);
-        });
+    async componentDidMount() {
+        await getOrFetchVolList();
     }
 
     render() {
+        var volCards = this.createCards();
         return (
             <div className="Resources">
+                <Popup history={this.props.history} noscroll>
+                    <VolunteeringPopup></VolunteeringPopup>
+                </Popup>
                 <h1 className="links-title">Links</h1>
-                <div className="link-container">
-                    <LinkBox href="https://docs.google.com/presentation/d/18ZPbYD5iH_2faGDtRRZUGOd70fmo8aRlWDb08qHxGas/edit?usp=sharing">
+                {/* // TODO: Extract to array in data.json */}
+                <div className="resources-link-container">
+                    <LinkBox className="resources-link" href={data.examCalendar}>
                         Exam Calendar
                     </LinkBox>
-                    <LinkBox href="https://docs.google.com/document/d/1gi7-K81MN4KLEBPCF9bv-nVxg2HMnH8ub5IXKeFM7fc/edit?usp=sharing">
+                    <LinkBox className="resources-link" href={data.academicsGuide}>
                         Academics Guide
                     </LinkBox>
-                    <LinkBox href="https://tams.unt.edu/studentlife/clubs#clubresources">Club Leader Resources</LinkBox>
+                    <LinkBox className="resources-link" href={data.clubLeaderResources}>
+                        Club Leader Resources
+                    </LinkBox>
                 </div>
                 <h1>Volunteering</h1>
                 <div className="volunteering-filters">
                     <button
-                        onClick={() => this.createCards(null)}
+                        onClick={this.updateFilter.bind(this, null)}
                         className={'vol-filter all' + (this.state.filter === null ? ' active' : '')}
                     >
                         All
                     </button>
                     <button
-                        onClick={() => this.createCards('limited')}
+                        onClick={this.updateFilter.bind(this, 'limited')}
                         className={'vol-filter limited' + (this.state.filter === 'limited' ? ' active' : '')}
                     >
                         Limited Slots
                     </button>
                     <button
-                        onClick={() => this.createCards('semester')}
+                        onClick={this.updateFilter.bind(this, 'semester')}
                         className={'vol-filter semester' + (this.state.filter === 'semester' ? ' active' : '')}
                     >
                         Semester Long
                     </button>
                     <button
-                        onClick={() => this.createCards('setTimes')}
+                        onClick={this.updateFilter.bind(this, 'setTimes')}
                         className={'vol-filter set-times' + (this.state.filter === 'setTimes' ? ' active' : '')}
                     >
                         Set Volunteering Times
                     </button>
                     <button
-                        onClick={() => this.createCards('weekly')}
+                        onClick={this.updateFilter.bind(this, 'weekly')}
                         className={'vol-filter weekly' + (this.state.filter === 'weekly' ? ' active' : '')}
                     >
                         Weekly Signups
                     </button>
                     <button
-                        onClick={() => this.createCards('open')}
+                        onClick={this.updateFilter.bind(this, 'open')}
                         className={'vol-filter open' + (this.state.filter === 'open' ? ' active' : '')}
                     >
                         Open
                     </button>
                 </div>
-                <div className="volunteering-section">{this.state.volCards}</div>
+                <div className="volunteering-section">{volCards}</div>
+                <div className="resources-add-volunteering-container">
+                    <ActionButton className="resources-add-volunteering" onClick={this.addVolunteering}>
+                        Add Volunteering
+                    </ActionButton>
+                </div>
             </div>
         );
     }
 }
 
-export default Resources;
+const mapStateToProps = (state) => {
+    return {
+        volunteeringList: getSavedVolunteeringList(state),
+    };
+};
+const mapDispatchToProps = { setVolunteeringList, setPopupOpen, setPopupId, setPopupNew, setPopupEdit };
+
+export default connect(mapStateToProps, mapDispatchToProps)(Resources);

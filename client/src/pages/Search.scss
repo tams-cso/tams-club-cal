@@ -1,0 +1,25 @@
+@import '../custom.scss';
+
+.Search {
+    text-align: center;
+}
+
+.Search .SearchBar {
+    width: 60%;
+    margin: auto;
+    margin-top: 1rem;
+    padding: 0.25rem;
+}
+
+.Search .SearchBar input {
+    width: 96%;
+}
+
+.default-search {
+    margin-top: 1rem;
+    color: $text-light;
+}
+
+.search-result-list {
+    margin: 1rem 15% 0;
+}

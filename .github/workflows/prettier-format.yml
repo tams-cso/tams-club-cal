@@ -1,0 +1,33 @@
+name: 'Format with Prettier'
+
+on: 
+  push:
+    branches: [ master ]
+
+jobs:
+  format:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+        with:
+          token: ${{ secrets.TOKEN }}
+      
+      - name: Use NodeJS 14
+        uses: actions/setup-node@v1
+        with:
+          node-version: '14'
+
+      - name: Format Files
+        run: |
+          npm install -g yarn
+          cd $GITHUB_WORKSPACE && ls -la
+          cd client
+          yarn install && yarn format
+          cd ../server
+          yarn install && yarn format
+      
+      - name: Commit Changes
+        uses: stefanzweifel/git-auto-commit-action@v4
+        with:
+          commit_message: Apply formatting changes to last commit
