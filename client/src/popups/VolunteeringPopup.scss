@@ -130,5 +130,10 @@
     .VolunteeringPopup {
         width: 90vw;
         padding: 5vw;
+        padding-bottom: 10vw;
+    }
+
+    .VolunteeringPopup .res-popup-edit {
+        display: none;
     }
 }
