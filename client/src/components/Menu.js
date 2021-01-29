@@ -2,6 +2,7 @@ import './Menu.scss';
 import React from 'react';
 import { NavLink, withRouter } from 'react-router-dom';
 import SearchBar from './SearchBar';
+import { ReactComponent as Logo } from '../files/logo-small.svg';
 
 class Menu extends React.Component {
     constructor(props) {
@@ -12,6 +13,10 @@ class Menu extends React.Component {
     clickDropdown = () => {
         this.setState({ mobileDropdown: !this.state.mobileDropdown });
     };
+
+    navHome = () => {
+        this.props.history.push('/');
+    }
 
     componentDidMount() {
         if (location.pathname.includes('/search')) this.setState({ searchBar: null });
@@ -56,7 +61,7 @@ class Menu extends React.Component {
                     <div className="search-bar-wrapper menu-item">{this.state.searchBar}</div>
                 </div>
                 <div className="mobile-menu">
-                    <div className="mobile-menu-title">TAMS Club Calendar</div>
+                    <Logo className="mobile-menu-logo" onClick={this.navHome}></Logo>
                     <svg
                         className={'hamburger' + (this.state.mobileDropdown ? ' ham-active' : '')}
                         viewBox="0 0 100 80"

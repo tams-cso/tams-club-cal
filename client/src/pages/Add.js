@@ -248,7 +248,7 @@ class Add extends React.Component {
                 ></input>
                 <br />
                 {invalidMessage}
-                <div className="center-div">
+                <div className="center-button">
                     <button className="submit-add" onClick={this.add}>
                         Add to Calendar
                     </button>

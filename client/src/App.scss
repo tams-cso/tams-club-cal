@@ -97,8 +97,14 @@ a:hover {
     fill: $bad;
 }
 
-.center-div {
+.center-button {
     margin: 0.75rem;
+    text-align: center;
+}
+
+.center-div {
+    width: 100%;
+    margin: auto;
     text-align: center;
 }
 
@@ -148,20 +154,12 @@ a:hover {
         font-size: 24px;
     }
 
-    .menu-bkgd {
-        height: 2rem;
+    h1 {
+        font-size: 2rem;
     }
 }
 
 @include media-phone-down {
-    html {
-        font-size: 24px;
-    }
-
-    h1 {
-        font-size: 2rem;
-    }
-
     .menu-bkgd {
         height: 2rem;
     }

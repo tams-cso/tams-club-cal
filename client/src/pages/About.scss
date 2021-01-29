@@ -50,3 +50,30 @@
 #feedback-submit:hover {
     filter: drop-shadow(0 0 0.15rem $background-tint);
 }
+
+/*
+ * #########################
+ * ##### MEDIA QUERIES #####
+ * #########################
+ */
+
+@include media-small-desktop-down {
+    .about {
+        margin: 1rem 5vw;
+    }
+
+    .about-header {
+        width: 90%;
+        height: fit-content;
+    }
+
+    #feedback-form {
+        width: 90%;
+    }
+}
+
+@include media-phone-down {
+    .about {
+        margin-top: 0;
+    }
+}

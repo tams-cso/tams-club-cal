@@ -58,37 +58,52 @@
 }
 
 .mobile-menu-dropdown {
+    position: fixed;
+    top: 2rem;
+    width: 100%;
     height: 0;
-    transition: height 1s;
-    background-color: $background;
-    filter: drop-shadow(0 0.05rem 0.05rem $background-tint);
     overflow: hidden;
+
+    background-color: $background;
+    box-shadow: 0 0.2rem 0.3rem $background-tint;
+    transition: height 0.65s;
+    transition-timing-function: cubic-bezier(0.075, 0.82, 0.165, 1);
 }
 
 .mob-item {
     display: none;
 }
 
-@media handheld and (max-width: 992px), screen and (max-device-width: 992px), screen and (max-width: 992px) {
+@include media-small-desktop-down {
     .Menu {
-        padding: 0.25rem 4rem 0.5rem 4rem;
+        padding: 0.25rem 3rem 0;
     }
+
     .menu-item {
-        font-size: 0.75rem;
+        font-size: 0.65rem;
     }
+}
+
+@include media-tablet-down {
+    .menu-item {
+        font-size: 0.85rem;
+    }
+
     .menu-search {
         width: 7rem;
     }
 }
 
-@media handheld and (max-width: 652px), screen and (max-device-width: 652px), screen and (max-width: 652px) {
+@include media-phone-down {
     .Menu {
         padding: 0;
         height: 2rem;
     }
+
     .menu-list {
         display: none;
     }
+
     .mobile-menu {
         display: flex !important;
         flex-direction: row;
@@ -97,19 +112,30 @@
         height: 1rem;
         padding: 0.5rem 0;
     }
-    .mobile-menu-title {
-        padding-left: 1rem;
+
+    .menu-item {
+        padding: 0.1rem;
+        font-size: 1rem;
     }
+
+    .mobile-menu-logo {
+        padding-left: 1rem;
+        height: 1.5rem;
+    }
+
     .hamburger {
         padding-right: 0.5rem;
         fill: #cccccc;
     }
+
     .ham-active {
         fill: $text-light;
     }
+
     .drop-active > .mob-item {
         display: block;
     }
+
     .drop-active {
         overflow: hidden;
         height: 7rem;
