@@ -153,21 +153,19 @@ $rh: 5rem;
     .schedule-view {
         margin: 2rem 2rem 0;
     }
+
+    .calendar-header {
+        margin: 1rem 0.5rem 0;
+    }
+
+    .calendar-days {
+        margin: 0 0.5rem 0.5rem;
+    }
 }
 
 @include media-tablet-down {
     .month-year {
         font-size: 1rem;
-    }
-}
-
-@include media-phone-down {
-    .home-top {
-        top: 2rem;
-    }
-
-    .schedule-view {
-        margin: 2rem 0.5rem;
     }
 
     // Center the month and get rid of view switcher
@@ -179,5 +177,15 @@ $rh: 5rem;
 
     .view-switch {
         display: none;
+    }
+}
+
+@include media-phone-down {
+    .home-top {
+        top: 2rem;
+    }
+
+    .schedule-view {
+        margin: 2rem 0.5rem;
     }
 }
