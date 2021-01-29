@@ -8,11 +8,18 @@
     justify-content: center;
 }
 
-.club-card-list > .ClubCard {
-    margin: 0 0.5rem;
+.club-card-list > .club-card {
+    margin: auto;
 }
 
 .clubs-add-club-container {
     margin-bottom: 1rem;
     text-align: center;
+}
+
+@include media-phone-down {
+    .club-card-list {
+        padding: 0;
+        grid-template-columns: repeat(auto-fill, 7rem);
+    }
 }
