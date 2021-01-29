@@ -19,7 +19,7 @@
 
 @include media-phone-down {
     .club-card-list {
-        padding: 0;
+        padding: 1rem 0 0.5rem;
         grid-template-columns: repeat(auto-fill, 7rem);
     }
 }
