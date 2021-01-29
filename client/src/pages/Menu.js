@@ -18,7 +18,7 @@ class Menu extends React.Component {
 
     navHome = () => {
         this.props.history.push('/');
-    }
+    };
 
     componentDidMount() {
         if (location.pathname.includes('/search')) this.setState({ searchBar: null });
@@ -77,7 +77,13 @@ class Menu extends React.Component {
                     </svg>
                 </div>
                 <div className={'mobile-menu-dropdown' + (this.state.mobileDropdown ? ' drop-active' : '')}>
-                    <NavLink className="menu-item mob-item" activeClassName="active" to="/" exact>
+                    <NavLink
+                        className="menu-item mob-item"
+                        activeClassName="active"
+                        isActive={() => ['/', '/events'].includes(window.location.pathname)}
+                        to="/"
+                        exact
+                    >
                         Home
                     </NavLink>
                     <NavLink className="menu-item mob-item" activeClassName="active" to="/resources" exact>
