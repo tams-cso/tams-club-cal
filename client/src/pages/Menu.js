@@ -1,8 +1,10 @@
-import './Menu.scss';
 import React from 'react';
 import { NavLink, withRouter } from 'react-router-dom';
-import SearchBar from './SearchBar';
+
+import SearchBar from '../components/SearchBar';
 import { ReactComponent as Logo } from '../files/logo-small.svg';
+
+import './Menu.scss';
 
 class Menu extends React.Component {
     constructor(props) {
