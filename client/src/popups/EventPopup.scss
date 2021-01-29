@@ -123,3 +123,32 @@
 .action-button-box .action-button {
     margin: 0.25rem 0.25rem 0;
 }
+
+@include media-phone-down {
+    .EventPopup {
+        width: 90vw;
+        padding: 5vw;
+    }
+
+    .EventPopup .display-events {
+        flex-direction: column;
+    }
+
+    .EventPopup .event-left {
+        border: none;
+        border-bottom: 0.03rem solid $text-primary;
+    }
+
+    .EventPopup .event-date,
+    .EventPopup .event-time {
+        font-size: 0.8rem;
+    }
+
+    .EventPopup .event-link {
+        font-size: 0.75rem;
+    }
+
+    .EventPopup .event-edited-by {
+        margin: 0.5rem 0 0;
+    }
+}
