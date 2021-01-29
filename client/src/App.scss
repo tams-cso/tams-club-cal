@@ -131,23 +131,37 @@ a:hover {
     display: block;
 }
 
-@media handheld and (max-width: 992px), screen and (max-device-width: 992px), screen and (max-width: 992px) {
-    html,
-    body,
-    #root {
+/*
+ * #########################
+ * ##### MEDIA QUERIES #####
+ * #########################
+ */
+
+@include media-small-desktop-down {
+    html {
+        font-size: 32px;
+    }
+}
+
+@include media-tablet-down {
+    html {
         font-size: 24px;
     }
+
     .menu-bkgd {
         height: 2rem;
     }
 }
 
-@media handheld and (max-width: 652px), screen and (max-device-width: 652px), screen and (max-width: 652px) {
-    html,
-    body,
-    #root {
+@include media-phone-down {
+    html {
         font-size: 24px;
     }
+
+    h1 {
+        font-size: 2rem;
+    }
+
     .menu-bkgd {
         height: 2rem;
     }
