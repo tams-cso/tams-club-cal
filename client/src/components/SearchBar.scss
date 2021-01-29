@@ -12,12 +12,12 @@
 }
 
 .SearchBar input {
-    border: none;
+    border: none !important;
     margin: 0;
-    padding: 0;
+    padding: 0 !important;
     height: 0.75rem;
     font-size: 1.5vw;
-    width: 90%;
+    width: 90% !important;
 }
 
 #mag-glass-component {
