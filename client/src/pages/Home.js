@@ -1,18 +1,17 @@
 import React from 'react';
 import { connect } from 'react-redux';
 import dayjs from 'dayjs';
+import arraySupport from 'dayjs/plugin/arraySupport';
 
 import DateSection from '../components/DateSection';
 import ScheduleEvent from '../components/ScheduleEvent';
 import CalendarDay from '../components/CalendarDay';
-import Popup from '../components/Popup';
+import Popup from '../popups/Popup';
+import EventPopup from '../popups/EventPopup';
 
-import { getEventList } from '../functions/api';
 import { setEventList, setPopupOpen, setPopupId } from '../redux/actions';
-import arraySupport from 'dayjs/plugin/arraySupport';
-
-import './Home.scss';
-
+import { getSavedEventList } from '../redux/selectors';
+import { getEventList } from '../functions/api';
 import {
     createDateHeader,
     divideByDate,
@@ -21,8 +20,8 @@ import {
     calendarDays,
     daysOfWeek,
 } from '../functions/util';
-import { getSavedEventList } from '../redux/selectors';
-import EventPopup from '../components/EventPopup';
+
+import './Home.scss';
 
 class Home extends React.Component {
     constructor(props) {

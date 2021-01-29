@@ -11,7 +11,7 @@ import {
     setPopupNew,
     addVolunteering,
 } from '../redux/actions';
-import ActionButton from './ActionButton';
+import ActionButton from '../components/ActionButton';
 import './VolunteeringPopup.scss';
 import { connect } from 'react-redux';
 

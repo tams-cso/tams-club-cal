@@ -1,7 +1,14 @@
 import React from 'react';
 import { connect } from 'react-redux';
-import ExecCard from './ExecCard';
-import CommitteeCard from './CommitteeCard';
+
+import ActionButton from '../components/ActionButton';
+import ExecCard from '../components/ExecCard';
+import CommitteeCard from '../components/CommitteeCard';
+import ImageUpload from '../components/ImageUpload';
+import ExecEdit from '../components/ExecEdit';
+import CommitteeEdit from '../components/CommitteeEdit';
+import { ReactComponent as TrashIcon } from '../files/trash-can.svg';
+
 import { getPopupEdit, getPopupId, getPopupNew, getPopupOpen } from '../redux/selectors';
 import {
     setPopupOpen,
@@ -13,15 +20,11 @@ import {
     deleteSavedClub,
     setPopupDeleted,
 } from '../redux/actions';
-import './ClubPopup.scss';
 import { deleteClub, getClub, postClub } from '../functions/api';
-import ActionButton from './ActionButton';
-import { compressUploadedImage, imgUrl, isActive } from '../functions/util';
-import ImageUpload from './ImageUpload';
-import ExecEdit from './ExecEdit';
-import CommitteeEdit from './CommitteeEdit';
 import { Club, ClubInfo, Committee, Exec } from '../functions/entries';
-import { ReactComponent as TrashIcon } from '../files/trash-can.svg';
+import { compressUploadedImage, imgUrl, isActive } from '../functions/util';
+
+import './ClubPopup.scss';
 
 class ClubPopup extends React.Component {
     constructor(props) {
