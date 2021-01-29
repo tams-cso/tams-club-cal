@@ -1,5 +1,6 @@
 import React from 'react';
 import { connect } from 'react-redux';
+import ActionButton from '../components/ActionButton';
 
 import { postEvent } from '../functions/api';
 import { Event } from '../functions/entries';
@@ -115,22 +116,22 @@ class Add extends React.Component {
     changeType = (type) => this.setState({ type });
 
     render() {
-        // If type is event, add an ending date/time
+        // If the type is 'event, add an ending date/time input
         var endObj;
         if (this.state.type == 'event') {
             endObj = (
-                <div className="end-date-obj">
+                <div className="add-end-date-obj">
                     <label htmlFor="endDate">End</label>
                     <input
                         name="endDate"
-                        className="line-in date-input"
+                        className="line-in add-date-input"
                         type="date"
                         value={this.state.endDate}
                         onChange={this.handleInputChange}
                     ></input>
                     <input
                         name="endTime"
-                        className="line-in time-input"
+                        className="line-in add-time-input"
                         type="time"
                         value={this.state.endTime}
                         onChange={this.handleInputChange}
@@ -147,7 +148,7 @@ class Add extends React.Component {
                 <input
                     name={'links-' + i}
                     key={'links-' + i}
-                    className="line-in links-input extra-link"
+                    className="line-in add-links-input add-extra-link"
                     type="text"
                     placeholder="Add another link"
                     value={this.state.links[i]}
@@ -160,28 +161,28 @@ class Add extends React.Component {
         // Create "invalid element" messages
         var invalidMessage = [];
         this.state.invalid.forEach((i) => {
-            invalidMessage.push(<p className="invalid-add" key={i}>{`${i} cannot be empty!`}</p>);
+            invalidMessage.push(<p className="add-invalid" key={i}>{`${i} cannot be empty!`}</p>);
         });
 
         return (
-            <div className="Add">
-                <div className="type-switcher">
-                    <button
-                        className={`event-button type-button ${this.state.type}-active`}
+            <div className="add">
+                <div className="add-type-switcher">
+                    <ActionButton
+                        className={`add-type-button add-event-button add-${this.state.type}-active`}
                         onClick={() => this.changeType('event')}
                     >
                         Event
-                    </button>
-                    <button
-                        className={`signup-button type-button ${this.state.type}-active`}
+                    </ActionButton>
+                    <ActionButton
+                        className={`add-type-button add-signup-button add-${this.state.type}-active`}
                         onClick={() => this.changeType('signup')}
                     >
                         Signup/Deadline
-                    </button>
+                    </ActionButton>
                 </div>
                 <input
                     name="name"
-                    className="line-in name-input"
+                    className="line-in add-name-input"
                     type="text"
                     placeholder="Event name..."
                     value={this.state.name}
@@ -190,7 +191,7 @@ class Add extends React.Component {
                 <label htmlFor="clubName">Club Name</label>
                 <input
                     name="clubName"
-                    className="line-in club-name-input"
+                    className="line-in add-club-name-input"
                     type="text"
                     placeholder="Enter the club hosting this event"
                     value={this.state.clubName}
@@ -200,26 +201,26 @@ class Add extends React.Component {
                 <label htmlFor="startDate">Start</label>
                 <input
                     name="startDate"
-                    className="line-in date-input"
+                    className="line-in add-date-input"
                     type="date"
                     value={this.state.startDate}
                     onChange={this.handleInputChange}
                 ></input>
                 <input
                     name="startTime"
-                    className="line-in time-input"
+                    className="line-in add-time-input"
                     type="time"
                     value={this.state.startTime}
                     onChange={this.handleInputChange}
                 ></input>
                 <br />
                 {endObj}
-                {/* TODO timezone edit */}
-                <p className="timezone-message">** Timezone is America/Chicago [CST/CDT] **</p>
+                {/* TODO Allow user to choose timezone */}
+                <p className="add-timezone-message">** Timezone is America/Chicago [CST/CDT] **</p>
                 <label htmlFor="links-0">Links</label>
                 <input
                     name="links-0"
-                    className="line-in links-input"
+                    className="line-in add-links-input"
                     type="text"
                     placeholder="Add a link"
                     value={this.state.links[0]}
@@ -229,18 +230,20 @@ class Add extends React.Component {
                 {extraLinks}
                 <label>Description</label>
                 <br />
-                <textarea
-                    name="description"
-                    className="description-input"
-                    type="text"
-                    placeholder="Enter a description for your event"
-                    value={this.state.description}
-                    onChange={this.handleInputChange}
-                ></textarea>
+                <div className="center-div">
+                    <textarea
+                        name="description"
+                        className="add-description-input"
+                        type="text"
+                        placeholder="Enter a description for your event"
+                        value={this.state.description}
+                        onChange={this.handleInputChange}
+                    ></textarea>
+                </div>
                 <label htmlFor="addedBy">YOUR Name</label>
                 <input
                     name="addedBy"
-                    className="line-in added-by-input"
+                    className="line-in add-added-by-input"
                     type="text"
                     placeholder="The name of the person editing"
                     value={this.state.addedBy}
@@ -249,9 +252,9 @@ class Add extends React.Component {
                 <br />
                 {invalidMessage}
                 <div className="center-button">
-                    <button className="submit-add" onClick={this.add}>
+                    <ActionButton className="add-submit" onClick={this.add}>
                         Add to Calendar
-                    </button>
+                    </ActionButton>
                 </div>
             </div>
         );

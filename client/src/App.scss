@@ -154,6 +154,10 @@ a:hover {
         font-size: 24px;
     }
 
+    label {
+        font-size: 1.25rem;
+    }
+
     h1 {
         font-size: 2rem;
     }
@@ -162,5 +166,14 @@ a:hover {
 @include media-phone-down {
     .menu-bkgd {
         height: 2rem;
+    }
+
+    label {
+        margin-right: 0.5rem;
+        font-size: 1rem;
+    }
+
+    .line-in {
+        font-size: 0.85rem;
     }
 }
