@@ -2,9 +2,9 @@ import React from 'react';
 import { connect } from 'react-redux';
 
 import LinkBox from '../components/LinkBox';
-import Popup from '../components/Popup';
+import Popup from '../popups/Popup';
 import VolunteeringCard from '../components/VolunteeringCard';
-import VolunteeringPopup from '../components/VolunteeringPopup';
+import VolunteeringPopup from '../popups/VolunteeringPopup';
 import ActionButton from '../components/ActionButton';
 
 import { getOrFetchVolList } from '../functions/util';

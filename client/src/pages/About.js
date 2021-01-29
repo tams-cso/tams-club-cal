@@ -1,6 +1,6 @@
 import React from 'react';
 import { postFeedback } from '../functions/api';
-import logo from '../files/logo.png';
+import logo from '../files/logo-banner.png';
 import './About.scss';
 
 class About extends React.Component {
@@ -49,13 +49,15 @@ class About extends React.Component {
                     We would love to hear what you think and what ideas you would like to see! Here’s the form for any
                     bugs, comments, suggestions, and anything else you would like us to know!
                 </div>
-                <textarea
-                    id="feedback-form"
-                    placeholder="Enter feedback here..."
-                    value={this.state.feedbackValue}
-                    onChange={this.handleChange}
-                />
                 <div className="center-div">
+                    <textarea
+                        id="feedback-form"
+                        placeholder="Enter feedback here..."
+                        value={this.state.feedbackValue}
+                        onChange={this.handleChange}
+                    />
+                </div>
+                <div className="center-button">
                     <input id="feedback-submit" type="submit" value="Submit" onClick={this.handleSubmit} />
                 </div>
             </div>

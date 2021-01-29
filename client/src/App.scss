@@ -97,8 +97,14 @@ a:hover {
     fill: $bad;
 }
 
-.center-div {
+.center-button {
     margin: 0.75rem;
+    text-align: center;
+}
+
+.center-div {
+    width: 100%;
+    margin: auto;
     text-align: center;
 }
 
@@ -131,24 +137,47 @@ a:hover {
     display: block;
 }
 
-@media handheld and (max-width: 992px), screen and (max-device-width: 992px), screen and (max-width: 992px) {
-    html,
-    body,
-    #root {
-        font-size: 24px;
-    }
-    .menu-bkgd {
-        height: 2rem;
+/*
+ * #########################
+ * ##### MEDIA QUERIES #####
+ * #########################
+ */
+
+@include media-small-desktop-down {
+    html {
+        font-size: 32px;
     }
 }
 
-@media handheld and (max-width: 652px), screen and (max-device-width: 652px), screen and (max-width: 652px) {
-    html,
-    body,
-    #root {
+@include media-tablet-down {
+    html {
         font-size: 24px;
     }
+
+    label {
+        font-size: 1.25rem;
+    }
+
+    h1 {
+        font-size: 2rem;
+    }
+}
+
+@include media-phone-down {
     .menu-bkgd {
         height: 2rem;
+    }
+
+    label {
+        margin-right: 0.5rem;
+        font-size: 1rem;
+    }
+
+    .line-in {
+        font-size: 0.85rem;
+    }
+
+    .page {
+        padding-top: 2rem;
     }
 }

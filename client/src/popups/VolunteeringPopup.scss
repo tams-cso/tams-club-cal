@@ -125,3 +125,15 @@
     margin: 0.25rem 0.25rem 0;
     font-size: 0.75rem;
 }
+
+@include media-phone-down {
+    .VolunteeringPopup {
+        width: 90vw;
+        padding: 5vw;
+        padding-bottom: 10vw;
+    }
+
+    .VolunteeringPopup .res-popup-edit {
+        display: none;
+    }
+}

@@ -13,8 +13,8 @@ import {
     isPopupInvalid,
 } from '../functions/util';
 import { getEvent, postEvent } from '../functions/api';
-import ActionButton from './ActionButton';
-import { Event, EventData, EventInfo } from '../functions/entries';
+import ActionButton from '../components/ActionButton';
+import { Event, EventInfo } from '../functions/entries';
 
 class EventPopup extends React.Component {
     constructor(props) {

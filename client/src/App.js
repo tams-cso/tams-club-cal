@@ -1,6 +1,5 @@
 import { BrowserRouter, Route, Switch } from 'react-router-dom';
-import './App.scss';
-import Menu from './components/Menu';
+import Menu from './pages/Menu';
 import About from './pages/About';
 import Add from './pages/Add';
 import Clubs from './pages/Clubs';
@@ -8,6 +7,7 @@ import Home from './pages/Home';
 import NotFound from './pages/NotFound';
 import Resources from './pages/Resources';
 import Search from './pages/Search';
+import './App.scss';
 
 function App() {
     return (

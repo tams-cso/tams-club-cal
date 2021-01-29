@@ -46,3 +46,27 @@
 .popup.noscroll .popup-content {
     overflow-y: hidden !important;
 }
+
+/*
+ * #########################
+ * ##### MEDIA QUERIES #####
+ * #########################
+ */
+
+@include media-tablet-down {
+    .popup-content {
+        max-height: 85vh;
+    }
+}
+
+@include media-phone-down {
+    .popup {
+        top: 2rem;
+    }
+
+    .popup-content {
+        margin: 0;
+        max-height: none;
+        width: 100%;
+    }
+}

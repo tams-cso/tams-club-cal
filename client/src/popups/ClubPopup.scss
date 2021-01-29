@@ -261,3 +261,48 @@
     margin-top: 0 !important;
     flex-grow: 0;
 }
+
+/*
+ * #########################
+ * ##### MEDIA QUERIES #####
+ * #########################
+ */
+
+@include media-phone-down {
+    .club-popup {
+        height: 90vh;
+        width: 100%;
+    }
+
+    .club-popup-view {
+        width: 100%;
+        padding-bottom: 3rem;
+    }
+
+    // TODO: This does not keep the scale ratio
+    .club-popup-image {
+        width: 100%;
+        height: 7rem;
+    }
+
+    .club-popup-advised,
+    .club-popup-name,
+    .club-popup-description {
+        width: 95vw;
+        padding-left: 0;
+        padding-right: 0;
+        margin: 0 auto;
+    }
+
+    .club-popup-advised {
+        margin-top: 0.5rem;
+    }
+
+    .club-popup-edit-button {
+        display: none;
+    }
+
+    .club-popup-tab-item {
+        font-size: 1.25rem;
+    }
+}

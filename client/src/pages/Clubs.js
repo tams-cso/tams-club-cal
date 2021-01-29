@@ -2,8 +2,8 @@ import React from 'react';
 import { connect } from 'react-redux';
 
 import ClubCard from '../components/ClubCard';
-import ClubPopup from '../components/ClubPopup';
-import Popup from '../components/Popup';
+import ClubPopup from '../popups/ClubPopup';
+import Popup from '../popups/Popup';
 
 import { getClubList } from '../functions/api';
 import { getSavedClubList } from '../redux/selectors';

@@ -29,3 +29,9 @@
 .schedule-date {
     padding: 0 0.5rem;
 }
+
+@include media-phone-down {
+    .DateSection {
+        top: 4rem;
+    }
+}

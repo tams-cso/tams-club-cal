@@ -1,7 +1,10 @@
-import './Menu.scss';
 import React from 'react';
 import { NavLink, withRouter } from 'react-router-dom';
-import SearchBar from './SearchBar';
+
+import SearchBar from '../components/SearchBar';
+import { ReactComponent as Logo } from '../files/logo-small.svg';
+
+import './Menu.scss';
 
 class Menu extends React.Component {
     constructor(props) {
@@ -11,6 +14,10 @@ class Menu extends React.Component {
 
     clickDropdown = () => {
         this.setState({ mobileDropdown: !this.state.mobileDropdown });
+    };
+
+    navHome = () => {
+        this.props.history.push('/');
     };
 
     componentDidMount() {
@@ -56,7 +63,7 @@ class Menu extends React.Component {
                     <div className="search-bar-wrapper menu-item">{this.state.searchBar}</div>
                 </div>
                 <div className="mobile-menu">
-                    <div className="mobile-menu-title">TAMS Club Calendar</div>
+                    <Logo className="mobile-menu-logo" onClick={this.navHome}></Logo>
                     <svg
                         className={'hamburger' + (this.state.mobileDropdown ? ' ham-active' : '')}
                         viewBox="0 0 100 80"
@@ -70,7 +77,13 @@ class Menu extends React.Component {
                     </svg>
                 </div>
                 <div className={'mobile-menu-dropdown' + (this.state.mobileDropdown ? ' drop-active' : '')}>
-                    <NavLink className="menu-item mob-item" activeClassName="active" to="/" exact>
+                    <NavLink
+                        className="menu-item mob-item"
+                        activeClassName="active"
+                        isActive={() => ['/', '/events'].includes(window.location.pathname)}
+                        to="/"
+                        exact
+                    >
                         Home
                     </NavLink>
                     <NavLink className="menu-item mob-item" activeClassName="active" to="/resources" exact>

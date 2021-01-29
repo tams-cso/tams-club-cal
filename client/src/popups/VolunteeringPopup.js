@@ -11,7 +11,7 @@ import {
     setPopupNew,
     addVolunteering,
 } from '../redux/actions';
-import ActionButton from './ActionButton';
+import ActionButton from '../components/ActionButton';
 import './VolunteeringPopup.scss';
 import { connect } from 'react-redux';
 
@@ -171,7 +171,7 @@ class VolunteeringPopup extends React.Component {
                     <p className="res-popup-club">{this.state.vol.club}</p>
                     <p className="res-popup-description">{this.state.vol.description}</p>
                     {filters}
-                    <ActionButton onClick={this.openEdit}>Edit</ActionButton>
+                    <ActionButton className="res-popup-edit" onClick={this.openEdit}>Edit</ActionButton>
                 </div>
                 <div className={'edit' + (this.props.edit ? ' active' : ' inactive')}>
                     <div className="title-and-open">
