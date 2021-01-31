@@ -1,17 +1,14 @@
 # How to Contribute to TAMS Club Calendar
 
-Welcome! We are a completely open-source project, so feel free to contributue as much or as little as you would like! :smile:
-
-| :warning: | These contributing guidelines are incomplete! If you would like to add anything, simply make a pull request for this file :) |
-| --------- | ---------------------------------------------------------------------------------------------------------------------------- |
+Welcome! We are a completely open-source project, so feel free to contributue as much or as little as you would like! 
 
 ## :flight_departure: Where to start
 
-If this is your first time working on an open source project, you can check out the [good first issue label](https://github.com/MichaelZhao21/tams-club-cal/issues?q=is%3Aopen+is%3Aissue+label%3A%22good+first+issue%22) for easier or smaller bits of code you can work on. For the more veteran contributors, please feel free to look around at the issues page for a good issue to work on!
+If this is your first time working on an open source project, you can check out the [good first issue label](https://github.com/MichaelZhao21/tams-club-cal/issues?q=is%3Aopen+is%3Aissue+label%3A%22good+first+issue%22) for easier or smaller bits of code you can work on. You can also look around the documentation and make some grammar and sentence flow changes. We are, after all, developers and not english majors, so our documentation can always improve! For the more veteran contributors, please feel free to look around at the issues page for a good issue to work on.
 
 ## :floppy_disk: Technologies we Use
 
-This project is completely written in [Javascript](https://www.javascript.com/), [HTML5](https://html.com/html5/), and [Sass (SCSS)](https://sass-lang.com/)! We are running both our frontend and backend javascript on [Nodejs 14 (lts/fermium)](https://nodejs.org/en/).
+This project is completely written in [Javascript](https://www.javascript.com/), [HTML5](https://html.com/html5/), and [Sass (SCSS)](https://sass-lang.com/)! We are running both our frontend and backend javascript on [Nodejs 14 (lts/fermium)](https://nodejs.org/en/). All in all, we use a pretty standard MERN stack.
 
 The frontend uses these main libraries:
 
