@@ -14,3 +14,5 @@
     - [Volunteering](database/volunteering-db.md)
     - [Feedback](database/feedback-db.md)
     - [History](database/history-db.md)
+
+- [Deployment Notes](deployment.md)
