@@ -1,12 +1,12 @@
-name: 'Build and Deploy App'
+name: 'Build Staging App and Deploy to Server'
 
-on:
+on: 
   push:
-    tags: 
-      - 'v-*'
+    branches: [ master ]
+
 jobs:
   deploy:
-    name: Deploy App
+    name: Deploy Staging App
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
@@ -22,12 +22,11 @@ jobs:
           MONGO_USER: ${{ secrets.MONGO_USER }}
           MONGO_PASS: ${{ secrets.MONGO_PASS }}
           DROPBOX_TOKEN: ${{ secrets.DROPBOX_TOKEN }}
-          API_KEY: ${{ secrets.API_KEY }}
         run: |
           npm install -g yarn
           cd $GITHUB_WORKSPACE && ls -la
           cd client
-          echo "{\"backend\":\"https://api.tams.club\", \"apiKey\":\"$API_KEY\"}" >| src/files/config.json
+          echo "{\"backend\":\"https://api.tams.club\"}" >| src/files/config.json
           yarn install && yarn build
           cd build
           zip -r ../../tams-club-cal-client.zip .
@@ -36,7 +35,6 @@ jobs:
           echo "MONGO_PASS=$MONGO_PASS" >> .env
           echo "DROPBOX_TOKEN=$DROPBOX_TOKEN" >> .env
           echo "PORT=8081" >> .env
-          echo "API_KEY=$API_KEY" >> .env
           yarn install
           zip -r ../tams-club-cal-server.zip .
           cd ..
@@ -58,9 +56,9 @@ jobs:
           key: ${{ secrets.KEY }}
           script: |
             cd /var/www
-            rm -rf tams-club-cal-client/{*,.*}
-            rm -rf tams-club-cal-server/{*,.*}
-            unzip tams-club-cal-client.zip -d tams-club-cal-client
-            unzip tams-club-cal-server.zip -d tams-club-cal-server
+            rm -rf tams-club-cal-staging-client/{*,.*}
+            rm -rf tams-club-cal-staging-server/{*,.*}
+            unzip tams-club-cal-client.zip -d tams-club-cal-staging-client
+            unzip tams-club-cal-server.zip -d tams-club-cal-staging-server
             rm tams-club-cal-client.zip
             rm tams-club-cal-server.zip
