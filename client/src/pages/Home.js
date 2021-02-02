@@ -204,7 +204,12 @@ class Home extends React.Component {
         // Check if there is already events saved
         if (this.props.eventList === null) {
             // Get event list from backend
-            eventList = await getEventList();
+            const res = await getEventList();
+            if (res.status !== 200) {
+                alert(`ERROR ${res.status}: Failed to get events list :(`);
+                return;
+            }
+            eventList = res.data;
             this.props.setEventList(eventList);
         }
         this.createEventComponents(eventList);

@@ -21,3 +21,4 @@ client/src/files/config.json
 
 # Image cache
 server/src/cache
+server/src/logs

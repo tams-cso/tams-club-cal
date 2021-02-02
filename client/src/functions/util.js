@@ -7,7 +7,7 @@ import { EventInfo, DateAndTime } from './entries';
 import store from '../redux/store';
 import { getSavedVolunteeringList } from '../redux/selectors';
 import { getVolunteering } from '../functions/api';
-import { setVolunteeringList } from '../redux/actions';
+import { resetPopupState, setVolunteeringList } from '../redux/actions';
 import config from '../files/config.json';
 
 dayjs.extend(utc);
@@ -209,7 +209,12 @@ export function millisToDateAndTime(millis) {
 export async function getOrFetchVolList() {
     var volList = getSavedVolunteeringList(store.getState());
     if (volList === null) {
-        volList = await getVolunteering();
+        const res = await getVolunteering();
+        if (res.status !== 200) {
+            store.dispatch(resetPopupState());
+            alert(`ERROR ${res.status}: Could not get volunteering list :(`);
+            return;
+        } else volList = res.data;
         store.dispatch(setVolunteeringList(volList));
     }
     return volList;

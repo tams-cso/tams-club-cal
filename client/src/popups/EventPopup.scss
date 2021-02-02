@@ -1,11 +1,11 @@
 @import '../custom.scss';
 
-.EventPopup {
+.event-popup {
     width: 25rem;
     padding: 0.5rem;
 }
 
-.EventPopup .display-events {
+.event-popup-display-events {
     display: flex;
     flex-direction: row;
 }
@@ -16,23 +16,23 @@
     padding: 0.5rem;
 }
 
-.EventPopup .event-left {
+.event-popup-left {
     border-right: 0.03rem solid $text-primary;
 }
 
-.EventPopup .popup-event-type {
+.event-popup-type {
     font-size: 0.6rem;
 }
 
-.EventPopup .popup-event-type.event {
+.event-popup-type.event {
     color: $type-event-darker;
 }
 
-.EventPopup .popup-event-type.signup {
+.event-popup-type.signup {
     color: $type-signup;
 }
 
-.EventPopup .event-name {
+.event-popup-name {
     width: 100%;
     max-width: 100%;
     overflow: hidden;
@@ -40,22 +40,22 @@
     margin-bottom: -0.1rem;
 }
 
-.EventPopup .event-club {
+.event-popup-club {
     font-size: 0.65rem;
     color: $text-light;
 }
 
-.EventPopup .event-date {
-    font-size: 0.65rem;
+.event-popup-date {
     margin-top: 0.5rem;
+    font-size: 0.65rem;
 }
 
-.EventPopup .event-time {
+.event-popup-time {
     font-size: 0.65rem;
     margin-bottom: 0.5rem;
 }
 
-.EventPopup .event-link {
+.event-popup-link {
     display: block;
     width: fit-content;
     font-size: 0.5rem;
@@ -64,63 +64,62 @@
     margin-bottom: 0.25rem;
 }
 
-.EventPopup .event-link:hover {
+.event-popup-link:hover {
     color: $primary;
 }
 
-.EventPopup .event-edited-by {
+.event-popup-event-edited-by {
     margin-top: 3rem;
     font-size: 0.45rem;
     color: $text-lighter;
     cursor: pointer;
 }
 
-.EventPopup .event-description {
+.event-popup-event-description {
     font-size: 0.55rem;
     white-space: pre-line;
 }
 
-.EventPopup .action-button {
+.event-popup-action-button {
     font-size: 0.65rem;
     padding: 0.1rem 0.25rem;
 }
 
-.EventPopup .inactive {
-    display: none;
-}
-
-.EventPopup .active {
-    display: block;
-}
-
-.EventPopup .edit {
+.event-popup-edit {
     padding: 0.5rem;
 }
 
-.EventPopup .name-input {
+.event-popup-name-input {
     width: 15rem;
+    font-size: 1.25rem !important;
 }
 
-.EventPopup input,
-.EventPopup label,
-.EventPopup textarea {
+.event-popup input,
+.event-popup label,
+.event-popup textarea {
     font-size: 0.75rem;
 }
 
-.EventPopup label {
+.event-popup label {
     margin-right: 0.5rem;
 }
 
-.EventPopup .description-input {
+.event-popup-description-input {
     width: 95%;
     height: 6rem;
+    margin: 0 0 0.5rem 0;
+    padding: 0.35rem;
 }
 
-.EventPopup .extra-link {
+.event-popup-extra-link {
     margin-left: 2rem;
 }
 
-.action-button-box .action-button {
+.event-popup-type-switcher {
+    display: flex;
+}
+
+.event-popup-action-button-box .action-button {
     margin: 0.25rem 0.25rem 0;
 }
 
@@ -130,25 +129,25 @@
         padding: 5vw;
     }
 
-    .EventPopup .display-events {
+    .event-popup-display-events {
         flex-direction: column;
     }
 
-    .EventPopup .event-left {
+    .event-popup-event-left {
         border: none;
         border-bottom: 0.03rem solid $text-primary;
     }
 
-    .EventPopup .event-date,
-    .EventPopup .event-time {
+    .event-popup-event-date,
+    .event-popup-event-time {
         font-size: 0.8rem;
     }
 
-    .EventPopup .event-link {
+    .event-popup-event-link {
         font-size: 0.75rem;
     }
 
-    .EventPopup .event-edited-by {
+    .event-popup-event-edited-by {
         margin: 0.5rem 0 0;
     }
 }

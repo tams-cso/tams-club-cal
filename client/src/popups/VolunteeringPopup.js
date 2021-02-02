@@ -92,7 +92,8 @@ class VolunteeringPopup extends React.Component {
 
     getVol = async () => {
         if (this.props.volList === null) {
-            await getOrFetchVolList();
+            getOrFetchVolList();
+            return;
         }
         const vol = this.props.volList.find((v) => v._id === this.props.id);
         this.resetState(vol);
@@ -132,7 +133,7 @@ class VolunteeringPopup extends React.Component {
             } else {
                 this.getVol();
             }
-        }
+        } else if (prevProps.volList !== this.props.volList && this.props.popupOpen && !this.props.new) this.getVol();
     }
 
     render() {

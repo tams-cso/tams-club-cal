@@ -44,7 +44,12 @@ class Clubs extends React.Component {
     async componentDidMount() {
         var clubList = this.props.clubList;
         if (clubList === null) {
-            clubList = await getClubList();
+            const res = await getClubList();
+            if (res.status !== 200) {
+                alert(`ERROR ${res.status}: Could not get club list :(`);
+                return;
+            }
+            clubList = res.data;
             this.props.setClubList(clubList);
         }
         this.createCards(clubList);

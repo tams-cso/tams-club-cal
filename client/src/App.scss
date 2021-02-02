@@ -21,8 +21,6 @@ p {
     font-size: 0.75rem;
 }
 
-// TODO: Change general selector for input to a classname (like line-in)
-input[type='text'],
 textarea {
     font-family: $main-font;
     border: 0.05rem solid $background-tint;
@@ -72,10 +70,12 @@ a:hover {
 }
 
 .line-in {
-    border: none !important;
-    border-bottom: 0.05rem solid $background-tint !important;
-    font-size: 1rem;
-    margin-bottom: 0.5rem !important;
+    padding: 0.1rem;
+    padding-bottom: 0;
+    margin-bottom: 0.5rem;
+    border: none;
+    border-bottom: 0.05rem solid $background-tint;
+    font-family: $main-font;
 }
 
 .line-in::placeholder {
