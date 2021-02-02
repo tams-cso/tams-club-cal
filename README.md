@@ -36,7 +36,10 @@ Create the environmental variable file at `server/.env`:
 ```.env
 MONGO_USER="[Username for cluster]"
 MONGO_PASS="[Password for cluster]"
+MONGO_URL="[Connection URL to the mongodb cluster (eg. "tams-cal-db-staging.7d0nz.mongodb.net")]
 DROPBOX_TOKEN="[Token for dropbox app]"
+API_KEY="[(optional) API key will be required for any calls if defined (see docs)]
+PORT="[(optional) The port to start the server on]"
 ```
 
 ## Execution

@@ -19,9 +19,9 @@ jobs:
       
       - name: Build client and zip server files
         env:
-          MONGO_USER: ${{ secrets.MONGO_USER }}
-          MONGO_PASS: ${{ secrets.MONGO_PASS }}
-          DROPBOX_TOKEN: ${{ secrets.DROPBOX_TOKEN }}
+          MONGO_USER: ${{ secrets.STAGING_MONGO_USER }}
+          MONGO_PASS: ${{ secrets.STAGING_MONGO_PASS }}
+          DROPBOX_TOKEN: ${{ secrets.STAGING_DROPBOX_TOKEN }}
         run: |
           npm install -g yarn
           cd $GITHUB_WORKSPACE && ls -la
@@ -33,6 +33,7 @@ jobs:
           cd ../../server
           echo "MONGO_USER=$MONGO_USER" >| .env
           echo "MONGO_PASS=$MONGO_PASS" >> .env
+          echo "MONGO_URL=tams-cal-db-staging.7d0nz.mongodb.net" >> .env
           echo "DROPBOX_TOKEN=$DROPBOX_TOKEN" >> .env
           echo "PORT=8081" >> .env
           mv staging.ecosystem.config.js ecosystem.config.js
