@@ -79,7 +79,7 @@ class Add extends React.Component {
         const res = await postEvent(newEvent);
 
         if (res.status === 200) {
-            newEvent.objId = res.id;
+            newEvent.objId = res.data.id;
             this.props.addEvent(newEvent);
 
             this.setState({

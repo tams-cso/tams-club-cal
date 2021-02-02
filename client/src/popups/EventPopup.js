@@ -1,7 +1,7 @@
 import React from 'react';
 import { connect } from 'react-redux';
 import { getPopupEdit, getPopupId, getPopupOpen, getSavedEventList } from '../redux/selectors';
-import { setPopupOpen, setPopupId, setPopupEdit, updateEvent } from '../redux/actions';
+import { setPopupOpen, setPopupId, setPopupEdit, updateEvent, resetPopupState } from '../redux/actions';
 import './EventPopup.scss';
 import {
     addDayjsElement,
@@ -37,8 +37,13 @@ class EventPopup extends React.Component {
     }
 
     getEventData = async () => {
-        const event = await getEvent(this.props.id);
-        this.setState({ event }, () => {
+        const res = await getEvent(this.props.id);
+        if (res.status !== 200) {
+            this.props.resetPopup();
+            alert(`ERROR ${res.status}: Cannot get event :(`);
+            return;
+        }
+        this.setState({ event: res.data }, () => {
             this.resetState();
         });
     };
@@ -52,6 +57,7 @@ class EventPopup extends React.Component {
         this.resetState();
     };
 
+    // TODO: Pass in event object to reset state
     resetState = () => {
         var startDatetime = millisToDateAndTime(this.state.event.start);
         var endDatetime = millisToDateAndTime(this.state.event.end);
@@ -83,76 +89,78 @@ class EventPopup extends React.Component {
         oldLinkList[linkNum] = target.value;
 
         // Add new link if text is typed into the last link box
-        if (linkNum == this.state.links.length - 1 && target.value != '') oldLinkList.push('');
+        if (linkNum === this.state.links.length - 1 && target.value != '') oldLinkList.push('');
 
         this.setState({ links: oldLinkList });
     };
 
     changeType = (type) => this.setState({ type });
 
-    submit = () => {
+    submit = async () => {
+        // Don't submit if missing required fields
         var invalid = this.testValid();
-        if (invalid.length == 0) {
-            // Filter out empty links
-            var currLinks = this.state.links;
-            var i = 0;
-            while (i != currLinks.length) {
-                if (currLinks[i] == '') currLinks.splice(i, 1);
-                else i++;
-            }
+        if (invalid.length !== 0) {
+            var invalidMessage = '';
+            invalid.forEach((i) => (invalidMessage += `${i} cannot be empty!\n`));
+            alert(invalidMessage);
+            return;
+        }
 
-            // Calculate milliseconds from starting/ending datetimes
-            var end = null;
-            var start = parseTimeZone(`${this.state.startDate} ${this.state.startTime}`, getTimezone());
-            if (this.state.type === 'event')
-                var end = parseTimeZone(`${this.state.endDate} ${this.state.endTime}`, getTimezone());
+        // Filter out empty links
+        var currLinks = this.state.links;
+        var i = 0;
+        while (i != currLinks.length) {
+            if (currLinks[i] === '') currLinks.splice(i, 1);
+            else i++;
+        }
 
-            var editedBy = [...this.state.event.editedBy];
-            editedBy.push(this.state.editedBy);
+        // Calculate milliseconds from starting/ending datetimes
+        var end = null;
+        var start = parseTimeZone(`${this.state.startDate} ${this.state.startTime}`, getTimezone());
+        if (this.state.type === 'event')
+            var end = parseTimeZone(`${this.state.endDate} ${this.state.endTime}`, getTimezone());
 
-            var fullEvent = new Event(
+        var editedBy = [...this.state.event.editedBy];
+        editedBy.push(this.state.editedBy);
+
+        var fullEvent = new Event(
+            this.state.type,
+            this.state.name,
+            this.state.clubName,
+            start,
+            end,
+            currLinks,
+            this.state.description,
+            editedBy
+        );
+
+        // POST event
+        const res = await postEvent(fullEvent, this.state.event.objId);
+        if (res.status === 200) {
+            var eventObj = new EventInfo(
+                this.state.event.objId,
                 this.state.type,
                 this.state.name,
                 this.state.clubName,
                 start,
-                end,
-                currLinks,
-                this.state.description,
-                editedBy
+                end
             );
-            // POST event
-            postEvent(fullEvent, this.state.event.objId).then((res) => {
-                if (res.status === 200) {
-                    var eventObj = new EventInfo(
-                        this.state.event.objId,
-                        this.state.type,
-                        this.state.name,
-                        this.state.clubName,
-                        start,
-                        end
-                    );
-                    this.props.updateEvent(this.state.event.objId, eventObj);
-                    this.props.setPopupEdit(false);
-                    this.setState({ event: fullEvent });
-                    alert('Successfully added!');
-                } else alert('Adding event failed :(');
-            });
-        } else {
-            var invalidMessage = '';
-            invalid.forEach((i) => (invalidMessage += `${i} cannot be empty!\n`));
-            alert(invalidMessage);
-        }
+            this.props.updateEvent(this.state.event.objId, eventObj);
+            this.props.setPopupEdit(false);
+            this.setState({ event: fullEvent });
+            alert('Successfully edited!');
+        } else alert('Editing event failed :(');
     };
 
     testValid = () => {
         var invalid = [];
-        if (this.state.name == '') invalid.push('Name');
-        if (this.state.clubName == '') invalid.push('Club Name');
-        if (this.state.startDate == '') invalid.push('Start Date');
-        if (this.state.startTime == '') invalid.push('Start Time');
-        if (this.state.endDate == '' && this.state.type == 'event') invalid.push('End Date');
-        if (this.state.endTime == '' && this.state.type == 'event') invalid.push('End Time');
-        if (this.state.editedBy == '') invalid.push('Edited By Name');
+        if (this.state.name === '') invalid.push('Name');
+        if (this.state.clubName === '') invalid.push('Club Name');
+        if (this.state.startDate === '') invalid.push('Start Date');
+        if (this.state.startTime === '') invalid.push('Start Time');
+        if (this.state.endDate === '' && this.state.type === 'event') invalid.push('End Date');
+        if (this.state.endTime === '' && this.state.type === 'event') invalid.push('End Time');
+        if (this.state.editedBy === '') invalid.push('Edited By Name');
         return invalid;
     };
 
@@ -186,7 +194,7 @@ class EventPopup extends React.Component {
         var i = 0;
         this.state.event.links.forEach((link) =>
             linkData.push(
-                <a className="event-link" key={`link-${i++}`} href={link}>
+                <a className="event-popup-link" key={`link-${i++}`} href={link}>
                     {link}
                 </a>
             )
@@ -194,20 +202,20 @@ class EventPopup extends React.Component {
 
         // If type is event, add an ending date/time
         var endObj;
-        if (this.state.type == 'event') {
+        if (this.state.type === 'event') {
             endObj = (
                 <div className="end-date-obj">
                     <label htmlFor="endDate">End</label>
                     <input
                         name="endDate"
-                        className="line-in date-input"
+                        className="line-in add-date-input"
                         type="date"
                         value={this.state.endDate}
                         onChange={this.handleInputChange}
                     ></input>
                     <input
                         name="endTime"
-                        className="line-in time-input"
+                        className="line-in add-time-input"
                         type="time"
                         value={this.state.endTime}
                         onChange={this.handleInputChange}
@@ -224,7 +232,7 @@ class EventPopup extends React.Component {
                 <input
                     name={'links-' + i}
                     key={'links-' + i}
-                    className="line-in links-input extra-link"
+                    className="line-in links-input add-extra-link event-popup-extra-link"
                     type="text"
                     placeholder="Add another link"
                     value={this.state.links[i]}
@@ -243,50 +251,51 @@ class EventPopup extends React.Component {
         }
 
         return (
-            <div className="EventPopup">
-                <div className={'display' + (!this.props.edit ? ' active' : ' inactive')}>
-                    <div className="display-events">
+            <div className="event-popup">
+                <div className={'event-popup-display' + (!this.props.edit ? ' active' : ' inactive')}>
+                    <div className="event-popup-display-events">
                         <div className="event-left home-side">
                             {this.state.event.type === 'event' ? (
-                                <p className="popup-event-type event">Event</p>
+                                <p className="event-popup-type event">Event</p>
                             ) : (
-                                <p className="popup-event-type signup">Signup</p>
+                                <p className="event-popup-type signup">Signup</p>
                             )}
-                            <p className="event-name">{this.state.event.name}</p>
-                            <p className="event-club">{this.state.event.club}</p>
-                            <p className="event-date">{getFormattedDate(this.state.event)}</p>
-                            <p className="event-time">{getFormattedTime(this.state.event)}</p>
+                            <p className="event-popup-name">{this.state.event.name}</p>
+                            <p className="event-popup-club">{this.state.event.club}</p>
+                            <p className="event-popup-date">{getFormattedDate(this.state.event)}</p>
+                            <p className="event-popup-time">{getFormattedTime(this.state.event)}</p>
                             {linkData}
                             <p
-                                className="event-edited-by"
+                                className="event-popup-edited-by"
                                 onClick={this.toggleEditedBy}
                                 dangerouslySetInnerHTML={{ __html: editedByDisplay }}
                             ></p>
                             <ActionButton onClick={this.openEdit}>Edit</ActionButton>
                         </div>
-                        <div className="event-right home-side">
-                            <p className="event-description">{this.state.event.description}</p>
+                        <div className="event-popup-right home-side">
+                            <p className="event-popup-description">{this.state.event.description}</p>
                         </div>
                     </div>
                 </div>
-                <div className={'edit' + (this.props.edit ? ' active' : ' inactive')}>
-                    <div className="type-switcher">
-                        <button
-                            className={`event-button type-button ${this.state.type}-active`}
+                <div className={'event-popup-edit' + (this.props.edit ? ' active' : ' inactive')}>
+                    {/* TODO: Convert a lot of these to 'add' className to share css from add page */}
+                    <div className="add-type-switcher">
+                        <ActionButton
+                            className={`add-type-button add-event-button add-${this.state.type}-active`}
                             onClick={() => this.changeType('event')}
                         >
                             Event
-                        </button>
-                        <button
-                            className={`signup-button type-button ${this.state.type}-active`}
+                        </ActionButton>
+                        <ActionButton
+                            className={`add-type-button add-signup-button add-${this.state.type}-active`}
                             onClick={() => this.changeType('signup')}
                         >
                             Signup/Deadline
-                        </button>
+                        </ActionButton>
                     </div>
                     <input
                         name="name"
-                        className="line-in name-input"
+                        className="line-in event-popup-name-input"
                         type="text"
                         placeholder="Event name..."
                         value={this.state.name}
@@ -296,7 +305,7 @@ class EventPopup extends React.Component {
                     <label htmlFor="clubName">Club Name</label>
                     <input
                         name="clubName"
-                        className="line-in club-name-input"
+                        className="line-in event-popup-club-name-input"
                         type="text"
                         placeholder="Enter the club hosting this event"
                         value={this.state.clubName}
@@ -306,14 +315,14 @@ class EventPopup extends React.Component {
                     <label htmlFor="startDate">Start</label>
                     <input
                         name="startDate"
-                        className="line-in date-input"
+                        className="line-in add-date-input"
                         type="date"
                         value={this.state.startDate}
                         onChange={this.handleInputChange}
                     ></input>
                     <input
                         name="startTime"
-                        className="line-in time-input"
+                        className="line-in add-time-input"
                         type="time"
                         value={this.state.startTime}
                         onChange={this.handleInputChange}
@@ -321,11 +330,11 @@ class EventPopup extends React.Component {
                     <br />
                     {endObj}
                     {/* TODO timezone edit */}
-                    <p className="timezone-message">** Timezone is America/Chicago [CST/CDT] **</p>
+                    <p className="add-timezone-message">** Timezone is America/Chicago [CST/CDT] **</p>
                     <label htmlFor="links-0">Links</label>
                     <input
                         name="links-0"
-                        className="line-in links-input"
+                        className="line-in event-popup-links-input"
                         type="text"
                         placeholder="Add a link"
                         value={this.state.links[0]}
@@ -337,7 +346,7 @@ class EventPopup extends React.Component {
                     <br />
                     <textarea
                         name="description"
-                        className="description-input"
+                        className="event-popup-description-input"
                         type="text"
                         placeholder="Enter a description for your event"
                         value={this.state.description}
@@ -346,14 +355,14 @@ class EventPopup extends React.Component {
                     <label htmlFor="editedBy">YOUR Name</label>
                     <input
                         name="editedBy"
-                        className="line-in edited-by-input"
+                        className="line-in event-popup-edited-by-input"
                         type="text"
                         placeholder="The name of the person editing"
                         value={this.state.editedBy}
                         onChange={this.handleInputChange}
                     ></input>
                     <br />
-                    <div className="action-button-box">
+                    <div className="event-popup-action-button-box">
                         <ActionButton className="cancel" onClick={this.closeEdit}>
                             Cancel
                         </ActionButton>
@@ -373,6 +382,7 @@ const mapStateToProps = (state) => {
         id: getPopupId(state),
         edit: getPopupEdit(state),
         event: getSavedEventList(state),
+        resetPopup: resetPopupState(state),
     };
 };
 const mapDispatchToProps = { setPopupOpen, setPopupId, setPopupEdit, updateEvent };

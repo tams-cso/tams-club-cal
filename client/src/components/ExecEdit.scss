@@ -63,7 +63,7 @@
 .exec-edit-name-input {
     margin: 0 !important;
     width: 85%;
-    font-size: 0.75rem;
+    font-size: 0.75rem !important;
 }
 
 .exec-edit-trash-icon {
@@ -78,12 +78,12 @@
 .exec-edit-position-input {
     margin: 0 !important;
     width: 70%;
-    font-size: 0.65rem;
+    font-size: 0.65rem !important;
 }
 
 .exec-edit-description-input {
     height: 3rem;
     width: 95%;
     font-family: $alt-font;
-    font-size: 0.45rem;
+    font-size: 0.45rem !important;
 }

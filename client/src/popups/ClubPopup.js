@@ -19,6 +19,7 @@ import {
     addClub,
     deleteSavedClub,
     setPopupDeleted,
+    resetPopupState,
 } from '../redux/actions';
 import { deleteClub, getClub, postClub } from '../functions/api';
 import { Club, ClubInfo, Committee, Exec } from '../functions/entries';
@@ -51,8 +52,13 @@ class ClubPopup extends React.Component {
     }
 
     getClubData = async () => {
-        const club = await getClub(this.props.id);
-        if (club !== null) this.resetState(club);
+        const res = await getClub(this.props.id);
+        if (res.status !== 200) {
+            this.props.resetPopupState();
+            alert(`ERROR ${res.status}: Could not get club :(`);
+            return;
+        }
+        this.resetState(res.data);
     };
 
     switchTab = (tab) => this.setState({ execTab: tab === 'execs' });
@@ -117,7 +123,7 @@ class ClubPopup extends React.Component {
         var res;
         if (this.props.id === 'new') {
             res = await postClub(fullClub);
-            fullClub.objId = res.id;
+            fullClub.objId = res.data.id || null;
         } else {
             fullClub.oldExecs = this.state.club.execs;
             fullClub.oldCommittees = this.state.club.committees;
@@ -136,15 +142,17 @@ class ClubPopup extends React.Component {
                 this.state.coverImg
             );
 
-            var newClub = await getClub(this.props.id);
-
-            if (this.props.new) this.props.addClub(clubObj);
+            if (this.props.new) {
+                clubObj.objId = res.id;
+                fullClub.objId = res.id;
+                this.props.addClub(clubObj);
+            }
             else this.props.updateClub(this.state.club.objId, clubObj);
 
             this.props.setPopupEdit(false);
 
             if (this.props.new) this.props.setPopupOpen(false);
-            else this.resetState(newClub);
+            else this.resetState(fullClub);
 
             alert('Successfully added!');
         } else alert('Adding club failed :(');
@@ -247,8 +255,8 @@ class ClubPopup extends React.Component {
             confirmDelete !== null &&
             confirmDelete.toLowerCase().trim() === this.state.club.name.toLowerCase().trim()
         ) {
-            const status = await deleteClub(currObjId);
-            if (status === 200) {
+            const res = await deleteClub(currObjId);
+            if (res.status === 200) {
                 alert('Club successfully deleted!');
                 this.props.setPopupDeleted(true);
             } else {
@@ -461,6 +469,7 @@ const mapDispatchToProps = {
     addClub,
     deleteSavedClub,
     setPopupDeleted,
+    resetPopupState,
 };
 
 export default connect(mapStateToProps, mapDispatchToProps)(ClubPopup);

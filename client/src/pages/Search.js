@@ -31,8 +31,12 @@ class Search extends React.Component {
         if (query === '') return;
 
         if (this.props.eventList === null) {
-            const eventList = await getEventList();
-            this.props.setEventList(eventList);
+            const res = await getEventList();
+            if (res.status !== 200) {
+                alert('Error fetching events list!');
+                return;
+            }
+            this.props.setEventList(res.data);
         }
 
         this.fuse = new Fuse(this.props.eventList, { keys: ['name', 'club'] });

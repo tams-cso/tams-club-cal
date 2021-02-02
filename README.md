@@ -24,7 +24,8 @@ Create the config file at `client/src/files/config.json` (**For the `backend` fi
 
 ```json
 {
-    "backend": "[address that the backend server is hosted on (eg. http://localhost:5000)]"
+    "backend": "[address that the backend server is hosted on (eg. http://localhost:5000)]",
+    "apiKey": "[(optional) API key for backend. The https://dev.tams.club backend used for development does NOT need this]"
 }
 ```
 

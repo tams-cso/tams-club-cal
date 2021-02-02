@@ -1,87 +1,64 @@
 import config from '../files/config.json';
-import { Club, ClubInfo, ClubData, Event, EventInfo, EventData, Volunteering } from './entries';
+import { FetchResponse } from './entries';
 
 /**
- * GET to /event-list - Gets the list of all events
- * @returns {Promise<EventInfo[]>} An array of all events' basic information
+ * Performs GET request to endpoint
+ * @param {string} url API endpoint to GET
+ * @returns {Promise<FetchResponse>} Will return the object or error object
  */
+async function getRequest(url) {
+    try {
+        const res = await fetch(`${config.backend}${url}?key=${config.apiKey}`);
+        const data = await res.json();
+        return new FetchResponse(res.status, data);
+    } catch (error) {
+        console.dir(error);
+        return new FetchResponse(404, null);
+    }
+}
+
+/**
+ * Performs POST request to endpoint
+ * @param {string} url API endpoint to POST
+ * @param {object} body POST body content
+ * @param {boolean} [json] Adds a JSON content type header if true
+ * @returns {Promise<FetchResponse>} Will return the object or error object
+ */
+async function postRequest(url, body, json = true) {
+    try {
+        const options = { method: 'POST', body };
+        if (json) options.headers = { 'Content-Type': 'application/json' };
+
+        const res = await fetch(`${config.backend}${url}?key=${config.apiKey}`, options);
+        const data = await res.json();
+        return new FetchResponse(res.status, data);
+    } catch (error) {
+        console.dir(error);
+        return new FetchResponse(404, null);
+    }
+}
+
 export async function getEventList() {
-    // TODO: Add a start and end time range
-    try {
-        return await fetch(`${config.backend}/events`).then((res) => res.json());
-    } catch (error) {
-        console.dir(error);
-    }
+    return getRequest('/events');
 }
 
-/**
- * GET to /event?id=${id} - Gets event with given id
- * @returns {Promise<EventData>} An array of all events' basic information
- */
 export async function getEvent(id) {
-    try {
-        return await fetch(`${config.backend}/events/${id}`).then((res) => res.json());
-    } catch (error) {
-        console.dir(error);
-    }
+    return getRequest(`/events/${id}`);
 }
 
-/**
- * POST to /add - Creates or updates an event
- * @param {Event} event Event object
- * @param {string} [id] ID to update
- * @returns {Promise<number>} POST status [200 for Success & 400 for Failure]
- */
-export async function postEvent(event, id = null) {
-    var update = id !== undefined && id !== null ? `?update=true&id=${id}` : '';
-    try {
-        const res = await fetch(`${config.backend}/add-event${update}`, {
-            method: 'POST',
-            body: JSON.stringify(event),
-            headers: { 'Content-Type': 'application/json' },
-        });
-        const jsonData = await res.json();
-        return { status: res.status, id: jsonData.id };
-    } catch (error) {
-        console.dir(error);
-        return { status: 400, id: null };
-    }
+export async function postEvent(event, id = '') {
+    return postRequest(`/events/${id}`, JSON.stringify(event));
 }
 
-/**
- * GET to /club-list - Gets the list of clubs
- * @returns {Promise<ClubInfo[]>} An array of all clubs' basic information
- */
 export async function getClubList() {
-    try {
-        return await fetch(`${config.backend}/clubs`).then((res) => res.json());
-    } catch (error) {
-        console.dir(error);
-    }
+    return getRequest('/clubs');
 }
 
-/**
- * GET to /club?id=${id} - Gets club with given id
- * @returns {Promise<ClubData>} Object of club specified by id
- */
 export async function getClub(id) {
-    try {
-        return await fetch(`${config.backend}/clubs/${id}`).then((res) => {
-            if (res.status === 400) return null;
-            else return res.json();
-        });
-    } catch (error) {
-        console.dir(error);
-    }
+    return getRequest(`/clubs/${id}`);
 }
 
-/**
- * POST to /add-club - Creates or updates a club
- * @param {Club} club Club object
- * @param {string} [id] ID to update
- * @returns {Promise<object | null>} POST response of a string for the updated cover image thumbnail url
- */
-export async function postClub(club, id = null) {
+export async function postClub(club, id = '') {
     var data = new FormData();
     data.append('data', JSON.stringify(club));
     data.append('img', club.coverImgBlobs.img);
@@ -89,81 +66,21 @@ export async function postClub(club, id = null) {
     for (var i = 0; i < club.execProfilePicBlobs.length; i++) {
         if (club.execProfilePicBlobs[i] !== undefined) data.append(`exec${i}`, club.execProfilePicBlobs[i]);
     }
-
-    var update = id !== undefined && id !== null ? `?update=true&id=${id}` : '';
-    try {
-        const res = await fetch(`${config.backend}/add-club${update}`, {
-            method: 'POST',
-            body: data,
-        });
-        const jsonData = await res.json();
-        return { status: res.status, id: jsonData.id };
-    } catch (error) {
-        console.dir(error);
-        return { status: 400, id: null };
-    }
+    return postRequest(`/clubs/${id}`, data, false);
 }
 
-/**
- * POST to /add-volunteering - Adds or updates a volunteering event
- *
- * @param {Volunteering} vol The volunteering object
- * @param {string} [id] ID to update
- * @returns {Promise<string>} The generated id or the id that was updated
- */
-export async function postVolunteering(vol, id) {
-    var update = id !== undefined && id !== null ? `?update=true&id=${id}` : '';
-    try {
-        const res = await fetch(`${config.backend}/add-volunteering${update}`, {
-            method: 'POST',
-            body: JSON.stringify(vol),
-            headers: { 'Content-Type': 'application/json' },
-        });
-        return res.json();
-    } catch (error) {
-        console.dir(error);
-    }
-}
-
-/**
- * GET to /volunteering - Gets the list of volunteering opportunities
- * @returns {Promise<Volunteering[]>} An array of all volunteering opportunities
- */
 export async function getVolunteering() {
-    try {
-        return await fetch(`${config.backend}/volunteering`).then((res) => res.json());
-    } catch (error) {
-        console.dir(error);
-    }
+    return getRequest('/volunteering');
 }
 
-/**
- * POST to /feedback - Uploads user feedback
- * @param {string} feedback The feedback
- * @returns {Promise<number>} POST status [200 for Success & 400 for Failure]
- */
+export async function postVolunteering(vol, id = '') {
+    return postRequest(`/volunteering/${id}`, JSON.stringify(vol));
+}
+
 export async function postFeedback(feedback) {
-    try {
-        const res = await fetch(`${config.backend}/feedback`, {
-            method: 'POST',
-            body: JSON.stringify({ feedback }),
-            headers: { 'Content-Type': 'application/json' },
-        });
-        return res.status;
-    } catch (error) {
-        console.dir(error);
-    }
+    return postRequest('/feedback', JSON.stringify(feedback));
 }
 
 export async function deleteClub(id) {
-    try {
-        const res = await fetch(`${config.backend}/delete-club`, {
-            method: 'POST',
-            body: JSON.stringify({ id }),
-            headers: { 'Content-Type': 'application/json' },
-        });
-        return res.status;
-    } catch (error) {
-        console.dir(error);
-    }
+    return postRequest('/delete-club', JSON.stringify({ id }));
 }

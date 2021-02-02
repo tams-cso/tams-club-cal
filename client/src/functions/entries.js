@@ -181,6 +181,16 @@ export function Committee(name, description, fb, website) {
 }
 
 /**
+ * Return object for fetch requests 
+ * @param {number} status The HTTP status code
+ * @param {object} data Data of the request
+ */
+export function FetchResponse(status, data) {
+    this.status = status;
+    this.data = data;
+}
+
+/**
  * @typedef {Object} DateAndTime
  * @property {string} date The date in the format (YYYY-MM-DD)
  * @property {string} time The time in the format (HH:MM)
