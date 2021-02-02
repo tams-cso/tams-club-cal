@@ -35,6 +35,7 @@ jobs:
           echo "MONGO_PASS=$MONGO_PASS" >> .env
           echo "DROPBOX_TOKEN=$DROPBOX_TOKEN" >> .env
           echo "PORT=8081" >> .env
+          mv staging.ecosystem.config.js ecosystem.config.js
           yarn install
           zip -r ../tams-club-cal-server.zip .
           cd ..
