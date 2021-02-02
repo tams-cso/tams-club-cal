@@ -26,7 +26,7 @@ jobs:
           npm install -g yarn
           cd $GITHUB_WORKSPACE && ls -la
           cd client
-          echo "{\"backend\":\"https://api.tams.club\"}" >| src/files/config.json
+          echo "{\"backend\":\"https://dev.tams.club\"}" >| src/files/config.json
           yarn install && yarn build
           cd build
           zip -r ../../tams-club-cal-client.zip .

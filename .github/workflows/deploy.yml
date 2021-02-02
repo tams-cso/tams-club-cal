@@ -36,7 +36,6 @@ jobs:
           echo "MONGO_PASS=$MONGO_PASS" >> .env
           echo "MONGO_URL=tams-cal-db.seuxs.mongodb.net" >> .env
           echo "DROPBOX_TOKEN=$DROPBOX_TOKEN" >> .env
-          echo "API_KEY=$API_KEY" >> .env
           echo "PORT=8081" >> .env
           echo "API_KEY=$API_KEY" >> .env
           yarn install
