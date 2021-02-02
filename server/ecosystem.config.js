@@ -5,7 +5,7 @@ module.exports = {
             script: 'src/app.js',
             watch: '.',
             watch_delay: 5000,
-            ignore_watch: ['node_modules', 'src/cache'],
+            ignore_watch: ['node_modules', 'src/cache', 'src/logs'],
         },
     ],
     env: {
