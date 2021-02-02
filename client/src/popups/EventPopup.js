@@ -254,7 +254,7 @@ class EventPopup extends React.Component {
             <div className="event-popup">
                 <div className={'event-popup-display' + (!this.props.edit ? ' active' : ' inactive')}>
                     <div className="event-popup-display-events">
-                        <div className="event-left home-side">
+                        <div className="event-popup-left home-side">
                             {this.state.event.type === 'event' ? (
                                 <p className="event-popup-type event">Event</p>
                             ) : (
@@ -270,7 +270,7 @@ class EventPopup extends React.Component {
                                 onClick={this.toggleEditedBy}
                                 dangerouslySetInnerHTML={{ __html: editedByDisplay }}
                             ></p>
-                            <ActionButton onClick={this.openEdit}>Edit</ActionButton>
+                            <ActionButton className="event-popup-open-edit" onClick={this.openEdit}>Edit</ActionButton>
                         </div>
                         <div className="event-popup-right home-side">
                             <p className="event-popup-description">{this.state.event.description}</p>

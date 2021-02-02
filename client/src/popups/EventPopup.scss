@@ -68,14 +68,19 @@
     color: $primary;
 }
 
-.event-popup-event-edited-by {
+.event-popup-edited-by {
     margin-top: 3rem;
     font-size: 0.45rem;
     color: $text-lighter;
     cursor: pointer;
 }
 
-.event-popup-event-description {
+.event-popup-open-edit {
+    font-size: 0.65rem;
+    padding: 0.1rem 0.25rem;
+}
+
+.event-popup-description {
     font-size: 0.55rem;
     white-space: pre-line;
 }
@@ -119,7 +124,15 @@
     display: flex;
 }
 
+.event-popup-action-button-box {
+    display: flex;
+    flex-direction: row;
+    justify-content: flex-end;
+}
+
 .event-popup-action-button-box .action-button {
+    font-size: 0.75rem;
+    padding: 0.1rem 0.25rem;
     margin: 0.25rem 0.25rem 0;
 }
 
