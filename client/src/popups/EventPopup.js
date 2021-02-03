@@ -57,6 +57,10 @@ class EventPopup extends React.Component {
         this.resetState();
     };
 
+    toggleEditedBy = () => {
+        this.setState({ showEditedBy: !this.state.showEditedBy });
+    };
+
     // TODO: Pass in event object to reset state
     resetState = () => {
         var startDatetime = millisToDateAndTime(this.state.event.start);
@@ -164,10 +168,6 @@ class EventPopup extends React.Component {
         return invalid;
     };
 
-    toggleEditedBy = () => {
-        this.setState({ showEditedBy: !this.state.showEditedBy });
-    };
-
     componentDidMount() {
         if (this.props.id !== null && this.props.id !== '' && !isPopupInvalid()) this.getEventData();
     }
@@ -253,8 +253,8 @@ class EventPopup extends React.Component {
         return (
             <div className="event-popup">
                 <div className={'event-popup-display' + (!this.props.edit ? ' active' : ' inactive')}>
-                    <div className="event-popup-display-events">
-                        <div className="event-popup-left home-side">
+                    <div className="event-popup-display">
+                        <div className="event-popup-left event-popup-home-side">
                             {this.state.event.type === 'event' ? (
                                 <p className="event-popup-type event">Event</p>
                             ) : (
@@ -272,7 +272,7 @@ class EventPopup extends React.Component {
                             ></p>
                             <ActionButton className="event-popup-open-edit" onClick={this.openEdit}>Edit</ActionButton>
                         </div>
-                        <div className="event-popup-right home-side">
+                        <div className="event-popup-right event-popup-home-side">
                             <p className="event-popup-description">{this.state.event.description}</p>
                         </div>
                     </div>

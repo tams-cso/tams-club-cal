@@ -1,3 +1,9 @@
+/**
+ * The EventPopup component holds the information for an event. The edit button at the bottom
+ * will pull up the editing menu, which is extremely similar to the Add page. In fact, a lot
+ * of the components used will include styles from that very page.
+ */
+
 @import '../custom.scss';
 
 .event-popup {
@@ -5,12 +11,18 @@
     padding: 0.5rem;
 }
 
-.event-popup-display-events {
+/*
+ * #########################
+ * ##### POPUP DISPLAY #####
+ * #########################
+ */
+
+.event-popup-display {
     display: flex;
     flex-direction: row;
 }
 
-.home-side {
+.event-popup-home-side {
     flex-basis: 50%;
     overflow-x: hidden;
     padding: 0.5rem;
@@ -19,6 +31,12 @@
 .event-popup-left {
     border-right: 0.03rem solid $text-primary;
 }
+
+/*
+ * ######################
+ * ##### POPUP INFO #####
+ * ######################
+ */
 
 .event-popup-type {
     font-size: 0.6rem;
@@ -85,13 +103,18 @@
     white-space: pre-line;
 }
 
-.event-popup-action-button {
-    font-size: 0.65rem;
-    padding: 0.1rem 0.25rem;
-}
+/*
+ * ###########################
+ * ##### POPUP EDIT MENU #####
+ * ###########################
+ */
 
 .event-popup-edit {
     padding: 0.5rem;
+}
+
+.event-popup-type-switcher {
+    display: flex;
 }
 
 .event-popup-name-input {
@@ -120,10 +143,6 @@
     margin-left: 2rem;
 }
 
-.event-popup-type-switcher {
-    display: flex;
-}
-
 .event-popup-action-button-box {
     display: flex;
     flex-direction: row;
@@ -136,31 +155,50 @@
     margin: 0.25rem 0.25rem 0;
 }
 
+/*
+ * #########################
+ * ##### MEDIA QUERIES #####
+ * #########################
+ */
+
 @include media-phone-down {
-    .EventPopup {
+    .event-popup {
         width: 90vw;
         padding: 5vw;
     }
 
-    .event-popup-display-events {
+    .event-popup-display {
         flex-direction: column;
     }
 
-    .event-popup-event-left {
+    .event-popup-left {
         border: none;
         border-bottom: 0.03rem solid $text-primary;
     }
 
-    .event-popup-event-date,
-    .event-popup-event-time {
-        font-size: 0.8rem;
-    }
-
-    .event-popup-event-link {
+    .event-popup-type {
         font-size: 0.75rem;
     }
 
-    .event-popup-event-edited-by {
+    .event-popup-name {
+        font-size: 1.5rem;
+    }
+
+    .event-popup-club {
+        font-size: 1rem;
+    }
+
+    .event-popup-date,
+    .event-popup-time {
+        font-size: 0.8rem;
+    }
+
+    .event-popup-link {
+        font-size: 0.75rem;
+    }
+
+    .event-popup-edited-by {
         margin: 0.5rem 0 0;
+        font-size: 0.65rem;
     }
 }
