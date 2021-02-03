@@ -29,7 +29,7 @@ async function uploadImage(file, oldId = null) {
     // Deletes old image if it was in the database
     if (oldId !== null && oldId !== undefined && oldId.startsWith('/')) {
         try {
-            const res = await dbx.filesDeleteV2({ path: oldId });
+            await dbx.filesDeleteV2({ path: oldId });
         } catch (error) {
             console.dir(error);
         }
