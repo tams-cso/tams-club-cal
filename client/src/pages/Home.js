@@ -22,6 +22,7 @@ import {
 } from '../functions/util';
 
 import './Home.scss';
+import Loading from '../components/Loading';
 
 class Home extends React.Component {
     constructor(props) {
@@ -221,6 +222,10 @@ class Home extends React.Component {
     }
 
     render() {
+
+        return <div className="Home">
+            <Loading></Loading>
+        </div>
         const calendarHeader = [];
         daysOfWeek().forEach((day) => {
             calendarHeader.push(
