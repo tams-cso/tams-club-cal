@@ -8,34 +8,31 @@ import ScheduleEvent from '../components/ScheduleEvent';
 import CalendarDay from '../components/CalendarDay';
 import Popup from '../popups/Popup';
 import EventPopup from '../popups/EventPopup';
+import Loading from '../components/Loading';
 
 import { setEventList, setPopupOpen, setPopupId } from '../redux/actions';
 import { getSavedEventList } from '../redux/selectors';
 import { getEventList } from '../functions/api';
-import {
-    createDateHeader,
-    divideByDate,
-    addDayjsElement,
-    getMonthAndYear,
-    calendarDays,
-    daysOfWeek,
-} from '../functions/util';
+import { createDateHeader, divideByDate, addDayjsElement, getMonthAndYear, calendarDays, pad } from '../functions/util';
 
+import data from '../files/data.json';
 import './Home.scss';
-import Loading from '../components/Loading';
 
 class Home extends React.Component {
     constructor(props) {
         super(props);
-        dayjs.extend(arraySupport);
-        this.state = { schedule: true, eventComponents: null, calendarComponents: null, currentDate: dayjs() };
-    }
 
-    // Pads a date to 2 digits (eg. 1 => '01')
-    pad = (num) => {
-        if (num < 10) return `0${num}`;
-        return `${num}`;
-    };
+        // Use DayJS plugin to parse arrays of dates
+        dayjs.extend(arraySupport);
+
+        // Set default state
+        this.state = {
+            schedule: true,
+            eventComponents: null,
+            calendarComponents: null,
+            currentDate: dayjs(),
+        };
+    }
 
     switchView = () => {
         this.setState({ schedule: !this.state.schedule, currentDate: dayjs() });
@@ -88,7 +85,7 @@ class Home extends React.Component {
             }
             calendarComponents.push(
                 <CalendarDay
-                    day={this.pad(currDay)}
+                    day={pad(currDay)}
                     key={month + year + '-' + currDay}
                     events={calEvents}
                     activatePopup={this.activatePopup}
@@ -113,7 +110,7 @@ class Home extends React.Component {
             }
             calendarComponents.push(
                 <CalendarDay
-                    day={this.pad(currDay)}
+                    day={pad(currDay)}
                     key={month + year + '-' + currDay}
                     events={calEvents}
                     activatePopup={this.activatePopup}
@@ -136,7 +133,7 @@ class Home extends React.Component {
             }
             calendarComponents.push(
                 <CalendarDay
-                    day={this.pad(currDay)}
+                    day={pad(currDay)}
                     key={month + year + '-' + currDay}
                     events={calEvents}
                     activatePopup={this.activatePopup}
@@ -222,12 +219,8 @@ class Home extends React.Component {
     }
 
     render() {
-
-        return <div className="Home">
-            <Loading></Loading>
-        </div>
         const calendarHeader = [];
-        daysOfWeek().forEach((day) => {
+        data.daysOfTheWeek.forEach((day) => {
             calendarHeader.push(
                 <div className="days-of-week" key={day}>
                     {day}

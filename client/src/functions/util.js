@@ -163,33 +163,28 @@ export function getMonthAndYear(date = undefined) {
 }
 
 /**
- * Retruns the month spelled out and full year
- * @param {dayjs} [currDate=undefined] dayjs object of the desired day
+ * Returns the month spelled out and full year
+ * 
+ * @param {dayjs} [currDate] dayjs object of the desired day, or null
  * @returns {{calendar: number[], previous: number[], after: number[], date: dayjs}} Object used to generate calendar
  */
-export function calendarDays(currDate = undefined) {
+export function calendarDays(currDate = null) {
+    // Creates a DayJS object  
     const date = dayjs(currDate).date(1);
-    const calendar = [];
+    
+    // Creates the dates for the current, previous, and next calendar month
+    const calendar = [], previous = [], after = [];
     for (let i = 1; i <= date.daysInMonth(); i++) calendar.push(i);
-    const previous = [];
     for (let i = date.day(), j = date.subtract(1, 'month').daysInMonth(); i > 0; i--) previous.unshift(j--);
-    const after = [];
     for (let i = date.date(date.daysInMonth()).day() + 1, j = 1; i < 7; i++) after.push(j++);
+
+    // Returns an object containing the data
     return { calendar, previous, after, date: date.subtract(1, 'month') };
 }
 
 /**
- * @returns {string[]} Array of days of the week
- */
-export function daysOfWeek() {
-    const date = dayjs().day(0);
-    const header = [];
-    for (let i = 0; i < 7; i++) header.push(date.add(i, 'day').format('ddd'));
-    return header;
-}
-
-/**
  * Converts millisecond time to object with string date and time
+ * 
  * @param {number} millis The UTC millisecond time
  * @returns {DateAndTime} The date and time objects
  */
@@ -204,6 +199,7 @@ export function millisToDateAndTime(millis) {
 /**
  * Gets volunteering list from store or if null,
  * fetches it and stores it in the store
+ * 
  * @returns {Promise<Volunteering[]>} List of volunteering events
  */
 export async function getOrFetchVolList() {
@@ -274,3 +270,14 @@ export function isPopupInvalid() {
     const id = getParams('id');
     return id === null || id === undefined;
 }
+
+/**
+ * Pads a date to 2 digits (eg. 1 => '01')
+ * 
+ * @param {number} num Input number
+ * @returns {string} The padded number, converted to a string
+ */
+export function pad(num) {
+    if (num < 10) return `0${num}`;
+    return `${num}`;
+};

@@ -22,12 +22,16 @@ async function uploadImage(file, oldId = null) {
     else id += '.jpg';
 
     // Uploads new image
-    // TODO: Check for fs and dropbox read/write errors
-    const data = fs.readFileSync(file.path);
-    await dbx.filesUpload({ path: id, contents: data });
+    try {
+        const data = fs.readFileSync(file.path);
+        await dbx.filesUpload({ path: id, contents: data });
+    } catch (error) {
+        console.dir(error);
+        // TODO: Throw an error and send failure to client (throw new Error('...'))
+    }
 
     // Deletes old image if it was in the database
-    if (oldId !== null && oldId !== undefined && oldId.startsWith('/')) {
+    if (oldId !== null && oldId !== undefined && oldId.startsWith('/') && typeof oldId === 'string') {
         try {
             await dbx.filesDeleteV2({ path: oldId });
         } catch (error) {
