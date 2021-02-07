@@ -235,7 +235,7 @@ class Add extends React.Component {
                         name="description"
                         className="add-description-input"
                         type="text"
-                        placeholder="Enter a description for your event"
+                        placeholder="Enter a description for your event (use http/https to hyperlink urls automatically)"
                         value={this.state.description}
                         onChange={this.handleInputChange}
                     ></textarea>
