@@ -18,6 +18,7 @@ import {
 } from '../../functions/util';
 
 import './event-popup.scss';
+import Loading from '../shared/loading';
 
 class EventPopup extends React.Component {
     constructor(props) {
@@ -175,7 +176,7 @@ class EventPopup extends React.Component {
     };
 
     componentDidMount() {
-        if (this.props.id !== null && this.props.id !== '' && !isPopupInvalid()) this.getEventData();
+        if (this.props.id !== null && this.props.id !== '') this.getEventData();
     }
 
     componentDidUpdate(prevProps) {
@@ -189,8 +190,8 @@ class EventPopup extends React.Component {
 
     render() {
         // Return empty div if the current popup is not defined
-        if (!this.props.popupOpen || this.state.event === null || isPopupInvalid())
-            return <div className="EventPopup"></div>;
+        if (!this.props.popupOpen || this.state.event === null)
+            return <Loading className="EventPopup"></Loading>;
 
         // Add a Dayjs attribute
         addDayjsElement(this.state.event);

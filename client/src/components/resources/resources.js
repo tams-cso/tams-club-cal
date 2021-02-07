@@ -7,12 +7,12 @@ import VolunteeringCard from './volunteering-card';
 import VolunteeringPopup from './volunteering-popup';
 import ActionButton from '../shared/action-button';
 
-import { getOrFetchVolList } from '../../functions/util';
 import { getSavedVolunteeringList } from '../../redux/selectors';
 import { setVolunteeringList, setPopupOpen, setPopupId, setPopupNew, setPopupEdit } from '../../redux/actions';
 
 import data from '../../files/data.json';
 import './resources.scss';
+import Loading from '../shared/loading';
 
 class Resources extends React.Component {
     constructor(props) {
@@ -37,7 +37,6 @@ class Resources extends React.Component {
     };
 
     createCards = () => {
-        if (this.props.volunteeringList === null) return;
         var volCards = [];
         this.props.volunteeringList.forEach((vol) => {
             if (this.state.filter === null || vol.filters[this.state.filter])
@@ -54,19 +53,18 @@ class Resources extends React.Component {
         return volCards;
     };
 
-    async componentDidMount() {
-        await getOrFetchVolList();
-    }
-
     render() {
-        var volCards = this.createCards();
+        if (this.props.volunteeringList === null) return <Loading className="resources"></Loading>;
+
+        // Create volunteering cards
+        const volCards = this.createCards();
+
         return (
             <div className="Resources">
                 <Popup history={this.props.history} noscroll>
                     <VolunteeringPopup></VolunteeringPopup>
                 </Popup>
                 <h1 className="links-title">Links</h1>
-                {/* // TODO: Extract to array in data.json */}
                 <div className="resources-link-container">
                     <LinkBox className="resources-link" href={data.examCalendar}>
                         Exam Calendar

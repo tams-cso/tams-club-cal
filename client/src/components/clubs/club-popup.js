@@ -7,7 +7,6 @@ import CommitteeCard from './committee-card';
 import ExecEdit from './exec-edit';
 import CommitteeEdit from './committee-edit';
 import ImageUpload from './image-upload';
-import { ReactComponent as TrashIcon } from '../../files/trash-can.svg';
 
 import { getPopupEdit, getPopupId, getPopupNew, getPopupOpen } from '../../redux/selectors';
 import {
@@ -25,6 +24,7 @@ import { deleteClub, getClub, postClub } from '../../functions/api';
 import { Club, ClubInfo, Committee, Exec } from '../../functions/entries';
 import { compressUploadedImage, imgUrl, isActive, parseLinks } from '../../functions/util';
 
+import { ReactComponent as TrashIcon } from '../../files/trash-can.svg';
 import './club-popup.scss';
 
 class ClubPopup extends React.Component {

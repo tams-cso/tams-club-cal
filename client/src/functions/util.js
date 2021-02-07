@@ -204,26 +204,6 @@ export function millisToDateAndTime(millis) {
 }
 
 /**
- * Gets volunteering list from store or if null,
- * fetches it and stores it in the store
- *
- * @returns {Promise<Volunteering[]>} List of volunteering events
- */
-export async function getOrFetchVolList() {
-    var volList = getSavedVolunteeringList(store.getState());
-    if (volList === null) {
-        const res = await getVolunteering();
-        if (res.status !== 200) {
-            store.dispatch(resetPopupState());
-            alert(`ERROR ${res.status}: Could not get volunteering list :(`);
-            return;
-        } else volList = res.data;
-        store.dispatch(setVolunteeringList(volList));
-    }
-    return volList;
-}
-
-/**
  * Adds 'active' or 'inactive' to an element's classname.
  *
  * @param {string} className Base name of the class
@@ -272,16 +252,6 @@ export function imgUrl(path) {
 export function getTimezone() {
     // TODO: Allow user to manually change timezone
     return dayjs.tz.guess();
-}
-
-/**
- * Checks for a valid id in the url or else the popup will not be opened
- *
- * @returns {boolean} True if the popup is invalid
- */
-export function isPopupInvalid() {
-    const id = getParams('id');
-    return id === null || id === undefined;
 }
 
 /**

@@ -2,10 +2,17 @@ import React from 'react';
 import { connect } from 'react-redux';
 import { withRouter } from 'react-router';
 
-import { getEventList } from './api';
-import { addDayjsElement, catchError } from './util';
-import { getSavedEventList } from '../redux/selectors';
-import { setEventList, setPopupOpen, setPopupId, resetPopupState } from '../redux/actions';
+import { getClubList, getEventList, getVolunteering } from './api';
+import { addDayjsElement, catchError, getParams } from './util';
+import { getSavedClubList, getSavedEventList, getSavedVolunteeringList } from '../redux/selectors';
+import {
+    setEventList,
+    setPopupOpen,
+    setPopupId,
+    resetPopupState,
+    setClubList,
+    setVolunteeringList,
+} from '../redux/actions';
 
 class RoutingRequests extends React.Component {
     fetchData = async () => {
@@ -29,9 +36,25 @@ class RoutingRequests extends React.Component {
                 break;
             }
             case '/resources': {
+                // If volunteering list hasn't been fetched, fetch with API
+                if (this.props.volunteeringList !== null) return;
+                const res = await getVolunteering();
+
+                // Catch errors and save to store
+                if (catchError(res.status, 'Failed to get volunteering list :(')) return;
+                this.props.setVolunteeringList(res.data);
+
                 break;
             }
             case '/clubs': {
+                // If club list hasn't been fetched, fetch with API
+                if (this.props.clubList !== null) return;
+                const res = await getClubList();
+
+                // Catch errors and save to store
+                if (catchError(res.status, 'Failed to get club list :(')) return;
+                this.props.setClubList(res.data);
+
                 break;
             }
             default:
@@ -39,15 +62,38 @@ class RoutingRequests extends React.Component {
         }
     };
 
+    activatePopup = (id) => {
+        // Detect if new and set relevant flags
+        if (id === 'new') {
+            this.props.setPopupNew(true);
+            this.props.setPopupEdit(true);
+        }
+
+        // Set the ID and open the popup
+        this.props.setPopupId(id);
+        this.props.setPopupOpen(true);
+        console.log(id);
+    };
+
     componentDidMount() {
+        // Activate popup
+        const id = getParams('id');
+        if (id !== undefined && id !== null) this.activatePopup(id);
+
+        // Fetch data
         this.fetchData();
     }
 
-    componentDidUpdate(prevProps, prevState) {
+    componentDidUpdate(prevProps) {
         // Close popup if going to page without popup (check for no search parameters in URL)
         // TODO: What if there are other search paramaters
         if (prevProps.location.search !== '' && this.props.location.search === '') {
             this.props.resetPopupState();
+        }
+
+        // Clear up any new popup inconsistencies
+        if (this.props.new && getParams('id') !== 'new') {
+            this.props.setPopupNew(false);
         }
 
         // Return if pathnames match (eg. opening popups)
@@ -72,8 +118,17 @@ class RoutingRequests extends React.Component {
 const mapStateToProps = (state) => {
     return {
         eventList: getSavedEventList(state),
+        clubList: getSavedClubList(state),
+        volunteeringList: getSavedVolunteeringList(state),
     };
 };
-const mapDispatchToProps = { setEventList, setPopupOpen, setPopupId, resetPopupState };
+const mapDispatchToProps = {
+    setPopupOpen,
+    setPopupId,
+    resetPopupState,
+    setEventList,
+    setVolunteeringList,
+    setClubList,
+};
 
 export default connect(mapStateToProps, mapDispatchToProps)(withRouter(RoutingRequests));

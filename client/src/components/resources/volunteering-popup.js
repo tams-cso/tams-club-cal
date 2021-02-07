@@ -16,6 +16,7 @@ import {
 } from '../../redux/actions';
 
 import './volunteering-popup.scss';
+import Loading from '../shared/loading';
 
 class VolunteeringPopup extends React.Component {
     constructor(props) {
@@ -93,10 +94,6 @@ class VolunteeringPopup extends React.Component {
     };
 
     getVol = async () => {
-        if (this.props.volList === null) {
-            getOrFetchVolList();
-            return;
-        }
         const vol = this.props.volList.find((v) => v._id === this.props.id);
         this.resetState(vol);
     };
@@ -115,32 +112,31 @@ class VolunteeringPopup extends React.Component {
     };
 
     componentDidMount() {
-        if (this.props.id === null || this.props.id === undefined || !this.props.popupOpen) return;
-        if (this.props.new) {
-            this.resetState(new VolunteeringDefault());
-        } else {
-            this.getVol();
+        if (this.props.volList !== null && this.props.id !== '') {
+            if (this.props.new) this.resetState(new Volunteering());
+            else this.getVol();
         }
     }
 
     componentDidUpdate(prevProps) {
+        // If id not valid, ignore updates
+        if (this.props.id === '') return;
+
+        // On volunteering list or id change, update the current volunteering
         if (
-            prevProps.id !== this.props.id &&
-            this.props.id !== undefined &&
-            this.props.id !== null &&
-            this.props.popupOpen
+            (prevProps.volList !== this.props.volList && this.props.volList !== null) ||
+            (prevProps.id !== this.props.id && this.props.id !== null)
         ) {
-            if (this.props.new) {
-                this.resetState(new Volunteering());
-            } else {
-                this.getVol();
-            }
-        } else if (prevProps.volList !== this.props.volList && this.props.popupOpen && !this.props.new) this.getVol();
+            if (this.props.volList === null) return;
+            if (this.props.new) this.resetState(new Volunteering());
+            else this.getVol();
+        }
     }
 
     render() {
-        // Return empty div if the current popup is not defined
-        if (this.state.vol === null || this.state.vol === undefined) return <div className="VolunteeringPopup"></div>;
+        // Return 'loading' if the current popup is not defined
+        if (this.state.vol === null || this.state.vol === undefined)
+            return <Loading className="VolunteeringPopup"></Loading>;
 
         // Get a list of filters
         var filters = formatVolunteeringFilters(this.state.vol.filters, this.state.vol.signupTime);

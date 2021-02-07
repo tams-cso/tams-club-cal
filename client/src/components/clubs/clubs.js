@@ -11,13 +11,9 @@ import { getSavedClubList } from '../../redux/selectors';
 import { setClubList, setPopupOpen, setPopupId, setPopupNew, setPopupEdit, setPopupType } from '../../redux/actions';
 
 import './clubs.scss';
+import Loading from '../shared/loading';
 
 class Clubs extends React.Component {
-    constructor(props) {
-        super(props);
-        this.state = {};
-    }
-
     activatePopup = (id) => {
         this.props.history.push(`/clubs?id=${id}`);
         this.props.setPopupId(id);
@@ -31,43 +27,23 @@ class Clubs extends React.Component {
         this.activatePopup('new');
     };
 
-    createCards = (data) => {
-        var clubCards = [];
-        data.forEach((club) => {
-            clubCards.push(
-                <ClubCard club={club} key={club.name} onClick={() => this.activatePopup(club.objId)}></ClubCard>
-            );
+    createCards = () => {
+        return this.props.clubList.map((c) => {
+            return <ClubCard club={c} key={c.name} onClick={this.activatePopup.bind(this, c.objId)}></ClubCard>;
         });
-        this.setState({ clubCards });
     };
 
-    async componentDidMount() {
-        var clubList = this.props.clubList;
-        if (clubList === null) {
-            const res = await getClubList();
-            if (res.status !== 200) {
-                alert(`ERROR ${res.status}: Could not get club list :(`);
-                return;
-            }
-            clubList = res.data;
-            this.props.setClubList(clubList);
-        }
-        this.createCards(clubList);
-    }
-
-    async componentDidUpdate(prevProps) {
-        if (prevProps.clubList !== this.props.clubList) {
-            this.createCards(this.props.clubList);
-        }
-    }
-
     render() {
+        if (this.props.clubList === null) return <Loading className="clubs"></Loading>;
+
+        const cards = this.createCards();
+
         return (
             <div className="Clubs">
                 <Popup history={this.props.history}>
                     <ClubPopup></ClubPopup>
                 </Popup>
-                <div className="club-card-list">{this.state.clubCards}</div>
+                <div className="club-card-list">{cards}</div>
                 <div className="clubs-add-club-container">
                     <ActionButton className="clubs-add-club" onClick={this.addClub}>
                         Add Club
