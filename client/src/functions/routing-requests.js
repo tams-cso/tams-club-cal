@@ -44,7 +44,13 @@ class RoutingRequests extends React.Component {
     }
 
     componentDidUpdate(prevProps, prevState) {
-        // Return if pathnames match (eg. closing popups)
+        // Close popup if going to page without popup (check for no search parameters in URL)
+        // TODO: What if there are other search paramaters
+        if (prevProps.location.search !== '' && this.props.location.search === '') {
+            this.props.resetPopupState();
+        }
+
+        // Return if pathnames match (eg. opening popups)
         if (this.props.location.pathname === prevProps.location.pathname) return;
 
         // Because homepage has 2 redirects: / and /events
@@ -53,12 +59,6 @@ class RoutingRequests extends React.Component {
             (prevProps.location.pathname === '/' || prevProps.location.pathname === '/events')
         )
             return;
-
-        // Close popup if going to page without popup (check for no search parameters in URL)
-        // TODO: What if there are other search paramaters
-        if (prevProps.location.search !== '' && this.props.location.search === '') {
-            this.props.resetPopupState();
-        }
 
         // Fetch data for the current page if not already gotten
         this.fetchData();
