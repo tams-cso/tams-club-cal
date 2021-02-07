@@ -4,7 +4,7 @@ import ActionButton from '../shared/action-button';
 
 import { postVolunteering } from '../../functions/api';
 import { Volunteering } from '../../functions/entries';
-import { formatVolunteeringFilters } from '../../functions/util';
+import { formatVolunteeringFilters, getOrFetchVolList, parseLinks } from '../../functions/util';
 import { getPopupEdit, getPopupId, getPopupOpen, getPopupNew, getSavedVolunteeringList } from '../../redux/selectors';
 import {
     setPopupOpen,
@@ -158,6 +158,8 @@ class VolunteeringPopup extends React.Component {
             );
         }
 
+        const description = parseLinks('res-popup-description', this.state.vol.description);
+
         return (
             <div className="VolunteeringPopup">
                 <div className={'display' + (!this.props.edit ? ' active' : ' inactive')}>
@@ -168,7 +170,7 @@ class VolunteeringPopup extends React.Component {
                     )}
                     <p className="res-popup-name">{this.state.vol.name}</p>
                     <p className="res-popup-club">{this.state.vol.club}</p>
-                    <p className="res-popup-description">{this.state.vol.description}</p>
+                    {description}
                     {filters}
                     <ActionButton className="res-popup-edit" onClick={this.openEdit}>
                         Edit
@@ -209,7 +211,7 @@ class VolunteeringPopup extends React.Component {
                         name="description"
                         className="description-input"
                         type="text"
-                        placeholder="Enter a description for your event"
+                        placeholder="Enter a description for your volunteering (use http/https to hyperlink urls automatically)"
                         value={this.state.description}
                         onChange={this.handleInputChange}
                     ></textarea>

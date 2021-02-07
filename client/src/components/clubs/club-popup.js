@@ -22,7 +22,7 @@ import {
 } from '../../redux/actions';
 import { deleteClub, getClub, postClub } from '../../functions/api';
 import { Club, ClubInfo, Committee, Exec } from '../../functions/entries';
-import { compressUploadedImage, imgUrl, isActive } from '../../functions/util';
+import { compressUploadedImage, imgUrl, isActive, parseLinks } from '../../functions/util';
 
 import { ReactComponent as TrashIcon } from '../../files/trash-can.svg';
 import './club-popup.scss';
@@ -146,8 +146,7 @@ class ClubPopup extends React.Component {
                 clubObj.objId = res.id;
                 fullClub.objId = res.id;
                 this.props.addClub(clubObj);
-            }
-            else this.props.updateClub(this.state.club.objId, clubObj);
+            } else this.props.updateClub(this.state.club.objId, clubObj);
 
             this.props.setPopupEdit(false);
 
@@ -318,6 +317,8 @@ class ClubPopup extends React.Component {
             );
         }
 
+        const description = parseLinks('club-popup-description', this.state.club.description);
+
         return (
             <div className="club-popup">
                 <div className={isActive('club-popup-view', !this.props.edit)}>
@@ -326,7 +327,7 @@ class ClubPopup extends React.Component {
                         {this.state.club.advised ? 'Advised' : 'Independent'}
                     </p>
                     <p className="club-popup-name">{this.state.club.name}</p>
-                    <p className="club-popup-description">{this.state.club.description}</p>
+                    {description}
                     <div className="club-popup-links">
                         <p className="club-popup-link fb" onClick={() => window.open(this.state.club.website)}>
                             {this.state.club.website}

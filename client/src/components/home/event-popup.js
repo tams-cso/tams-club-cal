@@ -13,6 +13,8 @@ import {
     millisToDateAndTime,
     parseTimeZone,
     getTimezone,
+    isPopupInvalid,
+    parseLinks,
 } from '../../functions/util';
 
 import './event-popup.scss';
@@ -151,8 +153,11 @@ class EventPopup extends React.Component {
                 start,
                 end
             );
+            
+            addDayjsElement(eventObj);
             this.props.updateEvent(this.state.event.objId, eventObj);
             this.props.setPopupEdit(false);
+
             this.setState({ event: fullEvent });
             alert('Successfully edited!');
         } else alert('Editing event failed :(');
@@ -252,6 +257,8 @@ class EventPopup extends React.Component {
             }
         }
 
+        const description = parseLinks('event-popup-description', this.state.event.description);
+
         return (
             <div className="event-popup">
                 <div className={'event-popup-display' + (!this.props.edit ? ' active' : ' inactive')}>
@@ -272,11 +279,11 @@ class EventPopup extends React.Component {
                                 onClick={this.toggleEditedBy}
                                 dangerouslySetInnerHTML={{ __html: editedByDisplay }}
                             ></p>
-                            <ActionButton className="event-popup-open-edit" onClick={this.openEdit}>Edit</ActionButton>
+                            <ActionButton className="event-popup-open-edit" onClick={this.openEdit}>
+                                Edit
+                            </ActionButton>
                         </div>
-                        <div className="event-popup-right event-popup-home-side">
-                            <p className="event-popup-description">{this.state.event.description}</p>
-                        </div>
+                        <div className="event-popup-right event-popup-home-side">{description}</div>
                     </div>
                 </div>
                 <div className={'event-popup-edit' + (this.props.edit ? ' active' : ' inactive')}>

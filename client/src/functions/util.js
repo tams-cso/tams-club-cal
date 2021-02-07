@@ -281,3 +281,37 @@ export function catchError(status, message = '') {
     }
     return false;
 }
+
+/**
+ * Takes in text and a classname, parses the links, and creates
+ * a paragraph element with the links in <a> tags
+ *
+ * @param {string} className Classname prop to add to outer paragraph element
+ * @param {string} text The text to parse and display
+ * @returns {object} A React jsx <p> component with links wrapped in <a> tags
+ */
+export function parseLinks(className, text) {
+    const re = /((?:http|https):\/\/.+?)(?:\.|\?|!)?(?:\s|$)/g;
+    var m;
+    var matches = [];
+    do {
+        m = re.exec(text);
+        if (m) matches.push(m);
+    } while (m);
+
+    var tempText = text;
+    var outText = [];
+    var prevIndex = 0;
+    matches.forEach((m) => {
+        outText.push(tempText.substring(prevIndex, tempText.indexOf(m[1])));
+        outText.push(
+            <a key={m[1]} href={m[1]} alt={m[1]}>
+                {m[1]}
+            </a>
+        );
+        tempText = tempText.substring(tempText.indexOf(m[1]) + m[1].length);
+    });
+    outText.push(tempText);
+
+    return <p className={className}>{outText}</p>;
+}

@@ -31,6 +31,12 @@
     color: $text-light;
 }
 
+.res-popup-description {
+    font-size: 0.65rem;
+    font-family: $alt-font;
+    white-space: pre-line;
+}
+
 .VolunteeringPopup .action-button {
     margin-top: 0.5rem;
 }
