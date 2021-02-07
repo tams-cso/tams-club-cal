@@ -1,7 +1,7 @@
 import React from 'react';
 import { connect } from 'react-redux';
 
-import { getParams, isActive, isPopupInvalid } from '../../functions/util';
+import { isActive } from '../../functions/util';
 import { getPopupEdit, getPopupId, getPopupOpen, getPopupNew, getPopupDeleted, getPopupType } from '../../redux/selectors';
 import {
     setPopupOpen,
@@ -15,15 +15,6 @@ import {
 import './popup.scss';
 
 class Popup extends React.Component {
-    activate = (id) => {
-        if (id === 'new') {
-            this.props.setPopupNew(true);
-            this.props.setPopupEdit(true);
-        }
-        this.props.setPopupId(id);
-        this.props.setPopupOpen(true);
-    };
-
     close = () => {
         if (window.location.pathname == '/event') this.props.history.push('/');
         else this.props.history.push(`${window.location.pathname}`);
@@ -31,23 +22,11 @@ class Popup extends React.Component {
     };
 
     componentDidMount() {
-        const id = getParams('id');
-        if (id !== undefined && id !== null) this.activate(id);
-
         addEventListener('keydown', (event) => {
             if (event.key.toLowerCase() == 'escape' && this.props.open) {
                 this.close();
             }
         });
-
-        this.unlisten = this.props.history.listen(() => {
-            const id = getParams('id');
-            if (id !== undefined && id !== null) this.activate(id);
-        });
-    }
-
-    componentWillUnmount() {
-        this.unlisten();
     }
 
     componentDidUpdate() {
@@ -57,12 +36,6 @@ class Popup extends React.Component {
                 this.props.history.push('/clubs');
             }
             this.props.resetPopupState();
-        }
-        if (isPopupInvalid()) {
-            this.props.setPopupOpen(false);
-        }
-        if (this.props.new && getParams('id') !== 'new') {
-            this.props.setPopupNew(false);
         }
     }
 
