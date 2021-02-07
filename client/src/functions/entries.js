@@ -1,3 +1,5 @@
+import dayjs, { Dayjs } from "dayjs";
+
 /**
  * An object containing the information for calendar events
  * @param {"event"|"signup"} type The type of the event
@@ -188,6 +190,33 @@ export function Committee(name, description, fb, website) {
 export function FetchResponse(status, data) {
     this.status = status;
     this.data = data;
+}
+
+/**
+ * Holds the list of numbered dates for the calendar to +/- 1 month
+ * 
+ * @param {number[]} current List of dates in the current month
+ * @param {number[]} previous List of dates in the previous month
+ * @param {number[]} next List of dates in the next month
+ * @param {Dayjs} dateObj DayJS Date object
+ */
+export function CalendarDates(current, previous, next, dateObj) {
+    this.current = current;
+    this.previous = previous;
+    this.next = next;
+    this.dateObj = dateObj;
+}
+
+/**
+ * A date divider object to be parsed by the home event list creator
+ * The object ID will be set to an empty string to differentiate
+ * between the EventInfo objects
+ * 
+ * @param {string} date Date formatted as YYYY-MM-DD
+ */
+export function DateDivider(date) {
+    this.date = date;
+    this.objId = '';
 }
 
 /**

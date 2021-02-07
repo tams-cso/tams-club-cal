@@ -38,7 +38,14 @@ Once you've made the changes that you need, please use the pull request template
 
 ## :computer: Coding Conventions
 
-We will auto-format code with [Prettier](https://prettier.io/) when a pull request is merged, but you can also use it if you install the [extension on VSCode](https://marketplace.visualstudio.com/items?itemName=esbenp.prettier-vscode) (and probably other IDEs as well).
+I am formatting the code with [Prettier](https://prettier.io/) as the [VSCode extension](https://marketplace.visualstudio.com/items?itemName=esbenp.prettier-vscode) (There are probably similar extensions in other IDEs as well). The `.prettierrc` file contains the
+formatting rules for Prettier and will be automatically used when formatting with the VSCode extension.
+
+### File and Organization Conventions
+
+All files will be named with **lowercase** letters and **dash-seperated**. This is because on some systems, capital letters will be ignored in file names. In terms of file organization, the client and server top-level folders contain each individual program, with
+seperate `package.json` files and `node_modules` folders. See the [documentation site](https://docs.tams.club) for more specific
+information on file structure.
 
 ### JS/JSX Conventions
 
@@ -134,7 +141,7 @@ At the top of each scss file, you should include a top-level description of the 
  *    This cover photo has a default placeholder if it does not exist.
  */
 
-@import '../custom.scss';
+@import '../../custom.scss';
 
 // Other components
 ```
@@ -169,7 +176,7 @@ Then we should group the css by relevant contents:
  *
  * Any final tidbits can go here
  */
-@import '../custom.scss';
+@import '../../custom.scss';
 
 .club-card {
     // The main component goes here

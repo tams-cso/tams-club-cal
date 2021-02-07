@@ -1,21 +1,21 @@
 // Data
-export const RESET_DATA_STATE = 'RESET_DATA_STATE';
-export const SET_EVENT_LIST = 'SET_EVENT_LIST';
-export const UPDATE_EVENT = 'UPDATE_EVENT';
-export const SET_VOLUNTEERING_LIST = 'SET_VOLUNTEERING_LIST';
-export const UPDATE_VOLUNTEERING = 'UPDATE_VOLUNTEERING';
-export const ADD_VOLUNTEERING = 'ADD_VOLUNTEERING';
-export const SET_CLUB_LIST = 'SET_CLUB_LIST';
-export const UPDATE_CLUB = 'UPDATE_CLUB';
-export const ADD_CLUB = 'ADD_CLUB';
-export const DELETE_CLUB = 'DELETE_CLUB';
-export const ADD_EVENT = 'ADD_EVENT';
+export const RESET_DATA_STATE = '[Data] Reset State';
+export const SET_EVENT_LIST = '[Data] Set Event List';
+export const ADD_EVENT = '[Data] Add Event';
+export const UPDATE_EVENT = '[Data] Update Event';
+export const SET_VOLUNTEERING_LIST = '[Data] Set Volunteering List';
+export const ADD_VOLUNTEERING = '[Data] Add Volunteering';
+export const UPDATE_VOLUNTEERING = '[Data] Update Volunteering';
+export const SET_CLUB_LIST = '[Data] Set Club List';
+export const ADD_CLUB = '[Data] Add Club';
+export const UPDATE_CLUB = '[Data] Update Club';
+export const DELETE_CLUB = '[Data] Delete Club';
 
 // Popup
-export const RESET_POPUP_STATE = 'RESET_POPUP_STATE';
-export const SET_OPEN = 'SET_OPEN';
-export const SET_EDIT = 'SET_EDIT';
-export const SET_NEW = 'SET_NEW';
-export const SET_ID = 'SET_ID';
-export const SET_DELETED = 'SET_DELETED';
-export const SET_TYPE = 'SET_TYPE';
+export const RESET_POPUP_STATE = '[Popup] Reset State';
+export const SET_OPEN = '[Popup] Set Open';
+export const SET_EDIT = '[Popup] Set Edit State';
+export const SET_NEW = '[Popup] Set Is New';
+export const SET_ID = '[Popup] Set ID';
+export const SET_DELETED = '[Popup] Set Is Deleted';
+export const SET_TYPE = '[Popup] Set Type';

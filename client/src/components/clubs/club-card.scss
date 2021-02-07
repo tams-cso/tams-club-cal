@@ -1,0 +1,172 @@
+/**
+ * The Club Card displays the basic club info.
+ * 
+ * 1) The component has a box-shadow that will darken on hover.
+ * 2) The width and height are set so the containing grid can auto-align.
+ * 3) A cover photo thumbnail is displayed at the top in its own div.
+ *    This cover photo has a default placeholder if it does not exist.
+ */
+
+@import '../../custom.scss';
+
+.club-card {
+    width: 8rem;
+    height: 8rem;
+    box-shadow: 0 0 0.1rem $background-tint;
+    filter: drop-shadow(0 0 0.08rem $background-tint);
+    background-color: $background;
+    text-align: center;
+    transition: 0.2s;
+}
+
+.club-card:hover {
+    cursor: pointer;
+}
+
+/* 
+ * #######################################
+ * ##### CLUB COVER IMAGE THUMBNAILS #####
+ * ####################################### 
+ */
+
+// Container to hold the club cover photo and image placeholder
+// If text-align is not left, the images are offset for some reason
+.club-card-image-container {
+    width: 100%;
+    height: 3.5rem;
+    background-color: $background-tint;
+    text-align: left;
+}
+
+// Placeholder located behind the image if the image URL does not exist
+.club-card-image-placeholder {
+    position: absolute;
+    width: 100%;
+    height: inherit;
+
+    color: $background;
+    font-size: 0.75rem;
+    text-align: center;
+}
+
+// The image will cover this element with a 'cover' object-fit
+// Text size set to 0 to hide the alt text in favor of the image placeholder
+.club-card-image {
+    position: absolute;
+    width: 100%;
+    height: inherit;
+
+    object-fit: cover;
+    font-size: 0;
+}
+
+/*
+ * ############################
+ * ##### CLUB INFORMATION #####
+ * ############################
+ */
+
+// Default color is $primary, and will be $type-signup if independent
+.club-card-type {
+    margin-top: 0.1rem;
+    color: $primary;
+    font-size: 0.5rem;
+}
+
+.club-card-independent {
+    color: $type-signup;
+}
+
+.club-card-name {
+    color: $text-primary;
+    font-size: 0.65rem;
+    padding: 0 0.25rem;
+}
+
+/*
+ * ################################
+ * ##### WEBSITE AND FB ICONS #####
+ * ################################
+ */
+
+.club-card-icons {
+    display: flex;
+    position: fixed;
+    bottom: 0.5rem;
+    left: 50%;
+    transform: translate(-50%, 0);
+    flex-direction: row;
+    justify-content: center;
+}
+
+// globe-style, fb-icon, and web-icon are defined classes in their respective svg files
+.globe-style {
+    fill: none;
+    stroke: #231f20;
+    stroke-linejoin: round;
+    stroke-width: 30px;
+}
+
+.web-icon,
+.fb-icon {
+    width: 1rem;
+    height: 1rem;
+    margin: 0 0.75rem;
+    cursor: pointer;
+    transition: 0.2s;
+}
+
+.web-icon > path,
+.fb-icon > path {
+    transition: 0.2s;
+}
+
+.web-icon:hover,
+.fb-icon:hover {
+    filter: drop-shadow(0 0 0.03rem $background-dark);
+}
+
+.fb-icon:hover > path {
+    fill: #3b5998;
+}
+
+.web-icon:hover > path {
+    stroke: $primary;
+}
+
+/*
+ * #########################
+ * ##### MEDIA QUERIES #####
+ * #########################
+ */
+
+@include media-phone-down {
+    .club-card {
+        height: 6rem;
+        width: 6rem;
+    }
+
+    // This will still be at a 3.5:8 ratio
+    .club-card-image-container {
+        height: 2.625rem;
+    }
+
+    .club-card-type {
+        font-size: 0.45rem;
+    }
+
+    .club-card-name {
+        font-size: 0.5rem;
+    }
+
+    .club-card-icons {
+        bottom: 0.25rem;
+    }
+
+    .web-icon,
+    .fb-icon {
+        width: 0.75rem;
+        height: 0.75rem;
+        margin-right: 0 0.25rem;
+    }
+}

@@ -1,9 +1,9 @@
-import dayjs from 'dayjs';
+import dayjs, { Dayjs } from 'dayjs';
 import utc from 'dayjs/plugin/utc';
 import timezone from 'dayjs/plugin/timezone';
 import isLeapYear from 'dayjs/plugin/isLeapYear';
 import imageCompression from 'browser-image-compression';
-import { EventInfo, DateAndTime } from './entries';
+import { EventInfo, DateAndTime, CalendarDates, DateDivider } from './entries';
 import store from '../redux/store';
 import { getSavedVolunteeringList } from '../redux/selectors';
 import { getVolunteering } from '../functions/api';
@@ -50,20 +50,23 @@ export function convertToTimeZone(millis, tz) {
 }
 
 /**
- * Takes a list of sorted events and injects date seperators
+ * Takes a list of sorted events and injects DateDivider objects into it
  *
  * @param {EventInfo[]} eventList List of events, with an extra dayjs object defined
  */
-export function divideByDate(eventList) {
-    var currDay = '';
+export function insertDateDividers(eventList) {
+    // Current date will store the latest date divider added, to prevent repeats
+    var currDate = '';
+
+    // Iterate through the list of sorted events
     for (var i = 0; i < eventList.length; i++) {
-        var day = eventList[i].startDayjs.format('YYYY-MM-DD');
-        if (currDay != day) {
-            currDay = day;
-            eventList.splice(i, 0, {
-                isDate: true,
-                day,
-            });
+        // Create formatted date from the start datetime of the event
+        var date = eventList[i].startDayjs.format('YYYY-MM-DD');
+
+        // If the date doesn't have a divider, add it to the list
+        if (currDate != date) {
+            currDate = date;
+            eventList.splice(i, 0, new DateDivider(date));
             i++;
         }
     }
@@ -109,7 +112,6 @@ export function getFormattedDate(event, noName = false) {
  * @param {EventInfo} event An event object
  */
 export function addDayjsElement(e) {
-    // TODO: Add place to change time zone
     e.startDayjs = convertToTimeZone(e.start, getTimezone());
     if (e.type === 'event') e.endDayjs = convertToTimeZone(e.end, getTimezone());
 }
@@ -154,42 +156,42 @@ export function formatVolunteeringFilters(filters, signupTime) {
 }
 
 /**
- * Retruns the month spelled out and full year
- * @param {dayjs} [date=undefined] dayjs object of the desired day
+ * Returns the month spelled out and full year
+ *
+ * @param {number} [offset] Month offset, or 0 if undefined
  * @returns {string} Formated month and year
  */
-export function getMonthAndYear(date = undefined) {
-    return dayjs(date).format('MMMM YYYY');
+export function getMonthAndYear(offset = 0) {
+    return dayjs().add(offset, 'month').format('MMMM YYYY');
 }
 
 /**
- * Retruns the month spelled out and full year
- * @param {dayjs} [currDate=undefined] dayjs object of the desired day
- * @returns {{calendar: number[], previous: number[], after: number[], date: dayjs}} Object used to generate calendar
+ * Creates the 3 numerical lists of calendar days, for the current, previous, and next months
+ *
+ * @param {number} [offset] Month offset, or 0 if undefined
+ * @returns {CalendarDates} Object with lists of calendar dates
  */
-export function calendarDays(currDate = undefined) {
-    const date = dayjs(currDate).date(1);
-    const calendar = [];
-    for (let i = 1; i <= date.daysInMonth(); i++) calendar.push(i);
-    const previous = [];
+export function generateCalendarDays(offset = 0) {
+    // Creates a DayJS object
+    const date = dayjs().add(offset, 'month').date(1);
+
+    // Creates the dates for the current, previous, and next calendar month
+    const current = [],
+        previous = [],
+        next = [];
+
+    // Iterate through the dates and push numbers into arrays
+    for (let i = 1; i <= date.daysInMonth(); i++) current.push(i);
     for (let i = date.day(), j = date.subtract(1, 'month').daysInMonth(); i > 0; i--) previous.unshift(j--);
-    const after = [];
-    for (let i = date.date(date.daysInMonth()).day() + 1, j = 1; i < 7; i++) after.push(j++);
-    return { calendar, previous, after, date: date.subtract(1, 'month') };
-}
+    for (let i = date.date(date.daysInMonth()).day() + 1, j = 1; i < 7; i++) next.push(j++);
 
-/**
- * @returns {string[]} Array of days of the week
- */
-export function daysOfWeek() {
-    const date = dayjs().day(0);
-    const header = [];
-    for (let i = 0; i < 7; i++) header.push(date.add(i, 'day').format('ddd'));
-    return header;
+    // Returns an object containing the data
+    return new CalendarDates(current, previous, next, date.subtract(1, 'month'));
 }
 
 /**
  * Converts millisecond time to object with string date and time
+ *
  * @param {number} millis The UTC millisecond time
  * @returns {DateAndTime} The date and time objects
  */
@@ -204,6 +206,7 @@ export function millisToDateAndTime(millis) {
 /**
  * Gets volunteering list from store or if null,
  * fetches it and stores it in the store
+ *
  * @returns {Promise<Volunteering[]>} List of volunteering events
  */
 export async function getOrFetchVolList() {
@@ -261,7 +264,13 @@ export function imgUrl(path) {
     return path;
 }
 
+/**
+ * Gets the user timezone by guessing it
+ *
+ * @return {string} The timezone as a tz database name
+ */
 export function getTimezone() {
+    // TODO: Allow user to manually change timezone
     return dayjs.tz.guess();
 }
 
@@ -273,4 +282,32 @@ export function getTimezone() {
 export function isPopupInvalid() {
     const id = getParams('id');
     return id === null || id === undefined;
+}
+
+/**
+ * Pads a date to 2 digits (eg. 1 => '01')
+ *
+ * @param {number} num Input number
+ * @returns {string} The padded number, converted to a string
+ */
+export function pad(num) {
+    if (num < 10) return `0${num}`;
+    return `${num}`;
+}
+
+/**
+ * Checks for error status codes and alerts the user
+ * if an error is detected
+ *
+ * @param {number} status The http status
+ * @param {string} [message] The error message to send to the user
+ * @returns {boolean} True if there is an error
+ */
+export function catchError(status, message = '') {
+    if (status !== 200) {
+        if (message !== '') message = `: ${message}`;
+        alert(`${status} Error${message}`);
+        return true;
+    }
+    return false;
 }
