@@ -14,15 +14,18 @@ import { getSavedEventList } from '../../redux/selectors';
 import { getEventList } from '../../functions/api';
 import {
     createDateHeader,
-    divideByDate,
+    insertDateDividers,
     addDayjsElement,
     getMonthAndYear,
-    calendarDays,
+    generateCalendarDays,
     pad,
+    isActive,
 } from '../../functions/util';
 
 import data from '../../files/data.json';
 import './home.scss';
+import Calendar from './calendar';
+import Loading from '../shared/loading';
 
 class Home extends React.Component {
     constructor(props) {
@@ -33,26 +36,21 @@ class Home extends React.Component {
 
         // Set default state
         this.state = {
-            schedule: true,
-            eventComponents: null,
-            calendarComponents: null,
-            currentDate: dayjs(),
+            scheduleView: true,
+            monthOffset: 0,
         };
     }
 
     switchView = () => {
-        this.setState({ schedule: !this.state.schedule, currentDate: dayjs() });
+        this.setState({ scheduleView: !this.state.scheduleView, monthOffset: 0 });
     };
 
-    changeMonth = (amount = null) => {
-        var currentDate;
-        if (amount === null) {
-            currentDate = dayjs();
-        } else {
-            if (amount < 0) currentDate = this.state.currentDate.subtract(-amount, 'month');
-            else currentDate = this.state.currentDate.add(amount, 'month');
-        }
-        this.setState({ currentDate });
+    resetMonthOffset = () => {
+        this.setState({ monthOffset: 0 });
+    };
+
+    changeMonthOffset = (isDecrement) => {
+        this.setState({ monthOffset: this.state.monthOffset + (isDecrement ? -1 : 1) });
     };
 
     activatePopup = (id) => {
@@ -61,129 +59,43 @@ class Home extends React.Component {
         this.props.setPopupOpen(true);
     };
 
-    setCalendar = (eventList) => {
-        var { calendar, previous, after, date } = calendarDays(this.state.currentDate);
-        var month = date.month(),
-            year = date.year();
-        // Index the beginning of the events to add to calendar
-        var i;
-        if (previous.length === 0) {
-            date = date.add(1, 'month');
-            month = date.month();
-            year = date.year();
-        }
-        const first = dayjs([year, month, previous.length === 0 ? 1 : previous[0]]);
-        for (i = 0; i < eventList.length; i++) {
-            const day = eventList[i].startDayjs;
-            if (day.isAfter(first)) break;
-        }
+    createEventComponents = () => {
+        // TODO: Change the eventsList fetch so only events in the current, next, and previous month are pulled,
+        //       but this would be an issue for the search functionality so idk => The search could be moved to backend (?)
 
-        var calendarComponents = [];
-        // Add events for previous month
-        previous.forEach((currDay) => {
-            var calEvents = [];
-            while (i < eventList.length) {
-                const day = eventList[i].startDayjs;
-                if (dayjs(day).year() === year && dayjs(day).month() === month && dayjs(day).date() === currDay) {
-                    calEvents.push(eventList[i]);
-                    i++;
-                } else break;
-            }
-            calendarComponents.push(
-                <CalendarDay
-                    day={pad(currDay)}
-                    key={month + year + '-' + currDay}
-                    events={calEvents}
-                    activatePopup={this.activatePopup}
-                    currentDay={currDay === dayjs().date() && month === dayjs().month() && year == dayjs().year()}
-                    sideMonth={true}
-                ></CalendarDay>
-            );
-        });
-        if (previous.length > 0) {
-            date = date.add(1, 'month');
-            month = date.month();
-            year = date.year();
-        }
-        calendar.forEach((currDay) => {
-            var calEvents = [];
-            while (i < eventList.length) {
-                const day = eventList[i].startDayjs;
-                if (dayjs(day).year() === year && dayjs(day).month() === month && dayjs(day).date() === currDay) {
-                    calEvents.push(eventList[i]);
-                    i++;
-                } else break;
-            }
-            calendarComponents.push(
-                <CalendarDay
-                    day={pad(currDay)}
-                    key={month + year + '-' + currDay}
-                    events={calEvents}
-                    activatePopup={this.activatePopup}
-                    currentDay={currDay === dayjs().date() && month === dayjs().month() && year == dayjs().year()}
-                    sideMonth={false}
-                ></CalendarDay>
-            );
-        });
-        date = date.add(1, 'month');
-        month = date.month();
-        year = date.year();
-        after.forEach((currDay) => {
-            var calEvents = [];
-            while (i < eventList.length) {
-                const day = eventList[i].startDayjs;
-                if (dayjs(day).year() === year && dayjs(day).month() === month && dayjs(day).date() === currDay) {
-                    calEvents.push(eventList[i]);
-                    i++;
-                } else break;
-            }
-            calendarComponents.push(
-                <CalendarDay
-                    day={pad(currDay)}
-                    key={month + year + '-' + currDay}
-                    events={calEvents}
-                    activatePopup={this.activatePopup}
-                    currentDay={currDay === dayjs().date() && month === dayjs().month() && year == dayjs().year()}
-                    sideMonth={true}
-                ></CalendarDay>
-            );
-        });
-        this.setState({ calendarComponents });
-    };
+        // Create a copy of the state object
+        var events = [...this.props.eventList];
 
-    createEventComponents = (eventList) => {
-        const events = [...eventList];
-        // Create a dayjs object for each event
-        events.forEach((e) => addDayjsElement(e));
-
-        // Sort the days
-        events.sort((a, b) => a.start - b.start);
-
-        this.setCalendar([...events]);
-
-        // Remove events that have already passed
-        while (events.length > 0)
+        // Remove events that have already passed by iterating through the sorted listuntil a future event is found
+        // All events before the first event will be removed from the list
+        while (events.length > 0) {
             if (dayjs(events[0].end === null ? events[0].start : events[0].end).isBefore(dayjs())) events.shift();
             else break;
+        }
 
-        // Insert the date objects
-        divideByDate(events);
+        // Insert the DateSection objects to the list
+        insertDateDividers(events);
 
-        // Generate the list of events
+        // Generate the list of EventCard and DateSection components
         var eventComponents = [];
+        var groupComponents = [];
 
-        var tempComponents = [];
+        // Iterate through the events
         events.forEach((e) => {
-            if (e.isDate) {
+            // If this is a date section, push the previous group of events in a sticky container
+            // This is so the 'position: sticky' works for the date section
+            if (e.objId === '') {
                 eventComponents.push(
                     <div className="schedule-view-sticky-container" key={eventComponents.length}>
-                        {tempComponents}
+                        {groupComponents}
                     </div>
                 );
-                tempComponents = [];
-                tempComponents.push(<DateSection date={createDateHeader(e.day)} key={e.day}></DateSection>);
+                // Reset the group array for the next group
+                groupComponents = [];
+                groupComponents.push(<DateSection date={createDateHeader(e.date)} key={e.date}></DateSection>);
             } else {
-                tempComponents.push(
+                // If it is not a date section, simply add the event card component to the group list
+                groupComponents.push(
                     <ScheduleEvent
                         event={e}
                         key={e.objId}
@@ -194,45 +106,25 @@ class Home extends React.Component {
                 );
             }
         });
+
+        // Add the final group of events to the eventComponents array
         eventComponents.push(
             <div className="schedule-view-sticky-container" key={eventComponents.length}>
-                {tempComponents}
+                {groupComponents}
             </div>
         );
+        // Remove the empty group of events at the beginning of the list
         eventComponents.shift();
-        this.setState({ eventComponents });
+
+        return eventComponents;
     };
 
-    async componentDidMount() {
-        var eventList = this.props.eventList;
-        // Check if there is already events saved
-        if (this.props.eventList === null) {
-            // Get event list from backend
-            const res = await getEventList();
-            if (res.status !== 200) {
-                alert(`ERROR ${res.status}: Failed to get events list :(`);
-                return;
-            }
-            eventList = res.data;
-            this.props.setEventList(eventList);
-        }
-        this.createEventComponents(eventList);
-    }
-
-    componentDidUpdate(prevProps, prevState) {
-        if (this.props.eventList !== prevProps.eventList || this.state.currentDate !== prevState.currentDate)
-            this.createEventComponents(this.props.eventList);
-    }
-
     render() {
-        const calendarHeader = [];
-        data.daysOfTheWeek.forEach((day) => {
-            calendarHeader.push(
-                <div className="days-of-week" key={day}>
-                    {day}
-                </div>
-            );
-        });
+        // Return loading screen if eventList is not fetched
+        if (this.props.eventList === null) return <Loading className="home"></Loading>;
+
+        // Create event components
+        const eventComponents = this.createEventComponents();
 
         return (
             <div className="Home">
@@ -240,50 +132,39 @@ class Home extends React.Component {
                     <EventPopup></EventPopup>
                 </Popup>
                 <div className="home-top">
-                    <div className={'dummy' + (this.state.schedule ? ' view-active' : '')}></div>
-                    <button
-                        className={'today' + (!this.state.schedule ? ' view-active' : '')}
-                        onClick={() => {
-                            this.changeMonth();
-                        }}
-                    >
+                    <div className={isActive('dummy', this.state.scheduleView)}></div>
+                    <button className={isActive('today', !this.state.scheduleView)} onClick={this.resetMonthOffset}>
                         Today
                     </button>
-                    <div className={'dummy-today' + (!this.state.schedule ? ' view-active' : '')}></div>
-                    <div
-                        className={'dummy-change-month month-back' + (this.state.schedule ? ' view-active' : '')}
-                    ></div>
+                    <div className={isActive('dummy-today', !this.state.scheduleView)}></div>
+                    <div className={isActive('dummy-change-month month-back', this.state.scheduleView)}></div>
                     <button
-                        className={'change-month month-back' + (!this.state.schedule ? ' view-active' : '')}
-                        onClick={() => {
-                            this.changeMonth(-1);
-                        }}
+                        className={isActive('change-month month-back', !this.state.scheduleView)}
+                        onClick={this.changeMonthOffset.bind(this, true)}
                     >
                         {'<'}
                     </button>
-                    <div className="month-year">{getMonthAndYear(this.state.currentDate)}</div>
+                    <div className="month-year">{getMonthAndYear(this.state.monthOffset)}</div>
                     <div
-                        className={'dummy-change-month month-forward' + (this.state.schedule ? ' view-active' : '')}
+                        className={isActive('dummy-change-month month-forward', this.state.scheduleView)}
                     ></div>
                     <button
-                        className={'change-month month-forward' + (!this.state.schedule ? ' view-active' : '')}
-                        onClick={() => {
-                            this.changeMonth(1);
-                        }}
+                        className={isActive('change-month month-forward', !this.state.scheduleView)}
+                        onClick={this.changeMonthOffset.bind(this, false)}
                     >
                         {'>'}
                     </button>
                     <button className="view-switch" onClick={this.switchView}>
-                        {`Switch to ${this.state.schedule ? 'Calendar' : 'Schedule'} View`}
+                        {`Switch to ${this.state.scheduleView ? 'Calendar' : 'Schedule'} View`}
                     </button>
                 </div>
-                <div className={'schedule-view' + (this.state.schedule ? ' view-active' : '')}>
-                    {this.state.eventComponents}
-                </div>
-                <div className={'calendar-view' + (!this.state.schedule ? ' view-active' : '')}>
-                    <div className="calendar-header">{calendarHeader}</div>
-                    <div className="calendar-days">{this.state.calendarComponents}</div>
-                </div>
+                <div className={isActive('schedule-view', this.state.scheduleView)}>{eventComponents}</div>
+                <Calendar
+                    className={isActive('home-calendar', !this.state.scheduleView)}
+                    eventList={this.props.eventList}
+                    monthOffset={this.state.monthOffset}
+                    activatePopup={this.activatePopup}
+                ></Calendar>
             </div>
         );
     }

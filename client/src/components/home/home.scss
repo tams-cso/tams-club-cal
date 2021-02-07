@@ -1,46 +1,12 @@
 @import '../../custom.scss';
 
-.schedule-view,
-.calendar-view {
-    display: none;
-}
-
 .schedule-view {
     margin: 2rem 14vw 0 14vw;
     padding-bottom: 0.5rem;
 }
 
-.calendar-view {
+.home-calendar {
     margin-top: 2.5rem;
-}
-
-$grid-border: 0.025rem solid $text-primary;
-$rh: 5rem;
-
-.calendar-header,
-.calendar-days {
-    display: grid;
-    grid-template-columns: repeat(7, 1fr);
-}
-
-.calendar-header {
-    margin: 1rem 4rem 0 4rem;
-}
-
-.calendar-days {
-    grid-auto-rows: $rh;
-    border-bottom: $grid-border;
-    margin: 0 4rem 1rem 4rem;
-}
-
-.calendar-days > .calendar-day {
-    border: 0;
-    border-top: $grid-border;
-    border-left: $grid-border;
-}
-
-.calendar-day:nth-child(7n) {
-    border-right: $grid-border;
 }
 
 .home-top {
@@ -54,10 +20,6 @@ $rh: 5rem;
     width: 100%;
     background-color: $background;
     z-index: 1;
-}
-
-.days-of-week {
-    text-align: center;
 }
 
 .month-year {
