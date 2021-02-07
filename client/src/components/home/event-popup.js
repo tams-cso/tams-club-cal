@@ -151,8 +151,11 @@ class EventPopup extends React.Component {
                 start,
                 end
             );
+            
+            addDayjsElement(eventObj);
             this.props.updateEvent(this.state.event.objId, eventObj);
             this.props.setPopupEdit(false);
+
             this.setState({ event: fullEvent });
             alert('Successfully edited!');
         } else alert('Editing event failed :(');
