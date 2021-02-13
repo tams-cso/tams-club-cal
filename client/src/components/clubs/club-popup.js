@@ -143,15 +143,21 @@ class ClubPopup extends React.Component {
             );
 
             if (this.props.new) {
-                clubObj.objId = res.id;
-                fullClub.objId = res.id;
+                clubObj.objId = res.data.id;
+                fullClub.objId = res.data.id;
                 this.props.addClub(clubObj);
             } else this.props.updateClub(this.state.club.objId, clubObj);
 
-            this.props.setPopupEdit(false);
+            // If images were changed, use the blob urls for the pictures
+            if (this.state.compressed !== null) {
+                fullClub.coverImg = this.state.coverImg;
+            }
 
-            if (this.props.new) this.props.setPopupOpen(false);
-            else this.resetState(fullClub);
+            if (this.props.new) this.props.resetPopupState();
+            else {
+                this.props.setPopupEdit(false);
+                this.resetState(fullClub);
+            }
 
             alert('Successfully added!');
         } else alert('Adding club failed :(');
@@ -225,7 +231,6 @@ class ClubPopup extends React.Component {
     addExec = () => {
         var execs = this.state.execs;
         var execBlobs = this.state.execBlobs;
-        // TODO: Add default constructor for exec & committee (prob convert to classes in entries.js)
         execs.push(new Exec());
         execBlobs.push(null);
         this.setState({ execs, execBlobs });
