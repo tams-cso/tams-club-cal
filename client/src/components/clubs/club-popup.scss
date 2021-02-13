@@ -112,7 +112,6 @@
     grid-template-columns: repeat(auto-fill, 10rem);
     gap: 1rem;
     justify-content: center;
-    align-items: center;
 
     display: grid;
     margin: auto;
@@ -293,6 +292,11 @@
         padding-left: 0;
         padding-right: 0;
         margin: 0 auto;
+        font-size: 0.65rem;
+    }
+
+    .club-popup-name {
+        font-size: 1.25rem;
     }
 
     .club-popup-advised {
@@ -305,5 +309,11 @@
 
     .club-popup-tab-item {
         font-size: 1.25rem;
+    }
+
+    .club-popup-committees {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
     }
 }
