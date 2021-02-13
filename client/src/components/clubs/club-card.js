@@ -1,7 +1,6 @@
 import React from 'react';
+import IconGroup from '../shared/icon-group';
 import { imgUrl } from '../../functions/util';
-import { ReactComponent as WebIcon } from '../../files/web.svg';
-import { ReactComponent as FbIcon } from '../../files/fb.svg';
 import './club-card.scss';
 
 class ClubCard extends React.Component {
@@ -20,19 +19,11 @@ class ClubCard extends React.Component {
                     {this.props.club.advised ? 'Advised' : 'Independent'}
                 </div>
                 <div className="club-card-name">{this.props.club.name}</div>
-                {/* TODO: Extract icons to seperate component */}
-                <div className="club-card-icons">
-                    <WebIcon
-                        onClick={() => {
-                            if (this.props.club.website != '') window.open(this.props.club.website);
-                        }}
-                    ></WebIcon>
-                    <FbIcon
-                        onClick={() => {
-                            if (this.props.club.fb != '') window.open(this.props.club.fb);
-                        }}
-                    ></FbIcon>
-                </div>
+                <IconGroup
+                    className="club-card-icons"
+                    fb={this.props.club.fb}
+                    website={this.props.club.website}
+                ></IconGroup>
             </div>
         );
     }
