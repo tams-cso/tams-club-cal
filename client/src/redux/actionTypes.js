@@ -19,3 +19,4 @@ export const SET_NEW = '[Popup] Set Is New';
 export const SET_ID = '[Popup] Set ID';
 export const SET_DELETED = '[Popup] Set Is Deleted';
 export const SET_TYPE = '[Popup] Set Type';
+export const SET_MOBILE_DROPDOWN = '[Popup] Set Mobile Dropdown Open'
