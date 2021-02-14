@@ -4,7 +4,7 @@ import { withRouter } from 'react-router';
 
 import { getClubList, getEventList, getVolunteering } from './api';
 import { addDayjsElement, catchError, getParams } from './util';
-import { getSavedClubList, getSavedEventList, getSavedVolunteeringList } from '../redux/selectors';
+import { getMobileDropdown, getSavedClubList, getSavedEventList, getSavedVolunteeringList } from '../redux/selectors';
 import {
     setEventList,
     setPopupOpen,
@@ -12,6 +12,7 @@ import {
     resetPopupState,
     setClubList,
     setVolunteeringList,
+    setMobileDropdown,
 } from '../redux/actions';
 
 class RoutingRequests extends React.Component {
@@ -85,6 +86,9 @@ class RoutingRequests extends React.Component {
     }
 
     componentDidUpdate(prevProps) {
+        // Only run functions for location changes
+        if (prevProps.location === this.props.location) return;
+
         // Close popup if going to page without popup (check for no search parameters in URL)
         // TODO: What if there are other search paramaters
         if (prevProps.location.search !== '' && this.props.location.search === '') {
@@ -98,6 +102,9 @@ class RoutingRequests extends React.Component {
 
         // Return if pathnames match (eg. opening popups)
         if (this.props.location.pathname === prevProps.location.pathname) return;
+
+        // Close mobile menu on any route change
+        if (this.props.mobileDropdown) this.props.setMobileDropdown(false);
 
         // Because homepage has 2 redirects: / and /events
         if (
@@ -120,6 +127,7 @@ const mapStateToProps = (state) => {
         eventList: getSavedEventList(state),
         clubList: getSavedClubList(state),
         volunteeringList: getSavedVolunteeringList(state),
+        mobileDropdown: getMobileDropdown(state),
     };
 };
 const mapDispatchToProps = {
@@ -129,6 +137,7 @@ const mapDispatchToProps = {
     setEventList,
     setVolunteeringList,
     setClubList,
+    setMobileDropdown,
 };
 
 export default connect(mapStateToProps, mapDispatchToProps)(withRouter(RoutingRequests));

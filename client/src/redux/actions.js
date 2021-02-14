@@ -17,6 +17,7 @@ import {
     SET_DELETED,
     SET_TYPE,
     ADD_EVENT,
+    SET_MOBILE_DROPDOWN,
 } from './actionTypes';
 
 export const resetDataState = () => ({
@@ -105,4 +106,9 @@ export const setPopupType = (type) => ({
 export const addEvent = (event) => ({
     type: ADD_EVENT,
     payload: { event },
+});
+
+export const setMobileDropdown = (open) => ({
+    type: SET_MOBILE_DROPDOWN,
+    payload: { open },
 });

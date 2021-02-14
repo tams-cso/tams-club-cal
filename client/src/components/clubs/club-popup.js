@@ -264,8 +264,7 @@ class ClubPopup extends React.Component {
         }
     };
 
-    componentDidUpdate(prevProps) {
-        if (prevProps.popupOpen === this.props.popupOpen) return;
+    checkOpenAndSetState = () => {
         if (this.props.popupOpen && this.props.id !== null) {
             if (this.props.new) {
                 this.resetState(new Club());
@@ -275,6 +274,15 @@ class ClubPopup extends React.Component {
         } else {
             this.setState({ club: null });
         }
+    }
+
+    componentDidMount() {
+        this.checkOpenAndSetState();
+    }
+
+    componentDidUpdate(prevProps) {
+        if (prevProps.popupOpen === this.props.popupOpen) return;
+        this.checkOpenAndSetState();
     }
 
     render() {

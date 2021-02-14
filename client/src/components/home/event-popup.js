@@ -191,7 +191,7 @@ class EventPopup extends React.Component {
     render() {
         // Return empty div if the current popup is not defined
         if (!this.props.popupOpen || this.state.event === null)
-            return <Loading className="EventPopup"></Loading>;
+            return <Loading className="event-popup"></Loading>;
 
         // Add a Dayjs attribute
         addDayjsElement(this.state.event);

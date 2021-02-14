@@ -1,17 +1,21 @@
 import React from 'react';
+import { connect } from 'react-redux';
 import { NavLink, withRouter } from 'react-router-dom';
+
 import SearchBar from './search-bar';
 import { ReactComponent as Logo } from '../../files/logo-small.svg';
+import { getMobileDropdown } from '../../redux/selectors';
+import { setMobileDropdown } from '../../redux/actions';
 import './menu.scss';
 
 class Menu extends React.Component {
     constructor(props) {
         super(props);
-        this.state = { mobileDropdown: false, searchBar: <SearchBar className="menu-item"></SearchBar> };
+        this.state = { searchBar: <SearchBar className="menu-item"></SearchBar> };
     }
 
     clickDropdown = () => {
-        this.setState({ mobileDropdown: !this.state.mobileDropdown });
+        this.props.setMobileDropdown(!this.props.mobileDropdown);
     };
 
     navHome = () => {
@@ -63,7 +67,7 @@ class Menu extends React.Component {
                 <div className="mobile-menu">
                     <Logo className="mobile-menu-logo" onClick={this.navHome}></Logo>
                     <svg
-                        className={'hamburger' + (this.state.mobileDropdown ? ' ham-active' : '')}
+                        className={'hamburger' + (this.props.mobileDropdown ? ' ham-active' : '')}
                         viewBox="0 0 100 80"
                         width="30"
                         height="30"
@@ -74,7 +78,7 @@ class Menu extends React.Component {
                         <rect y="60" width="80" height="15"></rect>
                     </svg>
                 </div>
-                <div className={'mobile-menu-dropdown' + (this.state.mobileDropdown ? ' drop-active' : '')}>
+                <div className={'mobile-menu-dropdown' + (this.props.mobileDropdown ? ' drop-active' : '')}>
                     <NavLink
                         className="menu-item mob-item"
                         activeClassName="active"
@@ -102,4 +106,11 @@ class Menu extends React.Component {
     }
 }
 
-export default withRouter(Menu);
+const mapStateToProps = (state) => {
+    return {
+        mobileDropdown: getMobileDropdown(state),
+    };
+};
+const mapDispatchToProps = { setMobileDropdown };
+
+export default connect(mapStateToProps, mapDispatchToProps)(withRouter(Menu));

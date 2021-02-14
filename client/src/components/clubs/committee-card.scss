@@ -3,7 +3,6 @@
 .committee-card {
     position: relative;
     width: 10rem;
-    height: 9rem;
 
     text-align: center;
     background-color: $background;
@@ -18,8 +17,8 @@
 }
 
 .committee-card-description {
-    padding: 0 0.25rem;
-    font-size: 0.45rem;
+    padding: 0 0.25rem 2rem;
+    font-size: 0.5rem;
     font-family: $alt-font;
 }
 
@@ -32,4 +31,20 @@
     display: flex;
     flex-direction: row;
     justify-content: center;
+}
+
+/*
+ * #########################
+ * ##### MEDIA QUERIES #####
+ * #########################
+ */
+
+@include media-phone-down {
+    .committee-card {
+        width: 85vw;
+    }
+    
+    .committee-card-description {
+        font-size: 0.6rem;
+    }
 }
