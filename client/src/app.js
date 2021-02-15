@@ -8,6 +8,7 @@ import NotFound from './components/404/404';
 import Volunteering from './components/volunteering/volunteering';
 import Search from './components/menu/search';
 import RoutingRequests from './functions/routing-requests';
+import Edit from './components/edit/edit';
 
 import './app.scss';
 import Resources from './components/resources/resources';
@@ -27,6 +28,7 @@ function App() {
                         <Route exact path="/resources" component={Resources} />
                         <Route exact path="/about" component={About} />
                         <Route exact path="/search" component={Search} />
+                        <Route path="/edit" component={Edit}></Route>
                         <Route component={NotFound} />
                     </Switch>
                 </div>

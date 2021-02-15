@@ -44,7 +44,7 @@ class Menu extends React.Component {
                         className="menu-item menu-logo"
                         activeClassName="active"
                         to="/"
-                        isActive={() => ['/', '/events'].includes(window.location.pathname)}
+                        isActive={() => ['/', '/events', '/edit'].includes(window.location.pathname)}
                         exact
                     >
                         <div className="menu-logo-tams">TAMS</div>
