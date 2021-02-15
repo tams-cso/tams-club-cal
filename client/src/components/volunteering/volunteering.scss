@@ -1,0 +1,109 @@
+@import '../../custom.scss';
+
+.volunteering-section {
+    display: grid;
+    gap: 1rem;
+    grid-template-columns: repeat(auto-fill, 9rem);
+    justify-content: center;
+    align-items: center;
+    margin: 0 6vw 1rem;
+}
+
+.volunteering-filters {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    margin: 1rem 6rem 0;
+}
+
+.vol-filter {
+    background-color: $background;
+    border: 0.1rem solid $background-tint;
+    border-radius: 1rem;
+    width: 5rem;
+    // TODO: Fix slightly off button ratios
+    padding: 0.2rem 0.1rem;
+    margin-right: 0.5rem;
+    margin-bottom: 0.5rem;
+    font-size: 0.5rem;
+    transition: 0.2s;
+}
+
+.vol-filter.all {
+    border-color: $filter-all;
+}
+
+.vol-filter.all.active,
+.volunteering-filters .vol-filter.all:hover {
+    background-color: $filter-all;
+}
+
+.vol-filter.limited {
+    border-color: $filter-limited;
+}
+
+.vol-filter.limited.active,
+.volunteering-filters .vol-filter.limited:hover {
+    background-color: $filter-limited;
+}
+
+.vol-filter.semester {
+    border-color: $filter-semester;
+}
+
+.vol-filter.semester.active,
+.volunteering-filters .vol-filter.semester:hover {
+    background-color: $filter-semester;
+}
+
+.vol-filter.set-times {
+    border-color: $filter-set-times;
+}
+
+.vol-filter.set-times.active,
+.volunteering-filters .vol-filter.set-times:hover {
+    background-color: $filter-set-times;
+}
+
+.vol-filter.weekly {
+    border-color: $filter-weekly;
+}
+
+.vol-filter.weekly.active,
+.volunteering-filters .vol-filter.weekly:hover {
+    background-color: $filter-weekly;
+}
+
+.vol-filter.open {
+    border-color: $filter-open;
+}
+
+.vol-filter.open.active,
+.volunteering-filters .vol-filter.open:hover {
+    background-color: $filter-open;
+}
+
+.vol-filter:hover {
+    cursor: pointer;
+    box-shadow: 0 0 0.2rem 0.05rem $background-tint;
+}
+
+.resources-add-volunteering-container {
+    text-align: center;
+    margin-bottom: 1rem;
+}
+
+@include media-small-desktop-down {
+    .resources-link-container {
+        margin: 0 1rem 1rem;
+    }
+    .volunteering-section {
+        margin: 0 0 1rem;
+    }
+}
+
+@include media-tablet-down {
+    .volunteering-filters {
+        margin: 0 10vw;
+    }
+}

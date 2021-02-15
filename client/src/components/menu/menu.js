@@ -50,14 +50,14 @@ class Menu extends React.Component {
                         <div className="menu-logo-tams">TAMS</div>
                         <div className="menu-logo-club">Club Calendar</div>
                     </NavLink>
-                    <NavLink className="menu-item" activeClassName="active" to="/resources" exact>
-                        Resources
+                    <NavLink className="menu-item" activeClassName="active" to="/volunteering" exact>
+                        Volunteering
                     </NavLink>
                     <NavLink className="menu-item" activeClassName="active" to="/clubs" exact>
                         Clubs
                     </NavLink>
-                    <NavLink className="menu-item" activeClassName="active" to="/add" exact>
-                        Add Event
+                    <NavLink className="menu-item" activeClassName="active" to="/resources" exact>
+                        Resources
                     </NavLink>
                     <NavLink className="menu-item" activeClassName="active" to="/about" exact>
                         About
@@ -88,14 +88,14 @@ class Menu extends React.Component {
                     >
                         Home
                     </NavLink>
-                    <NavLink className="menu-item mob-item" activeClassName="active" to="/resources" exact>
-                        Resources
+                    <NavLink className="menu-item mob-item" activeClassName="active" to="/volunteering" exact>
+                        Volunteering
                     </NavLink>
                     <NavLink className="menu-item mob-item" activeClassName="active" to="/clubs" exact>
                         Clubs
                     </NavLink>
-                    <NavLink className="menu-item mob-item" activeClassName="active" to="/add" exact>
-                        Add Event
+                    <NavLink className="menu-item mob-item" activeClassName="active" to="/resources" exact>
+                        Resources
                     </NavLink>
                     <NavLink className="menu-item mob-item" activeClassName="active" to="/about" exact>
                         About
