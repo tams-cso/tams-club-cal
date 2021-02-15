@@ -1,11 +1,11 @@
 import React from 'react';
 import { connect } from 'react-redux';
 import { NavLink, withRouter } from 'react-router-dom';
-
 import SearchBar from './search-bar';
-import { ReactComponent as Logo } from '../../files/logo-small.svg';
+
 import { getMobileDropdown } from '../../redux/selectors';
 import { setMobileDropdown } from '../../redux/actions';
+import { ReactComponent as Logo } from '../../files/logo-small.svg';
 import './menu.scss';
 
 class Menu extends React.Component {
@@ -38,7 +38,7 @@ class Menu extends React.Component {
 
     render() {
         return (
-            <div className="Menu">
+            <div className="menu">
                 <div className="menu-list">
                     <NavLink
                         className="menu-item menu-logo"

@@ -71,9 +71,3 @@
         width: 90%;
     }
 }
-
-@include media-phone-down {
-    .about {
-        margin-top: 0;
-    }
-}
