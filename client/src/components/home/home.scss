@@ -38,7 +38,7 @@
 
 .today {
     display: none;
-    font-family: $block-font;
+    font-family: $title-font;
     text-align: center;
     background-color: $background;
     width: 2.5rem;
@@ -47,7 +47,6 @@
     font-size: 0.75rem;
     border-radius: 0.25rem;
     transition: 0.2s;
-    // margin-right: 15vw;
 }
 
 .today:hover {
@@ -63,7 +62,7 @@
 
 .change-month {
     display: none;
-    font-family: $block-font;
+    font-family: $title-font;
     background-color: $background;
     width: 1.3rem;
     border: 0.1rem solid $text-primary;

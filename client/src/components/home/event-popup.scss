@@ -40,6 +40,8 @@
 
 .event-popup-type {
     font-size: 0.6rem;
+    font-family: $title-font;
+    font-weight: 300;
 }
 
 .event-popup-type.event {
@@ -63,6 +65,8 @@
 
 .event-popup-club {
     font-size: 0.65rem;
+    font-family: $title-font;
+    font-weight: 300;
     color: $text-light;
 }
 
@@ -103,7 +107,6 @@
 
 .event-popup-description {
     font-size: 0.55rem;
-    font-weight: 300;
     white-space: pre-line;
 }
 

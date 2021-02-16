@@ -21,7 +21,7 @@ h1 {
 p {
     margin: 0;
     font-size: 0.75rem;
-    font-weight: 700;
+    font-weight: 400;
 }
 
 textarea {
@@ -30,18 +30,18 @@ textarea {
     border-radius: 0.1rem;
 
     font-family: $block-font;
-    font-weight: 700;
+    font-weight: 400;
 }
 
 input {
     font-family: $block-font;
-    font-weight: 700;
+    font-weight: 400;
 }
 
 label {
     margin-right: 1rem;
     color: $text-light;
-    font-weight: 700;
+    font-weight: 400;
 }
 
 button {
@@ -52,7 +52,7 @@ button {
 a {
     color: $primary;
     text-decoration: none;
-    font-weight: 700;
+    font-weight: 400;
     transition: 0.2s;
 }
 
