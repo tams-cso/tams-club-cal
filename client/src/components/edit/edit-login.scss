@@ -1,1 +1,21 @@
 @import '../../custom.scss';
+
+.edit-login {
+    margin: 1rem 2rem;
+}
+
+.edit-login-top {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+}
+
+.edit-login-title {
+    font-size: 1rem;
+    color: $bad;
+}
+
+.edit-login-login-button {
+    height: 1.25rem;
+    font-size: 0.75rem;
+}

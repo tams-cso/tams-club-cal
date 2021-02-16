@@ -104,58 +104,6 @@
 }
 
 /*
- * ###########################
- * ##### POPUP EDIT MENU #####
- * ###########################
- */
-
-.event-popup-edit {
-    padding: 0.5rem;
-}
-
-.event-popup-type-switcher {
-    display: flex;
-}
-
-.event-popup-name-input {
-    width: 15rem;
-    font-size: 1.25rem !important;
-}
-
-.event-popup input,
-.event-popup label,
-.event-popup textarea {
-    font-size: 0.75rem;
-}
-
-.event-popup label {
-    margin-right: 0.5rem;
-}
-
-.event-popup-description-input {
-    width: 95%;
-    height: 6rem;
-    margin: 0 0 0.5rem 0;
-    padding: 0.35rem;
-}
-
-.event-popup-extra-link {
-    margin-left: 2rem;
-}
-
-.event-popup-action-button-box {
-    display: flex;
-    flex-direction: row;
-    justify-content: flex-end;
-}
-
-.event-popup-action-button-box .action-button {
-    font-size: 0.75rem;
-    padding: 0.1rem 0.25rem;
-    margin: 0.25rem 0.25rem 0;
-}
-
-/*
  * #########################
  * ##### MEDIA QUERIES #####
  * #########################
