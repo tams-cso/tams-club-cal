@@ -94,7 +94,7 @@ class EditEvents extends React.Component {
         // Get response and send to user
         if (res.status === 200) {
             alert(`Successfully ${this.state.new ? 'added' : 'edited'} event!`);
-            this.props.history.push('/');
+            this.props.parentHistory.push('/');
         } else alert(`${this.state.new ? 'Adding' : 'Editing'} event failed :(`);
     };
 
