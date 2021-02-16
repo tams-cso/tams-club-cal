@@ -36,7 +36,7 @@ class RoutingRequests extends React.Component {
 
                 break;
             }
-            case '/resources': {
+            case '/volunteering': {
                 // If volunteering list hasn't been fetched, fetch with API
                 if (this.props.volunteeringList !== null) return;
                 const res = await getVolunteering();
