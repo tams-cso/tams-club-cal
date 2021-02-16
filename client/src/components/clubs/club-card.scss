@@ -69,8 +69,9 @@
 // Default color is $primary, and will be $type-signup if independent
 .club-card-type {
     margin-top: 0.1rem;
-    color: $primary;
     font-size: 0.5rem;
+    font-family: $title-font;
+    color: $primary;
 }
 
 .club-card-independent {
@@ -78,9 +79,11 @@
 }
 
 .club-card-name {
-    color: $text-primary;
-    font-size: 0.65rem;
     padding: 0 0.25rem;
+
+    font-size: 0.65rem;
+    font-family: $title-font;
+    color: $text-primary;
 }
 
 /*

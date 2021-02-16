@@ -24,16 +24,21 @@
 
 .res-popup-name {
     font-size: 1.5rem;
+    font-family: $title-font;
+    font-weight: 300;
 }
 
 .res-popup-club {
     font-size: 0.9rem;
+    font-family: $title-font;
+    font-weight: 300;
     color: $text-light;
 }
 
 .res-popup-description {
     font-size: 0.65rem;
     font-family: $alt-font;
+    font-weight: 300;
     white-space: pre-line;
 }
 

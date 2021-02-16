@@ -14,10 +14,13 @@
     padding-top: 0.5rem;
     top: 2.5rem;
     height: 1.5rem;
+    width: 100%;
+
     display: flex;
     align-items: center;
     justify-content: center;
-    width: 100%;
+    
+    font-family: $title-font;    
     background-color: $background;
     z-index: 1;
 }
@@ -35,7 +38,7 @@
 
 .today {
     display: none;
-    font-family: $main-font;
+    font-family: $block-font;
     text-align: center;
     background-color: $background;
     width: 2.5rem;
@@ -60,7 +63,7 @@
 
 .change-month {
     display: none;
-    font-family: $main-font;
+    font-family: $block-font;
     background-color: $background;
     width: 1.3rem;
     border: 0.1rem solid $text-primary;
@@ -84,7 +87,6 @@
 }
 
 .view-switch {
-    font-family: $main-font;
     text-align: center;
     background-color: $background;
     width: 7.7rem;

@@ -7,15 +7,21 @@ class VolunteeringCard extends React.Component {
         // TODO: Convert millisecond signup time to [Sunday 11:00pm]
         var filterObjects = formatVolunteeringFilters(this.props.vol.filters, this.props.vol.signupTime);
         return (
-            <div className="VolunteeringCard" onClick={this.props.onClick}>
-                <div className={'overlay' + (!this.props.vol.filters.open ? ' overlay-closed' : '')}>
-                    <div className={'card-status status-' + (this.props.vol.filters.open ? 'open' : 'closed')}>
+            <div className="volunteering-card" onClick={this.props.onClick}>
+                <div className={'volunteering-card-overlay' + (!this.props.vol.filters.open ? ' overlay-closed' : '')}>
+                    <div
+                        className={
+                            'volunteering-card-status status ' + (this.props.vol.filters.open ? 'open' : 'closed')
+                        }
+                    >
                         {this.props.vol.filters.open ? 'Open' : 'Closed'}
                     </div>
-                    <div className="card-name">{this.props.vol.name}</div>
-                    <div className="club-name">{this.props.vol.club}</div>
-                    <div className="description">{this.props.vol.description.substring(0, 36) + '...'}</div>
-                    <div className="filter-list">{filterObjects}</div>
+                    <p className="volunteering-card-name">{this.props.vol.name}</p>
+                    <p className="volunteering-card-club-name">{this.props.vol.club}</p>
+                    <p className="volunteering-card-description">
+                        {this.props.vol.description.substring(0, 36) + '...'}
+                    </p>
+                    <div className="volunteering-card-filter-list">{filterObjects}</div>
                 </div>
             </div>
         );

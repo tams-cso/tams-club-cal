@@ -89,7 +89,7 @@ CSS is generally extremely difficult to format, and it can be extremely hard to 
     color: $text-primary;
 
     /* Text */
-    font-family: $main-font;
+    font-family: $block-font;
     font-size: 1.5rem;
     line-height: 1.2rem;
     text-align: center;

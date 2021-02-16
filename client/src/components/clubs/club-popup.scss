@@ -34,6 +34,8 @@
 
 .club-popup-advised {
     margin-top: 0.25rem;
+    font-family: $title-font;
+    font-weight: 300;
     color: $primary;
 }
 
@@ -43,8 +45,10 @@
 }
 
 .club-popup-name {
-    font-size: 1.45rem;
     padding: 0 0.75rem;
+    font-size: 1.45rem;
+    font-weight: 300;
+    font-family: $title-font;
 }
 
 .club-popup-description {
@@ -93,6 +97,8 @@
 
 .club-popup-tab-item {
     margin: 0 1.5rem;
+    font-family: $title-font;
+    font-weight: 300;
     color: $text-light;
     transition: 0.2s;
     cursor: pointer;

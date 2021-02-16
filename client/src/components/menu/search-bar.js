@@ -35,7 +35,7 @@ class SearchBar extends React.Component {
 
     render() {
         return (
-            <div className={`SearchBar`}>
+            <div className={`SearchBar ${this.props.className}`}>
                 <input
                     name="query"
                     className="search-bar"

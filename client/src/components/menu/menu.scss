@@ -7,6 +7,8 @@
     left: 0;
     right: 0;
     height: 2rem;
+    
+    font-family: $title-font;
     background-color: $background;
 }
 
@@ -18,12 +20,14 @@
 }
 
 .menu-item {
-    text-align: center;
-    font-size: 1.75vw;
-    text-decoration: none;
-    color: $text-primary;
     padding: 0.4vw;
     border-radius: 0.1rem;
+    text-align: center;
+    text-decoration: none;
+
+    font-size: 1.75vw;
+    font-weight: 300;
+    color: $text-primary;
     transition: 0.2s;
 }
 

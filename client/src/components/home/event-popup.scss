@@ -53,9 +53,12 @@
 .event-popup-name {
     width: 100%;
     max-width: 100%;
-    overflow: hidden;
-    font-size: 1.1rem;
     margin-bottom: -0.1rem;
+    overflow: hidden;
+    
+    font-size: 1.1rem;
+    font-family: $title-font;
+    font-weight: 300;
 }
 
 .event-popup-club {
@@ -100,6 +103,7 @@
 
 .event-popup-description {
     font-size: 0.55rem;
+    font-weight: 300;
     white-space: pre-line;
 }
 

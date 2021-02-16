@@ -1,6 +1,6 @@
 @import '../../custom.scss';
 
-.VolunteeringCard {
+.volunteering-card {
     background-color: $background;
     box-shadow: 0 0 0.3rem $background-tint;
     text-align: center;
@@ -9,49 +9,62 @@
     transition: 0.3s;
 }
 
-.VolunteeringCard:hover {
+.volunteering-card:hover {
     cursor: pointer;
     box-shadow: 0 0 0.2rem 0.1rem $background-dark;
 }
 
-.overlay {
+.volunteering-card-overlay {
     padding: 0.25rem;
     width: 8.5rem;
     height: 7rem;
 }
 
-.overlay-closed {
+.volunteering-card-overlay-closed {
     background-color: #00000033;
 }
 
-.card-status {
+.volunteering-card-status {
     font-size: 0.6rem;
+    font-family: $title-font;
 }
 
-.status-open {
+.volunteering-card-status.open {
     color: $primary;
 }
 
-.status-closed {
+.volunteering-card-status.closed {
     color: $bad;
 }
 
-.card-name {
-    font-size: 1.2rem;
-}
-
-.club-name {
-    color: $text-light;
-    font-size: 0.8rem;
-}
-
-.description {
-    font-size: 0.55rem;
+.volunteering-card-name {
+    margin: 0.1rem;
+    font-family: $title-font;
+    font-size: 0.9rem;
+    font-weight: 300;
+    white-space: nowrap;
     overflow-x: hidden;
+    text-overflow: ellipsis;
 }
 
-.filter-list {
+.volunteering-card-club-name {
+    color: $text-light;
     font-size: 0.6rem;
+    font-family: $title-font;
+    font-weight: 300;
+}
+
+.volunteering-card-description {
+    margin-bottom: 0.25rem;
+    white-space: nowrap;
+    overflow-x: hidden;
+    text-overflow: ellipsis;
+    font-size: 0.5rem;
+    font-weight: 300;
+}
+
+.volunteering-card-filter-list {
+    font-size: 0.5rem;
 }
 
 .f-limited {
