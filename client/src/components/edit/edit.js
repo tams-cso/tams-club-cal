@@ -5,8 +5,6 @@ import EditEvents from './edit-events';
 import EditClubs from './edit-clubs';
 import EditVolunteering from './edit-volunteering';
 
-import './edit.scss';
-
 class Edit extends React.Component {
     render() {
         return (
