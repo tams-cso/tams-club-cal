@@ -1,5 +1,5 @@
 import React from 'react';
-import Image from './image';
+import Image from '../shared/image';
 import { imgUrl } from '../../functions/util';
 import defaultProfile from '../../files/default-profile.png';
 import './exec-card.scss';

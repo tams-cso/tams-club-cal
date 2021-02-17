@@ -44,11 +44,6 @@ class Clubs extends React.Component {
                     <ClubPopup></ClubPopup>
                 </Popup>
                 <div className="club-card-list">{cards}</div>
-                <div className="clubs-add-club-container">
-                    <ActionButton className="clubs-add-club" onClick={this.addClub}>
-                        Add Club
-                    </ActionButton>
-                </div>
             </div>
         );
     }
