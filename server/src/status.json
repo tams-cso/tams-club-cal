@@ -1,5 +1,6 @@
 {
     "200": "Success",
     "400": "Bad Request",
-    "401": "Unauthorized"
+    "401": "Unauthorized",
+    "403": "Forbidden"
 }

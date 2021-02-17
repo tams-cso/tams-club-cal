@@ -48,6 +48,9 @@ app.use(cors());
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ limit: '50mb', extended: true, parameterLimit: 50000 }));
 
+// Trust proxy
+app.set('trust proxy', true);
+
 // Parse every request here first
 app.use(function (req, res, next) {
     // Add CORS headers
@@ -62,6 +65,20 @@ app.use(function (req, res, next) {
     if (!(NO_KEY || static)) {
         if (!(req.body.key === process.env.API_KEY || req.query.key === process.env.API_KEY)) {
             sendError(res, 401, 'Invalid API key. Pass the key in the POST body or in the querystring.');
+            return;
+        }
+    }
+
+    // Check for correct origin
+    // Set this in the .env file as ORIGIN
+    // This will throw an error if no origin is defined OR if the origin does not match the expected origin
+    // The block will be skipped if no ORIGIN environmental variable is defined
+    if (!static) {
+        if (
+            req.headers.origin === undefined ||
+            (process.env.ORIGIN !== undefined && req.headers.origin.indexOf(process.env.ORIGIN) === -1)
+        ) {
+            sendError(res, 403, 'Invalid request origin.');
             return;
         }
     }
@@ -233,8 +250,7 @@ app.post('/delete-club', async (req, res, next) => {
     if (good) {
         res.status(200);
         res.send({ status: 200 });
-    }
-    else sendError(res, 400, 'Could not delete club');
+    } else sendError(res, 400, 'Could not delete club');
 });
 
 app.get(/\/static\/.*/, async (req, res, next) => {
