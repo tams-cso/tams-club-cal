@@ -21,7 +21,6 @@ import { getClub } from '../../functions/api';
 import { Club } from '../../functions/entries';
 import { imgUrl, isActive, parseLinks } from '../../functions/util';
 
-import { ReactComponent as TrashIcon } from '../../files/trash-can.svg';
 import './club-popup.scss';
 
 class ClubPopup extends React.Component {
