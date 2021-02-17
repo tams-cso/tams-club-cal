@@ -19,8 +19,8 @@
 .about-info-p {
     margin-bottom: 1rem;
     text-align: center;
+    
     font-size: 0.8rem;
-    font-family: $alt-font;
 }
 
 /*
@@ -39,6 +39,8 @@
 #feedback-submit {
     padding: 0.25rem 0.75rem;
     border: 0;
+    font-family: $title-font;
+    font-weight: 300;
     font-size: 1rem;
 
     color: $primary;
@@ -69,11 +71,5 @@
 
     #feedback-form {
         width: 90%;
-    }
-}
-
-@include media-phone-down {
-    .about {
-        margin-top: 0;
     }
 }

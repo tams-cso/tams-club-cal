@@ -22,13 +22,18 @@ class PageNotFound extends React.Component {
                         </Link>
                     </li>
                     <li>
-                        <Link className="page-not-found-nav-item" to="/resources">
-                            Resources <span className="helper-text">(with links and volunteering opportunities) ➤</span>
+                        <Link className="page-not-found-nav-item" to="/volunteering">
+                            Volunteering <span className="helper-text">(contains information on all volunteering opportunities) ➤</span>
                         </Link>
                     </li>
                     <li>
                         <Link className="page-not-found-nav-item" to="/clubs">
                             Clubs <span className="helper-text">(all the clubs at TAMS) ➤</span>
+                        </Link>
+                    </li>
+                    <li>
+                        <Link className="page-not-found-nav-item" to="/resources">
+                            Resources <span className="helper-text">(with links and other external resources) ➤</span>
                         </Link>
                     </li>
                     <li>

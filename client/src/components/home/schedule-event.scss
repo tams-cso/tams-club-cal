@@ -32,10 +32,13 @@
 }
 
 .ScheduleEvent .event-time {
-    width: 6.1rem;
+    width: 6rem;
+    margin: 0 0.5em 0 0.5em;
     flex-grow: 0;
     flex-shrink: 0;
-    margin: 0 0.5em 0 0.5em;
+    font-family: $title-font;
+    font-size: 0.75rem;
+    font-weight: 300;
 }
 
 .ScheduleEvent .event-club-name {
@@ -47,13 +50,20 @@
     flex-grow: 0;
     flex-shrink: 0;
     margin: 0 0.5em 0 0.5em;
+    font-family: $title-font;
+    font-size: 0.75rem;
+    font-weight: 300;
 }
 
 .ScheduleEvent .event-name {
+    margin: 0;
     margin-left: 0.5em;
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
+    font-family: $title-font;
+    font-size: 0.75rem;
+    font-weight: 300;
 }
 
 @include media-phone-down {

@@ -44,6 +44,8 @@
     margin-bottom: 0.25rem;
     flex-direction: row;
     align-items: flex-end;
+    font-family: $title-font;
+    font-weight: 300;
 }
 
 .exec-card-position {
@@ -55,8 +57,7 @@
 
 .exec-card-description {
     text-align: left;
-    font-size: 0.55rem;
-    font-family: $alt-font;
+    font-size: 0.6rem;
 }
 
 /*

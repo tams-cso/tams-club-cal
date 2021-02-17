@@ -66,7 +66,7 @@ class Search extends React.Component {
         if (this.state.results === null) defaultMessage = <p className="default-search">Search for an Event here!</p>;
         return (
             <div className="Search">
-                <SearchBar search={this.search} default={this.state.query}></SearchBar>
+                <SearchBar className="search-page-bar" search={this.search} default={this.state.query}></SearchBar>
                 {defaultMessage}
                 <div className="search-result-list">{this.state.results}</div>
             </div>

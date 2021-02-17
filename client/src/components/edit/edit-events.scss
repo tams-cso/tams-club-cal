@@ -1,5 +1,5 @@
 /**
- * The Add Event page is where anyone can add events through a simple form!
+ * The Edit Event page is where anyone can edit or add events through a simple form!
  * This form is mainly input boxes with a few features:
  *
  * 1) The type buttons at the top will toggle between event and signup types,
@@ -12,11 +12,11 @@
 
 @import '../../custom.scss';
 
-.add {
-    margin: 1rem 8rem 0;
+.edit-events {
+    margin: 1rem 4rem 0;
 }
 
-.add input {
+.edit-events input {
     font-size: 1rem;
 }
 
@@ -26,7 +26,7 @@
  * ##############################
  */
 
-.add-type-switcher {
+.edit-events-type-switcher {
     display: flex;
     width: 13rem;
     justify-content: space-between;
@@ -34,7 +34,7 @@
 }
 
 // Overrides ActionButton
-.add-type-button {
+.edit-events-type-button {
     width: 6rem;
     padding: 0.15rem 0.5rem !important;
     border: 0.075rem solid $background-tint;
@@ -45,54 +45,53 @@
     text-align: center;
 }
 
-.add-type-button:hover {
+.edit-events-type-button:hover {
     box-shadow: none;
 }
 
-.add-event-button.add-event-active,
-.add-event-button:hover {
+.edit-events-event-button.edit-events-event-active,
+.edit-events-event-button:hover {
     color: $type-event-darker;
     border-color: $type-event !important;
 }
 
-.add-signup-button.add-signup-active,
-.add-signup-button:hover {
+.edit-events-signup-button.edit-events-signup-active,
+.edit-events-signup-button:hover {
     color: $type-signup;
     border-color: $type-signup !important;
 }
 
-/**
+/*
  * #######################
  * ##### INFO INPUTS #####
  * #######################
  */
 
-.add-name-input {
+.edit-events-name-input {
     width: 100%;
     font-size: 1.25rem !important;
 }
 
-.add-club-name-input,
-.add-links-input,
-.add-added-by-input {
+.edit-events-club-name-input,
+.edit-events-links-input {
     width: 50%;
 }
 
-.add-extra-link {
+.edit-events-extra-link {
     margin-left: 3rem;
 }
 
-.add-time-input {
+.edit-events-time-input {
     margin-left: 1rem;
 }
 
-.add-timezone-message {
+.edit-events-timezone-message {
     margin: 0 0 0.75rem 2.75rem;
     font-size: 0.55rem;
     color: $text-light;
 }
 
-.add-description-input {
+.edit-events-description-input {
     font-size: 0.75rem;
     width: 100%;
     height: 10rem;
@@ -101,44 +100,44 @@
 }
 
 /*
- * ######################################
- * ##### SUBMIT AND INVALID MESSAGE #####
- * ######################################
+ * #########################
+ * ##### SUBMIT BUTTON #####
+ * #########################
  */
 
 // Overrides ActionButton
-.add-submit {
+.edit-events-submit {
     color: $primary;
     padding: 0.25rem 0.75rem;
     font-size: 1rem;
 }
 
-.add-invalid {
-    margin: 0.25rem 0;
-    color: $bad;
-    font-size: 0.75rem;
-    text-align: center;
-}
+/*
+ * #########################
+ * ##### MEDIA QUERIES #####
+ * #########################
+ */
+
 @include media-small-desktop-down {
-    .add {
+    .edit-events {
         margin: 1rem 2rem 0;
     }
 }
 
 @include media-phone-down {
-    .add {
+    .edit-events {
         margin: 1rem 1rem 0;
     }
 
-    .add-timezone-message {
+    .edit-events-timezone-message {
         margin-left: 1.75rem;
     }
 
-    .add-links-input {
+    .edit-events-links-input {
         width: 80%;
     }
 
-    .add-description-input {
+    .edit-events-description-input {
         width: 80%;
     }
 }

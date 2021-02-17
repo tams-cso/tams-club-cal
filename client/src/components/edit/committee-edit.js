@@ -12,7 +12,7 @@ class CommitteeEdit extends React.Component {
                         num={this.props.num}
                         className="line-in committee-edit-name-input"
                         type="text"
-                        placeholder="Exec name..."
+                        placeholder="Committee name..."
                         value={this.props.committee.name}
                         onChange={this.props.onChange}
                     ></input>

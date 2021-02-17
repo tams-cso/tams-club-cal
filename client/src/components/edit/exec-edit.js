@@ -1,6 +1,6 @@
 import React from 'react';
 import ImageUpload from './image-upload';
-import Image from './image';
+import Image from '../shared/image';
 import { imgUrl } from '../../functions/util';
 
 import { ReactComponent as TrashIcon } from '../../files/trash-can.svg';

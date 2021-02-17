@@ -13,7 +13,7 @@
 
 $grid-border: 0.025rem solid $text-primary;
 $rh: 5rem;
- 
+
 /*
  * ###########################
  * ##### CALENDAR HEADER #####
@@ -22,6 +22,8 @@ $rh: 5rem;
 
 .calendar-day-names {
     text-align: center;
+    font-family: $title-font;
+    font-weight: 300;
 }
 
 .calendar-header {
@@ -54,4 +56,9 @@ $rh: 5rem;
 
 .calendar-day:nth-child(7n) {
     border-right: $grid-border;
+}
+
+.calendar-date {
+    font-family: $title-font;
+    font-weight: 300;
 }

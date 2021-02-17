@@ -3,48 +3,57 @@
 html,
 body,
 #root {
-    margin: 0;
-    color: $text-primary;
     min-height: 100%;
+    margin: 0;
+
     font-size: 36px;
-    font-family: $main-font;
+    font-family: $block-font;
+    color: $text-primary;
 }
 
 h1 {
     margin: 0 0 0.5rem 0;
     text-align: center;
+    font-family: $title-font;
     font-weight: 300;
 }
 
 p {
-    margin: 0.1rem;
+    margin: 0;
     font-size: 0.75rem;
+    font-weight: 400;
 }
 
 textarea {
-    font-family: $main-font;
+    padding: 0.1rem;
     border: 0.05rem solid $background-tint;
     border-radius: 0.1rem;
-    padding: 0.1rem;
+
+    font-family: $block-font;
+    font-weight: 400;
 }
 
 input {
-    font-family: $main-font;
+    font-family: $block-font;
+    font-weight: 400;
 }
 
 label {
     margin-right: 1rem;
     color: $text-light;
+    font-family: $title-font;
+    font-weight: 300;
 }
 
 button {
-    font-family: $main-font;
+    font-family: $title-font;
     outline: none;
 }
 
 a {
-    text-decoration: none;
     color: $primary;
+    text-decoration: none;
+    font-weight: 400;
     transition: 0.2s;
 }
 
@@ -75,7 +84,7 @@ a:hover {
     margin-bottom: 0.5rem;
     border: none;
     border-bottom: 0.05rem solid $background-tint;
-    font-family: $main-font;
+    font-family: $block-font;
 }
 
 .line-in::placeholder {

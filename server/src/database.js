@@ -237,7 +237,7 @@ async function deleteClub(id) {
     }
 }
 
-async function getVolunteering() {
+async function getVolunteeringList() {
     try {
         const db = client.db('volunteering');
         const collection = db.collection('data');
@@ -248,6 +248,21 @@ async function getVolunteering() {
             return { good: -1 };
         }
         return { volunteering, good: 1 };
+    } catch (error) {
+        console.dir(error);
+        return { good: -1 };
+    }
+}
+
+async function getVolunteering(id) {
+    try {
+        const db = client.db('volunteering');
+        const collectionData = db.collection('data');
+
+        const data = await collectionData.findOne({ _id: ObjectId(id) });
+
+        if (data === null) return { good: 0 };
+        return { ...data, good: 1 };
     } catch (error) {
         console.dir(error);
         return { good: -1 };
@@ -324,6 +339,7 @@ module.exports = {
     getEvent,
     getEventList,
     updateEvent,
+    getVolunteeringList,
     getVolunteering,
     updateVolunteering,
     updateClub,

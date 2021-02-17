@@ -1,13 +1,9 @@
-import dayjs, { Dayjs } from 'dayjs';
+import dayjs from 'dayjs';
 import utc from 'dayjs/plugin/utc';
 import timezone from 'dayjs/plugin/timezone';
 import isLeapYear from 'dayjs/plugin/isLeapYear';
 import imageCompression from 'browser-image-compression';
 import { EventInfo, DateAndTime, CalendarDates, DateDivider } from './entries';
-import store from '../redux/store';
-import { getSavedVolunteeringList } from '../redux/selectors';
-import { getVolunteering } from '../functions/api';
-import { resetPopupState, setVolunteeringList } from '../redux/actions';
 import config from '../files/config.json';
 
 dayjs.extend(utc);
@@ -314,4 +310,13 @@ export function parseLinks(className, text) {
     outText.push(tempText);
 
     return <p className={className}>{outText}</p>;
+}
+
+/**
+ * If on an edit page, will redirect the user to the resource that is being edited.
+ * 
+ * @param {Location} location Location object
+ */
+export function returnToLastLocation(location) {
+    location.href = `${location.origin}${location.pathname.substring(5)}${location.search}`;
 }

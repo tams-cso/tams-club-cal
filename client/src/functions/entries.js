@@ -12,14 +12,14 @@ import dayjs, { Dayjs } from "dayjs";
  * @param {string[]} editedBy The editors of the event
  */
 export function Event(type, name, club, start, end, links, description, editedBy = []) {
-    this.type = type;
-    this.name = name;
-    this.club = club;
-    this.start = start;
-    this.end = end;
-    this.links = links;
-    this.description = description;
-    this.editedBy = editedBy;
+    this.type = type || 'event';
+    this.name = name || '';
+    this.club = club || '';
+    this.start = start || '';
+    this.end = end || '';
+    this.links = links || [];
+    this.description = description || '';
+    this.editedBy = editedBy || [];
 }
 
 /**

@@ -29,12 +29,12 @@ class About extends React.Component {
         return (
             <div className="about">
                 <img className="about-header" alt="TAMS Club Calendar" src={logo}></img>
-                <div className="about-info-p">
+                <p className="about-info-p">
                     Welcome to the TAMS Club Calendar! This is a simple web app that displays all the student
                     organization events at TAMS, along with a list of clubs and other resources. Our vision is a
                     community-maintained resource that’s avaliable to anyone and can be updated by anyone as well.
-                </div>
-                <div className="about-info-p">
+                </p>
+                <p className="about-info-p">
                     We are an open-source project, meaning that anyone and everyone can help contribute to the
                     development of the website! You can go to the&nbsp;
                     <b>
@@ -45,12 +45,12 @@ class About extends React.Component {
                     where you can write whatever you would like! The way programs like these get better, after all, is
                     through independent user feedback. Thank you once again for checking out tams.club, and we hope you
                     enjoy the rest of your day! :D
-                </div>
+                </p>
                 <h1 className="feedback-header">Feedback</h1>
-                <div className="about-info-p">
+                <p className="about-info-p">
                     We would love to hear what you think and what ideas you would like to see! Here’s the form for any
                     bugs, comments, suggestions, and anything else you would like us to know!
-                </div>
+                </p>
                 <div className="center-div">
                     <textarea
                         id="feedback-form"
