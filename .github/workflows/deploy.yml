@@ -38,6 +38,7 @@ jobs:
           echo "DROPBOX_TOKEN=$DROPBOX_TOKEN" >> .env
           echo "PORT=8081" >> .env
           echo "API_KEY=$API_KEY" >> .env
+          echo "ORIGIN=https://tams.club" >> .env
           yarn install
           zip -r ../tams-club-cal-server.zip .
           cd ..
