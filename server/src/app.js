@@ -168,7 +168,7 @@ app.get('/clubs/:id', async (req, res, next) => {
 // Add a club
 app.post('/clubs', async (req, res, next) => {
     parseForm(req, res, async (club) => {
-        const data = await addClub(club);
+        const data = await addClub(club, getIp(req));
         if (data.good === -1) sendError(res, 500, 'Unable to add club');
         else {
             res.status(200);
@@ -180,7 +180,7 @@ app.post('/clubs', async (req, res, next) => {
 // Update a club
 app.post('/clubs/:id', async (req, res, next) => {
     parseForm(req, res, async (club) => {
-        const good = await updateClub(club, req.params.id);
+        const good = await updateClub(club, req.params.id, getIp(req));
         if (good === -1) sendError(res, 500, 'Unable to update clubs');
         else if (good === 0) sendError(res, 400, 'Invalid club id');
         else {
@@ -213,7 +213,7 @@ app.get('/volunteering/:id', async (req, res, next) => {
 
 // Add volunteering
 app.post('/volunteering', async (req, res, next) => {
-    const data = await addVolunteering(req.body);
+    const data = await addVolunteering(req.body, getIp(req));
     if (data.good === -1) sendError(res, 500, 'Unable to add volunteering');
     else {
         res.status(200);
@@ -223,7 +223,7 @@ app.post('/volunteering', async (req, res, next) => {
 
 // Update volunteering
 app.post('/volunteering/:id', async (req, res, next) => {
-    const good = await updateVolunteering(req.body, req.params.id);
+    const good = await updateVolunteering(req.body, req.params.id, getIp(req));
     if (good === -1) sendError(res, 500, 'Unable to update volunteering');
     else if (good === 0) sendError(res, 400, 'Invalid volunteering ID');
     else {
@@ -235,7 +235,7 @@ app.post('/volunteering/:id', async (req, res, next) => {
 // Add feedback
 app.post('/feedback', async (req, res, next) => {
     if (req.body.feedback == '') sendError(res, 400, 'Empty feedback text!');
-    const good = await addFeedback(req.body.feedback);
+    const good = await addFeedback(req.body.feedback, getIp(req));
     if (good === -1) sendError(res, 500, 'Unable to add feedback');
     else {
         res.status(200);

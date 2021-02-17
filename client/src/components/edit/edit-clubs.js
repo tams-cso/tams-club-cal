@@ -133,7 +133,8 @@ class EditClubs extends React.Component {
             this.state.execs,
             this.state.committees,
             { img: this.state.compressed, thumb: coverThumb },
-            this.state.execBlobs
+            this.state.execBlobs,
+            this.state.club.editedBy
         );
 
         // POST Club
@@ -179,7 +180,6 @@ class EditClubs extends React.Component {
             description: club.description,
             execs: [...club.execs],
             committees: [...club.committees],
-            editedBy: '',
             execBlobs: Array(club.execs.length),
             compressed: null,
         });
