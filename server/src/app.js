@@ -24,7 +24,7 @@ const {
     getVolunteering,
 } = require('./database');
 const { getImage, deleteClubImages } = require('./images');
-const { sendError, logRequest, parseForm } = require('./util');
+const { sendError, logRequest, parseForm, getIp } = require('./util');
 
 // Clean up the 'cache' folder on start
 fs.readdir(path.join(__dirname, 'cache'), (err, files) => {
@@ -124,7 +124,7 @@ app.get('/events/:id', async (req, res, next) => {
 
 // Add event
 app.post('/events', async (req, res, next) => {
-    const data = await addEvent(req.body);
+    const data = await addEvent(req.body, getIp(req));
     if (data.good === -1) sendError(res, 500, 'Unable to add event');
     else {
         res.status(200);
@@ -135,7 +135,7 @@ app.post('/events', async (req, res, next) => {
 // Update event
 app.post('/events/:id', async (req, res, next) => {
     // TODO: Check for correct id
-    const good = await updateEvent(req.body, req.params.id);
+    const good = await updateEvent(req.body, req.params.id, getIp(req));
     if (good === -1) sendError(res, 500, 'Unable to update event');
     else if (good === 0) sendError(res, 400, 'Invalid event id');
     else {

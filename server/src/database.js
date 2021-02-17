@@ -42,7 +42,7 @@ async function getEvent(id) {
     }
 }
 
-async function addEvent(event) {
+async function addEvent(event, user) {
     try {
         const db = client.db('events');
         const infoCollection = db.collection('info');
@@ -68,7 +68,7 @@ async function addEvent(event) {
         const dataRes = await dataCollection.insertOne({
             objId,
             links: event.links,
-            editedBy: event.editedBy,
+            editedBy: [user],
             description: event.description,
         });
 
@@ -80,7 +80,7 @@ async function addEvent(event) {
     }
 }
 
-async function updateEvent(event, id) {
+async function updateEvent(event, id, user) {
     try {
         const db = client.db('events');
         const infoCollection = db.collection('info');
@@ -97,6 +97,7 @@ async function updateEvent(event, id) {
                 },
             }
         );
+        event.editedBy.push(user);
         const dataRes = await dataCollection.updateOne(
             { objId: id },
             {
