@@ -133,7 +133,8 @@ class EditClubs extends React.Component {
             this.state.execs,
             this.state.committees,
             { img: this.state.compressed, thumb: coverThumb },
-            this.state.execBlobs
+            this.state.execBlobs,
+            this.state.club.editedBy
         );
 
         // POST Club
@@ -179,7 +180,6 @@ class EditClubs extends React.Component {
             description: club.description,
             execs: [...club.execs],
             committees: [...club.committees],
-            editedBy: '',
             execBlobs: Array(club.execs.length),
             compressed: null,
         });
@@ -248,6 +248,12 @@ class EditClubs extends React.Component {
                 </div>
                 <div className="edit-clubs-edit-bottom">
                     <div className="edit-clubs-name-advised-div">
+                        <ActionButton
+                            className={isActive('edit-clubs-advised', this.state.advised)}
+                            onClick={this.changeAdvised}
+                        >
+                            {this.state.advised ? 'Advised' : 'Independent'}
+                        </ActionButton>
                         <input
                             name="name"
                             className="line-in edit-clubs-name-input"
@@ -256,12 +262,6 @@ class EditClubs extends React.Component {
                             value={this.state.name}
                             onChange={this.handleInputChange}
                         ></input>
-                        <ActionButton
-                            className={isActive('edit-clubs-advised edit-clubs-advised-edit', this.state.advised)}
-                            onClick={this.changeAdvised}
-                        >
-                            {this.state.advised ? 'Advised' : 'Independent'}
-                        </ActionButton>
                     </div>
                     <label htmlFor="description">Description</label>
                     <br />

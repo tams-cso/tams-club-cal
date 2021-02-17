@@ -85,7 +85,7 @@ class EditEvents extends React.Component {
             end,
             currLinks,
             this.state.description,
-            ['']
+            this.state.event.editedBy
         );
 
         // POST event
@@ -111,29 +111,39 @@ class EditEvents extends React.Component {
         return invalid;
     };
 
-    resetState = (event) => {
-        // Convert to string times
-        var startDatetime = millisToDateAndTime(event.start);
-        var endDatetime = millisToDateAndTime(event.end);
+    resetState = (event, isNew = false) => {
+        if (isNew) {
+            this.setState({
+                event,
+                new: isNew,
+                clubName: event.club,
+                description: event.description,
+                type: event.type,
+            });
+        } else {
+            // Convert to string times
+            var startDatetime = millisToDateAndTime(event.start);
+            var endDatetime = millisToDateAndTime(event.end);
 
-        // Create list of links
-        var linkList = event.links;
-        linkList.push('');
+            // Create list of links
+            var linkList = event.links;
+            linkList.push('');
 
-        // Update form with saved fields
-        this.setState({
-            event,
-            name: event.name,
-            clubName: event.club,
-            startDate: startDatetime.date,
-            startTime: startDatetime.time,
-            endDate: endDatetime.date,
-            endTime: endDatetime.time,
-            links: linkList,
-            description: event.description,
-            editedBy: '',
-            type: event.type,
-        });
+            // Update form with saved fields
+            this.setState({
+                event,
+                new: isNew,
+                name: event.name,
+                clubName: event.club,
+                startDate: startDatetime.date,
+                startTime: startDatetime.time,
+                endDate: endDatetime.date,
+                endTime: endDatetime.time,
+                links: linkList,
+                description: event.description,
+                type: event.type,
+            });
+        }
     };
 
     async componentDidMount() {
@@ -142,7 +152,7 @@ class EditEvents extends React.Component {
 
         // Empty form if new
         if (id === null) {
-            this.setState({ new: true });
+            this.resetState(new Event(), true);
             return;
         }
 

@@ -56,7 +56,8 @@ class EditVolunteering extends React.Component {
             this.state.club,
             this.state.description,
             filters,
-            this.state.signupTime || null
+            this.state.signupTime || null,
+            this.state.volunteering.editedBy
         );
 
         // POST volunteering

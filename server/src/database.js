@@ -42,7 +42,7 @@ async function getEvent(id) {
     }
 }
 
-async function addEvent(event) {
+async function addEvent(event, user) {
     try {
         const db = client.db('events');
         const infoCollection = db.collection('info');
@@ -68,7 +68,7 @@ async function addEvent(event) {
         const dataRes = await dataCollection.insertOne({
             objId,
             links: event.links,
-            editedBy: event.editedBy,
+            editedBy: [user],
             description: event.description,
         });
 
@@ -80,11 +80,15 @@ async function addEvent(event) {
     }
 }
 
-async function updateEvent(event, id) {
+async function updateEvent(event, id, user) {
     try {
         const db = client.db('events');
         const infoCollection = db.collection('info');
         const dataCollection = db.collection('data');
+
+        // Add user to edited by
+        event.editedBy.push(user);
+
         const infoRes = await infoCollection.updateOne(
             { objId: id },
             {
@@ -149,7 +153,7 @@ async function getClub(id) {
     }
 }
 
-async function addClub(club) {
+async function addClub(club, user) {
     try {
         const db = client.db('clubs');
         const dataCollection = db.collection('data');
@@ -177,6 +181,7 @@ async function addClub(club) {
             execs: club.execs,
             committees: club.committees,
             coverImg: club.coverImg,
+            editedBy: [user],
         });
 
         if (dataRes.result.ok === 0 || infoRes.result.ok === 0) return { good: -1 };
@@ -187,11 +192,15 @@ async function addClub(club) {
     }
 }
 
-async function updateClub(club, id) {
+async function updateClub(club, id, user) {
     try {
         const db = client.db('clubs');
         const dataCollection = db.collection('data');
         const infoCollection = db.collection('info');
+
+        // Add user to editedby
+        club.editedBy.push(user);
+
         const dataRes = await dataCollection.updateOne(
             { objId: id },
             {
@@ -200,6 +209,7 @@ async function updateClub(club, id) {
                     execs: club.execs,
                     committees: club.committees,
                     coverImg: club.coverImg,
+                    editedBy: club.editedBy,
                 },
             }
         );
@@ -269,7 +279,7 @@ async function getVolunteering(id) {
     }
 }
 
-async function addVolunteering(vol) {
+async function addVolunteering(vol, user) {
     try {
         const db = client.db('volunteering');
         const collection = db.collection('data');
@@ -279,6 +289,7 @@ async function addVolunteering(vol) {
             description: vol.description,
             filters: vol.filters,
             signupTime: vol.signupTime,
+            editedBy: [user],
         };
 
         const res = await collection.insertOne(data);
@@ -290,10 +301,13 @@ async function addVolunteering(vol) {
     }
 }
 
-async function updateVolunteering(vol, id) {
+async function updateVolunteering(vol, id, user) {
     try {
         const db = client.db('volunteering');
         const collection = db.collection('data');
+
+        // Add user to editedby
+        vol.editedBy.push(user);
 
         const res = await collection.updateOne(
             { _id: ObjectId(id) },
@@ -304,6 +318,7 @@ async function updateVolunteering(vol, id) {
                     description: vol.description,
                     filters: vol.filters,
                     signupTime: vol.signupTime,
+                    editedBy: vol.editedBy,
                 },
             }
         );
@@ -316,13 +331,13 @@ async function updateVolunteering(vol, id) {
     }
 }
 
-async function addFeedback(feedback) {
+async function addFeedback(feedback, user) {
     try {
         const db = client.db('feedback');
         const collection = db.collection('data');
-        
-        const res = await collection.insertOne({ date: new Date().getTime(), feedback });
-        
+
+        const res = await collection.insertOne({ date: new Date().getTime(), feedback, user });
+
         if (res.insertedCount === 0) return -1;
         return 1;
     } catch (error) {

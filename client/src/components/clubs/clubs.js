@@ -4,9 +4,7 @@ import { connect } from 'react-redux';
 import ClubCard from './club-card';
 import ClubPopup from './club-popup';
 import Popup from '../shared/popup';
-import ActionButton from '../shared/action-button';
 
-import { getClubList } from '../../functions/api';
 import { getSavedClubList } from '../../redux/selectors';
 import { setClubList, setPopupOpen, setPopupId, setPopupNew, setPopupEdit, setPopupType } from '../../redux/actions';
 

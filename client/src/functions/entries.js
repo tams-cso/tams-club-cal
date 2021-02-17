@@ -1,4 +1,4 @@
-import dayjs, { Dayjs } from "dayjs";
+import dayjs, { Dayjs } from 'dayjs';
 
 /**
  * An object containing the information for calendar events
@@ -71,6 +71,7 @@ export function EventData(objId, links, description, editedBy) {
  * @param {string} coverImgBlobs.img The compressed cover image
  * @param {string} coverImgBlobs.thumb The super compressed cover image thumbnail
  * @param {string[]} execProfilePicBlobs Base64 encoded strings of the exec profile pics in the order of the execs (null if missing)
+ * @param {string[]} editedBy The editors of the event
  */
 export function Club(
     name,
@@ -83,7 +84,8 @@ export function Club(
     execs,
     committees,
     coverImgBlobs = null,
-    execProfilePicBlobs = null
+    execProfilePicBlobs = null,
+    editedBy
 ) {
     this.name = name || '';
     this.advised = advised || false;
@@ -96,6 +98,7 @@ export function Club(
     this.committees = committees || [new Committee()];
     this.coverImgBlobs = coverImgBlobs || [];
     this.execProfilePicBlobs = execProfilePicBlobs || [];
+    this.editedBy = editedBy || [];
 }
 
 /**
@@ -124,13 +127,16 @@ export function ClubInfo(objId, name, advised, fb, website, coverImgThumbnail) {
  * @param {Exec[]} execs Array of exec objects
  * @param {Committee[]} committee Array of committee objects
  * @param {string} coverImg URL of the full-sized cover image
+ * @param {string[]} editedBy The editors of the event
  */
-export function ClubData(infoId, description, execs, committee, coverImg) {
+export function ClubData(infoId, description, execs, committee, coverImg, editedBy) {
     this.objId = objId;
     this.infoId = infoId;
     this.description = description;
     this.execs = execs;
     this.committee = committee;
+    this.coverImg = coverImg;
+    this.editedBy = editedBy;
 }
 
 /**
@@ -145,13 +151,15 @@ export function ClubData(infoId, description, execs, committee, coverImg) {
  * @param {boolean} filters.weekly True if there are weekly signups, otherwise false
  * @param {boolean} filters.open True if volunteering opportunity is currently available, otherwise false
  * @param {string} signupTime Time of weekly signups, null if no weekly signups
+ * @param {string[]} editedBy The editors of the event
  */
-export function Volunteering(name, club, description, filters, signupTime) {
+export function Volunteering(name, club, description, filters, signupTime, editedBy) {
     this.name = name || '';
     this.club = club || '';
     this.description = description || '';
     this.filters = filters || { limited: false, semester: false, setTimes: false, weekly: false, open: true };
     this.signupTime = signupTime || '';
+    this.editedBy = editedBy || [];
 }
 
 /**
@@ -183,7 +191,7 @@ export function Committee(name, description, fb, website) {
 }
 
 /**
- * Return object for fetch requests 
+ * Return object for fetch requests
  * @param {number} status The HTTP status code
  * @param {object} data Data of the request
  */
@@ -194,7 +202,7 @@ export function FetchResponse(status, data) {
 
 /**
  * Holds the list of numbered dates for the calendar to +/- 1 month
- * 
+ *
  * @param {number[]} current List of dates in the current month
  * @param {number[]} previous List of dates in the previous month
  * @param {number[]} next List of dates in the next month
@@ -211,7 +219,7 @@ export function CalendarDates(current, previous, next, dateObj) {
  * A date divider object to be parsed by the home event list creator
  * The object ID will be set to an empty string to differentiate
  * between the EventInfo objects
- * 
+ *
  * @param {string} date Date formatted as YYYY-MM-DD
  */
 export function DateDivider(date) {

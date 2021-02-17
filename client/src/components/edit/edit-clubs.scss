@@ -42,10 +42,20 @@
     justify-content: left;
 }
 
-.edit-clubs-advised-edit {
+.edit-clubs-advised {
     margin: 0;
+    margin-right: 0.5rem;
     height: 1.5rem;
     flex-grow: 0;
+
+    font-family: $title-font;
+    font-weight: 300;
+    color: $primary;
+}
+
+.edit-clubs-advised.inactive {
+    color: $type-signup;
+    display: block;
 }
 
 .edit-clubs-name-input {

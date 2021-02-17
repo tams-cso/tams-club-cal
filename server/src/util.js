@@ -69,4 +69,13 @@ async function parseForm(req, res, callback) {
     });
 }
 
-module.exports = { sendError, logRequest, parseForm };
+/**
+ * Extracts the IP address from the header of the express request object
+ * 
+ * @param {import('express').Request} req Express request object
+ */
+function getIp(req) {
+    return req.ip || req.connection.remoteAddress;
+}
+
+module.exports = { sendError, logRequest, parseForm, getIp };

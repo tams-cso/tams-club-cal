@@ -24,7 +24,7 @@ const {
     getVolunteering,
 } = require('./database');
 const { getImage, deleteClubImages } = require('./images');
-const { sendError, logRequest, parseForm } = require('./util');
+const { sendError, logRequest, parseForm, getIp } = require('./util');
 
 // Clean up the 'cache' folder on start
 fs.readdir(path.join(__dirname, 'cache'), (err, files) => {
@@ -48,6 +48,9 @@ app.use(cors());
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ limit: '50mb', extended: true, parameterLimit: 50000 }));
 
+// Trust proxy
+app.set('trust proxy', true);
+
 // Parse every request here first
 app.use(function (req, res, next) {
     // Add CORS headers
@@ -62,6 +65,20 @@ app.use(function (req, res, next) {
     if (!(NO_KEY || static)) {
         if (!(req.body.key === process.env.API_KEY || req.query.key === process.env.API_KEY)) {
             sendError(res, 401, 'Invalid API key. Pass the key in the POST body or in the querystring.');
+            return;
+        }
+    }
+
+    // Check for correct origin
+    // Set this in the .env file as ORIGIN
+    // This will throw an error if no origin is defined OR if the origin does not match the expected origin
+    // The block will be skipped if no ORIGIN environmental variable is defined
+    if (!static) {
+        if (
+            req.headers.origin === undefined ||
+            (process.env.ORIGIN !== undefined && req.headers.origin.indexOf(process.env.ORIGIN) === -1)
+        ) {
+            sendError(res, 403, 'Invalid request origin.');
             return;
         }
     }
@@ -107,7 +124,7 @@ app.get('/events/:id', async (req, res, next) => {
 
 // Add event
 app.post('/events', async (req, res, next) => {
-    const data = await addEvent(req.body);
+    const data = await addEvent(req.body, getIp(req));
     if (data.good === -1) sendError(res, 500, 'Unable to add event');
     else {
         res.status(200);
@@ -118,7 +135,7 @@ app.post('/events', async (req, res, next) => {
 // Update event
 app.post('/events/:id', async (req, res, next) => {
     // TODO: Check for correct id
-    const good = await updateEvent(req.body, req.params.id);
+    const good = await updateEvent(req.body, req.params.id, getIp(req));
     if (good === -1) sendError(res, 500, 'Unable to update event');
     else if (good === 0) sendError(res, 400, 'Invalid event id');
     else {
@@ -151,7 +168,7 @@ app.get('/clubs/:id', async (req, res, next) => {
 // Add a club
 app.post('/clubs', async (req, res, next) => {
     parseForm(req, res, async (club) => {
-        const data = await addClub(club);
+        const data = await addClub(club, getIp(req));
         if (data.good === -1) sendError(res, 500, 'Unable to add club');
         else {
             res.status(200);
@@ -163,7 +180,7 @@ app.post('/clubs', async (req, res, next) => {
 // Update a club
 app.post('/clubs/:id', async (req, res, next) => {
     parseForm(req, res, async (club) => {
-        const good = await updateClub(club, req.params.id);
+        const good = await updateClub(club, req.params.id, getIp(req));
         if (good === -1) sendError(res, 500, 'Unable to update clubs');
         else if (good === 0) sendError(res, 400, 'Invalid club id');
         else {
@@ -196,7 +213,7 @@ app.get('/volunteering/:id', async (req, res, next) => {
 
 // Add volunteering
 app.post('/volunteering', async (req, res, next) => {
-    const data = await addVolunteering(req.body);
+    const data = await addVolunteering(req.body, getIp(req));
     if (data.good === -1) sendError(res, 500, 'Unable to add volunteering');
     else {
         res.status(200);
@@ -206,7 +223,7 @@ app.post('/volunteering', async (req, res, next) => {
 
 // Update volunteering
 app.post('/volunteering/:id', async (req, res, next) => {
-    const good = await updateVolunteering(req.body, req.params.id);
+    const good = await updateVolunteering(req.body, req.params.id, getIp(req));
     if (good === -1) sendError(res, 500, 'Unable to update volunteering');
     else if (good === 0) sendError(res, 400, 'Invalid volunteering ID');
     else {
@@ -218,7 +235,7 @@ app.post('/volunteering/:id', async (req, res, next) => {
 // Add feedback
 app.post('/feedback', async (req, res, next) => {
     if (req.body.feedback == '') sendError(res, 400, 'Empty feedback text!');
-    const good = await addFeedback(req.body.feedback);
+    const good = await addFeedback(req.body.feedback, getIp(req));
     if (good === -1) sendError(res, 500, 'Unable to add feedback');
     else {
         res.status(200);
@@ -233,8 +250,7 @@ app.post('/delete-club', async (req, res, next) => {
     if (good) {
         res.status(200);
         res.send({ status: 200 });
-    }
-    else sendError(res, 400, 'Could not delete club');
+    } else sendError(res, 400, 'Could not delete club');
 });
 
 app.get(/\/static\/.*/, async (req, res, next) => {
