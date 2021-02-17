@@ -14,13 +14,14 @@ const {
     addEvent,
     getEvent,
     getEventList,
-    getVolunteering,
+    getVolunteeringList,
     updateVolunteering,
     updateEvent,
     updateClub,
     addVolunteering,
     addClub,
     deleteClub,
+    getVolunteering,
 } = require('./database');
 const { getImage, deleteClubImages } = require('./images');
 const { sendError, logRequest, parseForm } = require('./util');
@@ -96,7 +97,12 @@ app.get('/events', async (req, res, next) => {
 // Get single event by id
 app.get('/events/:id', async (req, res, next) => {
     const event = await getEvent(req.params.id);
-    res.send(event);
+    if (event.good === -1) sendError(res, 500, 'Unable to retrive current event');
+    else if (event.good === 0) sendError(res, 400, 'Invalid event objId');
+    else {
+        res.status(200);
+        res.send(event);
+    }
 });
 
 // Add event
@@ -169,11 +175,22 @@ app.post('/clubs/:id', async (req, res, next) => {
 
 // Get volunteering list
 app.get('/volunteering', async (req, res, next) => {
-    const data = await getVolunteering();
+    const data = await getVolunteeringList();
     if (data.good === -1) sendError(res, 500, 'Unable to retrive volunteering list');
     else {
         res.status(200);
         res.send(data.volunteering);
+    }
+});
+
+// Get single volunteering by id
+app.get('/volunteering/:id', async (req, res, next) => {
+    const volunteering = await getVolunteering(req.params.id);
+    if (volunteering.good === -1) sendError(res, 500, 'Unable to retrive current volunteering');
+    else if (volunteering.good === 0) sendError(res, 400, 'Invalid volunteering id');
+    else {
+        res.status(200);
+        res.send(volunteering);
     }
 });
 

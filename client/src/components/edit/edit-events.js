@@ -6,6 +6,7 @@ import { Event } from '../../functions/entries';
 import { parseTimeZone, getTimezone, getParams, millisToDateAndTime } from '../../functions/util';
 import './edit-events.scss';
 import Loading from '../shared/loading';
+import { withRouter } from 'react-router';
 
 class EditEvents extends React.Component {
     constructor(props) {
@@ -150,7 +151,7 @@ class EditEvents extends React.Component {
         if (res.status === 200) this.resetState(res.data);
         else {
             alert(`Could not get event with the requested ID '${id}'. Redirecting to 'new event' page`);
-            this.setState({ new: true });
+            window.location.href = `${window.location.origin}/edit/events`;
         }
     }
 
@@ -286,4 +287,4 @@ class EditEvents extends React.Component {
     }
 }
 
-export default EditEvents;
+export default withRouter(EditEvents);

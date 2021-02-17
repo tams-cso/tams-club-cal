@@ -102,11 +102,6 @@ class Volunteering extends React.Component {
                     </button>
                 </div>
                 <div className="volunteering-section">{volCards}</div>
-                <div className="resources-add-volunteering-container">
-                    <ActionButton className="resources-add-volunteering" onClick={this.addVolunteering}>
-                        Add Volunteering
-                    </ActionButton>
-                </div>
             </div>
         );
     }

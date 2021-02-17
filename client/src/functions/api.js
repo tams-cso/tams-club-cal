@@ -69,8 +69,12 @@ export async function postClub(club, id = '') {
     return postRequest(`/clubs/${id}`, data, false);
 }
 
-export async function getVolunteering() {
+export async function getVolunteeringList() {
     return getRequest('/volunteering');
+}
+
+export async function getVolunteering(id) {
+    return getRequest(`/volunteering/${id}`);
 }
 
 export async function postVolunteering(vol, id = '') {

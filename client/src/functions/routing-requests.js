@@ -2,7 +2,7 @@ import React from 'react';
 import { connect } from 'react-redux';
 import { withRouter } from 'react-router';
 
-import { getClubList, getEventList, getVolunteering } from './api';
+import { getClubList, getEventList, getVolunteeringList } from './api';
 import { addDayjsElement, catchError, getParams } from './util';
 import { getMobileDropdown, getSavedClubList, getSavedEventList, getSavedVolunteeringList } from '../redux/selectors';
 import {
@@ -39,7 +39,7 @@ class RoutingRequests extends React.Component {
             case '/volunteering': {
                 // If volunteering list hasn't been fetched, fetch with API
                 if (this.props.volunteeringList !== null) return;
-                const res = await getVolunteering();
+                const res = await getVolunteeringList();
 
                 // Catch errors and save to store
                 if (catchError(res.status, 'Failed to get volunteering list :(')) return;
@@ -86,6 +86,9 @@ class RoutingRequests extends React.Component {
     }
 
     componentDidUpdate(prevProps) {
+        // Only run if not editing
+        if (this.props.location.pathname.startsWith('/edit')) return;
+
         // Only run functions for location changes
         if (prevProps.location === this.props.location) return;
 
@@ -93,11 +96,6 @@ class RoutingRequests extends React.Component {
         // TODO: What if there are other search paramaters
         if (prevProps.location.search !== '' && this.props.location.search === '') {
             this.props.resetPopupState();
-        }
-
-        // Clear up any new popup inconsistencies
-        if (this.props.new && getParams('id') !== 'new') {
-            this.props.setPopupNew(false);
         }
 
         // Return if pathnames match (eg. opening popups)
