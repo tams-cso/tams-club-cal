@@ -75,7 +75,7 @@ async function parseForm(req, res, callback) {
  * @param {import('express').Request} req Express request object
  */
 function getIp(req) {
-    return req.ip || req.connection.remoteAddress;
+    return req.headers['X-Real-IP'] || req.connection.remoteAddress;
 }
 
 module.exports = { sendError, logRequest, parseForm, getIp };
