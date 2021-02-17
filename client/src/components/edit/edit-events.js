@@ -7,6 +7,7 @@ import { parseTimeZone, getTimezone, getParams, millisToDateAndTime } from '../.
 import './edit-events.scss';
 import Loading from '../shared/loading';
 import { withRouter } from 'react-router';
+import SubmitGroup from '../shared/submit-group';
 
 class EditEvents extends React.Component {
     constructor(props) {
@@ -277,11 +278,7 @@ class EditEvents extends React.Component {
                         onChange={this.handleInputChange}
                     ></textarea>
                 </div>
-                <div className="center-button">
-                    <ActionButton className="edit-events-submit" onClick={this.submit}>
-                        Add to Calendar
-                    </ActionButton>
-                </div>
+                <SubmitGroup submit={this.submit}></SubmitGroup>
             </div>
         );
     }
