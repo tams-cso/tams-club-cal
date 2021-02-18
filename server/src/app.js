@@ -25,6 +25,7 @@ const {
 } = require('./database');
 const { getImage, deleteClubImages } = require('./images');
 const { sendError, logRequest, parseForm, getIp } = require('./util');
+const { getAuthUrl } = require('./auth');
 
 // Clean up the 'cache' folder on start
 fs.readdir(path.join(__dirname, 'cache'), (err, files) => {
@@ -234,13 +235,26 @@ app.post('/volunteering/:id', async (req, res, next) => {
 
 // Add feedback
 app.post('/feedback', async (req, res, next) => {
-    if (req.body.feedback == '') sendError(res, 400, 'Empty feedback text!');
+    if (req.body.feedback == '') {
+        sendError(res, 400, 'Empty feedback text!');
+        return;
+    }
     const good = await addFeedback(req.body.feedback, getIp(req));
     if (good === -1) sendError(res, 500, 'Unable to add feedback');
     else {
         res.status(200);
         res.send({ status: 200 });
     }
+});
+
+// Send client ip address
+app.get('/auth/ip', async (req, res, next) => {
+    res.send({ ip: getIp(req) });
+});
+
+// Send auth string
+app.get('/auth', async (req, res, next) => {
+    res.send({ authUrl: getAuthUrl() });
 });
 
 // Delete club

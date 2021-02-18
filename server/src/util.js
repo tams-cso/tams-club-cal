@@ -1,6 +1,7 @@
 const fs = require('fs');
 const path = require('path');
 const formidable = require('formidable');
+const crypto = require('crypto');
 const statusList = require('./status.json');
 
 /**
@@ -44,7 +45,7 @@ function logRequest(req) {
 async function parseForm(req, res, callback) {
     // Import this function here to avoid circular dependencies
     const { uploadImage } = require('./images');
-    
+
     const form = new formidable.IncomingForm();
     form.parse(req, async (err, fields, files) => {
         if (err) {
@@ -71,11 +72,21 @@ async function parseForm(req, res, callback) {
 
 /**
  * Extracts the IP address from the header of the express request object
- * 
+ *
  * @param {import('express').Request} req Express request object
+ * @returns {string} IP address of the user or
  */
 function getIp(req) {
     return req.headers['X-Real-IP'] || req.connection.remoteAddress;
 }
 
-module.exports = { sendError, logRequest, parseForm, getIp };
+/**
+ * Generates a 16 byte hex state
+ *
+ * @returns {string} String representing the state
+ */
+function genState() {
+    return crypto.randomBytes(16).toString('hex');
+}
+
+module.exports = { sendError, logRequest, parseForm, getIp, genState };

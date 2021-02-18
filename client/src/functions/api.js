@@ -85,6 +85,14 @@ export async function postFeedback(feedback) {
     return postRequest('/feedback', JSON.stringify(feedback));
 }
 
+export async function getIp() {
+    return getRequest('/auth/ip');
+}
+
+export async function getAuthUrl() {
+    return getRequest('/auth');
+}
+
 export async function deleteClub(id) {
     return postRequest('/delete-club', JSON.stringify({ id }));
 }

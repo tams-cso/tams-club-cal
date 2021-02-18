@@ -1,5 +1,14 @@
 # API Reference
 
+## Authentication
+
+| Method                            | HTTP request       | Description         |
+| --------------------------------- | ------------------ | ------------------- |
+| [getUrl](backend/events.md#list)  | GET /auth          | List of events      |
+| [getToken](backend/events.md#get) | POST /auth         | Gets an event by id |
+| [refresh](backend/events.md#add)  | POST /auth/refresh | Adds an event       |
+| [getIp](backend/events.md#update) | GET /auth/ip       | Updates an event    |
+
 ## Events
 
 | Method                             | HTTP request          | Description         |
