@@ -97,7 +97,7 @@ app.get('/', (req, res, next) => {
         key: "Either you're a developer, or we have some security issues to fix :))",
         github: 'https://github.com/MichaelZhao21/tams-club-cal/',
         documentation: 'https://docs.tams.club/',
-        webiste: 'https://tams.club/',
+        website: 'https://tams.club/',
     });
 });
 
