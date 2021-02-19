@@ -1,10 +1,11 @@
 // Import fonts
-@import url('https://fonts.googleapis.com/css2?family=Montserrat&family=Bubblegum+Sans&family=Source+Sans+Pro&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Montserrat&family=Bubblegum+Sans&family=Source+Sans+Pro&family=Roboto&display=swap');
 
 // TODO: change fonts to use these variables
 $title-font: 'Bubblegum Sans', sans-serif;
 $block-font: 'Source Sans Pro', sans-serif;
 $alt-font: 'Montserrat', sans-serif;
+$google-font: 'Roboto', sans-serif;
 
 // Color Variables
 
@@ -20,6 +21,7 @@ $type-signup: #d49dff;
 $text-primary: black;
 $text-light: #777777;
 $text-lighter: #9e9e9e;
+$google-blue: #4285f4;
 
 // Volunteering Filter Colors
 

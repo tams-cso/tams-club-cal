@@ -107,7 +107,6 @@ class EditVolunteering extends React.Component {
         // Fill form with volunteering
         const res = await getVolunteering(id);
 
-        console.log(res);
         if (res.status === 200) this.resetState(res.data);
         else {
             alert(`Could not get volunteering with the requested ID '${id}'. Redirecting to 'new volunteering' page`);

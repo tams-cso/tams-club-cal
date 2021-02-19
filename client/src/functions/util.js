@@ -12,6 +12,7 @@ dayjs.extend(isLeapYear);
 
 /**
  * Gets query parameters
+ * @param {string} query key value to get from the querystring
  * @returns {string | null} The value of the query parameter or null if missing
  */
 export function getParams(query) {

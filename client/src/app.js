@@ -12,6 +12,7 @@ import Edit from './components/edit/edit';
 
 import './app.scss';
 import Resources from './components/resources/resources';
+import Auth from './components/edit/auth';
 
 function App() {
     return (
@@ -28,6 +29,7 @@ function App() {
                         <Route exact path="/resources" component={Resources} />
                         <Route exact path="/about" component={About} />
                         <Route exact path="/search" component={Search} />
+                        <Route exact path="/auth" component={Auth} />
                         <Route path="/edit" component={Edit}></Route>
                         <Route component={NotFound} />
                     </Switch>

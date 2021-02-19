@@ -42,10 +42,17 @@ MONGO_USER="[Username for cluster]"
 MONGO_PASS="[Password for cluster]"
 MONGO_URL="[Connection URL to the mongodb cluster (eg. "tams-cal-db-staging.7d0nz.mongodb.net")]"
 DROPBOX_TOKEN="[Token for dropbox app]"
+G_CLIENT_ID="[Google API OAuth 2.0 Client ID]"
+G_CLIENT_SECRET="[Google API OAuth 2.0 Client Secret]"
+FRONTEND="[URL origin of the frontend site (NO / at the end!)]"
 API_KEY="[(optional) API key will be required for any calls if defined (see docs)]"
 ORIGIN="[(optional) Origin to allow requests from. This will *deny requests from other origins* (eg. "http://localhost:3000")]"
 PORT="[(optional) The port to start the server on]"
 ```
+
+You will need to create a [Dropbox Developer Account](https://www.dropbox.com/developers/reference/getting-started?_tk=guides_lp&_ad=guides2&_camp=get_started#app%20console) and a project.
+
+Additionally, you need to make a [Google Cloud Developer Account](https://cloud.google.com/docs), create a project, and make both OAuth 2.0 Client credentials and a service account credentials, enabling the Google Calendar API. 
 
 ## Execution
 
