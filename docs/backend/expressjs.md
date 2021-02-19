@@ -2,12 +2,12 @@
 
 ## Authentication
 
-| Method                            | HTTP request       | Description         |
-| --------------------------------- | ------------------ | ------------------- |
-| [getUrl](backend/events.md#list)  | GET /auth          | List of events      |
-| [getToken](backend/events.md#get) | POST /auth         | Gets an event by id |
-| [refresh](backend/events.md#add)  | POST /auth/refresh | Adds an event       |
-| [getIp](backend/events.md#update) | GET /auth/ip       | Updates an event    |
+| Method                            | HTTP request       | Description                                               |
+| --------------------------------- | ------------------ | --------------------------------------------------------- |
+| [getUrl](backend/events.md#list)  | GET /auth          | Sends the Google authentication redirect URL              |
+| [getToken](backend/events.md#get) | POST /auth         | Uses auth code to fetch access tokens and name            |
+| [refresh](backend/events.md#add)  | POST /auth/refresh | Uses the refresh token to get a new access token and name |
+| [getIp](backend/events.md#update) | GET /auth/ip       | Returns the user's IP address                             |
 
 ## Events
 

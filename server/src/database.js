@@ -349,6 +349,37 @@ async function addFeedback(feedback, user) {
     }
 }
 
+async function upsertUser(email, refreshToken) {
+    try {
+        const db = client.db('users');
+        const collection = db.collection('data');
+
+        const res = await collection.updateOne(
+            { email },
+            { $set: { email, refresh: refreshToken, lastRequest: new Date().getTime() } },
+            { upsert: 1 }
+        );
+
+        if (res.upsertedCount === 0) return -1;
+        return 1;
+    } catch (error) {
+        console.dir(error);
+        return -1;
+    }
+}
+
+async function findUser(email) {
+    try {
+        const db = client.db('users');
+        const collection = db.collection('data');
+        const res = await collection.findOne({ email });
+        return res;
+    } catch (error) {
+        console.dir(error);
+        return null;
+    }
+}
+
 module.exports = {
     getClubList,
     getClub,
@@ -364,4 +395,6 @@ module.exports = {
     addVolunteering,
     addClub,
     deleteClub,
+    upsertUser,
+    findUser,
 };

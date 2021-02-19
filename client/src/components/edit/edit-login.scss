@@ -28,6 +28,11 @@
 
     background-color: $google-blue;
     box-shadow: 0 0 0.1rem $background-tint;
+    cursor: pointer;
+}
+
+.edit-login-with-google.active {
+    display: flex !important;
 }
 
 .edit-login-google-text {

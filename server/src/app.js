@@ -22,10 +22,11 @@ const {
     addClub,
     deleteClub,
     getVolunteering,
+    findUser,
 } = require('./database');
 const { getImage, deleteClubImages } = require('./images');
-const { sendError, logRequest, parseForm, getIp } = require('./util');
-const { getAuthUrl } = require('./auth');
+const { sendError, logRequest, parseForm, getIp, genState, parseUser } = require('./util');
+const { getAuthUrl, getTokensAndInfo, getSavedUser } = require('./auth');
 
 // Clean up the 'cache' folder on start
 fs.readdir(path.join(__dirname, 'cache'), (err, files) => {
@@ -125,7 +126,8 @@ app.get('/events/:id', async (req, res, next) => {
 
 // Add event
 app.post('/events', async (req, res, next) => {
-    const data = await addEvent(req.body, getIp(req));
+    const user = await parseUser(req);
+    const data = await addEvent(req.body, user);
     if (data.good === -1) sendError(res, 500, 'Unable to add event');
     else {
         res.status(200);
@@ -135,8 +137,8 @@ app.post('/events', async (req, res, next) => {
 
 // Update event
 app.post('/events/:id', async (req, res, next) => {
-    // TODO: Check for correct id
-    const good = await updateEvent(req.body, req.params.id, getIp(req));
+    const user = await parseUser(req);
+    const good = await updateEvent(req.body, req.params.id, user);
     if (good === -1) sendError(res, 500, 'Unable to update event');
     else if (good === 0) sendError(res, 400, 'Invalid event id');
     else {
@@ -169,7 +171,8 @@ app.get('/clubs/:id', async (req, res, next) => {
 // Add a club
 app.post('/clubs', async (req, res, next) => {
     parseForm(req, res, async (club) => {
-        const data = await addClub(club, getIp(req));
+    const user = await parseUser(req);
+    const data = await addClub(club, user);
         if (data.good === -1) sendError(res, 500, 'Unable to add club');
         else {
             res.status(200);
@@ -181,7 +184,8 @@ app.post('/clubs', async (req, res, next) => {
 // Update a club
 app.post('/clubs/:id', async (req, res, next) => {
     parseForm(req, res, async (club) => {
-        const good = await updateClub(club, req.params.id, getIp(req));
+    const user = await parseUser(req);
+    const good = await updateClub(club, req.params.id, user);
         if (good === -1) sendError(res, 500, 'Unable to update clubs');
         else if (good === 0) sendError(res, 400, 'Invalid club id');
         else {
@@ -214,7 +218,8 @@ app.get('/volunteering/:id', async (req, res, next) => {
 
 // Add volunteering
 app.post('/volunteering', async (req, res, next) => {
-    const data = await addVolunteering(req.body, getIp(req));
+    const user = await parseUser(req);
+    const data = await addVolunteering(req.body, user);
     if (data.good === -1) sendError(res, 500, 'Unable to add volunteering');
     else {
         res.status(200);
@@ -224,7 +229,8 @@ app.post('/volunteering', async (req, res, next) => {
 
 // Update volunteering
 app.post('/volunteering/:id', async (req, res, next) => {
-    const good = await updateVolunteering(req.body, req.params.id, getIp(req));
+    const user = await parseUser(req);
+    const good = await updateVolunteering(req.body, req.params.id, user);
     if (good === -1) sendError(res, 500, 'Unable to update volunteering');
     else if (good === 0) sendError(res, 400, 'Invalid volunteering ID');
     else {
@@ -239,7 +245,8 @@ app.post('/feedback', async (req, res, next) => {
         sendError(res, 400, 'Empty feedback text!');
         return;
     }
-    const good = await addFeedback(req.body.feedback, getIp(req));
+    const user = await parseUser(req);
+    const good = await addFeedback(req.body.feedback, user);
     if (good === -1) sendError(res, 500, 'Unable to add feedback');
     else {
         res.status(200);
@@ -254,7 +261,34 @@ app.get('/auth/ip', async (req, res, next) => {
 
 // Send auth string
 app.get('/auth', async (req, res, next) => {
-    res.send({ authUrl: getAuthUrl() });
+    const state = genState();
+    res.send({ authUrl: getAuthUrl(state), state });
+});
+
+// Fetch access tokens with auth code
+app.post('/auth', async (req, res, next) => {
+    const data = await getTokensAndInfo(req.body.code);
+    if (data === null) sendError(res, 500, 'Failed to fetch user information');
+    else res.send({ email: data.email });
+});
+
+// Get name from email
+app.post('/auth/refresh', async (req, res, next) => {
+    const savedUser = getSavedUser(req.body.email);
+    if (savedUser !== null) {
+        res.send({ name: savedUser.name });
+        return;
+    }
+
+    const user = await findUser(req.body.email);
+    if (user === null) {
+        sendError(res, 400, 'Invalid email');
+        return;
+    }
+
+    const data = await getTokensAndInfo(user.refresh, true);
+    if (data === null) sendError(res, 500, 'Failed to fetch user');
+    else res.send({ name: data.name });
 });
 
 // Delete club

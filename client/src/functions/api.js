@@ -1,3 +1,4 @@
+import Cookies from 'universal-cookie';
 import config from '../files/config.json';
 import { FetchResponse } from './entries';
 
@@ -26,6 +27,10 @@ async function getRequest(url) {
  */
 async function postRequest(url, body, json = true) {
     try {
+        if (json) {
+            body.email = addEmail();
+            body = JSON.stringify(body);
+        }
         const options = { method: 'POST', body };
         if (json) options.headers = { 'Content-Type': 'application/json' };
 
@@ -38,6 +43,13 @@ async function postRequest(url, body, json = true) {
     }
 }
 
+function addEmail() {
+    const cookies = new Cookies();
+    const email = cookies.get('auth_email');
+    if (email === undefined) return null;
+    return email;
+}
+
 export async function getEventList() {
     return getRequest('/events');
 }
@@ -47,7 +59,7 @@ export async function getEvent(id) {
 }
 
 export async function postEvent(event, id = '') {
-    return postRequest(`/events/${id}`, JSON.stringify(event));
+    return postRequest(`/events/${id}`, event);
 }
 
 export async function getClubList() {
@@ -59,6 +71,9 @@ export async function getClub(id) {
 }
 
 export async function postClub(club, id = '') {
+    // Add email to club
+    club.email = addEmail();
+
     var data = new FormData();
     data.append('data', JSON.stringify(club));
     data.append('img', club.coverImgBlobs.img);
@@ -78,11 +93,11 @@ export async function getVolunteering(id) {
 }
 
 export async function postVolunteering(vol, id = '') {
-    return postRequest(`/volunteering/${id}`, JSON.stringify(vol));
+    return postRequest(`/volunteering/${id}`, vol);
 }
 
 export async function postFeedback(feedback) {
-    return postRequest('/feedback', JSON.stringify(feedback));
+    return postRequest('/feedback', { feedback });
 }
 
 export async function getIp() {
@@ -93,6 +108,14 @@ export async function getAuthUrl() {
     return getRequest('/auth');
 }
 
+export async function postAuth(code) {
+    return postRequest('/auth', { code });
+}
+
+export async function postRefreshAuth(email) {
+    return postRequest('/auth/refresh', { email });
+}
+
 export async function deleteClub(id) {
-    return postRequest('/delete-club', JSON.stringify({ id }));
+    return postRequest('/delete-club', id);
 }
