@@ -2,16 +2,13 @@ import React from 'react';
 import { connect } from 'react-redux';
 import ActionButton from '../shared/action-button';
 
-import { getEvent, postEvent } from '../../functions/api';
-import { Event, EventInfo } from '../../functions/entries';
-import { getPopupId, getPopupOpen, getSavedEventList } from '../../redux/selectors';
-import { setPopupOpen, setPopupId, resetPopupState } from '../../redux/actions';
+import { getEvent } from '../../functions/api';
+import { getPopupId, getPopupOpen, getPopupType } from '../../redux/selectors';
+import { resetPopupState } from '../../redux/actions';
 import {
     addDayjsElement,
     getFormattedDate,
     getFormattedTime,
-    parseTimeZone,
-    getTimezone,
     parseLinks,
 } from '../../functions/util';
 
@@ -21,21 +18,7 @@ import Loading from '../shared/loading';
 class EventPopup extends React.Component {
     constructor(props) {
         super(props);
-        this.state = {
-            event: null,
-            name: '',
-            clubName: '',
-            startDate: '',
-            startTime: '',
-            endDate: '',
-            endTime: '',
-            links: [''],
-            description: '',
-            editedBy: '',
-            type: 'event',
-            showEditedBy: false,
-        };
-        this.handleInputChange = this.handleInputChange.bind(this);
+        this.state = { event: null };
     }
 
     getEventData = async () => {
@@ -52,112 +35,13 @@ class EventPopup extends React.Component {
         window.location.href = `${window.location.origin}/edit/events?id=${this.state.event.objId}`;
     };
 
-    closeEdit = () => {
-        this.props.setPopupEdit(false);
-        this.resetState();
-    };
-
-    toggleEditedBy = () => {
-        this.setState({ showEditedBy: !this.state.showEditedBy });
-    };
-
-    handleInputChange = (event) => {
-        const target = event.target;
-        if (target.name.startsWith('links-')) this.linksInputChange(target);
-        else this.setState({ [target.name]: target.value });
-    };
-
-    linksInputChange = (target) => {
-        var linkNum = Number(target.name.substring(6));
-        var oldLinkList = this.state.links;
-        oldLinkList[linkNum] = target.value;
-
-        // Add new link if text is typed into the last link box
-        if (linkNum === this.state.links.length - 1 && target.value != '') oldLinkList.push('');
-
-        this.setState({ links: oldLinkList });
-    };
-
-    changeType = (type) => this.setState({ type });
-
-    submit = async () => {
-        // Don't submit if missing required fields
-        var invalid = this.testValid();
-        if (invalid.length !== 0) {
-            var invalidMessage = '';
-            invalid.forEach((i) => (invalidMessage += `${i} cannot be empty!\n`));
-            alert(invalidMessage);
-            return;
-        }
-
-        // Filter out empty links
-        var currLinks = this.state.links;
-        var i = 0;
-        while (i != currLinks.length) {
-            if (currLinks[i] === '') currLinks.splice(i, 1);
-            else i++;
-        }
-
-        // Calculate milliseconds from starting/ending datetimes
-        var end = null;
-        var start = parseTimeZone(`${this.state.startDate} ${this.state.startTime}`, getTimezone());
-        if (this.state.type === 'event')
-            var end = parseTimeZone(`${this.state.endDate} ${this.state.endTime}`, getTimezone());
-
-        var editedBy = [...this.state.event.editedBy];
-        editedBy.push(this.state.editedBy);
-
-        var fullEvent = new Event(
-            this.state.type,
-            this.state.name,
-            this.state.clubName,
-            start,
-            end,
-            currLinks,
-            this.state.description,
-            editedBy
-        );
-
-        // POST event
-        const res = await postEvent(fullEvent, this.state.event.objId);
-        if (res.status === 200) {
-            var eventObj = new EventInfo(
-                this.state.event.objId,
-                this.state.type,
-                this.state.name,
-                this.state.clubName,
-                start,
-                end
-            );
-
-            addDayjsElement(eventObj);
-            this.props.updateEvent(this.state.event.objId, eventObj);
-            this.props.setPopupEdit(false);
-
-            this.setState({ event: fullEvent });
-            alert('Successfully edited!');
-        } else alert('Editing event failed :(');
-    };
-
-    testValid = () => {
-        var invalid = [];
-        if (this.state.name === '') invalid.push('Name');
-        if (this.state.clubName === '') invalid.push('Club Name');
-        if (this.state.startDate === '') invalid.push('Start Date');
-        if (this.state.startTime === '') invalid.push('Start Time');
-        if (this.state.endDate === '' && this.state.type === 'event') invalid.push('End Date');
-        if (this.state.endTime === '' && this.state.type === 'event') invalid.push('End Time');
-        if (this.state.editedBy === '') invalid.push('Edited By Name');
-        return invalid;
-    };
-
     componentDidMount() {
-        if (this.props.id !== null && this.props.id !== '') this.getEventData();
+        if (this.props.id !== null && this.props.id !== '' && this.props.type === 'events') this.getEventData();
     }
 
     componentDidUpdate(prevProps) {
         if (prevProps.popupOpen === this.props.popupOpen) return;
-        if (this.props.popupOpen && this.props.id !== null) {
+        if (this.props.popupOpen && this.props.id !== null && this.props.type === 'events') {
             this.getEventData();
         } else {
             this.setState({ event: null });
@@ -213,10 +97,9 @@ const mapStateToProps = (state) => {
     return {
         popupOpen: getPopupOpen(state),
         id: getPopupId(state),
-        event: getSavedEventList(state),
-        resetPopup: resetPopupState(state),
+        type: getPopupType(state),
     };
 };
-const mapDispatchToProps = { setPopupOpen, setPopupId };
+const mapDispatchToProps = { resetPopupState };
 
 export default connect(mapStateToProps, mapDispatchToProps)(EventPopup);
