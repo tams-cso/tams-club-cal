@@ -8,7 +8,7 @@ import VolunteeringPopup from './volunteering-popup';
 import ActionButton from '../shared/action-button';
 
 import { getSavedVolunteeringList } from '../../redux/selectors';
-import { setVolunteeringList, setPopupOpen, setPopupId, setPopupNew, setPopupEdit } from '../../redux/actions';
+import { setVolunteeringList, openPopup } from '../../redux/actions';
 
 import './volunteering.scss';
 import Loading from '../shared/loading';
@@ -21,14 +21,7 @@ class Volunteering extends React.Component {
 
     activatePopup = (id) => {
         this.props.history.push(`/volunteering?id=${id}`);
-        this.props.setPopupId(id);
-        this.props.setPopupOpen(true);
-    };
-
-    addVolunteering = () => {
-        this.props.setPopupNew(true);
-        this.props.setPopupEdit(true);
-        this.activatePopup('new');
+        this.props.openPopup(id, 'volunteering');
     };
 
     updateFilter = (filter) => {
@@ -112,6 +105,6 @@ const mapStateToProps = (state) => {
         volunteeringList: getSavedVolunteeringList(state),
     };
 };
-const mapDispatchToProps = { setVolunteeringList, setPopupOpen, setPopupId, setPopupNew, setPopupEdit };
+const mapDispatchToProps = { setVolunteeringList, openPopup };
 
 export default connect(mapStateToProps, mapDispatchToProps)(Volunteering);
