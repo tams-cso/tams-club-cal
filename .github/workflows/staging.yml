@@ -36,6 +36,8 @@ jobs:
           echo "MONGO_URL=tams-cal-db-staging.7d0nz.mongodb.net" >> .env
           echo "DROPBOX_TOKEN=$DROPBOX_TOKEN" >> .env
           echo "PORT=8082" >> .env
+          echo "G_CLIENT_ID=$G_CLIENT_ID" >> .env
+          echo "G_CLIENT_SECRET=$G_CLIENT_SECRET" >> .env
           mv staging.ecosystem.config.js ecosystem.config.js
           yarn install
           zip -r ../tams-club-cal-server.zip .

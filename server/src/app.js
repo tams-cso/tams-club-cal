@@ -171,8 +171,8 @@ app.get('/clubs/:id', async (req, res, next) => {
 // Add a club
 app.post('/clubs', async (req, res, next) => {
     parseForm(req, res, async (club) => {
-    const user = await parseUser(req);
-    const data = await addClub(club, user);
+        const user = await parseUser(req);
+        const data = await addClub(club, user);
         if (data.good === -1) sendError(res, 500, 'Unable to add club');
         else {
             res.status(200);
@@ -184,8 +184,8 @@ app.post('/clubs', async (req, res, next) => {
 // Update a club
 app.post('/clubs/:id', async (req, res, next) => {
     parseForm(req, res, async (club) => {
-    const user = await parseUser(req);
-    const good = await updateClub(club, req.params.id, user);
+        const user = await parseUser(req);
+        const good = await updateClub(club, req.params.id, user);
         if (good === -1) sendError(res, 500, 'Unable to update clubs');
         else if (good === 0) sendError(res, 400, 'Invalid club id');
         else {
@@ -262,12 +262,12 @@ app.get('/auth/ip', async (req, res, next) => {
 // Send auth string
 app.get('/auth', async (req, res, next) => {
     const state = genState();
-    res.send({ authUrl: getAuthUrl(state), state });
+    res.send({ authUrl: getAuthUrl(state, req.headers.origin), state });
 });
 
 // Fetch access tokens with auth code
 app.post('/auth', async (req, res, next) => {
-    const data = await getTokensAndInfo(req.body.code);
+    const data = await getTokensAndInfo(req.body.code, false, req.headers.origin);
     if (data === null) sendError(res, 500, 'Failed to fetch user information');
     else res.send({ email: data.email });
 });
@@ -286,7 +286,7 @@ app.post('/auth/refresh', async (req, res, next) => {
         return;
     }
 
-    const data = await getTokensAndInfo(user.refresh, true);
+    const data = await getTokensAndInfo(user.refresh, true, req.headers.origin);
     if (data === null) sendError(res, 500, 'Failed to fetch user');
     else res.send({ name: data.name });
 });

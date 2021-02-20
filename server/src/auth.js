@@ -3,15 +3,14 @@ const fetch = require('node-fetch');
 const qs = require('querystring');
 const { URLSearchParams } = require('url');
 
-const REDIRECT_URI = `${process.env.FRONTEND}/auth`;
 const SCOPES = ['https://www.googleapis.com/auth/userinfo.email', 'https://www.googleapis.com/auth/userinfo.profile'];
 
 var users = new Map();
 
-function getAuthUrl(state) {
+function getAuthUrl(state, frontend) {
     let params = {
         client_id: process.env.G_CLIENT_ID,
-        redirect_uri: REDIRECT_URI,
+        redirect_uri: `${frontend}/auth`,
         response_type: 'code',
         scope: SCOPES.join(' '),
         access_type: 'offline',
@@ -20,14 +19,13 @@ function getAuthUrl(state) {
     return `https://accounts.google.com/o/oauth2/v2/auth?${qs.encode(params)}`;
 }
 
-// https://developers.google.com/identity/protocols/oauth2/scopes#people
-async function getTokensAndInfo(code, refresh = false) {
+async function getTokensAndInfo(code, refresh = false, frontend) {
     // Get tokens
     const body = new URLSearchParams();
     body.append('client_id', process.env.G_CLIENT_ID);
     body.append('client_secret', process.env.G_CLIENT_SECRET);
     body.append('grant_type', refresh ? 'refresh_token' : 'authorization_code');
-    body.append('redirect_uri', REDIRECT_URI);
+    body.append('redirect_uri', `${frontend}/auth`);
 
     // Set correct parameter depending on if refresh token
     if (refresh) body.append('refresh_token', code);

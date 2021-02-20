@@ -37,6 +37,8 @@ jobs:
           echo "MONGO_URL=tams-cal-db.seuxs.mongodb.net" >> .env
           echo "DROPBOX_TOKEN=$DROPBOX_TOKEN" >> .env
           echo "PORT=8081" >> .env
+          echo "G_CLIENT_ID=$G_CLIENT_ID" >> .env
+          echo "G_CLIENT_SECRET=$G_CLIENT_SECRET" >> .env
           echo "API_KEY=$API_KEY" >> .env
           echo "ORIGIN=https://tams.club" >> .env
           yarn install
