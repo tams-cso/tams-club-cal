@@ -26,6 +26,9 @@ class Popup extends React.Component {
             <div className={`popup ${isActive('', this.props.open)} ${this.props.noscroll ? 'noscroll' : ''}`}>
                 <div className="popup-close-bkgd" onClick={this.close}></div>
                 <div className="popup-content">{this.props.children}</div>
+                <button className="popup-close-button" onClick={this.close}>
+                    x
+                </button>
             </div>
         );
     }
