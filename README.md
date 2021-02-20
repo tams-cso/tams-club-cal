@@ -4,17 +4,13 @@ An unofficial calendar for the [Texas Academy of Mathematics and Science (TAMS)]
 
 ## Contribution
 
-Find out how to contribute [here](CONTRIBUTING.md)! You can look through the issues, comment on the ones you like, and make a pull request to resolve them :grinning: We also welcome any bug reports or feature requests ➔ create a new issue [here](https://github.com/MichaelZhao21/tams-club-cal/issues/new)!
+There is a page for instructions on [how to contribute](CONTRIBUTING.md). You can look through the issues, comment on the ones you like, and make a pull request to resolve them :D We also welcome any bug reports or feature requests ➔ [create a new issue](https://github.com/MichaelZhao21/tams-club-cal/issues/new)!
 
 ## Documentation
 
 More information and general documentation can be found on our [documentation site](https://docs.tams.club). This project is still being actively developed, so expect a lot of missing and/or incorrect information.
 
 For now, here are the links to the [planning Google Doc](https://docs.google.com/document/d/1U_zqoEiplk0ODeGdMTzK1aLhz9OYFQV0FlhSI52VSBo/edit?usp=sharing) and the [Figma prototype](https://www.figma.com/file/yp3mDSciGjMZBZknjbog49/TAMS-Club-Calendar?node-id=0%3A1)
-
-## :warning: IMPORTANT UPDATE
-
-If you are developing the frontend, do NOT use `https://api.tams.club`. I have created a staging backend: `https://dev.tams.club`. Use this instead!
 
 ## Setup
 
@@ -52,7 +48,7 @@ PORT="[(optional) The port to start the server on]"
 
 You will need to create a [Dropbox Developer Account](https://www.dropbox.com/developers/reference/getting-started?_tk=guides_lp&_ad=guides2&_camp=get_started#app%20console) and a project.
 
-Additionally, you need to make a [Google Cloud Developer Account](https://cloud.google.com/docs), create a project, and make both OAuth 2.0 Client credentials and a service account credentials, enabling the Google Calendar API. 
+Additionally, you need to make a [Google Cloud Developer Account](https://cloud.google.com/docs), create a project, and make both OAuth 2.0 Client credentials and a service account credentials, enabling the Google Calendar API. The Oauth2 credentials can be placed in the `.env` file, but you will need to download the service account credentials and move the JSON file to `server/creds.json`.
 
 ## Execution
 
