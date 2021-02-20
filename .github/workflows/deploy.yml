@@ -23,6 +23,8 @@ jobs:
           MONGO_PASS: ${{ secrets.MONGO_PASS }}
           DROPBOX_TOKEN: ${{ secrets.DROPBOX_TOKEN }}
           API_KEY: ${{ secrets.API_KEY }}
+          G_CLIENT_ID: ${{ secrets.G_CLIENT_ID }}
+          G_CLIENT_SECRET: ${{ secrets.G_CLIENT_SECRET }}
         run: |
           npm install -g yarn
           cd $GITHUB_WORKSPACE && ls -la
