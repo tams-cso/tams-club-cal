@@ -182,14 +182,6 @@ class EventPopup extends React.Component {
             )
         );
 
-        // Create edited by display (if set to true or else just display added by)
-        var editedByDisplay = `Added by: ${this.state.event.editedBy[0]}`;
-        if (this.state.showEditedBy) {
-            for (var i = 1; i < this.state.event.editedBy.length; i++) {
-                editedByDisplay += `<br />Edited by: ${this.state.event.editedBy[i]}`;
-            }
-        }
-
         const description = parseLinks('event-popup-description', this.state.event.description);
 
         return (
@@ -206,11 +198,6 @@ class EventPopup extends React.Component {
                         <p className="event-popup-date">{getFormattedDate(this.state.event)}</p>
                         <p className="event-popup-time">{getFormattedTime(this.state.event)}</p>
                         {linkData}
-                        <p
-                            className="event-popup-edited-by"
-                            onClick={this.toggleEditedBy}
-                            dangerouslySetInnerHTML={{ __html: editedByDisplay }}
-                        ></p>
                         <ActionButton className="event-popup-open-edit" onClick={this.openEdit}>
                             Edit
                         </ActionButton>
