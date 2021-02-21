@@ -171,17 +171,6 @@ class EventPopup extends React.Component {
         // Add a Dayjs attribute
         addDayjsElement(this.state.event);
 
-        // Create link element list
-        var linkData = [];
-        var i = 0;
-        this.state.event.links.forEach((link) =>
-            linkData.push(
-                <a className="event-popup-link" key={`link-${i++}`} href={link}>
-                    {link}
-                </a>
-            )
-        );
-
         // Create edited by display (if set to true or else just display added by)
         var editedByDisplay = `Added by: ${this.state.event.editedBy[0]}`;
         if (this.state.showEditedBy) {
@@ -205,7 +194,6 @@ class EventPopup extends React.Component {
                         <p className="event-popup-club">{this.state.event.club}</p>
                         <p className="event-popup-date">{getFormattedDate(this.state.event)}</p>
                         <p className="event-popup-time">{getFormattedTime(this.state.event)}</p>
-                        {linkData}
                         <p
                             className="event-popup-edited-by"
                             onClick={this.toggleEditedBy}
