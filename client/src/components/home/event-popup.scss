@@ -93,19 +93,13 @@
     color: $primary;
 }
 
-.event-popup-edited-by {
-    margin-top: 3rem;
-    font-size: 0.45rem;
-    color: $text-lighter;
-    cursor: pointer;
-}
-
 .event-popup-open-edit {
     font-size: 0.65rem;
     padding: 0.1rem 0.25rem;
 }
 
 .event-popup-description {
+    padding-right: 0.5rem;
     font-size: 0.55rem;
     white-space: pre-line;
 }
