@@ -1,44 +1,24 @@
 import React from 'react';
 import { connect } from 'react-redux';
 import dayjs from 'dayjs';
-import arraySupport from 'dayjs/plugin/arraySupport';
 
 import DateSection from './date-section';
 import ScheduleEvent from './schedule-event';
-import CalendarDay from './calendar-day';
 import Popup from '../shared/popup';
 import EventPopup from './event-popup';
-
-import { setEventList, setPopupOpen, setPopupId } from '../../redux/actions';
-import { getSavedEventList } from '../../redux/selectors';
-import { getEventList } from '../../functions/api';
-import {
-    createDateHeader,
-    insertDateDividers,
-    addDayjsElement,
-    getMonthAndYear,
-    generateCalendarDays,
-    pad,
-    isActive,
-} from '../../functions/util';
-
-import data from '../../files/data.json';
-import './home.scss';
 import Calendar from './calendar';
 import Loading from '../shared/loading';
+
+import { createDateHeader, insertDateDividers, getMonthAndYear, isActive } from '../../functions/util';
+import { openPopup } from '../../redux/actions';
+import { getSavedEventList } from '../../redux/selectors';
+
+import './home.scss';
 
 class Home extends React.Component {
     constructor(props) {
         super(props);
-
-        // Use DayJS plugin to parse arrays of dates
-        dayjs.extend(arraySupport);
-
-        // Set default state
-        this.state = {
-            scheduleView: true,
-            monthOffset: 0,
-        };
+        this.state = { scheduleView: true, monthOffset: 0 };
     }
 
     switchView = () => {
@@ -55,8 +35,7 @@ class Home extends React.Component {
 
     activatePopup = (id) => {
         this.props.history.push(`/events?id=${id}`);
-        this.props.setPopupId(id);
-        this.props.setPopupOpen(true);
+        this.props.openPopup(id, 'events');
     };
 
     createEventComponents = () => {
@@ -145,9 +124,7 @@ class Home extends React.Component {
                         {'<'}
                     </button>
                     <div className="month-year">{getMonthAndYear(this.state.monthOffset)}</div>
-                    <div
-                        className={isActive('dummy-change-month month-forward', this.state.scheduleView)}
-                    ></div>
+                    <div className={isActive('dummy-change-month month-forward', this.state.scheduleView)}></div>
                     <button
                         className={isActive('change-month month-forward', !this.state.scheduleView)}
                         onClick={this.changeMonthOffset.bind(this, false)}
@@ -175,6 +152,7 @@ const mapStateToProps = (state) => {
         eventList: getSavedEventList(state),
     };
 };
-const mapDispatchToProps = { setEventList, setPopupOpen, setPopupId };
+
+const mapDispatchToProps = { openPopup };
 
 export default connect(mapStateToProps, mapDispatchToProps)(Home);

@@ -1,16 +1,13 @@
 import React from 'react';
 import { connect } from 'react-redux';
 import ActionButton from '../shared/action-button';
+import Loading from '../shared/loading';
 
 import { formatVolunteeringFilters, parseLinks } from '../../functions/util';
-import { getPopupId, getPopupOpen, getSavedVolunteeringList } from '../../redux/selectors';
-import {
-    setPopupOpen,
-    setPopupId,
-} from '../../redux/actions';
+import { getPopupId, getPopupOpen, getPopupType, getSavedVolunteeringList } from '../../redux/selectors';
+import { openPopup } from '../../redux/actions';
 
 import './volunteering-popup.scss';
-import Loading from '../shared/loading';
 
 class VolunteeringPopup extends React.Component {
     constructor(props) {
@@ -24,16 +21,18 @@ class VolunteeringPopup extends React.Component {
 
     getVol = async () => {
         const vol = this.props.volList.find((v) => v._id === this.props.id);
-        this.setState({vol});
+        this.setState({ vol });
     };
 
     componentDidMount() {
-        if (this.props.volList !== null && this.props.id !== '') this.getVol();
+        if (this.props.volList !== null && this.props.id !== '' && this.props.type === 'volunteering') this.getVol();
     }
 
     componentDidUpdate(prevProps) {
-        // If id not valid, ignore updates
-        if (this.props.id === '') return;
+        // TODO: Simplify this if possible because it's really confusing rn
+
+        // If id or type not valid, ignore updates
+        if (this.props.id === '' || this.props.type !== 'volunteering') return;
 
         // On volunteering list or id change, update the current volunteering
         if (
@@ -79,11 +78,12 @@ class VolunteeringPopup extends React.Component {
 
 const mapStateToProps = (state) => {
     return {
-        popupOpen: getPopupOpen(state),
-        id: getPopupId(state),
         volList: getSavedVolunteeringList(state),
+        type: getPopupType(state),
+        open: getPopupOpen(state),
+        id: getPopupId(state),
     };
 };
-const mapDispatchToProps = { setPopupOpen, setPopupId };
+const mapDispatchToProps = { openPopup };
 
 export default connect(mapStateToProps, mapDispatchToProps)(VolunteeringPopup);

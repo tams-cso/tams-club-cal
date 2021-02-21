@@ -4,21 +4,11 @@ import { connect } from 'react-redux';
 import ActionButton from '../shared/action-button';
 import ExecCard from './exec-card';
 import CommitteeCard from './committee-card';
+import Loading from '../shared/loading';
 
-import { getPopupEdit, getPopupId, getPopupNew, getPopupOpen } from '../../redux/selectors';
-import {
-    setPopupOpen,
-    setPopupId,
-    setPopupEdit,
-    updateClub,
-    setPopupNew,
-    addClub,
-    deleteSavedClub,
-    setPopupDeleted,
-    resetPopupState,
-} from '../../redux/actions';
+import { getPopupId, getPopupOpen, getPopupType } from '../../redux/selectors';
+import { resetPopupState } from '../../redux/actions';
 import { getClub } from '../../functions/api';
-import { Club } from '../../functions/entries';
 import { imgUrl, isActive, parseLinks } from '../../functions/util';
 
 import './club-popup.scss';
@@ -29,16 +19,6 @@ class ClubPopup extends React.Component {
         this.state = {
             execTab: true,
             club: null,
-            name: '',
-            advised: false,
-            fb: '',
-            website: '',
-            coverImg: '',
-            description: '',
-            execs: null,
-            committees: null,
-            compressed: null,
-            execBlobs: null,
         };
     }
 
@@ -49,7 +29,7 @@ class ClubPopup extends React.Component {
             alert(`ERROR ${res.status}: Could not get club :(`);
             return;
         }
-        this.resetState(res.data);
+        this.setState({ club: res.data });
     };
 
     switchTab = (tab) => this.setState({ execTab: tab === 'execs' });
@@ -58,47 +38,22 @@ class ClubPopup extends React.Component {
         window.location.href = `${window.location.origin}/edit/clubs?id=${this.state.club.objId}`;
     };
 
-    checkOpenAndSetState = () => {
-        if (this.props.popupOpen && this.props.id !== null) {
-            if (this.props.new) {
-                this.resetState(new Club());
-            } else {
-                this.getClubData();
-            }
-        } else {
-            this.setState({ club: null });
-        }
-    };
-
-    resetState = (club = null) => {
-        if (club === null) club = this.state.club;
-        this.setState({
-            club,
-            name: club.name,
-            advised: club.advised,
-            fb: club.fb,
-            website: club.website,
-            coverImg: club.coverImg,
-            description: club.description,
-            execs: [...club.execs],
-            committees: [...club.committees],
-            editedBy: '',
-            execBlobs: Array(club.execs.length),
-            compressed: null,
-        });
-    };
-
     componentDidMount() {
-        this.checkOpenAndSetState();
+        if (this.props.id !== null && this.props.id !== '' && this.props.type === 'clubs') this.getClubData();
     }
 
     componentDidUpdate(prevProps) {
         if (prevProps.popupOpen === this.props.popupOpen) return;
-        this.checkOpenAndSetState();
+        if (this.props.popupOpen && this.props.id !== null && this.props.type === 'clubs') {
+            this.getClubData();
+        } else {
+            this.setState({ club: null });
+        }
     }
 
     render() {
-        if (!this.props.popupOpen || this.state.club === null) return <div className="club-popup"></div>;
+        if (!this.props.popupOpen || this.state.club === null)
+            return <Loading className="club-popup-loading"></Loading>;
 
         var execList = [];
         this.state.club.execs.forEach((exec) => {
@@ -115,7 +70,7 @@ class ClubPopup extends React.Component {
         return (
             <div className="club-popup">
                 <div className={isActive('club-popup-view', !this.props.edit)}>
-                    <img className="club-popup-image" src={imgUrl(this.state.coverImg)} alt="cover image"></img>
+                    <img className="club-popup-image" src={imgUrl(this.state.club.coverImg)} alt="cover image"></img>
                     <p className={isActive('club-popup-advised', this.state.club.advised)}>
                         {this.state.club.advised ? 'Advised' : 'Independent'}
                     </p>
@@ -161,20 +116,9 @@ const mapStateToProps = (state) => {
     return {
         popupOpen: getPopupOpen(state),
         id: getPopupId(state),
-        edit: getPopupEdit(state),
-        new: getPopupNew(state),
+        type: getPopupType(state),
     };
 };
-const mapDispatchToProps = {
-    setPopupOpen,
-    setPopupId,
-    setPopupEdit,
-    updateClub,
-    setPopupNew,
-    addClub,
-    deleteSavedClub,
-    setPopupDeleted,
-    resetPopupState,
-};
+const mapDispatchToProps = { resetPopupState };
 
 export default connect(mapStateToProps, mapDispatchToProps)(ClubPopup);
