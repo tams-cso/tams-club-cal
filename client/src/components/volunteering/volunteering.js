@@ -1,17 +1,15 @@
 import React from 'react';
 import { connect } from 'react-redux';
 
-import LinkBox from '../shared/link-box';
 import Popup from '../shared/popup';
 import VolunteeringCard from './volunteering-card';
 import VolunteeringPopup from './volunteering-popup';
-import ActionButton from '../shared/action-button';
+import Loading from '../shared/loading';
 
 import { getSavedVolunteeringList } from '../../redux/selectors';
 import { setVolunteeringList, openPopup } from '../../redux/actions';
 
 import './volunteering.scss';
-import Loading from '../shared/loading';
 
 class Volunteering extends React.Component {
     constructor(props) {
