@@ -21,7 +21,6 @@ class EditEvents extends React.Component {
             startTime: '',
             endDate: '',
             endTime: '',
-            links: [''],
             description: '',
             type: 'event',
             invalid: [],
@@ -34,21 +33,7 @@ class EditEvents extends React.Component {
     // React controlled forms
     handleInputChange(event) {
         const target = event.target;
-        if (target.name.startsWith('links-')) this.linksInputChange(target);
-        else this.setState({ [target.name]: target.value });
-    }
-
-    // Handle changing of links
-    linksInputChange(target) {
-        var linkNum = Number(target.name.substring(6));
-        var oldLinkList = this.state.links;
-        oldLinkList[linkNum] = target.value;
-
-        // Add new link if text is typed into the last link box
-        if (linkNum == this.state.links.length - 1 && target.value != '') oldLinkList.push('');
-
-        // TODO: Remove unused links
-        this.setState({ links: oldLinkList });
+        this.setState({ [target.name]: target.value });
     }
 
     // Submit the form and make a POST request
@@ -60,14 +45,6 @@ class EditEvents extends React.Component {
             invalid.forEach((i) => (invalidMessage += `${i} cannot be empty!\n`));
             alert(invalidMessage);
             return;
-        }
-
-        // Filter out empty links
-        var currLinks = this.state.links;
-        var i = 0;
-        while (i != currLinks.length) {
-            if (currLinks[i] === '') currLinks.splice(i, 1);
-            else i++;
         }
 
         // Calculate milliseconds from starting/ending datetimes
@@ -83,7 +60,6 @@ class EditEvents extends React.Component {
             this.state.clubName,
             start,
             end,
-            currLinks,
             this.state.description,
             this.state.event.editedBy
         );
@@ -125,10 +101,6 @@ class EditEvents extends React.Component {
             var startDatetime = millisToDateAndTime(event.start);
             var endDatetime = millisToDateAndTime(event.end);
 
-            // Create list of links
-            var linkList = event.links;
-            linkList.push('');
-
             // Update form with saved fields
             this.setState({
                 event,
@@ -139,7 +111,6 @@ class EditEvents extends React.Component {
                 startTime: startDatetime.time,
                 endDate: endDatetime.date,
                 endTime: endDatetime.time,
-                links: linkList,
                 description: event.description,
                 type: event.type,
             });
@@ -195,23 +166,6 @@ class EditEvents extends React.Component {
             );
         }
 
-        // Create lines for adding more links if needed
-        var extraLinks = [];
-        for (var i = 1; i < this.state.links.length; i++) {
-            extraLinks.push(
-                <input
-                    name={'links-' + i}
-                    key={'links-' + i}
-                    className="line-in edit-events-links-input edit-events-extra-link"
-                    type="text"
-                    placeholder="Add another link"
-                    value={this.state.links[i]}
-                    onChange={this.handleInputChange}
-                ></input>
-            );
-        }
-        if (extraLinks.length > 0) extraLinks.push(<br key="links-break" />);
-
         return (
             <div className="edit-events">
                 <div className="edit-events-type-switcher">
@@ -265,17 +219,6 @@ class EditEvents extends React.Component {
                 {endObj}
                 {/* TODO Allow user to choose timezone */}
                 <p className="edit-events-timezone-message">** Timezone is America/Chicago [CST/CDT] **</p>
-                <label htmlFor="links-0">Links</label>
-                <input
-                    name="links-0"
-                    className="line-in edit-events-links-input"
-                    type="text"
-                    placeholder="Add a link"
-                    value={this.state.links[0]}
-                    onChange={this.handleInputChange}
-                ></input>
-                <br />
-                {extraLinks}
                 <label>Description</label>
                 <br />
                 <div className="center-div">

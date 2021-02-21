@@ -70,7 +70,6 @@ async function addEvent(event, user) {
         });
         const dataRes = await dataCollection.insertOne({
             objId,
-            links: event.links,
             editedBy: [user],
             description: event.description,
         });
@@ -108,7 +107,6 @@ async function updateEvent(event, id, user) {
             { objId: id },
             {
                 $set: {
-                    links: event.links,
                     editedBy: event.editedBy,
                     description: event.description,
                 },

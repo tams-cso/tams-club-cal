@@ -55,17 +55,6 @@ class EventPopup extends React.Component {
         // Add a Dayjs attribute
         addDayjsElement(this.state.event);
 
-        // Create link element list
-        var linkData = [];
-        var i = 0;
-        this.state.event.links.forEach((link) =>
-            linkData.push(
-                <a className="event-popup-link" key={`link-${i++}`} href={link}>
-                    {link}
-                </a>
-            )
-        );
-
         const description = parseLinks('event-popup-description', this.state.event.description);
 
         return (
@@ -81,7 +70,6 @@ class EventPopup extends React.Component {
                         <p className="event-popup-club">{this.state.event.club}</p>
                         <p className="event-popup-date">{getFormattedDate(this.state.event)}</p>
                         <p className="event-popup-time">{getFormattedTime(this.state.event)}</p>
-                        {linkData}
                         <ActionButton className="event-popup-open-edit" onClick={this.openEdit}>
                             Edit
                         </ActionButton>

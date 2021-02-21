@@ -80,19 +80,6 @@
     margin-bottom: 0.5rem;
 }
 
-.event-popup-link {
-    display: block;
-    width: fit-content;
-    font-size: 0.5rem;
-    color: $text-light;
-    transition: 0.2s;
-    margin-bottom: 0.25rem;
-}
-
-.event-popup-link:hover {
-    color: $primary;
-}
-
 .event-popup-open-edit {
     font-size: 0.65rem;
     padding: 0.1rem 0.25rem;
@@ -140,10 +127,6 @@
     .event-popup-date,
     .event-popup-time {
         font-size: 0.8rem;
-    }
-
-    .event-popup-link {
-        font-size: 0.75rem;
     }
 
     .event-popup-description {
