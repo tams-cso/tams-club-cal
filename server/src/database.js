@@ -18,6 +18,7 @@ async function getEventList() {
         const events = await collection.find().toArray();
 
         if (events === null) {
+            // TODO: Add this console.dir to every GET
             console.dir({ error: 'Could not get events.info' });
             return { good: -1 };
         }
@@ -74,8 +75,11 @@ async function addEvent(event, user) {
             editedBy: [user],
             description: event.description,
         });
-
         if (dataRes.result.ok === 0 || infoRes.result.ok === 0) return { good: -1 };
+
+        const historyRes = await createHistory('events', objId, user, event);
+        if (historyRes !== 1) return { good: -1 };
+
         return { objId, good: 1 };
     } catch (error) {
         console.dir(error);
@@ -115,6 +119,10 @@ async function updateEvent(event, id, user) {
             }
         );
         if (dataRes.matchedCount === 0 || infoRes.matchedCount === 0) return 0;
+
+        const historyRes = await addToHistory('events', id, user, event);
+        if (historyRes !== 1) return -1;
+
         return 1;
     } catch (error) {
         console.dir(error);
@@ -186,8 +194,11 @@ async function addClub(club, user) {
             coverImg: club.coverImg,
             editedBy: [user],
         });
-
         if (dataRes.result.ok === 0 || infoRes.result.ok === 0) return { good: -1 };
+
+        const historyRes = await createHistory('clubs', objId, user, club);
+        if (historyRes !== 1) return { good: -1 };
+
         return { objId, good: 1 };
     } catch (error) {
         console.dir(error);
@@ -229,6 +240,10 @@ async function updateClub(club, id, user) {
             }
         );
         if (dataRes.matchedCount === 0 || infoRes.matchedCount === 0) return 0;
+
+        const historyRes = await addToHistory('clubs', id, user, club);
+        if (historyRes !== 1) return -1;
+
         return 1;
     } catch (error) {
         console.dir(error);
@@ -297,6 +312,10 @@ async function addVolunteering(vol, user) {
 
         const res = await collection.insertOne(data);
         if (res.result.ok === 0) return { good: -1 };
+
+        const historyRes = await createHistory('volunteering', data._id, user, data);
+        if (historyRes !== 1) return 0;
+
         return { id: data._id, good: 1 };
     } catch (error) {
         console.dir(error);
@@ -325,8 +344,11 @@ async function updateVolunteering(vol, id, user) {
                 },
             }
         );
-
         if (res.matchedCount === 0) return 0;
+
+        const historyRes = await addToHistory('volunteering', id, user, vol);
+        if (historyRes !== 1) return 0;
+
         return 1;
     } catch (error) {
         console.dir(error);
@@ -380,6 +402,109 @@ async function findUser(email) {
     }
 }
 
+/**
+ * Create a history object for a new resource
+ *
+ * @param {'events' | 'clubs' | 'volunteering'} resource The resource that was changed
+ * @param {string} id The hex objId or _id (volunteering) of the object
+ * @param {string} user User name or ip address
+ * @param {object} data Edited data object
+ */
+async function createHistory(resource, id, user, data) {
+    try {
+        const db = client.db('history');
+        const listCollection = db.collection('list');
+        const infoCollection = db.collection('info');
+        const dataCollection = db.collection('data');
+
+        const now = new Date().getTime();
+
+        const infoRes = await infoCollection.insertOne({
+            editId: id,
+            list: [
+                {
+                    editor: user,
+                    name: data.name,
+                    time: now,
+                    resource,
+                },
+            ],
+        });
+        const dataRes = await dataCollection.insertOne({
+            editId: id,
+            list: [{ data }],
+        });
+        const listRes = await listCollection.insertOne({
+            editId: id,
+            editIndex: 0,
+            editor: data.name,
+            time: now,
+            resource,
+        });
+
+        if (infoRes.result.ok === 0 || dataRes.result.ok === 0 || listRes.result.ok === 0) return -1;
+        return 1;
+    } catch (error) {
+        console.dir(error);
+        return -1;
+    }
+}
+
+/**
+ * Add to a history object
+ *
+ * @param {'events' | 'clubs' | 'volunteering'} resource The resource that was changed
+ * @param {string} id The hex objId or _id (volunteering) of the object
+ * @param {string} user User name or ip address
+ * @param {object} data Edited data object
+ */
+async function addToHistory(resource, id, user, data) {
+    try {
+        const db = client.db('history');
+        const listCollection = db.collection('list');
+        const infoCollection = db.collection('info');
+        const dataCollection = db.collection('data');
+
+        const now = new Date().getTime();
+        const index = (await dataCollection.findOne({ editId: id })).list.length;
+
+        const infoRes = await infoCollection.updateOne(
+            { editId: id },
+            {
+                $push: {
+                    list: {
+                        editor: user,
+                        time: now,
+                        name: data.name,
+                        resource,
+                    },
+                },
+            }
+        );
+        const dataRes = await dataCollection.updateOne(
+            { editId: id },
+            {
+                $push: {
+                    list: { data },
+                },
+            }
+        );
+        const listRes = await listCollection.insertOne({
+            editId: id,
+            editIndex: index,
+            editor: data.name,
+            time: now,
+            resource,
+        });
+
+        if (infoRes.matchedCount === 0 || dataRes.matchedCount === 0 || listRes.result.ok === 0) return -1;
+        return 1;
+    } catch (error) {
+        console.dir(error);
+        return -1;
+    }
+}
+
 module.exports = {
     getClubList,
     getClub,
@@ -397,4 +522,6 @@ module.exports = {
     deleteClub,
     upsertUser,
     findUser,
+    createHistory,
+    addToHistory,
 };
