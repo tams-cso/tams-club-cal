@@ -72,13 +72,8 @@
     font-size: 1.25rem !important;
 }
 
-.edit-events-club-name-input,
-.edit-events-links-input {
+.edit-events-club-name-input {
     width: 50%;
-}
-
-.edit-events-extra-link {
-    margin-left: 3rem;
 }
 
 .edit-events-time-input {
@@ -131,10 +126,6 @@
 
     .edit-events-timezone-message {
         margin-left: 1.75rem;
-    }
-
-    .edit-events-links-input {
-        width: 80%;
     }
 
     .edit-events-description-input {

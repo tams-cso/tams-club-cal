@@ -1,4 +1,4 @@
-import dayjs, { Dayjs } from 'dayjs';
+import { Dayjs } from 'dayjs';
 
 /**
  * An object containing the information for calendar events
@@ -7,17 +7,15 @@ import dayjs, { Dayjs } from 'dayjs';
  * @param {string} club The name of the club that is hosting the event
  * @param {string} start The time in UTC milliseconds that the event starts
  * @param {string} end The time in UTC milliseconds that the event ends
- * @param {string[]} links The link to the zoom meeting/fb post of the event
  * @param {string} description The description of the event
  * @param {string[]} editedBy The editors of the event
  */
-export function Event(type, name, club, start, end, links, description, editedBy = []) {
+export function Event(type, name, club, start, end, description, editedBy = []) {
     this.type = type || 'event';
     this.name = name || '';
     this.club = club || '';
     this.start = start || '';
     this.end = end || '';
-    this.links = links || [];
     this.description = description || '';
     this.editedBy = editedBy || [];
 }
@@ -45,13 +43,11 @@ export function EventInfo(objId, type, name, club, start, end) {
 /**
  * An object containing the extra data for an event
  * @param {string} objId The unique ID to match the info and data objects
- * @param {string[]} links The link to the zoom meeting/fb post of the event
  * @param {string} description The description of the event
  * @param {string[]} editedBy List of people who edited the event
  */
-export function EventData(objId, links, description, editedBy) {
+export function EventData(objId, description, editedBy) {
     this.objId = objId;
-    this.links = links;
     this.description = description;
     this.editedBy = editedBy;
 }

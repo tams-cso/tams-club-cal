@@ -13,6 +13,7 @@ import {
     setClubList,
     setVolunteeringList,
     setMobileDropdown,
+    openPopup,
 } from '../redux/actions';
 
 class RoutingRequests extends React.Component {
@@ -63,23 +64,10 @@ class RoutingRequests extends React.Component {
         }
     };
 
-    activatePopup = (id) => {
-        // Detect if new and set relevant flags
-        if (id === 'new') {
-            this.props.setPopupNew(true);
-            this.props.setPopupEdit(true);
-        }
-
-        // Set the ID and open the popup
-        this.props.setPopupId(id);
-        this.props.setPopupOpen(true);
-        console.log(id);
-    };
-
     componentDidMount() {
         // Activate popup
         const id = getParams('id');
-        if (id !== undefined && id !== null) this.activatePopup(id);
+        if (id !== undefined && id !== null) this.props.openPopup(id, window.location.pathname.substring(1));
 
         // Fetch data
         this.fetchData();
@@ -129,8 +117,7 @@ const mapStateToProps = (state) => {
     };
 };
 const mapDispatchToProps = {
-    setPopupOpen,
-    setPopupId,
+    openPopup,
     resetPopupState,
     setEventList,
     setVolunteeringList,
