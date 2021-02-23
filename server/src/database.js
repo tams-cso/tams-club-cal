@@ -1,6 +1,5 @@
 const { MongoClient, ObjectId } = require('mongodb');
 const crypto = require('crypto');
-const { time } = require('console');
 
 const uri = `mongodb+srv://${process.env.MONGO_USER}:${process.env.MONGO_PASS}@${process.env.MONGO_URL}/clubs?retryWrites=true&w=majority`;
 const client = new MongoClient(uri, { useNewUrlParser: true, useUnifiedTopology: true });
@@ -64,15 +63,14 @@ async function addEvent(event, user) {
 
         const infoRes = await infoCollection.insertOne({
             objId,
-            name: event.name,
             type: event.type,
+            name: event.name,
             club: event.club,
             start: event.start,
             end: event.end,
         });
         const dataRes = await dataCollection.insertOne({
             objId,
-            editedBy: [user],
             description: event.description,
         });
         if (dataRes.result.ok === 0 || infoRes.result.ok === 0) return { good: -1 };
@@ -100,8 +98,8 @@ async function updateEvent(event, id, user) {
             { objId: id },
             {
                 $set: {
-                    name: event.name,
                     type: event.type,
+                    name: event.name,
                     club: event.club,
                     start: event.start,
                     end: event.end,
@@ -112,7 +110,6 @@ async function updateEvent(event, id, user) {
             { objId: id },
             {
                 $set: {
-                    editedBy: event.editedBy,
                     description: event.description,
                 },
             }
@@ -179,19 +176,18 @@ async function addClub(club, user) {
 
         const infoRes = await infoCollection.insertOne({
             objId,
+            coverImgThumbnail: club.coverImgThumbnail,
             name: club.name,
             advised: club.advised,
             fb: club.fb,
             website: club.website,
-            coverImgThumbnail: club.coverImgThumbnail,
         });
         const dataRes = await dataCollection.insertOne({
             objId,
+            coverImg: club.coverImg,
             description: club.description,
             execs: club.execs,
             committees: club.committees,
-            coverImg: club.coverImg,
-            editedBy: [user],
         });
         if (dataRes.result.ok === 0 || infoRes.result.ok === 0) return { good: -1 };
 
@@ -214,27 +210,26 @@ async function updateClub(club, id, user, oldImages) {
         // Add user to editedby
         club.editedBy.push(user);
 
-        const dataRes = await dataCollection.updateOne(
-            { objId: id },
-            {
-                $set: {
-                    description: club.description,
-                    execs: club.execs,
-                    committees: club.committees,
-                    coverImg: club.coverImg,
-                    editedBy: club.editedBy,
-                },
-            }
-        );
         const infoRes = await infoCollection.updateOne(
             { objId: id },
             {
                 $set: {
+                    coverImgThumbnail: club.coverImgThumbnail,
                     name: club.name,
                     advised: club.advised,
                     fb: club.fb,
                     website: club.website,
-                    coverImgThumbnail: club.coverImgThumbnail,
+                },
+            }
+        );
+        const dataRes = await dataCollection.updateOne(
+            { objId: id },
+            {
+                $set: {
+                    coverImg: club.coverImg,
+                    description: club.description,
+                    execs: club.execs,
+                    committees: club.committees,
                 },
             }
         );
@@ -306,7 +301,6 @@ async function addVolunteering(vol, user) {
             description: vol.description,
             filters: vol.filters,
             signupTime: vol.signupTime,
-            editedBy: [user],
         };
 
         const res = await collection.insertOne(data);
@@ -339,7 +333,6 @@ async function updateVolunteering(vol, id, user) {
                     description: vol.description,
                     filters: vol.filters,
                     signupTime: vol.signupTime,
-                    editedBy: vol.editedBy,
                 },
             }
         );
