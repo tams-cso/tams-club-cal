@@ -3,7 +3,7 @@ import ActionButton from '../shared/action-button';
 import databaseInfo from './databaseInfo.json';
 import './admin-content.scss';
 import Cookies from 'universal-cookie';
-import { getDb } from '../../functions/api';
+import { getDb, postDb } from '../../functions/api';
 
 class AdminContent extends React.Component {
     constructor(props) {
@@ -54,6 +54,17 @@ class AdminContent extends React.Component {
 
     add = async () => {
         if (!this.isValid()) return;
+
+        // Get email
+        const cookies = new Cookies();
+        const email = cookies.get('auth_email');
+
+        // POST request
+        const res = await postDb(this.state.db, this.state.collection, { data: this.state.text }, email);
+        if (res.status === 200) {
+            alert('Added successfully!');
+            this.setState({ text: '', db: '', collection: '' });
+        } else alert('Error adding to collection :(');
     };
 
     isValid = () => {

@@ -126,6 +126,10 @@ export async function getDb(db, collection, email) {
     return getRequest(`/admin/db/${db}/${collection}`, email);
 }
 
+export async function postDb(db, collection, data, email) {
+    return postRequest(`/admin/db/${db}/${collection}`, data, true, email);
+}
+
 export async function deleteClub(id) {
     return postRequest('/delete-club', id);
 }

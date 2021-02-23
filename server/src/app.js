@@ -24,6 +24,7 @@ const {
     getVolunteering,
     findUser,
     getSpecificDb,
+    addToSpecificDb,
 } = require('./database');
 const { getImage, deleteClubImages } = require('./images');
 const { sendError, logRequest, parseForm, getIp, genState, parseUser, isTrusted } = require('./util');
@@ -316,6 +317,13 @@ app.post('/admin/db/:db/:collection', async (req, res, next) => {
     if (!isTrusted(req.body.email)) {
         sendError(res, 403, 'Invalid or untrusted email');
         return;
+    }
+
+    const insertRes = await addToSpecificDb(req.params.db, req.params.collection, req.body.data);
+    if (insertRes === -1) sendError(res, 500, 'Unable to add to collection');
+    else {
+        res.status(200);
+        res.send({ status: 200 });
     }
 });
 

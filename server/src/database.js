@@ -522,6 +522,20 @@ async function getSpecificDb(dbName, collectionName) {
     }
 }
 
+async function addToSpecificDb(dbName, collectionName, data) {
+    try {
+        const db = client.db(dbName);
+        const collection = db.collection(collectionName);
+        const res = await collection.insertMany(JSON.parse(data));
+
+        if (res.result.ok === 0) return -1;
+        return 1;
+    } catch (error) {
+        console.dir(error);
+        return -1;
+    }
+}
+
 module.exports = {
     getClubList,
     getClub,
@@ -542,4 +556,5 @@ module.exports = {
     createHistory,
     addToHistory,
     getSpecificDb,
+    addToSpecificDb,
 };
