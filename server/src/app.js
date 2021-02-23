@@ -23,9 +23,10 @@ const {
     deleteClub,
     getVolunteering,
     findUser,
+    getSpecificDb,
 } = require('./database');
 const { getImage, deleteClubImages } = require('./images');
-const { sendError, logRequest, parseForm, getIp, genState, parseUser } = require('./util');
+const { sendError, logRequest, parseForm, getIp, genState, parseUser, isTrusted } = require('./util');
 const { getAuthUrl, getTokensAndInfo, getSavedUser } = require('./auth');
 
 // Clean up the 'cache' folder on start
@@ -293,14 +294,29 @@ app.post('/auth/refresh', async (req, res, next) => {
 
 // Check if the email is trusted (for admin dashboard)
 app.post('/auth/trusted', async (req, res, next) => {
-    if (process.env.TRUSTED === undefined) {
-        res.send({ trusted: true });
+    res.send({ trusted: isTrusted(req.body.email) });
+});
+
+// Get the raw contents of one collection
+app.get('/admin/db/:db/:collection', async (req, res, next) => {
+    if (!isTrusted(req.headers.authorization)) {
+        sendError(res, 403, 'Invalid or untrusted email');
         return;
     }
 
-    const trusted = process.env.TRUSTED.indexOf(req.body.email) !== -1;
-    console.log({ trusted, list: process.env.TRUSTED, email: req.body.email })
-    res.send({ trusted });
+    const data = await getSpecificDb(req.params.db, req.params.collection);
+    if (data.good === -1) sendError(res, 500, 'Unable to retrive collection');
+    else {
+        res.status(200);
+        res.send(data.collection);
+    }
+});
+
+app.post('/admin/db/:db/:collection', async (req, res, next) => {
+    if (!isTrusted(req.body.email)) {
+        sendError(res, 403, 'Invalid or untrusted email');
+        return;
+    }
 });
 
 // Delete club

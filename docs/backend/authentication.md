@@ -7,3 +7,5 @@
 ## refresh
 
 ## getIp
+
+## isTrusted

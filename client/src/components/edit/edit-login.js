@@ -45,10 +45,12 @@ class EditLogin extends React.Component {
                 alert('Could not connect to the server! Please reload the page.');
                 return;
             }
-            this.setState({
-                message: `You are not logged in. Any edits you make will be saved with your current ip address [${res.data.ip}]`,
-                loaded: true,
-            });
+
+            var message = 'You are not logged in.';
+            if (!this.props.admin)
+                message += ` Any edits you make will be saved with your current ip address [${res.data.ip}]`;
+            
+                this.setState({ message, loaded: true });
             return;
         }
 

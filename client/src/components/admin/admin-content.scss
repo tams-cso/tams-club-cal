@@ -1,12 +1,13 @@
 
 .admin-content {
-    margin: 0 4rem;
+    margin: 0 4rem 1rem;
 }
 
 .admin-db-input-box {
     margin-bottom: 0.5rem;
     display: flex;
     flex-direction: row;
+    justify-content: center;
 }
 
 .admin-db-input-box-item {
@@ -39,4 +40,6 @@
     width: 90%;
     height: 10rem;
     margin: auto;
+    padding: 0.5rem;
+    font-size: 0.75rem;
 }

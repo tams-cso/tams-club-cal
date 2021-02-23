@@ -100,4 +100,16 @@ function genState() {
     return crypto.randomBytes(16).toString('hex');
 }
 
-module.exports = { sendError, logRequest, parseForm, getIp, genState, parseUser };
+/**
+ * Will check to see if the email is a trusted email
+ * Always returns true if TRUSTED environmental variable is not defined
+ * 
+ * @param {string} email The email to check
+ * @returns {boolean} True if the email is trusted
+ */
+function isTrusted(email) {
+    if (process.env.TRUSTED === undefined) return true;
+    return process.env.TRUSTED.indexOf(email) !== -1;
+}
+
+module.exports = { sendError, logRequest, parseForm, getIp, genState, parseUser, isTrusted };

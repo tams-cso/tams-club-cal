@@ -1,13 +1,21 @@
 # API Reference
 
+## Admin
+
+| Method                              | HTTP request   | Description                                   |
+| ----------------------------------- | -------------- | --------------------------------------------- |
+| [getDb](backend/admin.md#getDb)     | GET /admin/db  | Returns a raw database collection to the user |
+| [addToDb](backend/admin.md#addToDb) | POST /admin/db | Adds content to a database                    |
+
 ## Authentication
 
-| Method                            | HTTP request       | Description                                               |
-| --------------------------------- | ------------------ | --------------------------------------------------------- |
-| [getUrl](backend/events.md#list)  | GET /auth          | Sends the Google authentication redirect URL              |
-| [getToken](backend/events.md#get) | POST /auth         | Uses auth code to fetch access tokens and name            |
-| [refresh](backend/events.md#add)  | POST /auth/refresh | Uses the refresh token to get a new access token and name |
-| [getIp](backend/events.md#update) | GET /auth/ip       | Returns the user's IP address                             |
+| Method                                   | HTTP request       | Description                                                            |
+| ---------------------------------------- | ------------------ | ---------------------------------------------------------------------- |
+| [getUrl](backend/events.md#getUrl)       | GET /auth          | Sends the Google authentication redirect URL                           |
+| [getToken](backend/events.md#getToken)   | POST /auth         | Uses auth code to fetch access tokens and name                         |
+| [refresh](backend/events.md#refresh)     | POST /auth/refresh | Uses the refresh token to get a new access token and name              |
+| [getIp](backend/events.md#getIp)         | GET /auth/ip       | Returns the user's IP address                                          |
+| [isTrusted](backend/events.md#isTrusted) | POST /auth/trusted | Checks to see if the email is a trusted email for accessing admin data |
 
 ## Events
 

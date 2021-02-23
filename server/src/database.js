@@ -505,6 +505,23 @@ async function addToHistory(resource, id, user, data) {
     }
 }
 
+async function getSpecificDb(dbName, collectionName) {
+    try {
+        const db = client.db(dbName);
+        const collection = db.collection(collectionName);
+        const data = await collection.find().toArray();
+
+        if (data === null) {
+            console.dir(`Could not get ${db}.${collection}`);
+            return { good: -1 };
+        }
+        return { collection: data, good: 1 };
+    } catch (error) {
+        console.dir(error);
+        return { good: -1 };
+    }
+}
+
 module.exports = {
     getClubList,
     getClub,
@@ -524,4 +541,5 @@ module.exports = {
     findUser,
     createHistory,
     addToHistory,
+    getSpecificDb,
 };
