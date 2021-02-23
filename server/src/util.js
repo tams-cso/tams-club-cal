@@ -75,10 +75,10 @@ async function parseUser(req) {
     if (req.body.email !== null) {
         const user = await getLoggedInData(req.body.email);
         if (user !== null) {
-            return `${user.name} (${user.email})`;
+            return { name: user.name, email: user.email };
         }
     }
-    return getIp(req);
+    return { name: getIp(req) };
 }
 
 /**
@@ -103,7 +103,7 @@ function genState() {
 /**
  * Will check to see if the email is a trusted email
  * Always returns true if TRUSTED environmental variable is not defined
- * 
+ *
  * @param {string} email The email to check
  * @returns {boolean} True if the email is trusted
  */

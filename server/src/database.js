@@ -421,8 +421,9 @@ async function createHistory(resource, id, user, data) {
             editId: id,
             list: [
                 {
-                    editor: user,
                     name: data.name,
+                    editor: user.name,
+                    email: user.email,
                     time: now,
                     resource,
                 },
@@ -435,7 +436,9 @@ async function createHistory(resource, id, user, data) {
         const listRes = await listCollection.insertOne({
             editId: id,
             editIndex: 0,
-            editor: data.name,
+            name: data.name,
+            editor: user.name,
+            email: user.email,
             time: now,
             resource,
         });
@@ -471,7 +474,8 @@ async function addToHistory(resource, id, user, data) {
             {
                 $push: {
                     list: {
-                        editor: user,
+                        editor: user.name,
+                        email: user.email,
                         time: now,
                         name: data.name,
                         resource,
@@ -490,7 +494,9 @@ async function addToHistory(resource, id, user, data) {
         const listRes = await listCollection.insertOne({
             editId: id,
             editIndex: index,
-            editor: data.name,
+            name: data.name,
+            editor: user.name,
+            email: user.email,
             time: now,
             resource,
         });
