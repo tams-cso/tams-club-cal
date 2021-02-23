@@ -1,12 +1,5 @@
 # API Reference
 
-## Admin
-
-| Method                              | HTTP request   | Description                                   |
-| ----------------------------------- | -------------- | --------------------------------------------- |
-| [getDb](backend/admin.md#getDb)     | GET /admin/db  | Returns a raw database collection to the user |
-| [addToDb](backend/admin.md#addToDb) | POST /admin/db | Adds content to a database                    |
-
 ## Authentication
 
 | Method                                   | HTTP request       | Description                                                            |
@@ -51,3 +44,10 @@
 | Method                         | HTTP request   | Description             |
 | ------------------------------ | -------------- | ----------------------- |
 | [add](backend/feedback.md#add) | POST /feedback | Adds a feedback message |
+
+## Admin
+
+| Method                              | HTTP request   | Description                                   |
+| ----------------------------------- | -------------- | --------------------------------------------- |
+| [getDb](backend/admin.md#getDb)     | GET /admin/db  | Returns a raw database collection to the user |
+| [addToDb](backend/admin.md#addToDb) | POST /admin/db | Adds content to a database                    |
