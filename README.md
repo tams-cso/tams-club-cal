@@ -40,7 +40,6 @@ MONGO_URL="[Connection URL to the mongodb cluster (eg. "tams-cal-db-staging.7d0n
 DROPBOX_TOKEN="[Token for dropbox app]"
 G_CLIENT_ID="[Google API OAuth 2.0 Client ID]"
 G_CLIENT_SECRET="[Google API OAuth 2.0 Client Secret]"
-FRONTEND="[URL origin of the frontend site (NO / at the end!)]"
 API_KEY="[(optional) API key will be required for any calls if defined (see docs)]"
 ORIGIN="[(optional) Origin to allow requests from. This will *deny requests from other origins* (eg. "http://localhost:3000")]"
 PORT="[(optional) The port to start the server on]"

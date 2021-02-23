@@ -23,6 +23,8 @@ jobs:
           MONGO_PASS: ${{ secrets.STAGING_MONGO_PASS }}
           DROPBOX_TOKEN: ${{ secrets.STAGING_DROPBOX_TOKEN }}
           TRUSTED: ${{ secrets.TRUSTED }}
+          G_CLIENT_ID: ${{ secrets.G_CLIENT_ID }}
+          G_CLIENT_SECRET: ${{ secrets.G_CLIENT_SECRET }}
         run: |
           npm install -g yarn
           cd $GITHUB_WORKSPACE && ls -la
@@ -38,6 +40,8 @@ jobs:
           echo "DROPBOX_TOKEN=$DROPBOX_TOKEN" >> .env
           echo "PORT=8082" >> .env
           echo "TRUSTED=$TRUSTED" >> .env
+          echo "G_CLIENT_ID=$G_CLIENT_ID" >> .env
+          echo "G_CLIENT_SECRET=$G_CLIENT_SECRET" >> .env
           mv staging.ecosystem.config.js ecosystem.config.js
           yarn install
           zip -r ../tams-club-cal-server.zip .

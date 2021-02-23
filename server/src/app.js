@@ -264,12 +264,12 @@ app.get('/auth/ip', async (req, res, next) => {
 // Send auth string
 app.get('/auth', async (req, res, next) => {
     const state = genState();
-    res.send({ authUrl: getAuthUrl(state), state });
+    res.send({ authUrl: getAuthUrl(state, req.headers.origin), state });
 });
 
 // Fetch access tokens with auth code
 app.post('/auth', async (req, res, next) => {
-    const data = await getTokensAndInfo(req.body.code);
+    const data = await getTokensAndInfo(req.body.code, false, req.headers.origin);
     if (data === null) sendError(res, 500, 'Failed to fetch user information');
     else res.send({ email: data.email });
 });
@@ -288,7 +288,7 @@ app.post('/auth/refresh', async (req, res, next) => {
         return;
     }
 
-    const data = await getTokensAndInfo(user.refresh, true);
+    const data = await getTokensAndInfo(user.refresh, true, req.headers.origin);
     if (data === null) sendError(res, 500, 'Failed to fetch user');
     else res.send({ name: data.name });
 });
