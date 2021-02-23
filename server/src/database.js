@@ -1,5 +1,6 @@
 const { MongoClient, ObjectId } = require('mongodb');
 const crypto = require('crypto');
+const { time } = require('console');
 
 const uri = `mongodb+srv://${process.env.MONGO_USER}:${process.env.MONGO_PASS}@${process.env.MONGO_URL}/clubs?retryWrites=true&w=majority`;
 const client = new MongoClient(uri, { useNewUrlParser: true, useUnifiedTopology: true });
@@ -204,7 +205,7 @@ async function addClub(club, user) {
     }
 }
 
-async function updateClub(club, id, user) {
+async function updateClub(club, id, user, oldImages) {
     try {
         const db = client.db('clubs');
         const dataCollection = db.collection('data');
@@ -239,7 +240,7 @@ async function updateClub(club, id, user) {
         );
         if (dataRes.matchedCount === 0 || infoRes.matchedCount === 0) return 0;
 
-        const historyRes = await addToHistory('clubs', id, user, club);
+        const historyRes = await addToHistory('clubs', id, user, club, oldImages);
         if (historyRes !== 1) return -1;
 
         return 1;
@@ -458,8 +459,9 @@ async function createHistory(resource, id, user, data) {
  * @param {string} id The hex objId or _id (volunteering) of the object
  * @param {string} user User name or ip address
  * @param {object} data Edited data object
+ * @param {string[]} [imageIds] URLs of images that are to be deleted (only applies for resource='clubs')
  */
-async function addToHistory(resource, id, user, data) {
+async function addToHistory(resource, id, user, data, imageIds = null) {
     try {
         const db = client.db('history');
         const listCollection = db.collection('list');
@@ -500,6 +502,19 @@ async function addToHistory(resource, id, user, data) {
             time: now,
             resource,
         });
+
+        if (resource === 'clubs') {
+            // Add 2629800000 milliseconds (1 month) to current time
+            const aMonthFromNow = now + 2629800000;
+
+            // Map images ids to objects to add to database
+            imageObjs = imageIds.map((id) => ({ imageId: id, deleteDate: aMonthFromNow }));
+            
+            // POST and send error if bad
+            const imageCollection = db.collection('images');
+            const imageRes = await imageCollection.insertMany(imageObjs);
+            if (imageRes.result.ok === 0) return -1;
+        }
 
         if (infoRes.matchedCount === 0 || dataRes.matchedCount === 0 || listRes.result.ok === 0) return -1;
         return 1;

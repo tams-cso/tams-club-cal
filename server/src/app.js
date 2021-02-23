@@ -185,9 +185,9 @@ app.post('/clubs', async (req, res, next) => {
 
 // Update a club
 app.post('/clubs/:id', async (req, res, next) => {
-    parseForm(req, res, async (club) => {
+    parseForm(req, res, async (club, oldImages) => {
         const user = await parseUser(req);
-        const good = await updateClub(club, req.params.id, user);
+        const good = await updateClub(club, req.params.id, user, oldImages);
         if (good === -1) sendError(res, 500, 'Unable to update clubs');
         else if (good === 0) sendError(res, 400, 'Invalid club id');
         else {

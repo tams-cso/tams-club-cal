@@ -31,13 +31,14 @@ async function uploadImage(file, oldId = null) {
     }
 
     // Deletes old image if it was in the database
-    if (oldId !== null && oldId !== undefined && oldId.startsWith('/') && typeof oldId === 'string') {
-        try {
-            await dbx.filesDeleteV2({ path: oldId });
-        } catch (error) {
-            console.dir(error);
-        }
-    }
+    // TODO: This is no longer needed because of the timed delete! Still need to add the cron task though
+    // if (oldId !== null && oldId !== undefined && oldId.startsWith('/') && typeof oldId === 'string') {
+    //     try {
+    //         await dbx.filesDeleteV2({ path: oldId });
+    //     } catch (error) {
+    //         console.dir(error);
+    //     }
+    // }
 
     return id;
 }
