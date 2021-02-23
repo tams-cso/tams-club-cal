@@ -32,7 +32,7 @@ class EditLogin extends React.Component {
         cookies.remove('auth_email', { path: '/' });
         console.log(cookies.getAll());
         window.location.href = window.location.toString();
-    }
+    };
 
     async componentDidMount() {
         const cookies = new Cookies();
@@ -59,6 +59,9 @@ class EditLogin extends React.Component {
             alert('Could not connect to the server! Please reload the page.');
             return;
         }
+
+        // Set state of logged in
+        if (this.props.setLoggedIn) this.props.setLoggedIn(true);
         this.setState({
             message: `You are logged in as ${res.data.name} (${email}).`,
             loaded: true,
@@ -70,8 +73,11 @@ class EditLogin extends React.Component {
         return (
             <div className="edit-login">
                 <div className="edit-login-top">
-                    <h1 className="edit-login-title">EDIT MODE</h1>
-                    <ActionButton className={isActive('edit-login-logout', this.state.loaded && this.state.loggedIn)} onClick={this.logout}>
+                    <h1 className="edit-login-title">{this.props.admin ? 'Admin Menu' : 'EDIT MODE'}</h1>
+                    <ActionButton
+                        className={isActive('edit-login-logout', this.state.loaded && this.state.loggedIn)}
+                        onClick={this.logout}
+                    >
                         Logout
                     </ActionButton>
                     <button

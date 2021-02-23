@@ -171,8 +171,8 @@ app.get('/clubs/:id', async (req, res, next) => {
 // Add a club
 app.post('/clubs', async (req, res, next) => {
     parseForm(req, res, async (club) => {
-    const user = await parseUser(req);
-    const data = await addClub(club, user);
+        const user = await parseUser(req);
+        const data = await addClub(club, user);
         if (data.good === -1) sendError(res, 500, 'Unable to add club');
         else {
             res.status(200);
@@ -184,8 +184,8 @@ app.post('/clubs', async (req, res, next) => {
 // Update a club
 app.post('/clubs/:id', async (req, res, next) => {
     parseForm(req, res, async (club) => {
-    const user = await parseUser(req);
-    const good = await updateClub(club, req.params.id, user);
+        const user = await parseUser(req);
+        const good = await updateClub(club, req.params.id, user);
         if (good === -1) sendError(res, 500, 'Unable to update clubs');
         else if (good === 0) sendError(res, 400, 'Invalid club id');
         else {
@@ -289,6 +289,18 @@ app.post('/auth/refresh', async (req, res, next) => {
     const data = await getTokensAndInfo(user.refresh, true);
     if (data === null) sendError(res, 500, 'Failed to fetch user');
     else res.send({ name: data.name });
+});
+
+// Check if the email is trusted (for admin dashboard)
+app.post('/auth/trusted', async (req, res, next) => {
+    if (process.env.TRUSTED === undefined) {
+        res.send({ trusted: true });
+        return;
+    }
+
+    const trusted = process.env.TRUSTED.indexOf(req.body.email) !== -1;
+    console.log({ trusted, list: process.env.TRUSTED, email: req.body.email })
+    res.send({ trusted });
 });
 
 // Delete club

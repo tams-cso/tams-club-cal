@@ -23,6 +23,7 @@ jobs:
           MONGO_PASS: ${{ secrets.MONGO_PASS }}
           DROPBOX_TOKEN: ${{ secrets.DROPBOX_TOKEN }}
           API_KEY: ${{ secrets.API_KEY }}
+          TRUSTED: ${{ secrets.TRUSTED }}
         run: |
           npm install -g yarn
           cd $GITHUB_WORKSPACE && ls -la
@@ -39,6 +40,7 @@ jobs:
           echo "PORT=8081" >> .env
           echo "API_KEY=$API_KEY" >> .env
           echo "ORIGIN=https://tams.club" >> .env
+          echo "TRUSTED=$TRUSTED" >> .env
           yarn install
           zip -r ../tams-club-cal-server.zip .
           cd ..

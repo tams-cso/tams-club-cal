@@ -116,6 +116,10 @@ export async function postRefreshAuth(email) {
     return postRequest('/auth/refresh', { email });
 }
 
+export async function postTrustedAuth(email) {
+    return postRequest('/auth/trusted', { email });
+}
+
 export async function deleteClub(id) {
     return postRequest('/delete-club', id);
 }
