@@ -18,6 +18,9 @@ class Resources extends React.Component {
                     <LinkBox className="resources-link" href={data.clubLeaderResources}>
                         Club Leader Resources
                     </LinkBox>
+                    <LinkBox className="resources-link" href={data.tamsWiki}>
+                        TAMS Wiki
+                    </LinkBox>
                 </div>
             </div>
         );
