@@ -1,0 +1,39 @@
+/**
+ * Committee Edit component for editing committees of a club
+ * // TODO: Add more to this desc
+ */
+
+@import '../../custom.scss';
+
+.committee-edit {
+    width: 96.5%;
+    padding: 0.5rem;
+    margin-bottom: 0.5rem;
+    box-shadow: 0 0 0.2rem $background-tint;
+}
+
+.committee-edit-name-trash-container {
+    display: flex;
+    flex-direction: row;
+}
+
+.committee-edit-name-input {
+    margin: 0 !important;
+    width: 90%;
+    font-size: 1rem;
+}
+
+.committee-edit-trash-icon {
+    margin-left: 0.5rem;
+}
+
+.committee-edit-label {
+    margin-right: 0.5rem;
+    font-size: 0.75rem;
+}
+
+.committee-edit-input {
+    margin-bottom: 0.25rem !important;
+    width: 75%;
+    font-size: 0.75rem;
+}

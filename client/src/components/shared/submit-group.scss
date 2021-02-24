@@ -1,0 +1,13 @@
+@import '../../custom.scss';
+
+.submit-group {
+    display: flex;
+    flex-direction: row;
+    justify-content: flex-end;
+    margin-bottom: 0.5rem;
+}
+
+.submit-group .action-button {
+    margin: 0.25rem 0.25rem 0;
+    font-size: 1rem;
+}

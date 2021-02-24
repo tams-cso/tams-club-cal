@@ -1,0 +1,134 @@
+/**
+ * The Edit Event page is where anyone can edit or add events through a simple form!
+ * This form is mainly input boxes with a few features:
+ *
+ * 1) The type buttons at the top will toggle between event and signup types,
+ *    changing color and border color. This heavily overrides the ActionButton styles
+ * 2) Datetime inputs are using HTML 5's built in input (This will be changed in 
+ *    the future to a custom component)
+ * 3) The description input is a simple centered textarea
+ * 4) The submit button is also an overridden ActionButton
+ */
+
+@import '../../custom.scss';
+
+.edit-events {
+    margin: 1rem 4rem 0;
+}
+
+.edit-events input {
+    font-size: 1rem;
+}
+
+/*
+ * ##############################
+ * ##### EVENT TYPE BUTTONS #####
+ * ##############################
+ */
+
+.edit-events-type-switcher {
+    display: flex;
+    width: 13rem;
+    justify-content: space-between;
+    margin-bottom: 0.5rem;
+}
+
+// Overrides ActionButton
+.edit-events-type-button {
+    width: 6rem;
+    padding: 0.15rem 0.5rem !important;
+    border: 0.075rem solid $background-tint;
+
+    color: $background-tint;
+    box-shadow: none;
+    font-size: 0.7rem !important;
+    text-align: center;
+}
+
+.edit-events-type-button:hover {
+    box-shadow: none;
+}
+
+.edit-events-event-button.edit-events-event-active,
+.edit-events-event-button:hover {
+    color: $type-event-darker;
+    border-color: $type-event !important;
+}
+
+.edit-events-signup-button.edit-events-signup-active,
+.edit-events-signup-button:hover {
+    color: $type-signup;
+    border-color: $type-signup !important;
+}
+
+/*
+ * #######################
+ * ##### INFO INPUTS #####
+ * #######################
+ */
+
+.edit-events-name-input {
+    width: 100%;
+    font-size: 1.25rem !important;
+}
+
+.edit-events-club-name-input {
+    width: 50%;
+}
+
+.edit-events-time-input {
+    margin-left: 1rem;
+}
+
+.edit-events-timezone-message {
+    margin: 0 0 0.75rem 2.75rem;
+    font-size: 0.55rem;
+    color: $text-light;
+}
+
+.edit-events-description-input {
+    font-size: 0.75rem;
+    width: 100%;
+    height: 10rem;
+    padding: 0.5rem;
+    margin: 0.5rem 0;
+}
+
+/*
+ * #########################
+ * ##### SUBMIT BUTTON #####
+ * #########################
+ */
+
+// Overrides ActionButton
+.edit-events-submit {
+    color: $primary;
+    padding: 0.25rem 0.75rem;
+    font-size: 1rem;
+}
+
+/*
+ * #########################
+ * ##### MEDIA QUERIES #####
+ * #########################
+ */
+
+@include media-small-desktop-down {
+    .edit-events {
+        margin: 1rem 2rem 0;
+    }
+}
+
+@include media-phone-down {
+    .edit-events {
+        margin: 1rem 1rem 0;
+    }
+
+    .edit-events-timezone-message {
+        margin-left: 1.75rem;
+    }
+
+    .edit-events-description-input {
+        width: 80%;
+    }
+}

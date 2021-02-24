@@ -1,0 +1,87 @@
+@import '../../custom.scss';
+
+.ScheduleEvent {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: left;
+    padding: 0.5rem 1rem;
+    font-size: 0.75rem;
+    border-radius: 0.25rem;
+    transition: 0.2s;
+}
+
+.ScheduleEvent:hover {
+    cursor: pointer;
+    background-color: $background-tint;
+}
+
+.ScheduleEvent .event-type {
+    height: 0.8rem;
+    width: 0.8rem;
+    flex-grow: 0;
+    flex-shrink: 0;
+    background-color: $type-event;
+    border: 0.1rem solid $text-primary;
+    border-radius: 0.25rem;
+    margin: 0 0.5em 0 1em;
+}
+
+.ScheduleEvent .event-type-signup {
+    background-color: $type-signup;
+}
+
+.ScheduleEvent .event-time {
+    width: 6rem;
+    margin: 0 0.5em 0 0.5em;
+    flex-grow: 0;
+    flex-shrink: 0;
+    font-family: $title-font;
+    font-size: 0.75rem;
+    font-weight: 300;
+}
+
+.ScheduleEvent .event-club-name {
+    color: $text-light;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    width: 5.2rem;
+    flex-grow: 0;
+    flex-shrink: 0;
+    margin: 0 0.5em 0 0.5em;
+    font-family: $title-font;
+    font-size: 0.75rem;
+    font-weight: 300;
+}
+
+.ScheduleEvent .event-name {
+    margin: 0;
+    margin-left: 0.5em;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    font-family: $title-font;
+    font-size: 0.75rem;
+    font-weight: 300;
+}
+
+@include media-phone-down {
+    .ScheduleEvent {
+        padding: 0.5rem 0.1rem;
+    }
+
+    .ScheduleEvent .event-type {
+        margin: 0 0.25rem 0;
+    }
+
+    .ScheduleEvent .event-club-name {
+        width: 2rem;
+        margin: 0;
+    }
+
+    .ScheduleEvent .event-time {
+        font-size: 0.65rem;
+        width: 5.5rem;
+    }
+}

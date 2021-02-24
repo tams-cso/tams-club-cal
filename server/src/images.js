@@ -3,6 +3,7 @@ const crypto = require('crypto');
 const path = require('path');
 const Dropbox = require('dropbox');
 const { getClub } = require('./database');
+const { sendError } = require('./util');
 const dbx = new Dropbox.Dropbox({ accessToken: process.env.DROPBOX_TOKEN });
 
 const CACHE_TIMEOUT = 3600000; // Cache gets deleted after an hour (3,600,000 ms)
@@ -21,15 +22,18 @@ async function uploadImage(file, oldId = null) {
     else id += '.jpg';
 
     // Uploads new image
-    // TODO: Check for fs and dropbox read/write errors
-    const data = fs.readFileSync(file.path);
-    await dbx.filesUpload({ path: id, contents: data });
+    try {
+        const data = fs.readFileSync(file.path);
+        await dbx.filesUpload({ path: id, contents: data });
+    } catch (error) {
+        console.dir(error);
+        // TODO: Throw an error and send failure to client (throw new Error('...'))
+    }
 
     // Deletes old image if it was in the database
-    if (oldId !== null && oldId !== undefined && oldId.startsWith('/')) {
+    if (oldId !== null && oldId !== undefined && oldId.startsWith('/') && typeof oldId === 'string') {
         try {
-            const res = await dbx.filesDeleteV2({ path: oldId });
-            console.log(res);
+            await dbx.filesDeleteV2({ path: oldId });
         } catch (error) {
             console.dir(error);
         }
@@ -63,24 +67,33 @@ async function getImage(id, res) {
             delete cache[id];
         }, CACHE_TIMEOUT);
     } catch (error) {
-        console.dir(error);
-        res.status(400);
-        res.send({ error: '400 Bad Request', description: 'File not found' });
+        // 409 is path_not_found error
+        if (error.status === 409) {
+            sendError(res, 400, 'Image path not found');
+        } else {
+            console.dir(error);
+            sendError(res, 500, 'Image fetch error');
+        }
     }
 }
 
 async function deleteClubImages(id) {
-    const club = await getClub(id);
-    var toDelete = [];
-    if (club.coverImg !== null) {
-        toDelete.push({ path: club.coverImg });
-        toDelete.push({ path: club.coverImgThumbnail });
+    try {
+        const club = await getClub(id);
+        var toDelete = [];
+        if (club.coverImg !== null && club.coverImg !== '') {
+            toDelete.push({ path: club.coverImg });
+            toDelete.push({ path: club.coverImgThumbnail });
+        }
+        club.execs.forEach((e) => {
+            if (e.img !== null) toDelete.push({ path: e.img });
+        });
+        const res = await dbx.filesDeleteBatch({ entries: toDelete });
+        return res.status;
+    } catch (error) {
+        console.dir(error);
+        return 400;
     }
-    club.execs.forEach((e) => {
-        if (e.img !== null) toDelete.push({ path: e.img });
-    });
-    const res = await dbx.filesDeleteBatch({ entries: toDelete });
-    return res.status;
 }
 
 module.exports = { uploadImage, getImage, deleteClubImages };

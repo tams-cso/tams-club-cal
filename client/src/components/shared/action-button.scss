@@ -1,0 +1,37 @@
+/**
+ * The Action Button component is a simple button element that has its box-shadow increased on hover.
+ * It is designed with crisp black borders and a white background (on the default theme).
+ */
+
+@import '../../custom.scss';
+
+.action-button {
+    border: none;
+    box-shadow: 0 0 0.1rem 0.025rem $background-tint;
+    padding: 0 0.5rem;
+
+    background-color: white;
+
+    font-size: 1rem;
+
+    cursor: pointer;
+    transition: 0.2s;
+}
+
+.action-button:hover {
+    box-shadow: 0 0 0.1rem 0.1rem $background-tint;
+}
+
+/*
+ * #########################
+ * ##### CUSTOM COLORS #####
+ * #########################
+ */
+
+.action-button.submit {
+    color: $primary;
+}
+
+.action-button.cancel {
+    color: $bad;
+}

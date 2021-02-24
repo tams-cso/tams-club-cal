@@ -1,0 +1,61 @@
+@import '../../custom.scss';
+
+.VolunteeringPopup {
+    text-align: center;
+    padding: 0.5rem;
+    width: 14rem;
+}
+
+.VolunteeringPopup .filter {
+    font-size: 0.65rem;
+}
+
+.res-popup-open {
+    font-size: 0.65rem;
+}
+
+.res-popup-open.open {
+    color: $primary;
+}
+
+.res-popup-open.closed {
+    color: $bad;
+}
+
+.res-popup-name {
+    font-size: 1.25rem;
+    font-family: $title-font;
+    font-weight: 300;
+}
+
+.res-popup-club {
+    font-size: 0.9rem;
+    font-family: $title-font;
+    font-weight: 300;
+    color: $text-light;
+}
+
+.res-popup-description {
+    font-size: 0.65rem;
+    white-space: pre-line;
+}
+
+.VolunteeringPopup .action-button {
+    margin-top: 0.5rem;
+}
+
+.VolunteeringPopup .inactive {
+    display: none;
+}
+
+.VolunteeringPopup .active {
+    display: block;
+}
+
+@include media-phone-down {
+    .VolunteeringPopup {
+        width: 90vw;
+        padding: 5vw;
+        padding-bottom: 10vw;
+    }
+}

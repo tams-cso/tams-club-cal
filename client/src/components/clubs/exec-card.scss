@@ -1,0 +1,89 @@
+/**
+ * The ExecCard component is a simple component used inside of the ClubPopup component. Each
+ * of the cards will display an exec and their relevant information with the following general format:
+ *
+ * 1) The left side is an img display of a set width
+ * 2) The right side contains the name, position, and description
+ * 3) All of these elements are wrapped in nested flexboxes to guarentee their positions within the component
+ */
+
+@import '../../custom.scss';
+
+.exec-card {
+    display: flex;
+    flex-direction: row;
+    margin: 0 2rem 1rem 2rem;
+}
+
+/*
+ * ###########################
+ * ##### IMAGE LEFT SIDE #####
+ * ###########################
+ */
+
+.exec-img {
+    height: 4rem;
+    max-height: 4rem;
+    width: 4rem;
+    margin-right: 1rem;
+    flex-shrink: 0;
+
+    object-fit: cover;
+    box-shadow: 0 0 0.2rem 0.1rem $background-tint;
+    color: $background;
+}
+
+/*
+ * ###########################
+ * ##### INFO RIGHT SIDE #####
+ * ###########################
+ */
+
+.exec-card-name-position-group {
+    display: flex;
+    margin-bottom: 0.25rem;
+    flex-direction: row;
+    align-items: flex-end;
+    font-family: $title-font;
+    font-weight: 300;
+}
+
+.exec-card-position {
+    padding-left: 0.75rem;
+    padding-bottom: 0.1rem;
+    font-size: 0.6rem;
+    color: $text-lighter;
+}
+
+.exec-card-description {
+    text-align: left;
+    font-size: 0.6rem;
+}
+
+/*
+ * #########################
+ * ##### MEDIA QUERIES #####
+ * #########################
+ */
+
+@include media-tablet-down {
+    .exec-card-name {
+        font-size: 1rem;
+    }
+}
+
+@include media-phone-down {
+    .exec-card {
+        margin: 0 0.5rem 0.5rem;
+    }
+
+    .exec-img {
+        margin-right: 0.5rem;
+        width: 3rem;
+        height: 3rem;
+    }
+
+    .exec-card-name {
+        font-size: 1rem;
+    }
+}

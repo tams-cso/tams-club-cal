@@ -1,6 +1,6 @@
 # MongoDB Data Organization
 
-We have 5 different databases in the same cluster that store the data for this site. We use the [MongoDB Node.js API](https://docs.mongodb.com/drivers/node/) to access the data.
+We have 6 different databases in the same cluster that store the data for this site. We use the [MongoDB Node.js API](https://docs.mongodb.com/drivers/node/) to access the data.
 
 ## Databases
 
@@ -9,3 +9,4 @@ We have 5 different databases in the same cluster that store the data for this s
 - [Volunteering](database/volunteering-db.md)
 - [Feedback](database/feedback-db.md)
 - [History](database/history-db.md)
+- [Users](database/users-db.md)

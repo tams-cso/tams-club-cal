@@ -22,19 +22,27 @@ jobs:
           MONGO_USER: ${{ secrets.MONGO_USER }}
           MONGO_PASS: ${{ secrets.MONGO_PASS }}
           DROPBOX_TOKEN: ${{ secrets.DROPBOX_TOKEN }}
+          API_KEY: ${{ secrets.API_KEY }}
+          G_CLIENT_ID: ${{ secrets.G_CLIENT_ID }}
+          G_CLIENT_SECRET: ${{ secrets.G_CLIENT_SECRET }}
         run: |
           npm install -g yarn
           cd $GITHUB_WORKSPACE && ls -la
           cd client
-          echo "{\"backend\":\"https://api.tams.club\"}" >| src/files/config.json
+          echo "{\"backend\":\"https://api.tams.club\", \"apiKey\":\"$API_KEY\"}" >| src/files/config.json
           yarn install && yarn build
           cd build
           zip -r ../../tams-club-cal-client.zip .
           cd ../../server
           echo "MONGO_USER=$MONGO_USER" >| .env
           echo "MONGO_PASS=$MONGO_PASS" >> .env
+          echo "MONGO_URL=tams-cal-db.seuxs.mongodb.net" >> .env
           echo "DROPBOX_TOKEN=$DROPBOX_TOKEN" >> .env
           echo "PORT=8081" >> .env
+          echo "G_CLIENT_ID=$G_CLIENT_ID" >> .env
+          echo "G_CLIENT_SECRET=$G_CLIENT_SECRET" >> .env
+          echo "API_KEY=$API_KEY" >> .env
+          echo "ORIGIN=https://tams.club" >> .env
           yarn install
           zip -r ../tams-club-cal-server.zip .
           cd ..

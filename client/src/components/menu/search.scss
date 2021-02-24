@@ -1,0 +1,21 @@
+@import '../../custom.scss';
+
+.Search {
+    text-align: center;
+}
+
+.search-page-bar {
+    width: 60%;
+    margin: auto;
+    margin-top: 1rem;
+    padding: 0.25rem;
+}
+
+.default-search {
+    margin-top: 1rem;
+    color: $text-light;
+}
+
+.search-result-list {
+    margin: 1rem 15% 0;
+}

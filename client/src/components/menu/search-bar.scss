@@ -1,0 +1,42 @@
+@import '../../custom.scss';
+
+.SearchBar {
+    font-size: 1.5vw;
+    font-family: $block-font;
+    border: 0.05rem solid $background-tint;
+    border-radius: 0.1rem;
+    padding: 0.1rem;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    background-color: $background !important;
+}
+
+.SearchBar input {
+    border: none !important;
+    margin: 0;
+    padding: 0 !important;
+    width: 100%;
+    height: 0.75rem;
+    font-size: 1.5vw;
+}
+
+#mag-glass-component {
+    height: 0.55rem;
+    width: 0.55rem;
+    padding: 0 0.2rem;
+    background-color: $background;
+    cursor: pointer;
+}
+
+#mag-glass-path {
+    stroke: none;
+    fill-rule: nonzero;
+    fill: $text-light;
+    fill-opacity: 1;
+    transition: 0.3s;
+}
+
+#mag-glass-component:hover #mag-glass-path {
+    fill: $primary;
+}

@@ -16,7 +16,7 @@ Delete options that do not apply:
 
 ### Checklist
 
-- [ ] My code follows the coding conventions listed in [CONTRIBUTING.md](https://github.com/MichaelZhao21/tams-club-cal/blob/master/CONTRIBUTING.md)
+- [ ] My code follows the coding conventions listed in [CONTRIBUTING.md](https://github.com/MichaelZhao21/tams-club-cal/blob/master/CONTRIBUTING.md) OR used the Prettier VSCode extension to auto-format
 - [ ] I have **fully** commented my code, especially in hard-to-understand areas
 - [ ] I have made changes to the documentation OR created an issue to update documentation
 - [ ] All existing functionality (if a non-breaking change) still works as it should

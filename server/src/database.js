@@ -1,53 +1,30 @@
 const { MongoClient, ObjectId } = require('mongodb');
 const crypto = require('crypto');
 
-const uri = `mongodb+srv://${process.env.MONGO_USER}:${process.env.MONGO_PASS}@tams-cal-db.seuxs.mongodb.net/clubs?retryWrites=true&w=majority`;
+const uri = `mongodb+srv://${process.env.MONGO_USER}:${process.env.MONGO_PASS}@${process.env.MONGO_URL}/clubs?retryWrites=true&w=majority`;
 const client = new MongoClient(uri, { useNewUrlParser: true, useUnifiedTopology: true });
 
-client.connect().then(() => console.log('Connected to mongodb'));
+client
+    .connect()
+    .then(() => console.log('Connected to mongodb'))
+    .catch((err) => console.dir(err));
 
-async function getClub(id) {
+// TODO: add time range limitations to get event list
+async function getEventList() {
     try {
-        const db = client.db('clubs');
-        const collectionData = db.collection('data');
-        const collectionInfo = db.collection('info');
-        const clubData = await collectionData.findOne({ objId: id });
-        const clubInfo = await collectionInfo.findOne({ objId: id });
-        return { ...clubData, ...clubInfo };
-    } catch (error) {
-        console.dir(error);
-    }
-}
-
-async function getClubList() {
-    try {
-        const db = client.db('clubs');
+        const db = client.db('events');
         const collection = db.collection('info');
-        const clubs = await collection.find().toArray();
-        return clubs;
-    } catch (error) {
-        console.dir(error);
-    }
-}
 
-async function getVolunteering() {
-    try {
-        const db = client.db('volunteering');
-        const collection = db.collection('data');
-        const volunteering = await collection.find().toArray();
-        return volunteering;
-    } catch (error) {
-        console.dir(error);
-    }
-}
+        const events = await collection.find().toArray();
 
-async function addFeedback(feedback) {
-    try {
-        const db = client.db('feedback');
-        const collection = db.collection('data');
-        collection.insertOne({ date: new Date().getTime(), feedback });
+        if (events === null) {
+            console.dir({ error: 'Could not get events.info' });
+            return { good: -1 };
+        }
+        return { events, good: 1 };
     } catch (error) {
         console.dir(error);
+        return { good: -1 };
     }
 }
 
@@ -56,37 +33,34 @@ async function getEvent(id) {
         const db = client.db('events');
         const collectionData = db.collection('data');
         const collectionInfo = db.collection('info');
+
         const eventData = await collectionData.findOne({ objId: id });
         const eventInfo = await collectionInfo.findOne({ objId: id });
-        return { ...eventData, ...eventInfo };
+
+        if (eventData === null) return { good: 0 };
+        return { ...eventData, ...eventInfo, good: 1 };
     } catch (error) {
         console.dir(error);
+        return { good: -1 };
     }
 }
 
-async function getEventList() {
-    try {
-        const db = client.db('events');
-        const collection = db.collection('info');
-        const events = await collection.find().toArray();
-        return events;
-    } catch (error) {
-        console.dir(error);
-    }
-}
-
-async function addEvent(event) {
+async function addEvent(event, user) {
     try {
         const db = client.db('events');
         const infoCollection = db.collection('info');
         const dataCollection = db.collection('data');
+
+        // Create a unique objID
+        // TODO: encapsulate this somehow
         var objId;
         while (true) {
             objId = crypto.randomBytes(16).toString('hex');
             const eventInfo = await infoCollection.find({ objId }).toArray();
             if (eventInfo.length == 0) break;
         }
-        infoCollection.insertOne({
+
+        const infoRes = await infoCollection.insertOne({
             objId,
             name: event.name,
             type: event.type,
@@ -94,24 +68,30 @@ async function addEvent(event) {
             start: event.start,
             end: event.end,
         });
-        dataCollection.insertOne({
+        const dataRes = await dataCollection.insertOne({
             objId,
-            links: event.links,
-            editedBy: event.editedBy,
+            editedBy: [user],
             description: event.description,
         });
-        return objId;
+
+        if (dataRes.result.ok === 0 || infoRes.result.ok === 0) return { good: -1 };
+        return { objId, good: 1 };
     } catch (error) {
         console.dir(error);
+        return { good: -1 };
     }
 }
 
-async function updateEvent(event, id) {
+async function updateEvent(event, id, user) {
     try {
         const db = client.db('events');
         const infoCollection = db.collection('info');
         const dataCollection = db.collection('data');
-        infoCollection.updateOne(
+
+        // Add user to edited by
+        event.editedBy.push(user);
+
+        const infoRes = await infoCollection.updateOne(
             { objId: id },
             {
                 $set: {
@@ -123,99 +103,58 @@ async function updateEvent(event, id) {
                 },
             }
         );
-        dataCollection.updateOne(
+        const dataRes = await dataCollection.updateOne(
             { objId: id },
             {
                 $set: {
-                    links: event.links,
                     editedBy: event.editedBy,
                     description: event.description,
                 },
             }
         );
-        return id;
+        if (dataRes.matchedCount === 0 || infoRes.matchedCount === 0) return 0;
+        return 1;
     } catch (error) {
         console.dir(error);
+        return -1;
     }
 }
 
-async function updateVolunteering(vol, id) {
-    try {
-        const db = client.db('volunteering');
-        const collection = db.collection('data');
-        collection.updateOne(
-            { _id: ObjectId(id) },
-            {
-                $set: {
-                    name: vol.name,
-                    club: vol.club,
-                    description: vol.description,
-                    filters: vol.filters,
-                    signupTime: vol.signupTime,
-                },
-            }
-        );
-        return id;
-    } catch (error) {
-        console.dir(error);
-        return null;
-    }
-}
-
-async function addVolunteering(vol) {
-    try {
-        const db = client.db('volunteering');
-        const collection = db.collection('data');
-        var data = {
-            name: vol.name,
-            club: vol.club,
-            description: vol.description,
-            filters: vol.filters,
-            signupTime: vol.signupTime,
-        };
-        collection.insertOne(data);
-        return data._id;
-    } catch (error) {
-        console.dir(error);
-        return null;
-    }
-}
-
-async function updateClub(club, id) {
+async function getClubList() {
     try {
         const db = client.db('clubs');
-        const dataCollection = db.collection('data');
-        const infoCollection = db.collection('info');
-        dataCollection.updateOne(
-            { objId: id },
-            {
-                $set: {
-                    description: club.description,
-                    execs: club.execs,
-                    committees: club.committees,
-                    coverImg: club.coverImg,
-                },
-            }
-        );
-        infoCollection.updateOne(
-            { objId: id },
-            {
-                $set: {
-                    name: club.name,
-                    advised: club.advised,
-                    fb: club.fb,
-                    website: club.website,
-                    coverImgThumbnail: club.coverImgThumbnail,
-                },
-            }
-        );
-        return id;
+        const collection = db.collection('info');
+        const clubs = await collection.find().toArray();
+
+        if (clubs === null) {
+            console.dir({ error: 'Could not get clubs.info' });
+            return { good: -1 };
+        }
+        return { clubs, good: 1 };
     } catch (error) {
         console.dir(error);
+        return { good: -1 };
     }
 }
 
-async function addClub(club) {
+async function getClub(id) {
+    try {
+        const db = client.db('clubs');
+        const collectionData = db.collection('data');
+        const collectionInfo = db.collection('info');
+
+        const clubData = await collectionData.findOne({ objId: id });
+        const clubInfo = await collectionInfo.findOne({ objId: id });
+
+        if (clubData === null) return { good: 0 };
+        return { ...clubData, ...clubInfo, good: 1 };
+    } catch (error) {
+        console.dir(error);
+        return { good: -1 };
+    }
+}
+
+async function addClub(club, user) {
     try {
         const db = client.db('clubs');
         const dataCollection = db.collection('data');
@@ -229,7 +168,7 @@ async function addClub(club) {
             if (clubTest.length == 0) break;
         }
 
-        infoCollection.insertOne({
+        const infoRes = await infoCollection.insertOne({
             objId,
             name: club.name,
             advised: club.advised,
@@ -237,17 +176,61 @@ async function addClub(club) {
             website: club.website,
             coverImgThumbnail: club.coverImgThumbnail,
         });
-        dataCollection.insertOne({
+        const dataRes = await dataCollection.insertOne({
             objId,
             description: club.description,
             execs: club.execs,
             committees: club.committees,
             coverImg: club.coverImg,
+            editedBy: [user],
         });
-        return objId;
+
+        if (dataRes.result.ok === 0 || infoRes.result.ok === 0) return { good: -1 };
+        return { objId, good: 1 };
     } catch (error) {
         console.dir(error);
-        return null;
+        return { good: -1 };
+    }
+}
+
+async function updateClub(club, id, user) {
+    try {
+        const db = client.db('clubs');
+        const dataCollection = db.collection('data');
+        const infoCollection = db.collection('info');
+
+        // Add user to editedby
+        club.editedBy.push(user);
+
+        const dataRes = await dataCollection.updateOne(
+            { objId: id },
+            {
+                $set: {
+                    description: club.description,
+                    execs: club.execs,
+                    committees: club.committees,
+                    coverImg: club.coverImg,
+                    editedBy: club.editedBy,
+                },
+            }
+        );
+        const infoRes = await infoCollection.updateOne(
+            { objId: id },
+            {
+                $set: {
+                    name: club.name,
+                    advised: club.advised,
+                    fb: club.fb,
+                    website: club.website,
+                    coverImgThumbnail: club.coverImgThumbnail,
+                },
+            }
+        );
+        if (dataRes.matchedCount === 0 || infoRes.matchedCount === 0) return 0;
+        return 1;
+    } catch (error) {
+        console.dir(error);
+        return -1;
     }
 }
 
@@ -265,6 +248,136 @@ async function deleteClub(id) {
     }
 }
 
+async function getVolunteeringList() {
+    try {
+        const db = client.db('volunteering');
+        const collection = db.collection('data');
+        const volunteering = await collection.find().toArray();
+
+        if (volunteering === null) {
+            console.dir({ error: 'Could not get volunteering.info' });
+            return { good: -1 };
+        }
+        return { volunteering, good: 1 };
+    } catch (error) {
+        console.dir(error);
+        return { good: -1 };
+    }
+}
+
+async function getVolunteering(id) {
+    try {
+        const db = client.db('volunteering');
+        const collectionData = db.collection('data');
+
+        const data = await collectionData.findOne({ _id: ObjectId(id) });
+
+        if (data === null) return { good: 0 };
+        return { ...data, good: 1 };
+    } catch (error) {
+        console.dir(error);
+        return { good: -1 };
+    }
+}
+
+async function addVolunteering(vol, user) {
+    try {
+        const db = client.db('volunteering');
+        const collection = db.collection('data');
+        var data = {
+            name: vol.name,
+            club: vol.club,
+            description: vol.description,
+            filters: vol.filters,
+            signupTime: vol.signupTime,
+            editedBy: [user],
+        };
+
+        const res = await collection.insertOne(data);
+        if (res.result.ok === 0) return { good: -1 };
+        return { id: data._id, good: 1 };
+    } catch (error) {
+        console.dir(error);
+        return { good: -1 };
+    }
+}
+
+async function updateVolunteering(vol, id, user) {
+    try {
+        const db = client.db('volunteering');
+        const collection = db.collection('data');
+
+        // Add user to editedby
+        vol.editedBy.push(user);
+
+        const res = await collection.updateOne(
+            { _id: ObjectId(id) },
+            {
+                $set: {
+                    name: vol.name,
+                    club: vol.club,
+                    description: vol.description,
+                    filters: vol.filters,
+                    signupTime: vol.signupTime,
+                    editedBy: vol.editedBy,
+                },
+            }
+        );
+
+        if (res.matchedCount === 0) return 0;
+        return 1;
+    } catch (error) {
+        console.dir(error);
+        return -1;
+    }
+}
+
+async function addFeedback(feedback, user) {
+    try {
+        const db = client.db('feedback');
+        const collection = db.collection('data');
+
+        const res = await collection.insertOne({ date: new Date().getTime(), feedback, user });
+
+        if (res.insertedCount === 0) return -1;
+        return 1;
+    } catch (error) {
+        console.dir(error);
+        return -1;
+    }
+}
+
+async function upsertUser(email, refreshToken) {
+    try {
+        const db = client.db('users');
+        const collection = db.collection('data');
+
+        const res = await collection.updateOne(
+            { email },
+            { $set: { email, refresh: refreshToken, lastRequest: new Date().getTime() } },
+            { upsert: 1 }
+        );
+
+        if (res.upsertedCount === 0) return -1;
+        return 1;
+    } catch (error) {
+        console.dir(error);
+        return -1;
+    }
+}
+
+async function findUser(email) {
+    try {
+        const db = client.db('users');
+        const collection = db.collection('data');
+        const res = await collection.findOne({ email });
+        return res;
+    } catch (error) {
+        console.dir(error);
+        return null;
+    }
+}
+
 module.exports = {
     getClubList,
     getClub,
@@ -273,10 +386,13 @@ module.exports = {
     getEvent,
     getEventList,
     updateEvent,
+    getVolunteeringList,
     getVolunteering,
     updateVolunteering,
     updateClub,
     addVolunteering,
     addClub,
     deleteClub,
+    upsertUser,
+    findUser,
 };

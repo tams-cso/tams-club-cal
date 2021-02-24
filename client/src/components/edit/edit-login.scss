@@ -1,0 +1,49 @@
+@import '../../custom.scss';
+
+.edit-login {
+    margin: 1rem 2rem;
+}
+
+.edit-login-top {
+    margin-bottom: 1rem;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.edit-login-title {
+    font-size: 1rem;
+    color: $bad;
+    margin: 0;
+}
+
+.edit-login-with-google {
+    padding: 0;
+    border-radius: 0.1rem;
+
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+
+    background-color: $google-blue;
+    box-shadow: 0 0 0.1rem $background-tint;
+    cursor: pointer;
+}
+
+.edit-login-with-google.active {
+    display: flex !important;
+}
+
+.edit-login-google-text {
+    margin: 0 0.25rem;
+    font-family: $google-font;
+    font-weight: 700;
+    font-size: 0.5rem;
+    color: $background;
+}
+
+.edit-login-bottom {
+    font-size: 0.75rem;
+    text-align: center;
+}

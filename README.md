@@ -1,4 +1,4 @@
-![TAMS Club Calendar](docs/logo.png)
+![TAMS Club Calendar](docs/_images/logo-banner.png)
 
 An unofficial calendar for the [Texas Academy of Mathematics and Science (TAMS)](https://tams.unt.edu/) student organizations.
 
@@ -12,6 +12,10 @@ More information and general documentation can be found on our [documentation si
 
 For now, here are the links to the [planning Google Doc](https://docs.google.com/document/d/1U_zqoEiplk0ODeGdMTzK1aLhz9OYFQV0FlhSI52VSBo/edit?usp=sharing) and the [Figma prototype](https://www.figma.com/file/yp3mDSciGjMZBZknjbog49/TAMS-Club-Calendar?node-id=0%3A1)
 
+## :warning: IMPORTANT UPDATE
+
+If you are developing the frontend, do NOT use `https://api.tams.club`. I have created a staging backend: `https://dev.tams.club`. Use this instead!
+
 ## Setup
 
 ```bash
@@ -24,19 +28,30 @@ Create the config file at `client/src/files/config.json` (**For the `backend` fi
 
 ```json
 {
-    "backend": "[address that the backend server is hosted on (eg. http://localhost:5000)]"
+    "backend": "[address that the backend server is hosted on (eg. http://localhost:5000)]",
+    "apiKey": "[(optional) API key for backend. The https://dev.tams.club backend used for development does NOT need this]"
 }
 ```
 
-If you would like to help develop the backend, email or message [MichaelZhao21](https://github.com/MichaelZhao21) to get access to the database. If you are just developing frontend, you can simply use `https://api.tams.club` as the backend address in the json file and only run the frontend (`client` folder). You will not need to do the following step if you are only developing frontend.
+If you would like to help develop the backend, email or message [MichaelZhao21](https://github.com/MichaelZhao21) to get access to the database. If you are just developing frontend, you can simply use `https://dev.tams.club` as the backend address in the json file and only run the frontend (`client` folder). You will not need to do the following step if you are only developing frontend.
 
 Create the environmental variable file at `server/.env`:
 
 ```.env
 MONGO_USER="[Username for cluster]"
 MONGO_PASS="[Password for cluster]"
+MONGO_URL="[Connection URL to the mongodb cluster (eg. "tams-cal-db-staging.7d0nz.mongodb.net")]"
 DROPBOX_TOKEN="[Token for dropbox app]"
+G_CLIENT_ID="[Google API OAuth 2.0 Client ID]"
+G_CLIENT_SECRET="[Google API OAuth 2.0 Client Secret]"
+API_KEY="[(optional) API key will be required for any calls if defined (see docs)]"
+ORIGIN="[(optional) Origin to allow requests from. This will *deny requests from other origins* (eg. "http://localhost:3000")]"
+PORT="[(optional) The port to start the server on]"
 ```
+
+You will need to create a [Dropbox Developer Account](https://www.dropbox.com/developers/reference/getting-started?_tk=guides_lp&_ad=guides2&_camp=get_started#app%20console) and a project.
+
+Additionally, you need to make a [Google Cloud Developer Account](https://cloud.google.com/docs), create a project, and make both OAuth 2.0 Client credentials and a service account credentials, enabling the Google Calendar API. 
 
 ## Execution
 

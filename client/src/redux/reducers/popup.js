@@ -1,4 +1,14 @@
-import { RESET_POPUP_STATE, SET_EDIT, SET_ID, SET_NEW, SET_OPEN, SET_DELETED, SET_TYPE } from '../actionTypes';
+import {
+    RESET_POPUP_STATE,
+    SET_EDIT,
+    SET_ID,
+    SET_NEW,
+    SET_OPEN,
+    SET_DELETED,
+    SET_TYPE,
+    SET_MOBILE_DROPDOWN,
+    OPEN_POPUP,
+} from '../actionTypes';
 
 const initialState = {
     open: false,
@@ -6,7 +16,8 @@ const initialState = {
     new: false,
     id: '',
     deleted: false,
-    type: '',
+    type: '', // events | volunteering | clubs
+    mobileDropdown: false,
 };
 
 export default function popup(state = initialState, action) {
@@ -54,6 +65,22 @@ export default function popup(state = initialState, action) {
             return {
                 ...state,
                 type,
+            };
+        }
+        case SET_MOBILE_DROPDOWN: {
+            const { open } = action.payload;
+            return {
+                ...state,
+                mobileDropdown: open,
+            };
+        }
+        case OPEN_POPUP: {
+            const { id, type } = action.payload;
+            return {
+                ...state,
+                id,
+                type,
+                open: true,
             };
         }
         default:

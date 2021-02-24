@@ -1,0 +1,64 @@
+/**
+ * The Calendar component displays the events in a calendar on the home page.
+ * By default, this will be hidden and can be toggled by a button. It will also
+ * not be shown on mobile/small tablet devices because of the limitations of screen width.
+ */
+@import '../../custom.scss';
+
+/*
+ * #######################
+ * ##### DEFINITIONS #####
+ * #######################
+ */
+
+$grid-border: 0.025rem solid $text-primary;
+$rh: 5rem;
+
+/*
+ * ###########################
+ * ##### CALENDAR HEADER #####
+ * ###########################
+ */
+
+.calendar-day-names {
+    text-align: center;
+    font-family: $title-font;
+    font-weight: 300;
+}
+
+.calendar-header {
+    margin: 1rem 4rem 0 4rem;
+}
+
+/*
+ * #########################
+ * ##### CALENDAR GRID #####
+ * #########################
+ */
+
+.calendar-header,
+.calendar-days {
+    display: grid;
+    grid-template-columns: repeat(7, 1fr);
+}
+
+.calendar-days {
+    margin: 0 4rem 1rem 4rem;
+    grid-auto-rows: $rh;
+    border-bottom: $grid-border;
+}
+
+.calendar-days > .calendar-day {
+    border: 0;
+    border-top: $grid-border;
+    border-left: $grid-border;
+}
+
+.calendar-day:nth-child(7n) {
+    border-right: $grid-border;
+}
+
+.calendar-date {
+    font-family: $title-font;
+    font-weight: 300;
+}

@@ -1,0 +1,32 @@
+@import '../../custom.scss';
+
+.resources-links-title {
+    padding-top: 1rem;
+    margin-bottom: 0.5rem;
+}
+
+.resources-link-container {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    flex-wrap: wrap;
+    margin-bottom: 1rem;
+}
+
+.resources-link {
+    width: 9rem;
+    margin: 0.4rem 0.4rem;
+}
+
+@include media-small-desktop-down {
+    .resources-link-container {
+        margin: 0 1rem 1rem;
+    }
+}
+
+@include media-phone-down {
+    .resources-add-volunteering-container {
+        display: none;
+    }
+}

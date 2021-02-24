@@ -5,6 +5,10 @@
 - Backend
 
     - [Overview: Express.js](backend/expressjs.md)
+    - [Events](backend/events.md)
+    - [Clubs](backend/clubs.md)
+    - [Volunteering](backend/volunteering.md)
+    - [Feedback](backend/feedback.md)
 
 - Database
 
@@ -14,3 +18,5 @@
     - [Volunteering](database/volunteering-db.md)
     - [Feedback](database/feedback-db.md)
     - [History](database/history-db.md)
+
+- [Deployment Notes](deployment.md)

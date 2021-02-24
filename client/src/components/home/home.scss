@@ -1,0 +1,154 @@
+@import '../../custom.scss';
+
+.schedule-view {
+    margin: 2rem 14vw 0 14vw;
+    padding-bottom: 0.5rem;
+}
+
+.home-calendar {
+    margin-top: 2.5rem;
+}
+
+.home-top {
+    position: fixed;
+    padding-top: 0.5rem;
+    top: 2.5rem;
+    height: 1.5rem;
+    width: 100%;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    
+    font-family: $title-font;    
+    background-color: $background;
+    z-index: 1;
+}
+
+.month-year {
+    text-align: center;
+    width: 6.5rem;
+    padding: 0 0.2rem;
+}
+
+.dummy-change-month {
+    display: none;
+    width: 1.3rem;
+}
+
+.today {
+    display: none;
+    font-family: $title-font;
+    text-align: center;
+    background-color: $background;
+    width: 2.5rem;
+    border: 0.1rem solid $text-primary;
+    padding: 0.1rem 0.25rem;
+    font-size: 0.75rem;
+    border-radius: 0.25rem;
+    transition: 0.2s;
+}
+
+.today:hover {
+    cursor: pointer;
+    background-color: $background-tint;
+}
+
+.dummy-today {
+    display: none;
+    margin-right: 5vw;
+    width: 5.2rem;
+}
+
+.change-month {
+    display: none;
+    font-family: $title-font;
+    background-color: $background;
+    width: 1.3rem;
+    border: 0.1rem solid $text-primary;
+    padding: 0.1rem 0.25rem;
+    font-size: 0.75rem;
+    border-radius: 0.25rem;
+    transition: 0.2s;
+}
+
+.change-month:hover {
+    cursor: pointer;
+    background-color: $background-tint;
+}
+
+.month-back {
+    margin-left: 3vw;
+}
+
+.month-forward {
+    margin-right: 3vw;
+}
+
+.view-switch {
+    text-align: center;
+    background-color: $background;
+    width: 7.7rem;
+    border: 0.1rem solid $text-primary;
+    padding: 0.1rem 0.25rem;
+    font-size: 0.75rem;
+    border-radius: 0.25rem;
+    transition: 0.2s;
+    margin-left: 5vw;
+}
+
+.view-switch:hover {
+    cursor: pointer;
+    background-color: $background-tint;
+}
+
+.dummy {
+    display: none;
+    margin-right: 5vw;
+    width: 7.7rem;
+}
+
+.view-active {
+    display: block;
+}
+
+@include media-small-desktop-down {
+    .schedule-view {
+        margin: 2rem 2rem 0;
+    }
+
+    .calendar-header {
+        margin: 1rem 0.5rem 0;
+    }
+
+    .calendar-days {
+        margin: 0 0.5rem 0.5rem;
+    }
+}
+
+@include media-tablet-down {
+    .month-year {
+        font-size: 1rem;
+    }
+
+    // Center the month and get rid of view switcher
+    .dummy-change-month,
+    .dummy {
+        display: none;
+        width: 0;
+    }
+
+    .view-switch {
+        display: none;
+    }
+}
+
+@include media-phone-down {
+    .home-top {
+        top: 2rem;
+    }
+
+    .schedule-view {
+        margin: 2rem 0.5rem;
+    }
+}

@@ -1,17 +1,14 @@
 # How to Contribute to TAMS Club Calendar
 
-Welcome! We are a completely open-source project, so feel free to contributue as much or as little as you would like! :smile:
-
-| :warning: | These contributing guidelines are incomplete! If you would like to add anything, simply make a pull request for this file :) |
-| --------- | ---------------------------------------------------------------------------------------------------------------------------- |
+Welcome! We are a completely open-source project, so feel free to contributue as much or as little as you would like! 
 
 ## :flight_departure: Where to start
 
-If this is your first time working on an open source project, you can check out the [good first issue label](https://github.com/MichaelZhao21/tams-club-cal/issues?q=is%3Aopen+is%3Aissue+label%3A%22good+first+issue%22) for easier or smaller bits of code you can work on. For the more veteran contributors, please feel free to look around at the issues page for a good issue to work on!
+If this is your first time working on an open source project, you can check out the [good first issue label](https://github.com/MichaelZhao21/tams-club-cal/issues?q=is%3Aopen+is%3Aissue+label%3A%22good+first+issue%22) for easier or smaller bits of code you can work on. You can also look around the documentation and make some grammar and sentence flow changes. We are, after all, developers and not english majors, so our documentation can always improve! For the more veteran contributors, please feel free to look around at the issues page for a good issue to work on.
 
 ## :floppy_disk: Technologies we Use
 
-This project is completely written in [Javascript](https://www.javascript.com/), [HTML5](https://html.com/html5/), and [Sass (SCSS)](https://sass-lang.com/)! We are running both our frontend and backend javascript on [Nodejs 14 (lts/fermium)](https://nodejs.org/en/).
+This project is completely written in [Javascript](https://www.javascript.com/), [HTML5](https://html.com/html5/), and [Sass (SCSS)](https://sass-lang.com/)! We are running both our frontend and backend javascript on [Nodejs 14 (lts/fermium)](https://nodejs.org/en/). All in all, we use a pretty standard MERN stack.
 
 The frontend uses these main libraries:
 
@@ -41,7 +38,14 @@ Once you've made the changes that you need, please use the pull request template
 
 ## :computer: Coding Conventions
 
-We will auto-format code with [Prettier](https://prettier.io/) when a pull request is merged, but you can also use it if you install the [extension on VSCode](https://marketplace.visualstudio.com/items?itemName=esbenp.prettier-vscode) (and probably other IDEs as well).
+I am formatting the code with [Prettier](https://prettier.io/) as the [VSCode extension](https://marketplace.visualstudio.com/items?itemName=esbenp.prettier-vscode) (There are probably similar extensions in other IDEs as well). The `.prettierrc` file contains the
+formatting rules for Prettier and will be automatically used when formatting with the VSCode extension.
+
+### File and Organization Conventions
+
+All files will be named with **lowercase** letters and **dash-seperated**. This is because on some systems, capital letters will be ignored in file names. In terms of file organization, the client and server top-level folders contain each individual program, with
+seperate `package.json` files and `node_modules` folders. See the [documentation site](https://docs.tams.club) for more specific
+information on file structure.
 
 ### JS/JSX Conventions
 
@@ -85,7 +89,7 @@ CSS is generally extremely difficult to format, and it can be extremely hard to 
     color: $text-primary;
 
     /* Text */
-    font-family: $main-font;
+    font-family: $block-font;
     font-size: 1.5rem;
     line-height: 1.2rem;
     text-align: center;
@@ -137,7 +141,7 @@ At the top of each scss file, you should include a top-level description of the 
  *    This cover photo has a default placeholder if it does not exist.
  */
 
-@import '../custom.scss';
+@import '../../custom.scss';
 
 // Other components
 ```
@@ -172,7 +176,7 @@ Then we should group the css by relevant contents:
  *
  * Any final tidbits can go here
  */
-@import '../custom.scss';
+@import '../../custom.scss';
 
 .club-card {
     // The main component goes here
