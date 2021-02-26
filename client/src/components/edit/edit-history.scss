@@ -1,0 +1,28 @@
+@import '../../custom.scss';
+
+.edit-history {
+    margin: 0 4rem;
+}
+
+.edit-history-toggle {
+    width: fit-content;
+    margin: auto;
+
+    text-align: center;
+    color: $text-light;
+    transition: 0.2s;
+    cursor: pointer;
+}
+
+.edit-history-toggle:hover {
+    color: $primary;
+}
+
+.edit-history-list {
+    margin: 0.5rem;
+    border: 0.04rem solid $background-tint;
+}
+
+.edit-history-list .edit-history-card:last-child {
+    border: none;
+}

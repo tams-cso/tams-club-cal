@@ -25,6 +25,9 @@ const {
     findUser,
     getSpecificDb,
     addToSpecificDb,
+    getHistoryList,
+    getHistoryData,
+    getHistoryInfo,
 } = require('./database');
 const { getImage, deleteClubImages } = require('./images');
 const { sendError, logRequest, parseForm, getIp, genState, parseUser, isTrusted } = require('./util');
@@ -239,6 +242,26 @@ app.post('/volunteering/:id', async (req, res, next) => {
         res.status(200);
         res.send({ status: 200 });
     }
+});
+
+app.get('/history', async (req, res, next) => {
+    const history = await getHistoryList();
+    if (history.good === -1) sendError(res, 500, 'Unable to retrieve history data');
+    else res.send(history.data);
+});
+
+app.get('/history/:resource/:id', async (req, res, next) => {
+    const history = await getHistoryInfo(req.params.resource, req.params.id);
+    if (history.good === -1) sendError(res, 500, 'Unable to retrieve history object');
+    else if (history.good === 0) sendError(res, 400, 'Invalid history resource or id');
+    else res.send(history.data);
+});
+
+app.get('/history/:resource/:id/:index', async (req, res, next) => {
+    const history = await getHistoryData(req.params.resource, req.params.id, req.params.index);
+    if (history.good === -1) sendError(res, 500, 'Unable to retrieve history data');
+    else if (history.good === 0) sendError(res, 400, 'Invalid history resource, id, or index');
+    else res.send(history.data);
 });
 
 // Add feedback

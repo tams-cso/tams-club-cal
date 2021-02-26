@@ -91,9 +91,6 @@ async function updateEvent(event, id, user) {
         const infoCollection = db.collection('info');
         const dataCollection = db.collection('data');
 
-        // Add user to edited by
-        event.editedBy.push(user);
-
         const infoRes = await infoCollection.updateOne(
             { objId: id },
             {
@@ -207,9 +204,6 @@ async function updateClub(club, id, user, oldImages) {
         const dataCollection = db.collection('data');
         const infoCollection = db.collection('info');
 
-        // Add user to editedby
-        club.editedBy.push(user);
-
         const infoRes = await infoCollection.updateOne(
             { objId: id },
             {
@@ -306,7 +300,7 @@ async function addVolunteering(vol, user) {
         const res = await collection.insertOne(data);
         if (res.result.ok === 0) return { good: -1 };
 
-        const historyRes = await createHistory('volunteering', data._id, user, data);
+        const historyRes = await createHistory('volunteering', data._id.str, user, data);
         if (historyRes !== 1) return 0;
 
         return { id: data._id, good: 1 };
@@ -320,9 +314,6 @@ async function updateVolunteering(vol, id, user) {
     try {
         const db = client.db('volunteering');
         const collection = db.collection('data');
-
-        // Add user to editedby
-        vol.editedBy.push(user);
 
         const res = await collection.updateOne(
             { _id: ObjectId(id) },
@@ -413,28 +404,29 @@ async function createHistory(resource, id, user, data) {
 
         const infoRes = await infoCollection.insertOne({
             editId: id,
+            resource,
             list: [
                 {
                     name: data.name,
                     editor: user.name,
                     email: user.email,
                     time: now,
-                    resource,
                 },
             ],
         });
         const dataRes = await dataCollection.insertOne({
             editId: id,
-            list: [{ data }],
+            resource,
+            list: [data],
         });
         const listRes = await listCollection.insertOne({
             editId: id,
             editIndex: 0,
+            resource,
             name: data.name,
             editor: user.name,
             email: user.email,
             time: now,
-            resource,
         });
 
         if (infoRes.result.ok === 0 || dataRes.result.ok === 0 || listRes.result.ok === 0) return -1;
@@ -465,35 +457,34 @@ async function addToHistory(resource, id, user, data, imageIds = null) {
         const index = (await dataCollection.findOne({ editId: id })).list.length;
 
         const infoRes = await infoCollection.updateOne(
-            { editId: id },
+            { editId: id, resource },
             {
                 $push: {
                     list: {
+                        name: data.name,
                         editor: user.name,
                         email: user.email,
                         time: now,
-                        name: data.name,
-                        resource,
                     },
                 },
             }
         );
         const dataRes = await dataCollection.updateOne(
-            { editId: id },
+            { editId: id, resource },
             {
                 $push: {
-                    list: { data },
+                    list: data,
                 },
             }
         );
         const listRes = await listCollection.insertOne({
             editId: id,
             editIndex: index,
+            resource,
             name: data.name,
             editor: user.name,
             email: user.email,
             time: now,
-            resource,
         });
 
         if (resource === 'clubs') {
@@ -502,7 +493,7 @@ async function addToHistory(resource, id, user, data, imageIds = null) {
 
             // Map images ids to objects to add to database
             imageObjs = imageIds.map((id) => ({ imageId: id, deleteDate: aMonthFromNow }));
-            
+
             // POST and send error if bad
             const imageCollection = db.collection('images');
             const imageRes = await imageCollection.insertMany(imageObjs);
@@ -514,6 +505,45 @@ async function addToHistory(resource, id, user, data, imageIds = null) {
     } catch (error) {
         console.dir(error);
         return -1;
+    }
+}
+
+async function getHistoryList() {
+    try {
+        const db = client.db('history');
+        const collection = db.collection('list');
+        const data = await collection.find().toArray();
+        if (date === null) return { good: -1 };
+        return { data, good: 1 };
+    } catch (error) {
+        console.dir(error);
+        return { good: -1 };
+    }
+}
+
+async function getHistoryInfo(resource, id) {
+    try {
+        const db = client.db('history');
+        const collection = db.collection('info');
+        const data = await collection.findOne({ editId: id, resource });
+        if (data === null) return { good: 0 };
+        return { data, good: 1 };
+    } catch (error) {
+        console.dir(error);
+        return { good: -1 };
+    }
+}
+
+async function getHistoryData(resource, id, index) {
+    try {
+        const db = client.db('history');
+        const collection = db.collection('data');
+        const data = await collection.findOne({ editId: id, resource });
+        if (data === null || data.list.length <= index) return { good: 0 };
+        return { data: data.list[index], good: 1 };
+    } catch (error) {
+        console.dir(error);
+        return { good: -1 };
     }
 }
 
@@ -567,6 +597,9 @@ module.exports = {
     findUser,
     createHistory,
     addToHistory,
+    getHistoryList,
+    getHistoryInfo,
+    getHistoryData,
     getSpecificDb,
     addToSpecificDb,
 };

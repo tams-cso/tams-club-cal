@@ -39,6 +39,14 @@
 | [update](backend/clubs.md#update) | POST /clubs/\<id\>   | Updates a volunteering opportunity |
 | [delete](backend/clubs.md#delete) | DELETE /clubs/\<id\> | Deletes a volunteering opportunity |
 
+## History
+
+| Method                                | HTTP request                               | Description                                        |
+| ------------------------------------- | ------------------------------------------ | -------------------------------------------------- |
+| [list](backend/history.md#list)       | GET /history                               | Gets the entire edit history list of all resources |
+| [getInfo](backend/history.md#getInfo) | GET /history/\<resource\>/\<id\>           | Gets the history list for that specific resource   |
+| [getData](backend/history.md#getData) | GET /history/\<resource\>/\<id\>/\<index\> | Gets a specific point in history for a resource    |
+
 ## Feedback
 
 | Method                         | HTTP request   | Description             |
@@ -47,7 +55,7 @@
 
 ## Admin
 
-| Method                              | HTTP request   | Description                                   |
-| ----------------------------------- | -------------- | --------------------------------------------- |
-| [getDb](backend/admin.md#getDb)     | GET /admin/db  | Returns a raw database collection to the user |
-| [addToDb](backend/admin.md#addToDb) | POST /admin/db | Adds content to a database                    |
+| Method                              | HTTP request                         | Description                                   |
+| ----------------------------------- | ------------------------------------ | --------------------------------------------- |
+| [getDb](backend/admin.md#getDb)     | GET /admin/db/\<db\>/\<collection\>  | Returns a raw database collection to the user |
+| [addToDb](backend/admin.md#addToDb) | POST /admin/db/\<db\>/\<collection\> | Adds content to a database                    |

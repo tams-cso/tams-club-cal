@@ -122,6 +122,18 @@ export async function postTrustedAuth(email) {
     return postRequest('/auth/trusted', { email });
 }
 
+export async function getHistoryAll() {
+    return getRequest(`/history`);
+}
+
+export async function getHistoryList(resource, id) {
+    return getRequest(`/history/${resource}/${id}`);
+}
+
+export async function getHistoryData(resource, id, index) {
+    return getRequest(`/history/${resource}/${id}/${index}`);
+}
+
 export async function getDb(db, collection, email) {
     return getRequest(`/admin/db/${db}/${collection}`, email);
 }

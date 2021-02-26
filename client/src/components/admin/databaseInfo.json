@@ -6,6 +6,6 @@
         "clubs": ["info", "data"],
         "feedback": ["data"],
         "users": ["data"],
-        "history": ["list", "info", "data"]
+        "history": ["list", "info", "data", "images"]
     }
 }
