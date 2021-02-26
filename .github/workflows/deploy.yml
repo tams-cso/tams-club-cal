@@ -23,6 +23,7 @@ jobs:
           MONGO_PASS: ${{ secrets.MONGO_PASS }}
           DROPBOX_TOKEN: ${{ secrets.DROPBOX_TOKEN }}
           API_KEY: ${{ secrets.API_KEY }}
+          TRUSTED: ${{ secrets.TRUSTED }}
           G_CLIENT_ID: ${{ secrets.G_CLIENT_ID }}
           G_CLIENT_SECRET: ${{ secrets.G_CLIENT_SECRET }}
         run: |
@@ -43,6 +44,7 @@ jobs:
           echo "G_CLIENT_SECRET=$G_CLIENT_SECRET" >> .env
           echo "API_KEY=$API_KEY" >> .env
           echo "ORIGIN=https://tams.club" >> .env
+          echo "TRUSTED=$TRUSTED" >> .env
           yarn install
           zip -r ../tams-club-cal-server.zip .
           cd ..

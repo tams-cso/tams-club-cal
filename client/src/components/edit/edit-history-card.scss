@@ -1,0 +1,39 @@
+@import '../../custom.scss';
+
+.edit-history-card {
+    padding: 0.1rem;
+    border-bottom: 0.04rem solid $background-tint;
+}
+
+.edit-history-card-display {
+    display: flex !important;
+    flex-direction: row;
+    justify-content: center;
+    font-size: 0.65rem;
+    cursor: pointer;
+    transition: 0.2s;
+}
+
+.edit-history-card-display:hover {
+    color: $primary;
+}
+
+.edit-history-card-display-field {
+    margin: 0 0.5rem;
+    flex-basis: 1;
+    flex-grow: 0;
+    width: 30%;
+}
+
+.edit-history-card-date {
+    text-align: right;
+}
+
+.edit-history-card-editor {
+    text-align: left;
+}
+
+.edit-history-card-open {
+    font-size: 0.5rem;
+    overflow-x: scroll;
+}

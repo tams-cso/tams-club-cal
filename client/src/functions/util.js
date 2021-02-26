@@ -315,9 +315,29 @@ export function parseLinks(className, text) {
 
 /**
  * If on an edit page, will redirect the user to the resource that is being edited.
- * 
+ *
  * @param {Location} location Location object
  */
 export function returnToLastLocation(location) {
     location.href = `${location.origin}${location.pathname.substring(5)}${location.search}`;
+}
+
+/**
+ * @param {number} editDate Milliseconds representing the edit date (UTC)
+ * @returns {string} Edit date display string
+ */
+export function calculateEditDate(editDate) {
+    var edit = dayjs(editDate);
+    var now = dayjs();
+    var diff = 0;
+    var unit = '';
+
+    const diffs = ['year', 'month', 'day', 'hour', 'minute'];
+    for (var i = 0; i < diffs.length; i++) {
+        diff = now.diff(edit, diffs[i]);
+        unit = diffs[i];
+        if (diff > 0) break;
+    }
+
+    return `${diff} ${unit}${diff !== 1 ? 's' : ''} ago`;
 }

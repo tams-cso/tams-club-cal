@@ -55,30 +55,44 @@ async function parseForm(req, res, callback) {
             return;
         }
 
+
         var club = JSON.parse(fields.data);
+
+        // Check for old pictures
+        var oldImages = [];
+        if (hasOldPicture(club.coverImgThumbnail)) oldImages.push(club.coverImgThumbnail);
+        if (hasOldPicture(club.coverImg)) oldImages.push(club.coverImg);
+
         if (club.coverImgBlobs.img !== null) {
-            club.coverImgThumbnail = await uploadImage(files.thumb, club.coverImgThumbnail);
-            club.coverImg = await uploadImage(files.img, club.coverImg);
+            club.coverImgThumbnail = await uploadImage(files.thumb);
+            club.coverImg = await uploadImage(files.img);
         }
         for (var i = 0; i < club.execProfilePicBlobs.length; i++) {
             if (club.execProfilePicBlobs[i] !== null) {
-                if (req.query.update) club.execs[i].img = await uploadImage(files[`exec${i}`], club.oldExecs[i].img);
+                if (req.query.update) {
+                    if (hasOldPicture(club.oldExecs[i].img)) oldImages.push(club.oldExecs[i].img); 
+                    club.execs[i].img = await uploadImage(files[`exec${i}`]);
+                }
                 else club.execs[i].img = await uploadImage(files[`exec${i}`]);
             }
         }
 
-        callback(club);
+        callback(club, oldImages);
     });
+}
+
+async function hasOldPicture(oldId) {
+    return (oldId !== null && oldId !== undefined && oldId.startsWith('/') && typeof oldId === 'string')
 }
 
 async function parseUser(req) {
     if (req.body.email !== null) {
         const user = await getLoggedInData(req.body.email);
         if (user !== null) {
-            return `${user.name} (${user.email})`;
+            return { name: user.name, email: user.email };
         }
     }
-    return getIp(req);
+    return { name: getIp(req) };
 }
 
 /**
@@ -100,4 +114,16 @@ function genState() {
     return crypto.randomBytes(16).toString('hex');
 }
 
-module.exports = { sendError, logRequest, parseForm, getIp, genState, parseUser };
+/**
+ * Will check to see if the email is a trusted email
+ * Always returns true if TRUSTED environmental variable is not defined
+ *
+ * @param {string} email The email to check
+ * @returns {boolean} True if the email is trusted
+ */
+function isTrusted(email) {
+    if (process.env.TRUSTED === undefined) return true;
+    return process.env.TRUSTED.indexOf(email) !== -1;
+}
+
+module.exports = { sendError, logRequest, parseForm, getIp, genState, parseUser, isTrusted };

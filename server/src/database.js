@@ -18,6 +18,7 @@ async function getEventList() {
         const events = await collection.find().toArray();
 
         if (events === null) {
+            // TODO: Add this console.dir to every GET
             console.dir({ error: 'Could not get events.info' });
             return { good: -1 };
         }
@@ -62,19 +63,21 @@ async function addEvent(event, user) {
 
         const infoRes = await infoCollection.insertOne({
             objId,
-            name: event.name,
             type: event.type,
+            name: event.name,
             club: event.club,
             start: event.start,
             end: event.end,
         });
         const dataRes = await dataCollection.insertOne({
             objId,
-            editedBy: [user],
             description: event.description,
         });
-
         if (dataRes.result.ok === 0 || infoRes.result.ok === 0) return { good: -1 };
+
+        const historyRes = await createHistory('events', objId, user, event);
+        if (historyRes !== 1) return { good: -1 };
+
         return { objId, good: 1 };
     } catch (error) {
         console.dir(error);
@@ -88,15 +91,12 @@ async function updateEvent(event, id, user) {
         const infoCollection = db.collection('info');
         const dataCollection = db.collection('data');
 
-        // Add user to edited by
-        event.editedBy.push(user);
-
         const infoRes = await infoCollection.updateOne(
             { objId: id },
             {
                 $set: {
-                    name: event.name,
                     type: event.type,
+                    name: event.name,
                     club: event.club,
                     start: event.start,
                     end: event.end,
@@ -107,12 +107,15 @@ async function updateEvent(event, id, user) {
             { objId: id },
             {
                 $set: {
-                    editedBy: event.editedBy,
                     description: event.description,
                 },
             }
         );
         if (dataRes.matchedCount === 0 || infoRes.matchedCount === 0) return 0;
+
+        const historyRes = await addToHistory('events', id, user, event);
+        if (historyRes !== 1) return -1;
+
         return 1;
     } catch (error) {
         console.dir(error);
@@ -170,22 +173,24 @@ async function addClub(club, user) {
 
         const infoRes = await infoCollection.insertOne({
             objId,
+            coverImgThumbnail: club.coverImgThumbnail,
             name: club.name,
             advised: club.advised,
             fb: club.fb,
             website: club.website,
-            coverImgThumbnail: club.coverImgThumbnail,
         });
         const dataRes = await dataCollection.insertOne({
             objId,
+            coverImg: club.coverImg,
             description: club.description,
             execs: club.execs,
             committees: club.committees,
-            coverImg: club.coverImg,
-            editedBy: [user],
         });
-
         if (dataRes.result.ok === 0 || infoRes.result.ok === 0) return { good: -1 };
+
+        const historyRes = await createHistory('clubs', objId, user, club);
+        if (historyRes !== 1) return { good: -1 };
+
         return { objId, good: 1 };
     } catch (error) {
         console.dir(error);
@@ -193,40 +198,40 @@ async function addClub(club, user) {
     }
 }
 
-async function updateClub(club, id, user) {
+async function updateClub(club, id, user, oldImages) {
     try {
         const db = client.db('clubs');
         const dataCollection = db.collection('data');
         const infoCollection = db.collection('info');
 
-        // Add user to editedby
-        club.editedBy.push(user);
-
-        const dataRes = await dataCollection.updateOne(
-            { objId: id },
-            {
-                $set: {
-                    description: club.description,
-                    execs: club.execs,
-                    committees: club.committees,
-                    coverImg: club.coverImg,
-                    editedBy: club.editedBy,
-                },
-            }
-        );
         const infoRes = await infoCollection.updateOne(
             { objId: id },
             {
                 $set: {
+                    coverImgThumbnail: club.coverImgThumbnail,
                     name: club.name,
                     advised: club.advised,
                     fb: club.fb,
                     website: club.website,
-                    coverImgThumbnail: club.coverImgThumbnail,
+                },
+            }
+        );
+        const dataRes = await dataCollection.updateOne(
+            { objId: id },
+            {
+                $set: {
+                    coverImg: club.coverImg,
+                    description: club.description,
+                    execs: club.execs,
+                    committees: club.committees,
                 },
             }
         );
         if (dataRes.matchedCount === 0 || infoRes.matchedCount === 0) return 0;
+
+        const historyRes = await addToHistory('clubs', id, user, club, oldImages);
+        if (historyRes !== 1) return -1;
+
         return 1;
     } catch (error) {
         console.dir(error);
@@ -290,11 +295,14 @@ async function addVolunteering(vol, user) {
             description: vol.description,
             filters: vol.filters,
             signupTime: vol.signupTime,
-            editedBy: [user],
         };
 
         const res = await collection.insertOne(data);
         if (res.result.ok === 0) return { good: -1 };
+
+        const historyRes = await createHistory('volunteering', data._id.str, user, data);
+        if (historyRes !== 1) return 0;
+
         return { id: data._id, good: 1 };
     } catch (error) {
         console.dir(error);
@@ -307,9 +315,6 @@ async function updateVolunteering(vol, id, user) {
         const db = client.db('volunteering');
         const collection = db.collection('data');
 
-        // Add user to editedby
-        vol.editedBy.push(user);
-
         const res = await collection.updateOne(
             { _id: ObjectId(id) },
             {
@@ -319,12 +324,14 @@ async function updateVolunteering(vol, id, user) {
                     description: vol.description,
                     filters: vol.filters,
                     signupTime: vol.signupTime,
-                    editedBy: vol.editedBy,
                 },
             }
         );
-
         if (res.matchedCount === 0) return 0;
+
+        const historyRes = await addToHistory('volunteering', id, user, vol);
+        if (historyRes !== 1) return 0;
+
         return 1;
     } catch (error) {
         console.dir(error);
@@ -378,6 +385,199 @@ async function findUser(email) {
     }
 }
 
+/**
+ * Create a history object for a new resource
+ *
+ * @param {'events' | 'clubs' | 'volunteering'} resource The resource that was changed
+ * @param {string} id The hex objId or _id (volunteering) of the object
+ * @param {string} user User name or ip address
+ * @param {object} data Edited data object
+ */
+async function createHistory(resource, id, user, data) {
+    try {
+        const db = client.db('history');
+        const listCollection = db.collection('list');
+        const infoCollection = db.collection('info');
+        const dataCollection = db.collection('data');
+
+        const now = new Date().getTime();
+
+        const infoRes = await infoCollection.insertOne({
+            editId: id,
+            resource,
+            list: [
+                {
+                    name: data.name,
+                    editor: user.name,
+                    email: user.email,
+                    time: now,
+                },
+            ],
+        });
+        const dataRes = await dataCollection.insertOne({
+            editId: id,
+            resource,
+            list: [data],
+        });
+        const listRes = await listCollection.insertOne({
+            editId: id,
+            editIndex: 0,
+            resource,
+            name: data.name,
+            editor: user.name,
+            email: user.email,
+            time: now,
+        });
+
+        if (infoRes.result.ok === 0 || dataRes.result.ok === 0 || listRes.result.ok === 0) return -1;
+        return 1;
+    } catch (error) {
+        console.dir(error);
+        return -1;
+    }
+}
+
+/**
+ * Add to a history object
+ *
+ * @param {'events' | 'clubs' | 'volunteering'} resource The resource that was changed
+ * @param {string} id The hex objId or _id (volunteering) of the object
+ * @param {string} user User name or ip address
+ * @param {object} data Edited data object
+ * @param {string[]} [imageIds] URLs of images that are to be deleted (only applies for resource='clubs')
+ */
+async function addToHistory(resource, id, user, data, imageIds = null) {
+    try {
+        const db = client.db('history');
+        const listCollection = db.collection('list');
+        const infoCollection = db.collection('info');
+        const dataCollection = db.collection('data');
+
+        const now = new Date().getTime();
+        const index = (await dataCollection.findOne({ editId: id })).list.length;
+
+        const infoRes = await infoCollection.updateOne(
+            { editId: id, resource },
+            {
+                $push: {
+                    list: {
+                        name: data.name,
+                        editor: user.name,
+                        email: user.email,
+                        time: now,
+                    },
+                },
+            }
+        );
+        const dataRes = await dataCollection.updateOne(
+            { editId: id, resource },
+            {
+                $push: {
+                    list: data,
+                },
+            }
+        );
+        const listRes = await listCollection.insertOne({
+            editId: id,
+            editIndex: index,
+            resource,
+            name: data.name,
+            editor: user.name,
+            email: user.email,
+            time: now,
+        });
+
+        if (resource === 'clubs') {
+            // Add 2629800000 milliseconds (1 month) to current time
+            const aMonthFromNow = now + 2629800000;
+
+            // Map images ids to objects to add to database
+            imageObjs = imageIds.map((id) => ({ imageId: id, deleteDate: aMonthFromNow }));
+
+            // POST and send error if bad
+            const imageCollection = db.collection('images');
+            const imageRes = await imageCollection.insertMany(imageObjs);
+            if (imageRes.result.ok === 0) return -1;
+        }
+
+        if (infoRes.matchedCount === 0 || dataRes.matchedCount === 0 || listRes.result.ok === 0) return -1;
+        return 1;
+    } catch (error) {
+        console.dir(error);
+        return -1;
+    }
+}
+
+async function getHistoryList() {
+    try {
+        const db = client.db('history');
+        const collection = db.collection('list');
+        const data = await collection.find().toArray();
+        if (date === null) return { good: -1 };
+        return { data, good: 1 };
+    } catch (error) {
+        console.dir(error);
+        return { good: -1 };
+    }
+}
+
+async function getHistoryInfo(resource, id) {
+    try {
+        const db = client.db('history');
+        const collection = db.collection('info');
+        const data = await collection.findOne({ editId: id, resource });
+        if (data === null) return { good: 0 };
+        return { data, good: 1 };
+    } catch (error) {
+        console.dir(error);
+        return { good: -1 };
+    }
+}
+
+async function getHistoryData(resource, id, index) {
+    try {
+        const db = client.db('history');
+        const collection = db.collection('data');
+        const data = await collection.findOne({ editId: id, resource });
+        if (data === null || data.list.length <= index) return { good: 0 };
+        return { data: data.list[index], good: 1 };
+    } catch (error) {
+        console.dir(error);
+        return { good: -1 };
+    }
+}
+
+async function getSpecificDb(dbName, collectionName) {
+    try {
+        const db = client.db(dbName);
+        const collection = db.collection(collectionName);
+        const data = await collection.find().toArray();
+
+        if (data === null) {
+            console.dir(`Could not get ${db}.${collection}`);
+            return { good: -1 };
+        }
+        return { collection: data, good: 1 };
+    } catch (error) {
+        console.dir(error);
+        return { good: -1 };
+    }
+}
+
+async function addToSpecificDb(dbName, collectionName, data) {
+    try {
+        const db = client.db(dbName);
+        const collection = db.collection(collectionName);
+        const res = await collection.insertMany(JSON.parse(data));
+
+        if (res.result.ok === 0) return -1;
+        return 1;
+    } catch (error) {
+        console.dir(error);
+        return -1;
+    }
+}
+
 module.exports = {
     getClubList,
     getClub,
@@ -395,4 +595,11 @@ module.exports = {
     deleteClub,
     upsertUser,
     findUser,
+    createHistory,
+    addToHistory,
+    getHistoryList,
+    getHistoryInfo,
+    getHistoryData,
+    getSpecificDb,
+    addToSpecificDb,
 };

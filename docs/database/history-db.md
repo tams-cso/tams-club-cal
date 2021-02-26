@@ -1,25 +1,45 @@
 # History Database
 
-> THIS DATABASE DOES NOT CURRENTLY EXIST - THIS IS DOCUMENTATION FOR A FUTURE FEATURE!
-> The structure will change drastically, so don't rely on this page for accurate docs!
-
-## [ID] Collection
-
-```js
-{
-    _id: ObjectId("[Mongodb auto-generated ID]"),
-    time: "[UTC millis datetime when edited]",
-    oldData: {
-        // Object containing old information
-        // Can be Clubs.Info, Clubs.Data, Events.Info, Events.Data, or Volunteering.Data
-    }
-    editor: "[Name of editor]"
-}
-```
+## List Collection
 
 ### Properties
 
 - _id
-- time
-- oldData
+- editId
+- editIndex
+- resource
+- name
 - editor
+- email
+- time
+
+## Info Collection
+
+### Properties
+
+- _id
+- editId
+- resource
+- list
+    - name
+    - editor
+    - email
+    - time
+
+## Data Collection
+
+### Properties
+
+- _id
+- editId
+- resource
+- list
+    - [data]
+
+## Images Collection
+
+### Properties
+
+- _id
+- imageId
+- deleteDate

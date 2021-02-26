@@ -5,11 +5,12 @@ import { FetchResponse } from './entries';
 /**
  * Performs GET request to endpoint
  * @param {string} url API endpoint to GET
+ * @param {string} [auth] Authentication email
  * @returns {Promise<FetchResponse>} Will return the object or error object
  */
-async function getRequest(url) {
+async function getRequest(url, auth = null) {
     try {
-        const res = await fetch(`${config.backend}${url}?key=${config.apiKey}`);
+        const res = await fetch(`${config.backend}${url}?key=${config.apiKey}`, { headers: { authorization: auth } });
         const data = await res.json();
         return new FetchResponse(res.status, data);
     } catch (error) {
@@ -23,15 +24,16 @@ async function getRequest(url) {
  * @param {string} url API endpoint to POST
  * @param {object} body POST body content
  * @param {boolean} [json] Adds a JSON content type header if true
+ * @param {string} [auth] Authentication email
  * @returns {Promise<FetchResponse>} Will return the object or error object
  */
-async function postRequest(url, body, json = true) {
+async function postRequest(url, body, json = true, auth = null) {
     try {
         if (json) {
             body.email = addEmail();
             body = JSON.stringify(body);
         }
-        const options = { method: 'POST', body };
+        const options = { method: 'POST', body, authorization: auth };
         if (json) options.headers = { 'Content-Type': 'application/json' };
 
         const res = await fetch(`${config.backend}${url}?key=${config.apiKey}`, options);
@@ -114,6 +116,30 @@ export async function postAuth(code) {
 
 export async function postRefreshAuth(email) {
     return postRequest('/auth/refresh', { email });
+}
+
+export async function postTrustedAuth(email) {
+    return postRequest('/auth/trusted', { email });
+}
+
+export async function getHistoryAll() {
+    return getRequest(`/history`);
+}
+
+export async function getHistoryList(resource, id) {
+    return getRequest(`/history/${resource}/${id}`);
+}
+
+export async function getHistoryData(resource, id, index) {
+    return getRequest(`/history/${resource}/${id}/${index}`);
+}
+
+export async function getDb(db, collection, email) {
+    return getRequest(`/admin/db/${db}/${collection}`, email);
+}
+
+export async function postDb(db, collection, data, email) {
+    return postRequest(`/admin/db/${db}/${collection}`, data, true, email);
 }
 
 export async function deleteClub(id) {

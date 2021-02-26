@@ -23,9 +23,14 @@ const {
     deleteClub,
     getVolunteering,
     findUser,
+    getSpecificDb,
+    addToSpecificDb,
+    getHistoryList,
+    getHistoryData,
+    getHistoryInfo,
 } = require('./database');
 const { getImage, deleteClubImages } = require('./images');
-const { sendError, logRequest, parseForm, getIp, genState, parseUser } = require('./util');
+const { sendError, logRequest, parseForm, getIp, genState, parseUser, isTrusted } = require('./util');
 const { getAuthUrl, getTokensAndInfo, getSavedUser } = require('./auth');
 
 // Clean up the 'cache' folder on start
@@ -183,9 +188,9 @@ app.post('/clubs', async (req, res, next) => {
 
 // Update a club
 app.post('/clubs/:id', async (req, res, next) => {
-    parseForm(req, res, async (club) => {
+    parseForm(req, res, async (club, oldImages) => {
         const user = await parseUser(req);
-        const good = await updateClub(club, req.params.id, user);
+        const good = await updateClub(club, req.params.id, user, oldImages);
         if (good === -1) sendError(res, 500, 'Unable to update clubs');
         else if (good === 0) sendError(res, 400, 'Invalid club id');
         else {
@@ -239,6 +244,26 @@ app.post('/volunteering/:id', async (req, res, next) => {
     }
 });
 
+app.get('/history', async (req, res, next) => {
+    const history = await getHistoryList();
+    if (history.good === -1) sendError(res, 500, 'Unable to retrieve history data');
+    else res.send(history.data);
+});
+
+app.get('/history/:resource/:id', async (req, res, next) => {
+    const history = await getHistoryInfo(req.params.resource, req.params.id);
+    if (history.good === -1) sendError(res, 500, 'Unable to retrieve history object');
+    else if (history.good === 0) sendError(res, 400, 'Invalid history resource or id');
+    else res.send(history.data);
+});
+
+app.get('/history/:resource/:id/:index', async (req, res, next) => {
+    const history = await getHistoryData(req.params.resource, req.params.id, req.params.index);
+    if (history.good === -1) sendError(res, 500, 'Unable to retrieve history data');
+    else if (history.good === 0) sendError(res, 400, 'Invalid history resource, id, or index');
+    else res.send(history.data);
+});
+
 // Add feedback
 app.post('/feedback', async (req, res, next) => {
     if (req.body.feedback == '') {
@@ -289,6 +314,40 @@ app.post('/auth/refresh', async (req, res, next) => {
     const data = await getTokensAndInfo(user.refresh, true, req.headers.origin);
     if (data === null) sendError(res, 500, 'Failed to fetch user');
     else res.send({ name: data.name });
+});
+
+// Check if the email is trusted (for admin dashboard)
+app.post('/auth/trusted', async (req, res, next) => {
+    res.send({ trusted: isTrusted(req.body.email) });
+});
+
+// Get the raw contents of one collection
+app.get('/admin/db/:db/:collection', async (req, res, next) => {
+    if (!isTrusted(req.headers.authorization)) {
+        sendError(res, 403, 'Invalid or untrusted email');
+        return;
+    }
+
+    const data = await getSpecificDb(req.params.db, req.params.collection);
+    if (data.good === -1) sendError(res, 500, 'Unable to retrive collection');
+    else {
+        res.status(200);
+        res.send(data.collection);
+    }
+});
+
+app.post('/admin/db/:db/:collection', async (req, res, next) => {
+    if (!isTrusted(req.body.email)) {
+        sendError(res, 403, 'Invalid or untrusted email');
+        return;
+    }
+
+    const insertRes = await addToSpecificDb(req.params.db, req.params.collection, req.body.data);
+    if (insertRes === -1) sendError(res, 500, 'Unable to add to collection');
+    else {
+        res.status(200);
+        res.send({ status: 200 });
+    }
 });
 
 // Delete club

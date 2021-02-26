@@ -4,6 +4,7 @@ import EditLogin from './edit-login';
 import EditEvents from './edit-events';
 import EditClubs from './edit-clubs';
 import EditVolunteering from './edit-volunteering';
+import EditHistory from './edit-history';
 
 class Edit extends React.Component {
     render() {
@@ -11,6 +12,7 @@ class Edit extends React.Component {
             <div className="edit">
                 <BrowserRouter>
                     <EditLogin />
+                    <EditHistory />
                     <Switch>
                         <Route path="/edit/events">
                             <EditEvents parentHistory={this.props.history}></EditEvents>
@@ -22,7 +24,7 @@ class Edit extends React.Component {
                             <EditVolunteering parentHistory={this.props.history}></EditVolunteering>
                         </Route>
                         <Route>
-                            <div className="edit-no-route">ERROR: Invalid editing URL!</div>
+                            <div className="edit-no-route center-text">ERROR: Invalid editing URL!</div>
                         </Route>
                     </Switch>
                 </BrowserRouter>

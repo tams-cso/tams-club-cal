@@ -22,6 +22,10 @@ class Menu extends React.Component {
         this.props.history.push('/');
     };
 
+    logoActive = () => {
+        return ['/', '/events', '/edit/events', '/edit/volunteering', '/edit/clubs'].includes(window.location.pathname);
+    };
+
     componentDidMount() {
         if (location.pathname.includes('/search')) this.setState({ searchBar: null });
     }
@@ -44,7 +48,7 @@ class Menu extends React.Component {
                         className="menu-item menu-logo"
                         activeClassName="active"
                         to="/"
-                        isActive={() => ['/', '/events', '/edit'].includes(window.location.pathname)}
+                        isActive={this.logoActive}
                         exact
                     >
                         <div className="menu-logo-tams">TAMS</div>
