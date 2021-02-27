@@ -6,7 +6,6 @@ import { Event } from '../../functions/entries';
 import { parseTimeZone, getTimezone, getParams, millisToDateAndTime } from '../../functions/util';
 import './edit-events.scss';
 import Loading from '../shared/loading';
-import { withRouter } from 'react-router';
 import SubmitGroup from '../shared/submit-group';
 
 class EditEvents extends React.Component {
@@ -72,7 +71,7 @@ class EditEvents extends React.Component {
         // Get response and send to user
         if (res.status === 200) {
             alert(`Successfully ${this.state.new ? 'added' : 'edited'} event!`);
-            this.props.parentHistory.push(`/events${window.location.search}`);
+            window.location.href = `${window.location.origin}/events${window.location.search}`;
         } else alert(`${this.state.new ? 'Adding' : 'Editing'} event failed :(`);
     };
 
@@ -237,4 +236,4 @@ class EditEvents extends React.Component {
     }
 }
 
-export default withRouter(EditEvents);
+export default EditEvents;

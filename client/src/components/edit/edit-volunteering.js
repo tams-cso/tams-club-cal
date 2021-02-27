@@ -68,7 +68,7 @@ class EditVolunteering extends React.Component {
         // Get response and send to user
         if (res.status === 200) {
             alert(`Successfully ${this.state.new ? 'added' : 'edited'} volunteering!`);
-            this.props.parentHistory.push(`/volunteering${window.location.search}`);
+            window.location.href = `${window.location.origin}/volunteering${window.location.search}`;
         } else alert(`${this.state.new ? 'Adding' : 'Editing'} volunteering failed :(`);
     };
 
