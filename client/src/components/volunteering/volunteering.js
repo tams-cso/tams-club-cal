@@ -5,6 +5,7 @@ import Popup from '../shared/popup';
 import VolunteeringCard from './volunteering-card';
 import VolunteeringPopup from './volunteering-popup';
 import Loading from '../shared/loading';
+import AddButton from '../shared/add-button';
 
 import { getSavedVolunteeringList } from '../../redux/selectors';
 import { setVolunteeringList, openPopup } from '../../redux/actions';
@@ -93,6 +94,7 @@ class Volunteering extends React.Component {
                     </button>
                 </div>
                 <div className="volunteering-section">{volCards}</div>
+                <AddButton type="volunteering"></AddButton>
             </div>
         );
     }

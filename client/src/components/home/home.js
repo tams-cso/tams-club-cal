@@ -8,6 +8,7 @@ import Popup from '../shared/popup';
 import EventPopup from './event-popup';
 import Calendar from './calendar';
 import Loading from '../shared/loading';
+import AddButton from '../shared/add-button';
 
 import { createDateHeader, insertDateDividers, getMonthAndYear, isActive } from '../../functions/util';
 import { openPopup } from '../../redux/actions';
@@ -142,6 +143,7 @@ class Home extends React.Component {
                     monthOffset={this.state.monthOffset}
                     activatePopup={this.activatePopup}
                 ></Calendar>
+                <AddButton type="events"></AddButton>
             </div>
         );
     }

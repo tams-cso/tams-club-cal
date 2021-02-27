@@ -10,6 +10,7 @@ import { openPopup } from '../../redux/actions';
 
 import './clubs.scss';
 import Loading from '../shared/loading';
+import AddButton from '../shared/add-button';
 
 class Clubs extends React.Component {
     activatePopup = (id) => {
@@ -34,6 +35,7 @@ class Clubs extends React.Component {
                     <ClubPopup></ClubPopup>
                 </Popup>
                 <div className="club-card-list">{cards}</div>
+                <AddButton type="clubs"></AddButton>
             </div>
         );
     }
