@@ -14,15 +14,9 @@ class Edit extends React.Component {
                     <EditLogin />
                     <EditHistory />
                     <Switch>
-                        <Route path="/edit/events">
-                            <EditEvents parentHistory={this.props.history}></EditEvents>
-                        </Route>
-                        <Route path="/edit/clubs">
-                            <EditClubs parentHistory={this.props.history}></EditClubs>
-                        </Route>
-                        <Route path="/edit/volunteering">
-                            <EditVolunteering parentHistory={this.props.history}></EditVolunteering>
-                        </Route>
+                        <Route path="/edit/events" component={EditEvents} />
+                        <Route path="/edit/clubs" component={EditClubs} />
+                        <Route path="/edit/volunteering" component={EditVolunteering} />
                         <Route>
                             <div className="edit-no-route center-text">ERROR: Invalid editing URL!</div>
                         </Route>

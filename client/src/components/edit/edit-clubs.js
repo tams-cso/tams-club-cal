@@ -151,7 +151,7 @@ class EditClubs extends React.Component {
         // Get response and send to user
         if (res.status === 200) {
             alert(`Successfully ${this.state.new ? 'added' : 'edited'} club!`);
-            this.props.parentHistory.push(`/clubs${window.location.search}`);
+            window.location.href = `${window.location.origin}/clubs${window.location.search}`;
         } else alert(`${this.state.new ? 'Adding' : 'Editing'} club failed :(`);
     };
 
