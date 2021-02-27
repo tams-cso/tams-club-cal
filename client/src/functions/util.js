@@ -183,7 +183,7 @@ export function generateCalendarDays(offset = 0) {
     for (let i = date.date(date.daysInMonth()).day() + 1, j = 1; i < 7; i++) next.push(j++);
 
     // Returns an object containing the data
-    return new CalendarDates(current, previous, next, date.subtract(1, 'month'));
+    return new CalendarDates(current, previous, next);
 }
 
 /**

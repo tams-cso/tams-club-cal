@@ -202,13 +202,11 @@ export function FetchResponse(status, data) {
  * @param {number[]} current List of dates in the current month
  * @param {number[]} previous List of dates in the previous month
  * @param {number[]} next List of dates in the next month
- * @param {Dayjs} dateObj DayJS Date object
  */
-export function CalendarDates(current, previous, next, dateObj) {
+export function CalendarDates(current, previous, next) {
     this.current = current;
     this.previous = previous;
     this.next = next;
-    this.dateObj = dateObj;
 }
 
 /**
