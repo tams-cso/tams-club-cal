@@ -1,4 +1,5 @@
 import React from 'react';
+import './add-button.scss';
 
 class AddButton extends React.Component {
     openAdd = () => {
@@ -8,7 +9,7 @@ class AddButton extends React.Component {
     render() {
         return (
             <button className="add-button" onClick={this.openAdd}>
-                Add
+                +
             </button>
         );
     }

@@ -1,2 +1,17 @@
 @import '../../custom.scss';
 
+.add-button {
+    font-family: $title-font;
+    background-color: $background;
+    width: 1.2rem;
+    height: 1.2rem;
+    border: 0.1rem solid $text-primary;
+    padding: 0.1rem 0.25rem;
+    position: sticky;
+    bottom: 3rem;
+    right: 3rem;
+    z-index: 10;
+    font-size: 0.75rem;
+    border-radius: 1rem;
+    transition: 0.2s;
+}
