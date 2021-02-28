@@ -25,7 +25,8 @@ Create the config file at `client/src/files/config.json` (**For the `backend` fi
 ```json
 {
     "backend": "[address that the backend server is hosted on (eg. http://localhost:5000)]",
-    "apiKey": "[(optional) API key for backend. The https://dev.tams.club backend used for development does NOT need this]"
+    "apiKey": "[(optional) API key for backend. The https://dev.tams.club backend used for development does NOT need this]",
+    "calendarUrl": "[(optional) Public sharing URL for Google Calendar if syncing (should start with 'https://calendar.google.com/calendar')]"
 }
 ```
 
@@ -41,7 +42,6 @@ DROPBOX_TOKEN="[Token for dropbox app]"
 G_CLIENT_ID="[Google API OAuth 2.0 Client ID]"
 G_CLIENT_SECRET="[Google API OAuth 2.0 Client Secret]"
 CALENDAR_ID="[(optional) ID for Google Calendar if syncing]"
-CALENDAR_URL="[(optional) Public sharing URL for Google Calendar if syncing (should start with 'https://calendar.google.com/calendar')]"
 API_KEY="[(optional) API key will be required for any calls if defined (see docs)]"
 ORIGIN="[(optional) Origin to allow requests from. This will *deny requests from other origins* (eg. "http://localhost:3000")]"
 PORT="[(optional) The port to start the server on]"
