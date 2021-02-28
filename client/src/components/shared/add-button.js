@@ -8,7 +8,7 @@ class AddButton extends React.Component {
     }
 
     openAdd = () => {
-        window.location.href = `${window.location.origin}/edit/${this.props.type}`;
+        window.location.href = `${window.location.origin}/edit${window.location.pathname}`;
     };
 
     hoverEvent = (enter) => {
@@ -20,7 +20,7 @@ class AddButton extends React.Component {
     render() {
         return (
             <button
-                className={`add-button ${this.props.className} ${this.props.type}`}
+                className={`add-button ${this.props.className} ${this.props.type.toLowerCase()}`}
                 onClick={this.openAdd}
                 onMouseEnter={this.hoverEvent.bind(this, true)}
                 onMouseLeave={this.hoverEvent.bind(this, false)}
