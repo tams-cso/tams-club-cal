@@ -615,13 +615,15 @@ async function uploadLogs(logData) {
     }
 }
 
-async function getExpiredImages() {
+async function getAndDeleteExpiredImages() {
     try {
         const db = client.db('history');
         const collection = db.collection('images');
         const data = collection.find({ deleteDate: { $lt: new Date().getTime() } });
 
         if (data === null) return { good: -1 };
+
+        collection.deleteMany({ deleteDate: { $lt: new Date().getTime() } });
         return { data, good: 1 };
     } catch (error) {
         console.dir(error);
@@ -655,5 +657,5 @@ module.exports = {
     getSpecificDb,
     addToSpecificDb,
     uploadLogs,
-    getExpiredImages,
+    getAndDeleteExpiredImages,
 };
