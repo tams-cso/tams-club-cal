@@ -9,7 +9,7 @@ class AddButton extends React.Component {
 
     openAdd = () => {
         var path = window.location.pathname;
-        if (path === '/') path = 'events'
+        if (path === '/') path = '/events'
         window.location.href = `${window.location.origin}/edit${path}`;
     };
 
