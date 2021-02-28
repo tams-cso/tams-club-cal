@@ -8,7 +8,9 @@ class AddButton extends React.Component {
     }
 
     openAdd = () => {
-        window.location.href = `${window.location.origin}/edit${window.location.pathname}`;
+        var path = window.location.pathname;
+        if (path === '/') path = 'events'
+        window.location.href = `${window.location.origin}/edit${path}`;
     };
 
     hoverEvent = (enter) => {
