@@ -2,7 +2,7 @@ const fs = require('fs');
 const crypto = require('crypto');
 const path = require('path');
 const Dropbox = require('dropbox');
-const { getClub } = require('./database');
+const { getExpiredImages } = require('./database');
 const { sendError } = require('./util');
 const dbx = new Dropbox.Dropbox({ accessToken: process.env.DROPBOX_TOKEN });
 
@@ -27,19 +27,9 @@ async function uploadImage(file, oldId = null) {
         await dbx.filesUpload({ path: id, contents: data });
     } catch (error) {
         console.dir(error);
-        // TODO: Throw an error and send failure to client (throw new Error('...'))
+        return -1;
     }
-
-    // Deletes old image if it was in the database
-    // TODO: This is no longer needed because of the timed delete! Still need to add the cron task though
-    // if (oldId !== null && oldId !== undefined && oldId.startsWith('/') && typeof oldId === 'string') {
-    //     try {
-    //         await dbx.filesDeleteV2({ path: oldId });
-    //     } catch (error) {
-    //         console.dir(error);
-    //     }
-    // }
-
+    // TODO: Catch error (return -1) in util.js
     return id;
 }
 
@@ -78,23 +68,23 @@ async function getImage(id, res) {
     }
 }
 
-async function deleteClubImages(id) {
+async function deleteExpiredImages() {
     try {
-        const club = await getClub(id);
-        var toDelete = [];
-        if (club.coverImg !== null && club.coverImg !== '') {
-            toDelete.push({ path: club.coverImg });
-            toDelete.push({ path: club.coverImgThumbnail });
-        }
-        club.execs.forEach((e) => {
-            if (e.img !== null) toDelete.push({ path: e.img });
-        });
+        const dbRes = await getExpiredImages();
+        if (dbRes.good === -1) return -1;
+
+        const data = await dbRes.data.toArray();
+        const toDelete = data.map((d) => (d.id));
         const res = await dbx.filesDeleteBatch({ entries: toDelete });
-        return res.status;
+        if (res.status !== 200) {
+            console.dir(res);
+            return -1;
+        }
+        return toDelete.length;
     } catch (error) {
         console.dir(error);
-        return 400;
+        return -1;
     }
 }
 
-module.exports = { uploadImage, getImage, deleteClubImages };
+module.exports = { uploadImage, getImage, deleteExpiredImages };

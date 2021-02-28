@@ -6,6 +6,7 @@ const fs = require('fs');
 const path = require('path');
 const cors = require('cors');
 const bodyParser = require('body-parser');
+const cron = require('node-cron');
 
 const {
     getClubList,
@@ -20,7 +21,6 @@ const {
     updateClub,
     addVolunteering,
     addClub,
-    deleteClub,
     getVolunteering,
     findUser,
     getSpecificDb,
@@ -28,8 +28,9 @@ const {
     getHistoryList,
     getHistoryData,
     getHistoryInfo,
+    uploadLogs,
 } = require('./database');
-const { getImage, deleteClubImages } = require('./images');
+const { getImage, deleteExpiredImages } = require('./images');
 const { sendError, logRequest, parseForm, getIp, genState, parseUser, isTrusted } = require('./util');
 const { getAuthUrl, getTokensAndInfo, getSavedUser } = require('./auth');
 const { addToCalendar, updateCalendar } = require('./gcal');
@@ -45,6 +46,28 @@ fs.readdir(path.join(__dirname, 'cache'), (err, files) => {
             });
         }
     }
+});
+
+// Schedule cron tasks on start
+// These tasks will run at 09:00 UTC (3:00 AM CST)
+cron.schedule('* 9 * * *', async () => {
+    // Upload and clear log file
+    const logFile = path.join(__dirname, 'logs', 'main.log');
+    if (fs.existsSync(logFile)) {
+        const data = fs.readFileSync(logFile, 'utf-8');
+        const res = await uploadLogs(data);
+        if (res === 1)
+            fs.unlink(logFile, (err) => {
+                if (err) console.dir(err);
+                else console.log('Backed up log file!');
+            });
+    }
+
+    // Delete pictures marked for deletion after 30 days
+    deleteExpiredImages().then((d) => {
+        if (d === -1) return;
+        console.log(`Deleted ${d} expired images`);
+    })
 });
 
 // Check for defined API key and set NO_KEY constant
@@ -351,16 +374,6 @@ app.post('/admin/db/:db/:collection', async (req, res, next) => {
         res.status(200);
         res.send({ status: 200 });
     }
-});
-
-// Delete club
-// TODO: Clean up
-app.post('/delete-club', async (req, res, next) => {
-    var good = (await deleteClubImages(req.body.id)) === 200 && (await deleteClub(req.body.id));
-    if (good) {
-        res.status(200);
-        res.send({ status: 200 });
-    } else sendError(res, 400, 'Could not delete club');
 });
 
 app.get(/\/static\/.*/, async (req, res, next) => {

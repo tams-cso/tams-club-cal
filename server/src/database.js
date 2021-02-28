@@ -274,20 +274,6 @@ async function updateClub(club, id, user, oldImages) {
     }
 }
 
-async function deleteClub(id) {
-    try {
-        const db = client.db('clubs');
-        const dataCollection = db.collection('data');
-        const infoCollection = db.collection('info');
-        dataCollection.deleteOne({ objId: id });
-        infoCollection.deleteOne({ objId: id });
-        return true;
-    } catch (error) {
-        console.dir(error);
-        return false;
-    }
-}
-
 async function getVolunteeringList() {
     try {
         const db = client.db('volunteering');
@@ -391,8 +377,8 @@ async function addFeedback(feedback, user) {
 
 async function upsertUser(email, refreshToken) {
     try {
-        const db = client.db('users');
-        const collection = db.collection('data');
+        const db = client.db('data');
+        const collection = db.collection('users');
 
         const res = await collection.updateOne(
             { email },
@@ -410,8 +396,8 @@ async function upsertUser(email, refreshToken) {
 
 async function findUser(email) {
     try {
-        const db = client.db('users');
-        const collection = db.collection('data');
+        const db = client.db('data');
+        const collection = db.collection('users');
         const res = await collection.findOne({ email });
         return res;
     } catch (error) {
@@ -613,6 +599,36 @@ async function addToSpecificDb(dbName, collectionName, data) {
     }
 }
 
+async function uploadLogs(logData) {
+    try {
+        const db = client.db('data');
+        const collection = db.collection('logs');
+        const res = await collection.insertOne({ date: new Date().toISOString().substring(0, 10), log: logData });
+        if (res.insertedCount !== 1) {
+            console.dir('Could not insert log data into data.logs!');
+            return -1;
+        }
+        return 1;
+    } catch (error) {
+        console.dir(error);
+        return -1;
+    }
+}
+
+async function getExpiredImages() {
+    try {
+        const db = client.db('history');
+        const collection = db.collection('images');
+        const data = collection.find({ deleteDate: { $lt: new Date().getTime() } });
+
+        if (data === null) return { good: -1 };
+        return { data, good: 1 };
+    } catch (error) {
+        console.dir(error);
+        return { good: -1 };
+    }
+}
+
 module.exports = {
     getEventList,
     getEvent,
@@ -638,5 +654,6 @@ module.exports = {
     getHistoryData,
     getSpecificDb,
     addToSpecificDb,
-    deleteClub,
+    uploadLogs,
+    getExpiredImages,
 };
