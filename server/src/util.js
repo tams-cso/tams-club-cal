@@ -31,7 +31,7 @@ function logRequest(req) {
     var url = req.url;
     const keyIndex = url.indexOf('?key=');
     if (keyIndex !== -1) url = url.substring(0, keyIndex) + url.substring(keyIndex + 38, url.length);
-    const data = `[${new Date().toISOString()}] ${req.method} ${url}\n`;
+    const data = `${new Date().toISOString()} | ${getIp(req)} | ${req.method} ${url} | ${req.headers['user-agent']}\n`;
     fs.appendFile(path.join(__dirname, 'logs', 'main.log'), data, (err) => {
         if (err) console.dir(err);
     });
@@ -55,7 +55,6 @@ async function parseForm(req, res, callback) {
             return;
         }
 
-
         var club = JSON.parse(fields.data);
 
         // Check for old pictures
@@ -70,10 +69,9 @@ async function parseForm(req, res, callback) {
         for (var i = 0; i < club.execProfilePicBlobs.length; i++) {
             if (club.execProfilePicBlobs[i] !== null) {
                 if (req.query.update) {
-                    if (hasOldPicture(club.oldExecs[i].img)) oldImages.push(club.oldExecs[i].img); 
+                    if (hasOldPicture(club.oldExecs[i].img)) oldImages.push(club.oldExecs[i].img);
                     club.execs[i].img = await uploadImage(files[`exec${i}`]);
-                }
-                else club.execs[i].img = await uploadImage(files[`exec${i}`]);
+                } else club.execs[i].img = await uploadImage(files[`exec${i}`]);
             }
         }
 
@@ -82,7 +80,7 @@ async function parseForm(req, res, callback) {
 }
 
 async function hasOldPicture(oldId) {
-    return (oldId !== null && oldId !== undefined && oldId.startsWith('/') && typeof oldId === 'string')
+    return oldId !== null && oldId !== undefined && oldId.startsWith('/') && typeof oldId === 'string';
 }
 
 async function parseUser(req) {
