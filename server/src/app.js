@@ -32,6 +32,7 @@ const {
 const { getImage, deleteClubImages } = require('./images');
 const { sendError, logRequest, parseForm, getIp, genState, parseUser, isTrusted } = require('./util');
 const { getAuthUrl, getTokensAndInfo, getSavedUser } = require('./auth');
+const { addToCalendar, updateCalendar } = require('./gcal');
 
 // Clean up the 'cache' folder on start
 fs.readdir(path.join(__dirname, 'cache'), (err, files) => {
@@ -135,6 +136,7 @@ app.post('/events', async (req, res, next) => {
     const data = await addEvent(req.body, user);
     if (data.good === -1) sendError(res, 500, 'Unable to add event');
     else {
+        addToCalendar(req.body, data.objId);
         res.status(200);
         res.send({ id: data.objId });
     }
@@ -147,6 +149,7 @@ app.post('/events/:id', async (req, res, next) => {
     if (good === -1) sendError(res, 500, 'Unable to update event');
     else if (good === 0) sendError(res, 400, 'Invalid event id');
     else {
+        updateCalendar(req.body, req.params.id);
         res.status(200);
         res.send({ status: 200 });
     }
