@@ -111,6 +111,7 @@ class Home extends React.Component {
                 <Popup history={this.props.history}>
                     <EventPopup></EventPopup>
                 </Popup>
+                <AddButton type="Event"></AddButton>
                 <div className="home-top">
                     <div className={isActive('dummy', this.state.scheduleView)}></div>
                     <button className={isActive('today', !this.state.scheduleView)} onClick={this.resetMonthOffset}>
@@ -143,7 +144,6 @@ class Home extends React.Component {
                     monthOffset={this.state.monthOffset}
                     activatePopup={this.activatePopup}
                 ></Calendar>
-                <AddButton type="events"></AddButton>
             </div>
         );
     }

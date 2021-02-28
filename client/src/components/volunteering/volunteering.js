@@ -55,6 +55,7 @@ class Volunteering extends React.Component {
                 <Popup history={this.props.history} noscroll>
                     <VolunteeringPopup></VolunteeringPopup>
                 </Popup>
+                <AddButton type="Volunteering"></AddButton>
                 <div className="volunteering-filters">
                     <button
                         onClick={this.updateFilter.bind(this, null)}
@@ -94,7 +95,6 @@ class Volunteering extends React.Component {
                     </button>
                 </div>
                 <div className="volunteering-section">{volCards}</div>
-                <AddButton type="volunteering"></AddButton>
             </div>
         );
     }

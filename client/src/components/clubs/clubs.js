@@ -34,8 +34,8 @@ class Clubs extends React.Component {
                 <Popup history={this.props.history}>
                     <ClubPopup></ClubPopup>
                 </Popup>
+                <AddButton type="Club"></AddButton>
                 <div className="club-card-list">{cards}</div>
-                <AddButton type="clubs"></AddButton>
             </div>
         );
     }
