@@ -25,6 +25,8 @@ jobs:
           TRUSTED: ${{ secrets.TRUSTED }}
           G_CLIENT_ID: ${{ secrets.G_CLIENT_ID }}
           G_CLIENT_SECRET: ${{ secrets.G_CLIENT_SECRET }}
+          CALENDAR_ID: ${{ secrets.STAGING_CALENDAR_ID }}
+          CALENDAR_URL: ${{ secrets.STAGING_CALENDAR_URL }}
         run: |
           npm install -g yarn
           cd $GITHUB_WORKSPACE && ls -la
@@ -42,6 +44,8 @@ jobs:
           echo "TRUSTED=$TRUSTED" >> .env
           echo "G_CLIENT_ID=$G_CLIENT_ID" >> .env
           echo "G_CLIENT_SECRET=$G_CLIENT_SECRET" >> .env
+          echo "CALENDAR_ID=$CALENDAR_ID" >> .env
+          echo "CALENDAR_URL=$CALENDAR_URL" >> .env
           mv staging.ecosystem.config.js ecosystem.config.js
           yarn install
           zip -r ../tams-club-cal-server.zip .
