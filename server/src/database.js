@@ -123,6 +123,41 @@ async function updateEvent(event, id, user) {
     }
 }
 
+async function addEventCalendarId(objId, eventId) {
+    try {
+        const db = client.db('events');
+        const collection = db.collection('calendar');
+
+        const res = await collection.insertOne({ objId, eventId });
+
+        if (res.insertedCount === 0) return -1;
+        return 1;
+    } catch (error) {
+        console.dir(error);
+        return -1;
+    }
+}
+
+async function getEventCalendarId(objId) {
+    try {
+        const db = client.db('events');
+        const collection = db.collection('calendar');
+
+        console.log(objId);
+        const ids = await collection.findOne({ objId });
+
+        if (ids === null) {
+            // TODO: Add this console.dir to every GET
+            console.dir({ error: 'Could not get events.calendar' });
+            return { good: -1 };
+        }
+        return { ids, good: 1 };
+    } catch (error) {
+        console.dir(error);
+        return { good: -1 };
+    }
+}
+
 async function getClubList() {
     try {
         const db = client.db('clubs');
@@ -579,20 +614,21 @@ async function addToSpecificDb(dbName, collectionName, data) {
 }
 
 module.exports = {
-    getClubList,
-    getClub,
-    addFeedback,
-    addEvent,
-    getEvent,
     getEventList,
+    getEvent,
+    addEvent,
     updateEvent,
+    addEventCalendarId,
+    getEventCalendarId,
     getVolunteeringList,
     getVolunteering,
-    updateVolunteering,
-    updateClub,
     addVolunteering,
+    updateVolunteering,
+    getClubList,
+    getClub,
     addClub,
-    deleteClub,
+    updateClub,
+    addFeedback,
     upsertUser,
     findUser,
     createHistory,
@@ -602,4 +638,5 @@ module.exports = {
     getHistoryData,
     getSpecificDb,
     addToSpecificDb,
+    deleteClub,
 };

@@ -40,6 +40,8 @@ MONGO_URL="[Connection URL to the mongodb cluster (eg. "tams-cal-db-staging.7d0n
 DROPBOX_TOKEN="[Token for dropbox app]"
 G_CLIENT_ID="[Google API OAuth 2.0 Client ID]"
 G_CLIENT_SECRET="[Google API OAuth 2.0 Client Secret]"
+CALENDAR_ID="[(optional) ID for Google Calendar if syncing]"
+CALENDAR_URL="[(optional) Public sharing URL for Google Calendar if syncing (should start with 'https://calendar.google.com/calendar')]"
 API_KEY="[(optional) API key will be required for any calls if defined (see docs)]"
 ORIGIN="[(optional) Origin to allow requests from. This will *deny requests from other origins* (eg. "http://localhost:3000")]"
 PORT="[(optional) The port to start the server on]"
@@ -48,6 +50,8 @@ PORT="[(optional) The port to start the server on]"
 You will need to create a [Dropbox Developer Account](https://www.dropbox.com/developers/reference/getting-started?_tk=guides_lp&_ad=guides2&_camp=get_started#app%20console) and a project.
 
 Additionally, you need to make a [Google Cloud Developer Account](https://cloud.google.com/docs), create a project, and make both OAuth 2.0 Client credentials and a service account credentials, enabling the Google Calendar API. The Oauth2 credentials can be placed in the `.env` file, but you will need to download the service account credentials and move the JSON file to `server/creds.json`.
+
+Finally, if you would like to sync the events with a Google Calendar, then you will need to create a new calendar, share it with the service account email, and add the id and url to the `.env` file.
 
 ## Execution
 

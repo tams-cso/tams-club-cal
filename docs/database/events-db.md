@@ -48,3 +48,19 @@
 - links
 - description
 - editedBy
+
+## Calendar Collection
+
+```js
+{
+    _id: ObjectId("[Mongodb auto-generated ID]"),
+    objId: "[16-digit generated hex ID for event]",
+    eventId: "[Google calendar generated event ID]",
+}
+```
+
+### Properties
+
+- _id
+- objId
+- eventId
