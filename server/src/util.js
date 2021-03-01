@@ -83,9 +83,10 @@ async function hasOldPicture(oldId) {
     return oldId !== null && oldId !== undefined && oldId.startsWith('/') && typeof oldId === 'string';
 }
 
-async function parseUser(req) {
-    if (req.body.email !== null) {
-        const user = await getLoggedInData(req.body.email);
+async function parseUser(req, club = null) {
+    const email = club === null ? req.body.email : club.email;
+    if (email !== null) {
+        const user = await getLoggedInData(email);
         if (user !== null) {
             return { name: user.name, email: user.email };
         }
