@@ -7,7 +7,7 @@ import SearchBar from './search-bar';
 import SearchResult from './search-result';
 
 import { getEventList } from '../../functions/api';
-import { setEventList, setPopupId, setPopupOpen } from '../../redux/actions';
+import { setEventList, openPopup } from '../../redux/actions';
 import { getSavedEventList } from '../../redux/selectors';
 
 import './search.scss';
@@ -20,8 +20,7 @@ class Search extends React.Component {
 
     activatePopup = (id) => {
         this.props.history.push(`/events?id=${id}`);
-        this.props.setPopupId(id);
-        this.props.setPopupOpen(true);
+        this.props.openPopup(id, 'events');
     };
 
     componentDidMount() {
@@ -79,6 +78,6 @@ const mapStateToProps = (state) => {
         eventList: getSavedEventList(state),
     };
 };
-const mapDispatchToProps = { setEventList, setPopupId, setPopupOpen };
+const mapDispatchToProps = { setEventList, openPopup };
 
 export default connect(mapStateToProps, mapDispatchToProps)(Search);
