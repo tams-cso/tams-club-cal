@@ -321,7 +321,7 @@ async function addVolunteering(vol, user) {
         const res = await collection.insertOne(data);
         if (res.result.ok === 0) return { good: -1 };
 
-        const historyRes = await createHistory('volunteering', data._id.str, user, data);
+        const historyRes = await createHistory('volunteering', data._id.toString(), user, data);
         if (historyRes !== 1) return 0;
 
         return { id: data._id, good: 1 };
