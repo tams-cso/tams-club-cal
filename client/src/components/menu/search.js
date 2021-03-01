@@ -41,9 +41,9 @@ class Search extends React.Component {
             this.props.setEventList(res.data);
         }
 
-        this.fuse = new Fuse(this.props.eventList, { keys: ['name', 'club'] });
+        this.fuse = new Fuse(this.props.eventList, { useExtendedSearch: true, keys: ['name', 'club'] });
 
-        const rawResults = this.fuse.search(query);
+        const rawResults = this.fuse.search(`'${query}`);
 
         var results = [];
         rawResults.forEach((r) => {
