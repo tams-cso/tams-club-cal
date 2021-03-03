@@ -25,10 +25,49 @@
     border: 0.1rem solid $text-primary;
     border-radius: 0.25rem;
     margin: 0 0.5em 0 1em;
+    position: relative;
+    display: inline-block;
 }
 
 .schedule-event-type.signup {
     background-color: $type-signup;
+}
+
+.schedule-event-type-tooltip {
+    visibility: hidden;
+    position: absolute;
+    z-index: 1;
+    bottom: 140%;
+    left: 50%;
+    margin-left: -1.25rem;
+
+    width: 2.25rem;
+    padding: 0.1rem;
+    border-radius: 0.1rem;
+    
+    text-align: center;
+    background-color: $background;
+    color: $type-event-darker;
+    box-shadow: 0 0 0.4rem $background-tint;
+}
+
+.schedule-event-type-tooltip.signup {
+    color: $type-signup;
+}
+
+.schedule-event-type-tooltip::after {
+    content: '';
+    position: absolute;
+    top: 100%;
+    left: 50%;
+    margin-left: -7px;
+    border-width: 7px;
+    border-style: solid;
+    border-color: $background transparent transparent transparent;
+}
+
+.schedule-event-type:hover .schedule-event-type-tooltip {
+    visibility: visible;
 }
 
 .schedule-event-time {
