@@ -7,6 +7,7 @@ if (!hasCreds) {
     console.log('[ERROR] Service account and calendar ID undefined');
     process.exit(1);
 }
+authorize();
 
 async function authorize() {
     var jwt = new google.auth.JWT(
