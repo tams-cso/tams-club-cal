@@ -33,7 +33,7 @@ class Calendar extends React.Component {
         const calData = generateCalendarDays(this.props.monthOffset);
 
         // Store the current date, month, and year to compare events with
-        var currDateObj = dayjs().subtract(1, 'month');
+        var currDateObj = calData.dayObj.subtract(1, 'month');
         var currMonth = currDateObj.month();
         var currYear = currDateObj.year();
 

@@ -7,6 +7,7 @@ import { parseTimeZone, getTimezone, getParams, millisToDateAndTime } from '../.
 import './edit-events.scss';
 import Loading from '../shared/loading';
 import SubmitGroup from '../shared/submit-group';
+import DateInput from '../shared/date-input';
 
 class EditEvents extends React.Component {
     constructor(props) {
@@ -31,9 +32,14 @@ class EditEvents extends React.Component {
 
     // React controlled forms
     handleInputChange(event) {
+        console.log(event);
         const target = event.target;
         this.setState({ [target.name]: target.value });
     }
+
+    handleDateChange = (name, value) => {
+        this.setState({ [name]: value });
+    };
 
     // Submit the form and make a POST request
     submit = async () => {
@@ -51,6 +57,11 @@ class EditEvents extends React.Component {
         var start = parseTimeZone(`${this.state.startDate} ${this.state.startTime}`, getTimezone());
         if (this.state.type === 'event')
             end = parseTimeZone(`${this.state.endDate} ${this.state.endTime}`, getTimezone());
+
+        if (end < start) {
+            alert('Starting time cannot be after end time!');
+            return;
+        }
 
         // Create event object
         const fullEvent = new Event(
@@ -146,13 +157,12 @@ class EditEvents extends React.Component {
             endObj = (
                 <div className="edit-events-end-date-obj">
                     <label htmlFor="endDate">End</label>
-                    <input
+                    <DateInput
+                        className="edit-events-date-input"
                         name="endDate"
-                        className="line-in edit-events-date-input"
-                        type="date"
                         value={this.state.endDate}
-                        onChange={this.handleInputChange}
-                    ></input>
+                        onChange={this.handleDateChange}
+                    ></DateInput>
                     <input
                         name="endTime"
                         className="line-in edit-events-time-input"
@@ -200,13 +210,12 @@ class EditEvents extends React.Component {
                 ></input>
                 <br />
                 <label htmlFor="startDate">Start</label>
-                <input
+                <DateInput
+                    className="edit-events-date-input"
                     name="startDate"
-                    className="line-in edit-events-date-input"
-                    type="date"
                     value={this.state.startDate}
-                    onChange={this.handleInputChange}
-                ></input>
+                    onChange={this.handleDateChange}
+                ></DateInput>
                 <input
                     name="startTime"
                     className="line-in edit-events-time-input"
