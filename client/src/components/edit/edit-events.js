@@ -58,6 +58,11 @@ class EditEvents extends React.Component {
         if (this.state.type === 'event')
             end = parseTimeZone(`${this.state.endDate} ${this.state.endTime}`, getTimezone());
 
+        if (end < start) {
+            alert('Starting time cannot be after end time!');
+            return;
+        }
+
         // Create event object
         const fullEvent = new Event(
             this.state.type,
