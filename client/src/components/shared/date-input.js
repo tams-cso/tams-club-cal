@@ -105,7 +105,8 @@ class DateInput extends React.Component {
         ));
 
         // Create list of clickable dates
-        const calendarList = this.createCalendar();
+        var calendarList = null;
+        if (this.state.dropdown) calendarList = this.createCalendar();
 
         return (
             <div className={`date-input ${this.props.className}`}>
@@ -121,7 +122,7 @@ class DateInput extends React.Component {
                     ref={this.inputRef}
                 ></input>
                 <div
-                    className={isActive('date-input-dropdown', this.state.dropdown || this.state.mouse)}
+                    className={isActive('date-input-dropdown', this.state.dropdown)}
                     onMouseEnter={this.handleMouseEvent.bind(this, true)}
                     onMouseLeave={this.handleMouseEvent.bind(this, false)}
                     onClick={this.handleDropdownClick}
