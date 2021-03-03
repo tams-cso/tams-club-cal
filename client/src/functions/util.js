@@ -2,6 +2,7 @@ import dayjs from 'dayjs';
 import utc from 'dayjs/plugin/utc';
 import timezone from 'dayjs/plugin/timezone';
 import isLeapYear from 'dayjs/plugin/isLeapYear';
+import customParseFormat from 'dayjs/plugin/customParseFormat';
 import imageCompression from 'browser-image-compression';
 import { EventInfo, DateAndTime, CalendarDates, DateDivider } from './entries';
 import config from '../files/config.json';
@@ -9,6 +10,7 @@ import config from '../files/config.json';
 dayjs.extend(utc);
 dayjs.extend(timezone);
 dayjs.extend(isLeapYear);
+dayjs.extend(customParseFormat);
 
 /**
  * Gets query parameters
@@ -28,7 +30,7 @@ export function getParams(query) {
  * @returns {number} Milliseconds since Jan 1, 1970 [UTC time]
  */
 export function parseTimeZone(input, tz) {
-    return dayjs.tz(input, tz).valueOf();
+    return dayjs.tz(input, 'MMM D, YYYY H:m', tz).valueOf();
 }
 
 /**
@@ -165,12 +167,15 @@ export function getMonthAndYear(offset = 0) {
 /**
  * Creates the 3 numerical lists of calendar days, for the current, previous, and next months
  *
- * @param {number} [offset] Month offset, or 0 if undefined
+ * @param {number} [offset] Month offset (0 if undefined)
+ * @param {string} [dateString] The calendar date (MMM D, YYYY)
  * @returns {CalendarDates} Object with lists of calendar dates
  */
-export function generateCalendarDays(offset = 0) {
-    // Creates a DayJS object
-    const date = dayjs().add(offset, 'month').date(1);
+export function generateCalendarDays(offset = 0, dateString = '') {
+    // Creates a DayJS object from date or offset
+    var day = dayjs();
+    if (dateString !== '') day = dayjs(dateString, 'MMM D, YYYY');
+    day = day.add(offset, 'month').date(1);
 
     // Creates the dates for the current, previous, and next calendar month
     const current = [],
@@ -178,16 +183,16 @@ export function generateCalendarDays(offset = 0) {
         next = [];
 
     // Iterate through the dates and push numbers into arrays
-    for (let i = 1; i <= date.daysInMonth(); i++) current.push(i);
-    for (let i = date.day(), j = date.subtract(1, 'month').daysInMonth(); i > 0; i--) previous.unshift(j--);
-    for (let i = date.date(date.daysInMonth()).day() + 1, j = 1; i < 7; i++) next.push(j++);
+    for (let i = 1; i <= day.daysInMonth(); i++) current.push(i);
+    for (let i = day.day(), j = day.subtract(1, 'month').daysInMonth(); i > 0; i--) previous.unshift(j--);
+    for (let i = day.date(day.daysInMonth()).day() + 1, j = 1; i < 7; i++) next.push(j++);
 
     // Returns an object containing the data
-    return new CalendarDates(current, previous, next);
+    return new CalendarDates(current, previous, next, day);
 }
 
 /**
- * Converts millisecond time to object with string date and time
+ * Converts millisecond time to editing date and time
  *
  * @param {number} millis The UTC millisecond time
  * @returns {DateAndTime} The date and time objects
@@ -195,7 +200,7 @@ export function generateCalendarDays(offset = 0) {
 export function millisToDateAndTime(millis) {
     var dayObj = convertToTimeZone(millis, getTimezone());
     return {
-        date: dayObj.format('YYYY-MM-DD'),
+        date: dayObj.format('MMM D, YYYY'),
         time: dayObj.format('HH:mm'),
     };
 }
@@ -340,4 +345,16 @@ export function calculateEditDate(editDate) {
     }
 
     return `${diff} ${unit}${diff !== 1 ? 's' : ''} ago`;
+}
+
+export function guessDateInput(input) {
+    return dayjs(input, ['MMM D, YYYY', 'MMMM D, YYYY', 'YYYY', 'MMMM']).format('MMM D, YYYY');
+}
+
+export function getEditMonthAndYear(input, offset = 0) {
+    return dayjs(input, 'MMM D, YYYY').add(offset, 'month').format('MMMM YYYY');
+}
+
+export function getEditDate(input) {
+    return dayjs(input, 'MMM D, YYYY').get('date');
 }

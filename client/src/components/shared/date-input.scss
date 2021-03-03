@@ -1,0 +1,98 @@
+@import '../../custom.scss';
+
+.date-input {
+    position: relative;
+}
+
+.date-input-line {
+    width: 6rem;
+}
+
+.date-input-dropdown {
+    position: absolute;
+    top: 1.5rem;
+    z-index: 5;
+    padding: 0.1rem;
+    width: 8rem;
+
+    display: flex;
+    flex-direction: column;
+
+    font-size: 0.5rem;
+    box-shadow: 0 0 0.2rem $background-dark;
+    background-color: $background;
+}
+
+.date-input-header {
+    height: 1rem;
+    padding: 0 5%;
+
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.date-input-month {
+    margin-right: 0.25rem;
+    flex-basis: 80%;
+    font-size: 0.5rem;
+}
+
+.date-input-change-month {
+    margin: 0 0.1rem;
+    flex-basis: 5%;
+
+    font-size: 0.65rem;
+    cursor: pointer;
+    transition: 0.2s;
+}
+
+.date-input-change-month:hover {
+    color: $primary;
+}
+
+.date-input-weekday-list {
+    height: 0.5rem;
+    margin-bottom: 0.25rem;
+
+    display: grid;
+    grid-template-columns: repeat(7, 1fr);
+    align-items: center;
+    justify-items: center;
+
+    font-size: 0.4rem;
+    font-weight: 700;
+    color: $text-lighter;
+}
+
+.date-input-calendar {
+    display: grid;
+    grid-template-columns: repeat(7, 1fr);
+
+    align-items: center;
+    justify-items: center;
+}
+
+.date-input-num {
+    height: 0.85rem;
+    width: 0.85rem;
+    border-radius: 1rem;
+
+    text-align: center;
+    font-size: 0.55rem;
+    cursor: pointer;
+    transition: 0.2s;
+}
+
+.date-input-num:hover {
+    background-color: rgba($primary, 0.25);
+}
+
+.date-input-num.diff-month {
+    color: $text-lighter;
+}
+
+.date-input-num.current {
+    color: $primary;
+}
