@@ -3,7 +3,14 @@ import ActionButton from '../shared/action-button';
 
 import { getEvent, postEvent } from '../../functions/api';
 import { Event } from '../../functions/entries';
-import { parseTimeZone, getTimezone, getParams, millisToDateAndTime } from '../../functions/util';
+import {
+    parseTimeZone,
+    getTimezone,
+    getParams,
+    millisToDateAndTime,
+    getDefaulEditDate,
+    getDefaulEditTime,
+} from '../../functions/util';
 import './edit-events.scss';
 import Loading from '../shared/loading';
 import SubmitGroup from '../shared/submit-group';
@@ -32,7 +39,6 @@ class EditEvents extends React.Component {
 
     // React controlled forms
     handleInputChange(event) {
-        console.log(event);
         const target = event.target;
         this.setState({ [target.name]: target.value });
     }
@@ -105,6 +111,10 @@ class EditEvents extends React.Component {
                 clubName: event.club,
                 description: event.description,
                 type: event.type,
+                startDate: getDefaulEditDate(),
+                startTime: getDefaulEditTime(false),
+                endDate: getDefaulEditDate(),
+                endTime: getDefaulEditTime(true),
             });
         } else {
             // Convert to string times

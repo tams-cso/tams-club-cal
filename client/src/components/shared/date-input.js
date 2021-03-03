@@ -1,5 +1,5 @@
 import React from 'react';
-import { generateCalendarDays, getEditDate, getEditMonthAndYear, guessDateInput, isActive } from '../../functions/util';
+import { generateCalendarDays, getDefaulEditDate, getEditDate, getEditMonthAndYear, guessDateInput, isActive } from '../../functions/util';
 import data from '../../files/data.json';
 import './date-input.scss';
 
@@ -117,7 +117,7 @@ class DateInput extends React.Component {
                     name={this.props.name}
                     className="line-in date-input-line"
                     type="text"
-                    placeholder="MM/DD/YYYY"
+                    placeholder={getDefaulEditDate()}
                     value={this.state.value}
                     onChange={this.handleInputChange}
                     onBlur={this.handleBlur}
