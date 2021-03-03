@@ -358,3 +358,16 @@ export function getEditMonthAndYear(input, offset = 0) {
 export function getEditDate(input) {
     return dayjs(input, 'MMM D, YYYY').get('date');
 }
+
+export function getDefaulEditDate() {
+    return dayjs().format('MMM D, YYYY');
+}
+
+export function getDefaulEditTime(endTime) {
+    // Will take next whole hour
+    var day = dayjs().second(0).minute(0).add(1, 'hour');
+    
+    // Add 1 hour if end time
+    if (endTime) day = day.add(1, 'hour');
+    return day.format('H:mm');
+}
