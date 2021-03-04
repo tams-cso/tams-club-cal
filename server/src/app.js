@@ -202,7 +202,7 @@ app.get('/clubs/:id', async (req, res, next) => {
 // Add a club
 app.post('/clubs', async (req, res, next) => {
     parseForm(req, res, async (club) => {
-        const user = await parseUser(req);
+        const user = await parseUser(req, club);
         const data = await addClub(club, user);
         if (data.good === -1) sendError(res, 500, 'Unable to add club');
         else {
