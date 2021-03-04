@@ -7,7 +7,7 @@
 
 // Entire element is flexbox with left and right components
 .exec-edit {
-    width: 99%;
+    width: 96.5%;
     flex-direction: row;
     display: flex;
     padding: 0.5rem;
@@ -63,12 +63,12 @@
 
 .exec-edit-name-input {
     margin: 0 !important;
-    width: 85%;
+    width: 95%;
     font-size: 0.75rem !important;
 }
 
 .exec-edit-trash-icon {
-    margin-left: 1rem;
+    margin-left: 0.5rem;
 }
 
 .exec-edit-position-label {
