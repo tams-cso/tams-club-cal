@@ -167,12 +167,13 @@ class EditEvents extends React.Component {
             endObj = (
                 <div className="edit-events-end-date-obj">
                     <label htmlFor="endDate">End</label>
-                    <DateInput
-                        className="edit-events-date-input"
+                    <input
                         name="endDate"
+                        className="line-in edit-events-date-input"
+                        type="date"
                         value={this.state.endDate}
-                        onChange={this.handleDateChange}
-                    ></DateInput>
+                        onChange={this.handleInputChange}
+                    ></input>
                     <input
                         name="endTime"
                         className="line-in edit-events-time-input"
@@ -220,12 +221,13 @@ class EditEvents extends React.Component {
                 ></input>
                 <br />
                 <label htmlFor="startDate">Start</label>
-                <DateInput
-                    className="edit-events-date-input"
+                <input
                     name="startDate"
+                    className="line-in edit-events-date-input"
+                    type="date"
                     value={this.state.startDate}
-                    onChange={this.handleDateChange}
-                ></DateInput>
+                    onChange={this.handleInputChange}
+                ></input>
                 <input
                     name="startTime"
                     className="line-in edit-events-time-input"

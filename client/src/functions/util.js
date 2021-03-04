@@ -30,7 +30,7 @@ export function getParams(query) {
  * @returns {number} Milliseconds since Jan 1, 1970 [UTC time]
  */
 export function parseTimeZone(input, tz) {
-    return dayjs.tz(input, 'MMM D, YYYY H:m', tz).valueOf();
+    return dayjs.tz(input, 'YYYY-MM-DD HH:mm', tz).valueOf();
 }
 
 /**
@@ -200,7 +200,7 @@ export function generateCalendarDays(offset = 0, dateString = '') {
 export function millisToDateAndTime(millis) {
     var dayObj = convertToTimeZone(millis, getTimezone());
     return {
-        date: dayObj.format('MMM D, YYYY'),
+        date: dayObj.format('YYYY-MM-DD'),
         time: dayObj.format('HH:mm'),
     };
 }
@@ -360,7 +360,7 @@ export function getEditDate(input) {
 }
 
 export function getDefaulEditDate() {
-    return dayjs().format('MMM D, YYYY');
+    return dayjs().format('YYYY-MM-DD');
 }
 
 export function getDefaulEditTime(endTime) {
@@ -369,5 +369,5 @@ export function getDefaulEditTime(endTime) {
     
     // Add 1 hour if end time
     if (endTime) day = day.add(1, 'hour');
-    return day.format('H:mm');
+    return day.format('HH:mm');
 }
