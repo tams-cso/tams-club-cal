@@ -253,7 +253,7 @@ export function imgUrl(path) {
  */
 export function getTimezone() {
     // TODO: Allow user to manually change timezone
-    return dayjs.tz.guess();
+    return 'America/Chicago';
 }
 
 /**
