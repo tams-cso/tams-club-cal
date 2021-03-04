@@ -34,7 +34,7 @@ class DateInput extends React.Component {
 
         if (value === 'Invalid Date') value = this.state.lastValid;
         this.props.onChange(this.props.name, value);
-        this.setState({ value, lastValid: value, dropdown: false, offset: 0, mouse });
+        this.setState({ value, lastValid: value, dropdown: false, mouse });
     };
 
     handleMouseEvent = (enter) => {
@@ -50,6 +50,7 @@ class DateInput extends React.Component {
     };
 
     changeMonth = (increment) => {
+        console.log(this.state.offset)
         this.setState({ offset: this.state.offset + (increment ? 1 : -1) });
     };
 
