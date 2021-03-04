@@ -21,7 +21,6 @@ class CommitteeEdit extends React.Component {
                         onClick={this.props.onDelete}
                     ></TrashIcon>
                 </div>
-                <br />
                 <label htmlFor="fb" className="committee-edit-label">
                     Facebook:
                 </label>
