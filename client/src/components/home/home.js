@@ -114,7 +114,10 @@ class Home extends React.Component {
                 </Popup>
                 <AddButton type="Event"></AddButton>
                 <div className="home-top">
-                    <ActionButton className={isActive('home-top-item today', !this.state.scheduleView)} onClick={this.resetMonthOffset}>
+                    <ActionButton
+                        className={isActive('home-top-item today', !this.state.scheduleView)}
+                        onClick={this.resetMonthOffset}
+                    >
                         Today
                     </ActionButton>
                     <ActionButton
@@ -136,7 +139,8 @@ class Home extends React.Component {
                 </div>
                 <div className={isActive('home-schedule-view', this.state.scheduleView)}>
                     <div className={isActive('home-schedule-view-empty', eventComponents.length === 0)}>
-                        No upcoming events...
+                        No upcoming events... Well, you can
+                        <a href={`${window.origin}/edit/events`}> add one</a>!
                     </div>
                     {eventComponents}
                 </div>
