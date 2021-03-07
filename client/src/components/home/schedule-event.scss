@@ -35,6 +35,7 @@
 
 .schedule-event-type-tooltip {
     visibility: hidden;
+    opacity: 0;
     position: absolute;
     z-index: 1;
     bottom: 140%;
@@ -49,6 +50,7 @@
     background-color: $background;
     color: $type-event-darker;
     box-shadow: 0 0 0.4rem $background-tint;
+    transition: 0.3s;
 }
 
 .schedule-event-type-tooltip.signup {
@@ -68,6 +70,7 @@
 
 .schedule-event-type:hover .schedule-event-type-tooltip {
     visibility: visible;
+    opacity: 100%;
 }
 
 .schedule-event-time {
