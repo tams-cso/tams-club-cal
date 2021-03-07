@@ -1,116 +1,104 @@
+/**
+ * The home component is the homepage of our site! By default, this will display a
+ * list of upcoming events, in order by starting date/time. There are many features of this
+ * simple page:
+ * 
+ * 1) Each date section is a sticky container, meaning that if there are enough events,
+ *    the date section will stay at the top when scrolled above the top of the page.
+ * 2) The button at the top will switch a calendar view of the events, implemented
+ *    in the Calendar component.
+ */
+
 @import '../../custom.scss';
 
-.schedule-view {
-    margin: 2rem 14vw 0 14vw;
-    padding-bottom: 0.5rem;
-}
-
-.home-calendar {
-    margin-top: 2.5rem;
-}
+/* 
+ * ####################
+ * ##### HOME TOP #####
+ * ####################
+ */
 
 .home-top {
     position: fixed;
     padding-top: 0.5rem;
     top: 2.5rem;
-    height: 1.5rem;
+    height: 2rem;
     width: 100%;
 
-    display: flex;
+    display: grid;
+    grid-template-columns: 15% 10% 15% 2.5% 20% 2.5% 5% 15% 15%;
     align-items: center;
-    justify-content: center;
-    
-    font-family: $title-font;    
+
+    font-family: $title-font;
     background-color: $background;
     z-index: 1;
 }
 
-.month-year {
-    text-align: center;
-    width: 6.5rem;
-    padding: 0 0.2rem;
-}
-
-.dummy-change-month {
-    display: none;
-    width: 1.3rem;
-}
-
-.today {
-    display: none;
-    font-family: $title-font;
-    text-align: center;
-    background-color: $background;
-    width: 2.5rem;
+.home-top button {
+    padding: 0.1rem 0;
     border: 0.1rem solid $text-primary;
-    padding: 0.1rem 0.25rem;
     font-size: 0.75rem;
-    border-radius: 0.25rem;
-    transition: 0.2s;
 }
 
-.today:hover {
-    cursor: pointer;
-    background-color: $background-tint;
+.home-top button:hover {
+    border: 0.1rem solid $primary;
+    box-shadow: none;
+    color: $primary;
 }
 
-.dummy-today {
-    display: none;
-    margin-right: 5vw;
-    width: 5.2rem;
+.home-top-item.today {
+    grid-column-start: 2;
 }
 
-.change-month {
-    display: none;
-    font-family: $title-font;
-    background-color: $background;
-    width: 1.3rem;
-    border: 0.1rem solid $text-primary;
-    padding: 0.1rem 0.25rem;
-    font-size: 0.75rem;
-    border-radius: 0.25rem;
-    transition: 0.2s;
+.home-top-item.month-change {
+    padding: 0;
+    border: none;
+    box-shadow: none;
+    font-size: 1.5rem;
 }
 
-.change-month:hover {
-    cursor: pointer;
-    background-color: $background-tint;
+.home-top-item.month-change:hover {
+    border: none;
+    color: $primary;
 }
 
-.month-back {
-    margin-left: 3vw;
+.home-top-item.month-change.backward {
+    grid-column-start: 4;
 }
 
-.month-forward {
-    margin-right: 3vw;
+.home-top-item.month-year {
+    grid-column-start: 5;
+    margin: auto;
+    font-size: 1rem;
 }
 
-.view-switch {
-    text-align: center;
-    background-color: $background;
-    width: 7.7rem;
-    border: 0.1rem solid $text-primary;
-    padding: 0.1rem 0.25rem;
-    font-size: 0.75rem;
-    border-radius: 0.25rem;
-    transition: 0.2s;
-    margin-left: 5vw;
+.home-top-item.month-change.forward {
+    grid-column-start: 6;
 }
 
-.view-switch:hover {
-    cursor: pointer;
-    background-color: $background-tint;
+.home-top-item.view-switch {
+    grid-column-start: 8;
 }
 
-.dummy {
-    display: none;
-    margin-right: 5vw;
-    width: 7.7rem;
+/*
+ * #############################
+ * ##### HOMEPAGE CONTENTS #####
+ * #############################
+ */
+
+.home-schedule-view {
+    margin: 2.5rem 14vw 0 14vw;
+    padding-bottom: 0.5rem;
 }
 
-.view-active {
-    display: block;
+.home-calendar {
+    margin-top: 3rem;
 }
+
+/*
+ * #########################
+ * ##### MEDIA QUERIES #####
+ * #########################
+ */
 
 @include media-small-desktop-down {
     .schedule-view {

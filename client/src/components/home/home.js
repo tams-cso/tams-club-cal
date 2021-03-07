@@ -15,6 +15,7 @@ import { openPopup } from '../../redux/actions';
 import { getSavedEventList } from '../../redux/selectors';
 
 import './home.scss';
+import ActionButton from '../shared/action-button';
 
 class Home extends React.Component {
     constructor(props) {
@@ -107,37 +108,38 @@ class Home extends React.Component {
         const eventComponents = this.createEventComponents();
 
         return (
-            <div className="Home">
+            <div className="home">
                 <Popup history={this.props.history}>
                     <EventPopup></EventPopup>
                 </Popup>
                 <AddButton type="Event"></AddButton>
                 <div className="home-top">
-                    <div className={isActive('dummy', this.state.scheduleView)}></div>
-                    <button className={isActive('today', !this.state.scheduleView)} onClick={this.resetMonthOffset}>
+                    <ActionButton className={isActive('home-top-item today', !this.state.scheduleView)} onClick={this.resetMonthOffset}>
                         Today
-                    </button>
-                    <div className={isActive('dummy-today', !this.state.scheduleView)}></div>
-                    <div className={isActive('dummy-change-month month-back', this.state.scheduleView)}></div>
-                    <button
-                        className={isActive('change-month month-back', !this.state.scheduleView)}
+                    </ActionButton>
+                    <ActionButton
+                        className={isActive('home-top-item month-change backward', !this.state.scheduleView)}
                         onClick={this.changeMonthOffset.bind(this, true)}
                     >
                         {'<'}
-                    </button>
-                    <div className="month-year">{getMonthAndYear(this.state.monthOffset)}</div>
-                    <div className={isActive('dummy-change-month month-forward', this.state.scheduleView)}></div>
-                    <button
-                        className={isActive('change-month month-forward', !this.state.scheduleView)}
+                    </ActionButton>
+                    <h1 className="home-top-item month-year">{getMonthAndYear(this.state.monthOffset)}</h1>
+                    <ActionButton
+                        className={isActive('home-top-item month-change forward', !this.state.scheduleView)}
                         onClick={this.changeMonthOffset.bind(this, false)}
                     >
                         {'>'}
-                    </button>
-                    <button className="view-switch" onClick={this.switchView}>
-                        {`Switch to ${this.state.scheduleView ? 'Calendar' : 'Schedule'} View`}
-                    </button>
+                    </ActionButton>
+                    <ActionButton className="home-top-item view-switch" onClick={this.switchView}>
+                        {`Show ${this.state.scheduleView ? 'Calendar' : 'Schedule'}`}
+                    </ActionButton>
                 </div>
-                <div className={isActive('schedule-view', this.state.scheduleView)}>{eventComponents}</div>
+                <div className={isActive('home-schedule-view', this.state.scheduleView)}>
+                    <div className={isActive('home-schedule-view-empty', eventComponents.length === 0)}>
+                        No upcoming events...
+                    </div>
+                    {eventComponents}
+                </div>
                 <Calendar
                     className={isActive('home-calendar', !this.state.scheduleView)}
                     eventList={this.props.eventList}
