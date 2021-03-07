@@ -99,9 +99,19 @@ class ClubPopup extends React.Component {
                         </div>
                     </div>
                     {this.state.execTab ? (
-                        <div className="club-popup-execs">{execList}</div>
+                        <div className="club-popup-execs">
+                            <div className={isActive('club-popup-tab-empty', execList.length === 0)}>No execs ;-;</div>
+                            {execList}
+                        </div>
                     ) : (
-                        <div className="club-popup-committees">{committeeList}</div>
+                        <div className="club-popup-committees">
+                            <div className={isActive('club-popup-tab-empty', committeeList.length === 0)}>
+                                No committees :(
+                            </div>
+                            <div className={isActive('club-popup-committees-list', committeeList.length !== 0)}>
+                                {committeeList}
+                            </div>
+                        </div>
                     )}
                     <ActionButton className="club-popup-edit-button" onClick={this.openEdit}>
                         Edit
