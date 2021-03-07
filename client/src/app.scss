@@ -1,9 +1,11 @@
 @import './custom.scss';
 
+// Min height is so scrollbar always shows
+// I can't do 'overflow: scroll' beacuse it would break the sticky containers TT
 html,
 body,
 #root {
-    min-height: 100%;
+    min-height: 101vh;
     margin: 0;
 
     font-size: 36px;
