@@ -11,7 +11,9 @@
 }
 
 .about-header {
-    height: 6rem;
+    width: 100%;
+    height: auto;
+    object-fit: cover;
     display: block;
     margin: 0 auto 0.5rem;
 }
@@ -62,12 +64,6 @@
 @include media-small-desktop-down {
     .about {
         margin: 1rem 5vw;
-    }
-
-    .about-header {
-        width: 100%;
-        height: auto;
-        object-fit: cover;
     }
 
     #feedback-form {
