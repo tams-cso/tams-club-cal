@@ -14,6 +14,7 @@ function getAuthUrl(state, frontend) {
         response_type: 'code',
         scope: SCOPES.join(' '),
         access_type: 'offline',
+        prompt: 'consent',
         state,
     };
     return `https://accounts.google.com/o/oauth2/v2/auth?${qs.encode(params)}`;
@@ -60,9 +61,8 @@ async function getTokensAndInfo(code, refresh = false, frontend) {
     });
 
     // Weird bug with refresh token
-    console.log(tokens.refresh_token);
     if (tokens.refresh_token === null) {
-        console.dir("Error in getTokensAndInfo with invalid refresh_token passed into upsertUser");
+        console.dir('Error in getTokensAndInfo with invalid refresh_token passed into upsertUser');
         return null;
     }
 

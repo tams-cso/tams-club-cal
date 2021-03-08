@@ -16,7 +16,6 @@ class EditLogin extends React.Component {
         const cookies = new Cookies();
 
         const res = await getAuthUrl();
-        console.log(res.data.authUrl);
         if (res.status !== 200) {
             alert('Could not connect to login server. Please try refreshing the page :(');
             return;
@@ -30,7 +29,6 @@ class EditLogin extends React.Component {
     logout = () => {
         const cookies = new Cookies();
         cookies.remove('auth_email', { path: '/' });
-        console.log(cookies.getAll());
         window.location.href = window.location.toString();
     };
 

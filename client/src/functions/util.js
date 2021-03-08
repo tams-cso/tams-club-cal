@@ -227,10 +227,7 @@ export function isActive(className, state) {
  */
 export async function compressUploadedImage(imageFile, maxWidthOrHeight) {
     try {
-        console.log(`uncompressed size: ${imageFile.size / 1024 / 1024} MB`);
-        const compressed = await imageCompression(imageFile, { maxWidthOrHeight });
-        console.log(`compressed size: ${compressed.size / 1024 / 1024} MB`);
-        return compressed;
+        return await imageCompression(imageFile, { maxWidthOrHeight });
     } catch (error) {
         console.dir(error);
     }

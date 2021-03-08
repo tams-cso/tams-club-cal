@@ -143,7 +143,6 @@ async function getEventCalendarId(objId) {
         const db = client.db('events');
         const collection = db.collection('calendar');
 
-        console.log(objId);
         const ids = await collection.findOne({ objId });
 
         if (ids === null) {
