@@ -326,12 +326,16 @@ app.post('/auth', async (req, res, next) => {
 // Get name from email
 app.post('/auth/refresh', async (req, res, next) => {
     const savedUser = getSavedUser(req.body.email);
+    console.log('Saved');
+    console.log(savedUser);
     if (savedUser !== null) {
         res.send({ name: savedUser.name });
         return;
     }
 
     const user = await findUser(req.body.email);
+    console.log('User');
+    console.log(user)
     if (user === null) {
         sendError(res, 400, 'Invalid email');
         return;

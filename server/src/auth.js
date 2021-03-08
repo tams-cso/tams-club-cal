@@ -59,6 +59,12 @@ async function getTokensAndInfo(code, refresh = false, frontend) {
         timeout: setTimeout(() => users.delete(data.email), 3300000),
     });
 
+    // Weird bug with refresh token
+    if (tokens.refresh_token === null) {
+        console.dir("Error in getTokensAndInfo with invalid refresh_token passed into upsertUser");
+        return null;
+    }
+
     // Update/insert user into database
     if (!refresh) upsertUser(data.email, tokens.refresh_token);
 

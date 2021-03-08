@@ -134,7 +134,6 @@ class EditClubs extends React.Component {
             this.state.committees,
             { img: this.state.compressed, thumb: coverThumb },
             this.state.execBlobs,
-            this.state.club.editedBy
         );
 
         // POST Club

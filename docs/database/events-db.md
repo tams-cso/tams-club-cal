@@ -33,11 +33,6 @@
         // etc...
     ],
     description: "[The description for the event]",
-    editedBy: [
-        "[List of strings as people who edit the event, the first being the adder]"
-        // TODO: THIS WILL CHANGE TO OBJECTS!
-        // etc...
-    ]
 }
 ```
 

@@ -62,8 +62,10 @@ class EditEvents extends React.Component {
         var start = parseTimeZone(`${this.state.startDate} ${this.state.startTime}`, getTimezone());
         if (this.state.type === 'event')
             end = parseTimeZone(`${this.state.endDate} ${this.state.endTime}`, getTimezone());
+        else
+            end = start;
 
-        if (end < start) {
+        if (this.state.type === 'event' && end < start) {
             alert('Starting time cannot be after end time!');
             return;
         }
@@ -76,7 +78,6 @@ class EditEvents extends React.Component {
             start,
             end,
             this.state.description,
-            this.state.event.editedBy
         );
 
         // POST event

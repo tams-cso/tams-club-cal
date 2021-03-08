@@ -8,16 +8,14 @@ import { Dayjs } from 'dayjs';
  * @param {string} start The time in UTC milliseconds that the event starts
  * @param {string} end The time in UTC milliseconds that the event ends
  * @param {string} description The description of the event
- * @param {string[]} editedBy The editors of the event
  */
-export function Event(type, name, club, start, end, description, editedBy = []) {
+export function Event(type, name, club, start, end, description) {
     this.type = type || 'event';
     this.name = name || '';
     this.club = club || '';
     this.start = start || '';
     this.end = end || '';
     this.description = description || '';
-    this.editedBy = editedBy || [];
 }
 
 /**
@@ -44,12 +42,10 @@ export function EventInfo(objId, type, name, club, start, end) {
  * An object containing the extra data for an event
  * @param {string} objId The unique ID to match the info and data objects
  * @param {string} description The description of the event
- * @param {string[]} editedBy List of people who edited the event
  */
-export function EventData(objId, description, editedBy) {
+export function EventData(objId, description) {
     this.objId = objId;
     this.description = description;
-    this.editedBy = editedBy;
 }
 
 /**
@@ -67,7 +63,6 @@ export function EventData(objId, description, editedBy) {
  * @param {string} coverImgBlobs.img The compressed cover image
  * @param {string} coverImgBlobs.thumb The super compressed cover image thumbnail
  * @param {string[]} execProfilePicBlobs Base64 encoded strings of the exec profile pics in the order of the execs (null if missing)
- * @param {string[]} editedBy The editors of the event
  */
 export function Club(
     name,
@@ -81,7 +76,6 @@ export function Club(
     committees,
     coverImgBlobs = null,
     execProfilePicBlobs = null,
-    editedBy
 ) {
     this.name = name || '';
     this.advised = advised || false;
@@ -94,7 +88,6 @@ export function Club(
     this.committees = committees || [new Committee()];
     this.coverImgBlobs = coverImgBlobs || [];
     this.execProfilePicBlobs = execProfilePicBlobs || [];
-    this.editedBy = editedBy || [];
 }
 
 /**
@@ -123,16 +116,14 @@ export function ClubInfo(objId, name, advised, fb, website, coverImgThumbnail) {
  * @param {Exec[]} execs Array of exec objects
  * @param {Committee[]} committee Array of committee objects
  * @param {string} coverImg URL of the full-sized cover image
- * @param {string[]} editedBy The editors of the event
  */
-export function ClubData(infoId, description, execs, committee, coverImg, editedBy) {
+export function ClubData(infoId, description, execs, committee, coverImg) {
     this.objId = objId;
     this.infoId = infoId;
     this.description = description;
     this.execs = execs;
     this.committee = committee;
     this.coverImg = coverImg;
-    this.editedBy = editedBy;
 }
 
 /**
@@ -147,15 +138,13 @@ export function ClubData(infoId, description, execs, committee, coverImg, edited
  * @param {boolean} filters.weekly True if there are weekly signups, otherwise false
  * @param {boolean} filters.open True if volunteering opportunity is currently available, otherwise false
  * @param {string} signupTime Time of weekly signups, null if no weekly signups
- * @param {string[]} editedBy The editors of the event
  */
-export function Volunteering(name, club, description, filters, signupTime, editedBy) {
+export function Volunteering(name, club, description, filters, signupTime) {
     this.name = name || '';
     this.club = club || '';
     this.description = description || '';
     this.filters = filters || { limited: false, semester: false, setTimes: false, weekly: false, open: true };
     this.signupTime = signupTime || '';
-    this.editedBy = editedBy || [];
 }
 
 /**
