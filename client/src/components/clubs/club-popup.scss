@@ -119,14 +119,21 @@
     color: $primary;
 }
 
-.club-popup-committees {
+.club-popup-committees-list {
     grid-template-columns: repeat(auto-fill, 10rem);
     gap: 1rem;
     justify-content: center;
 
-    display: grid;
+    display: grid !important;
     margin: auto;
     margin-bottom: 1rem;
+}
+
+.club-popup-tab-empty {
+    margin-bottom: 0.5rem;
+    font-family: $title-font;
+    text-align: center;
+    color: $text-light;
 }
 
 .club-popup-edit-button {

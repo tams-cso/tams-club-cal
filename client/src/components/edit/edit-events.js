@@ -14,7 +14,6 @@ import {
 import './edit-events.scss';
 import Loading from '../shared/loading';
 import SubmitGroup from '../shared/submit-group';
-import DateInput from '../shared/date-input';
 
 class EditEvents extends React.Component {
     constructor(props) {

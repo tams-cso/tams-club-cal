@@ -15,6 +15,10 @@
     border-style: solid;
 }
 
+.calendar-day.current-day {
+    background-color: rgba($primary, $alpha: 0.1);
+}
+
 .side-month {
     background-color: $background-tint;
 }
@@ -34,6 +38,6 @@
     flex-direction: column;
 }
 
-.current-day {
+.calendar-date.current-day {
     color: $primary;
 }
