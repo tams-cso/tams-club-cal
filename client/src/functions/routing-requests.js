@@ -86,6 +86,14 @@ class RoutingRequests extends React.Component {
             this.props.resetPopupState();
         }
 
+        // Open popups if the path changes but the popup does not open
+        // TODO: This is still run twice when clicking on a popup TT
+        if (this.props.location.pathname === prevProps.location.pathname && prevProps.location.search === '') {
+            // Activate popup
+            const id = getParams('id');
+            if (id !== undefined && id !== null) this.props.openPopup(id, window.location.pathname.substring(1));
+        }
+
         // Return if pathnames match (eg. opening popups)
         if (this.props.location.pathname === prevProps.location.pathname) return;
 
