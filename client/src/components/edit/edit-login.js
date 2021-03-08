@@ -40,17 +40,7 @@ class EditLogin extends React.Component {
 
         // Fetch the IP if not logged in
         if (email === undefined) {
-            const res = await getIp();
-            if (res.status !== 200) {
-                alert('Could not connect to the server! Please reload the page.');
-                return;
-            }
-
-            var message = 'You are not logged in.';
-            if (!this.props.admin)
-                message += ` Any edits you make will be saved with your current ip address [${res.data.ip}]`;
-            
-                this.setState({ message, loaded: true });
+            this.getAndShowIp();
             return;
         }
 
@@ -58,7 +48,9 @@ class EditLogin extends React.Component {
         // TODO: Fetch profile picture with 'picture' field of user data
         const res = await postRefreshAuth(email);
         if (res.status !== 200) {
-            alert('Could not connect to the server! Please reload the page.');
+            cookies.remove('auth_email', { path: '/' });
+            this.getAndShowIp();
+            // alert('Could not connect to the server! Please reload the page.');
             return;
         }
 
@@ -69,6 +61,21 @@ class EditLogin extends React.Component {
             loaded: true,
             loggedIn: true,
         });
+    }
+
+    getAndShowIp = async () => {
+        const res = await getIp();
+        if (res.status !== 200) {
+            alert('Could not connect to the server! Please reload the page.');
+            return;
+        }
+
+        var message = 'You are not logged in.';
+        if (!this.props.admin)
+            message += ` Any edits you make will be saved with your current ip address [${res.data.ip}]`;
+        
+            this.setState({ message, loaded: true });
+        return;
     }
 
     render() {
