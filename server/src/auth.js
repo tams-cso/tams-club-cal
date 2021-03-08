@@ -60,6 +60,7 @@ async function getTokensAndInfo(code, refresh = false, frontend) {
     });
 
     // Weird bug with refresh token
+    console.log(tokens.refresh_token);
     if (tokens.refresh_token === null) {
         console.dir("Error in getTokensAndInfo with invalid refresh_token passed into upsertUser");
         return null;
