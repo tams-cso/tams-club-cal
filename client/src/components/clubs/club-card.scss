@@ -107,13 +107,13 @@
 
 @include media-phone-down {
     .club-card {
-        height: 6rem;
-        width: 6rem;
+        height: 7rem;
+        width: 7rem;
     }
 
     // This will still be at a 3.5:8 ratio
     .club-card-image-container {
-        height: 2.625rem;
+        height: 2.845rem;
     }
 
     .club-card-type {

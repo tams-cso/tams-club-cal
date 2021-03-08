@@ -48,10 +48,21 @@
     font-weight: 300;
 }
 
+.exec-card-name {
+    max-width: 50%;
+    overflow-x: hidden;
+    white-space: nowrap;
+}
+
 .exec-card-position {
+    max-width: 50%;
     padding-left: 0.75rem;
     padding-bottom: 0.1rem;
+    overflow: hidden;
+
     font-size: 0.6rem;
+    white-space: nowrap;
+    text-overflow: ellipsis;
     color: $text-lighter;
 }
 

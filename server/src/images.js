@@ -2,7 +2,7 @@ const fs = require('fs');
 const crypto = require('crypto');
 const path = require('path');
 const Dropbox = require('dropbox');
-const { getExpiredImages } = require('./database');
+const { getAndDeleteExpiredImages } = require('./database');
 const { sendError } = require('./util');
 const dbx = new Dropbox.Dropbox({ accessToken: process.env.DROPBOX_TOKEN });
 
@@ -70,7 +70,7 @@ async function getImage(id, res) {
 
 async function deleteExpiredImages() {
     try {
-        const dbRes = await getExpiredImages();
+        const dbRes = await getAndDeleteExpiredImages();
         if (dbRes.good === -1) return -1;
 
         const data = await dbRes.data.toArray();
