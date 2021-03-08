@@ -52,7 +52,7 @@ class ClubPopup extends React.Component {
     }
 
     render() {
-        if (!this.props.popupOpen || this.state.club === null)
+        // if (!this.props.popupOpen || this.state.club === null)
             return <Loading className="club-popup-loading"></Loading>;
 
         var execList = [];
