@@ -5,6 +5,7 @@ import './resources.scss';
 
 class Resources extends React.Component {
     render() {
+        const add = window.location.origin === 'https://tams.club' ? data.addCalendar : data.addStagingCalendar;
         return (
             <div className="resources">
                 <h1 className="resources-links-title">Links</h1>
@@ -20,6 +21,9 @@ class Resources extends React.Component {
                     </LinkBox>
                     <LinkBox className="resources-link" href={data.tamsWiki}>
                         TAMS Wiki
+                    </LinkBox>
+                    <LinkBox className="resources-link" href={add}>
+                        Add the Google Calendar to your own Calendar!
                     </LinkBox>
                 </div>
             </div>
