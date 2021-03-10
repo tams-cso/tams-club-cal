@@ -50,7 +50,7 @@ fs.readdir(path.join(__dirname, 'cache'), (err, files) => {
 
 // Schedule cron tasks on start
 // These tasks will run at 09:00 UTC (3:00 AM CST)
-cron.schedule('* 9 * * *', async () => {
+cron.schedule('0 9 * * *', async () => {
     // Upload and clear log file
     const logFile = path.join(__dirname, 'logs', 'main.log');
     if (fs.existsSync(logFile)) {
