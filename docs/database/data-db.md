@@ -1,6 +1,6 @@
-# Users Database
+# Data Database
 
-## Data Collection
+## Users Collection
 
 ```js
 {
@@ -17,3 +17,19 @@
 - email
 - refresh
 - lastRequest
+
+## Logs Collections
+
+```js
+{
+    _id: ObjectId("[Mongodb auto-generated ID]"),
+    date: "[Date of saved logs]",
+    log: "[String log of that day]"
+}
+```
+
+### Properties
+
+- _id
+- date
+- log
