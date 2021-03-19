@@ -5,12 +5,7 @@ import ActionButton from '../shared/action-button';
 import { getEvent } from '../../functions/api';
 import { getPopupId, getPopupOpen, getPopupType } from '../../redux/selectors';
 import { resetPopupState } from '../../redux/actions';
-import {
-    addDayjsElement,
-    getFormattedDate,
-    getFormattedTime,
-    parseLinks,
-} from '../../functions/util';
+import { addDayjsElement, getFormattedDate, getFormattedTime, parseLinks } from '../../functions/util';
 
 import './event-popup.scss';
 import Loading from '../shared/loading';
@@ -61,18 +56,20 @@ class EventPopup extends React.Component {
             <div className="event-popup">
                 <div className="event-popup-display">
                     <div className="event-popup-left event-popup-home-side">
-                        {this.state.event.type === 'event' ? (
-                            <p className="event-popup-type event">Event</p>
-                        ) : (
-                            <p className="event-popup-type signup">Signup</p>
-                        )}
-                        <p className="event-popup-name">{this.state.event.name}</p>
-                        <p className="event-popup-club">{this.state.event.club}</p>
-                        <p className="event-popup-date">{getFormattedDate(this.state.event)}</p>
-                        <p className="event-popup-time">{getFormattedTime(this.state.event)}</p>
-                        <ActionButton className="event-popup-open-edit" onClick={this.openEdit}>
-                            Edit
-                        </ActionButton>
+                        <div className="fixed">
+                            {this.state.event.type === 'event' ? (
+                                <p className="event-popup-type event">Event</p>
+                            ) : (
+                                <p className="event-popup-type signup">Signup</p>
+                            )}
+                            <p className="event-popup-name">{this.state.event.name}</p>
+                            <p className="event-popup-club">{this.state.event.club}</p>
+                            <p className="event-popup-date">{getFormattedDate(this.state.event)}</p>
+                            <p className="event-popup-time">{getFormattedTime(this.state.event)}</p>
+                            <ActionButton className="event-popup-open-edit" onClick={this.openEdit}>
+                                Edit
+                            </ActionButton>
+                        </div>
                     </div>
                     <div className="event-popup-right event-popup-home-side">{description}</div>
                 </div>
