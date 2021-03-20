@@ -1,39 +1,45 @@
+/**
+ * Date sections simply display a date with a divider. The dividers on the side are just
+ * short divs with a border radius.
+ */
 @import '../../custom.scss';
 
-.DateSection {
+.date-section {
+    position: sticky;
+    top: 5rem;
+    z-index: 1;
+    padding: 0.5rem 0;
+
     display: flex;
     flex-direction: row;
     align-items: center;
     justify-content: space-between;
-    padding: 0.5rem 0;
+
     font-size: 0.7rem;
-    position: sticky;
-    z-index: 1;
-    top: 5rem;
-    background-color: $background;
     font-family: $title-font;
+    background-color: $background;
 }
 
-.line {
+.date-section-line {
     height: 0.125rem;
     border-radius: 1rem;
     background-color: $text-primary;
 }
 
-.left-line {
+.date-section-line.left {
     flex-grow: 1;
 }
 
-.right-line {
+.date-section-line.right {
     flex-grow: 6;
 }
 
-.schedule-date {
+.date-section-date {
     padding: 0 0.5rem;
 }
 
 @include media-phone-down {
-    .DateSection {
+    .date-section {
         top: 4rem;
     }
 }

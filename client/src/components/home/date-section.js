@@ -8,10 +8,10 @@ class DateSection extends React.Component {
 
     render() {
         return (
-            <div className="DateSection">
-                <div className="line left-line"></div>
-                <div className="schedule-date">{this.props.date}</div>
-                <div className="line right-line"></div>
+            <div className="date-section">
+                <div className="date-section-line left"></div>
+                <div className="date-section-date">{this.props.date}</div>
+                <div className="date-section-line right"></div>
             </div>
         );
     }

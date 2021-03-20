@@ -1,3 +1,7 @@
+/**
+ * The schedule event displays the information for a single event.
+ */
+
 @import '../../custom.scss';
 
 .schedule-event {
@@ -17,16 +21,18 @@
 }
 
 .schedule-event-type {
+    position: relative;
     height: 0.8rem;
     width: 0.8rem;
+    margin: 0 0.5em 0 1em;
+
+    display: inline-block;
     flex-grow: 0;
     flex-shrink: 0;
-    background-color: $type-event;
+
     border: 0.1rem solid $text-primary;
     border-radius: 0.25rem;
-    margin: 0 0.5em 0 1em;
-    position: relative;
-    display: inline-block;
+    background-color: $type-event;
 }
 
 .schedule-event-type.signup {
@@ -34,9 +40,9 @@
 }
 
 .schedule-event-type-tooltip {
+    position: absolute;
     visibility: hidden;
     opacity: 0;
-    position: absolute;
     z-index: 1;
     bottom: 140%;
     left: 50%;
@@ -63,6 +69,7 @@
     top: 100%;
     left: 50%;
     margin-left: -7px;
+
     border-width: 7px;
     border-style: solid;
     border-color: $background transparent transparent transparent;
@@ -78,35 +85,44 @@
     margin: 0 0.5em 0 0.5em;
     flex-grow: 0;
     flex-shrink: 0;
+
     font-family: $title-font;
     font-size: 0.65rem;
     font-weight: 300;
 }
 
 .schedule-event-club-name {
-    color: $text-light;
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
+    margin: 0 0.5em 0 0.5em;
     width: 4rem;
     flex-grow: 0;
     flex-shrink: 0;
-    margin: 0 0.5em 0 0.5em;
+
     font-family: $title-font;
     font-size: 0.65rem;
     font-weight: 300;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    color: $text-light;
 }
 
 .schedule-event-name {
     margin: 0;
     margin-left: 0.5em;
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
+
     font-family: $title-font;
     font-size: 0.85rem;
     font-weight: 300;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
 }
+
+/*
+ * #########################
+ * ##### MEDIA QUERIES #####
+ * #########################
+ */
 
 @include media-phone-down {
     .schedule-event {

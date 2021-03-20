@@ -25,16 +25,17 @@
 .calendar-event-type {
     height: 0.3rem;
     width: 0.3rem;
+    margin: 0 0.15rem 0 0.1rem;
+
     flex-basis: 0.3rem;
     flex-grow: 0;
     flex-shrink: 0;
+    
     border-radius: 0.05rem;
-    margin: 0 0.15rem 0 0.1rem;
-
     background-color: $type-event;
 }
 
-.event-type-signup {
+.calendar-event-type.signup {
     background-color: $type-signup;
 }
 
