@@ -15,6 +15,9 @@
 
     font-family: $alt-font;
     font-weight: 800;
+
+    border-radius: 0.2rem;
+    transition: 0.2s;
 }
 
 .calendar-event:hover {
