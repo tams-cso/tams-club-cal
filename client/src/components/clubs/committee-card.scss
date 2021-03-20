@@ -1,3 +1,8 @@
+/**
+ * The CommitteeCard component displays the information for a single committee.
+ * It will display the name, description, and fb/website links
+ */
+
 @import '../../custom.scss';
 
 .committee-card {
@@ -41,7 +46,7 @@
     .committee-card {
         width: 85vw;
     }
-    
+
     .committee-card-description {
         font-size: 0.6rem;
     }
