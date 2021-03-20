@@ -3,13 +3,14 @@
 .menu {
     position: fixed;
     z-index: 100;
-    padding: 0.25rem 16vw 0 16vw;
+    padding: 0.25rem 16vw;
     left: 0;
     right: 0;
     height: 2rem;
     
     font-family: $title-font;
     background-color: $background;
+    box-shadow: 0 0 0.2rem $background-tint;
 }
 
 .menu-list {
@@ -90,7 +91,7 @@
 
 @include media-small-desktop-down {
     .menu {
-        padding: 0.25rem 3rem 0;
+        padding: 0.25rem 3rem;
     }
 
     .menu-item {

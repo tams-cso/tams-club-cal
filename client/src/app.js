@@ -21,7 +21,6 @@ function App() {
             <BrowserRouter>
                 <RoutingRequests />
                 <Menu />
-                <div className="menu-bkgd"></div>
                 <div className="page">
                     <Switch>
                         <Route exact path={['/', '/events']} component={Home} />
