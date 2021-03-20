@@ -35,19 +35,19 @@ $filter-open: #82ee9a;
 // Media Queries
 
 @mixin media-small-desktop-down {
-    @media handheld and (max-width: 1200px), screen and (max-device-width: 1200px), screen and (max-width: 1200px) {
+    @media only screen and (max-width: 1200px) {
         @content;
     }
 }
 
 @mixin media-tablet-down {
-    @media handheld and (max-width: 992px), screen and (max-device-width: 992px), screen and (max-width: 992px) {
+    @media only screen and (max-width: 992px) {
         @content;
     }
 }
 
 @mixin media-phone-down {
-    @media handheld and (max-width: 652px), screen and (max-device-width: 652px), screen and (max-width: 652px) {
+    @media only screen and (max-width: 652px) {
         @content;
     }
 }
