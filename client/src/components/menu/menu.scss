@@ -1,3 +1,9 @@
+/**
+ * The menu is the main navigation element for the entire site. It has a list of links
+ * to each one of the pages. Additionally, there is an inline search bar to go to the search page.
+ * The links will be highlighted in $primary color if the user is currently on that page.
+ */
+
 @import '../../custom.scss';
 
 .menu {
@@ -58,10 +64,6 @@
     font-size: 0.65rem;
 }
 
-.mobile-menu {
-    display: none;
-}
-
 .search-bar-wrapper {
     width: 25vw;
     background-color: $background !important;
@@ -70,6 +72,16 @@
 .search-bar-wrapper .SearchBar {
     width: 90%;
     float: right;
+}
+
+/*
+ * #######################
+ * ##### MOBILE MENU #####
+ * #######################
+ */
+
+.mobile-menu {
+    display: none;
 }
 
 .mobile-menu-dropdown {
@@ -88,6 +100,12 @@
 .mob-item {
     display: none;
 }
+
+/*
+ * #########################
+ * ##### MEDIA QUERIES #####
+ * #########################
+ */
 
 @include media-small-desktop-down {
     .menu {
@@ -120,12 +138,13 @@
     }
 
     .mobile-menu {
+        height: 1rem;
+        padding: 0.5rem 0;
+
         display: flex !important;
         flex-direction: row;
         justify-content: space-between;
         align-items: center;
-        height: 1rem;
-        padding: 0.5rem 0;
     }
 
     .menu-item {
@@ -148,19 +167,20 @@
     }
 
     .drop-active > .mob-item {
-        display: block;
         padding: 0.1rem;
         margin-bottom: 0.25rem;
+        display: block;
     }
 
     .drop-active {
-        overflow: hidden;
         height: 9rem;
+        padding: 0.25rem 0;
+        overflow: hidden;
+
         display: flex;
         flex-direction: column;
         justify-content: center;
         align-items: center;
         border-top: 1px solid $background-tint;
-        padding: 0.25rem 0;
     }
 }
