@@ -1,38 +1,52 @@
+/**
+ * The search bar is both inline on the menu and also shows up on the
+ * search results page. This is a simple search bar that only contains a text input.
+ */
+
 @import '../../custom.scss';
 
-.SearchBar {
-    font-size: 1.5vw;
-    font-family: $block-font;
-    border: 0.05rem solid $background-tint;
-    border-radius: 0.1rem;
+.search-bar {
     padding: 0.1rem;
     display: flex;
     align-items: center;
     justify-content: space-between;
+
+    border: 0.05rem solid $background-tint;
+    border-radius: 0.1rem;
+
+    font-size: 1.5vw;
+    font-family: $block-font;
     background-color: $background !important;
 }
 
-.SearchBar input {
-    border: none !important;
+.search-bar-input {
     margin: 0;
     padding: 0 !important;
     width: 100%;
-    height: 0.75rem;
+    height: 1rem;
+    border: none !important;
     font-size: 1.5vw;
 }
 
+/*
+ * ################################
+ * ##### MAGNEFYING GLASS SVG #####
+ * ################################
+ */
+
 #mag-glass-component {
-    height: 0.55rem;
     width: 0.55rem;
+    height: 0.55rem;
     padding: 0 0.2rem;
+
     background-color: $background;
     cursor: pointer;
 }
 
 #mag-glass-path {
     stroke: none;
-    fill-rule: nonzero;
     fill: $text-light;
+    fill-rule: nonzero;
     fill-opacity: 1;
     transition: 0.3s;
 }

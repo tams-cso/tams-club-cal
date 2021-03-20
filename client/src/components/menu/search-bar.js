@@ -35,10 +35,10 @@ class SearchBar extends React.Component {
 
     render() {
         return (
-            <div className={`SearchBar ${this.props.className}`}>
+            <div className={`search-bar ${this.props.className}`}>
                 <input
                     name="query"
-                    className="search-bar"
+                    className="search-bar-input"
                     type="text"
                     placeholder="Search events..."
                     onKeyDown={(e) => {
