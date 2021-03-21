@@ -84,15 +84,15 @@ CSS is generally extremely difficult to format, and it can be extremely hard to 
     margin: 0;
     flex-direction: row; // And other flexbox/grid props
 
-    /* Color */
-    background: $background;
-    color: $text-primary;
-
     /* Text */
     font-family: $block-font;
     font-size: 1.5rem;
     line-height: 1.2rem;
     text-align: center;
+
+    /* Color */
+    background: $background;
+    color: $text-primary;
 
     /* Other */
     cursor: pointer;
@@ -200,9 +200,9 @@ Then we should group the css by relevant contents:
 // Also, since there are only 3 props,
 // we don't have to put spaces
 .club-card-image {
-    align-self: center;
     width: 100%;
     height: 100%;
+    align-self: center;
 }
 
 /*

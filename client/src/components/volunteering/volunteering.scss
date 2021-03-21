@@ -1,19 +1,19 @@
 @import '../../custom.scss';
 
 .volunteering-section {
+    margin: 0 6vw 1rem;
     display: grid;
     gap: 1rem;
     grid-template-columns: repeat(auto-fill, 9rem);
     justify-content: center;
     align-items: center;
-    margin: 0 6vw 1rem;
 }
 
 .volunteering-filters {
+    margin: 1rem 6rem 0;
     display: flex;
     flex-wrap: wrap;
     justify-content: center;
-    margin: 1rem 6rem 0;
 }
 
 .vol-filter {
@@ -95,6 +95,12 @@
     text-align: center;
     margin-bottom: 1rem;
 }
+
+/*
+ * #########################
+ * ##### MEDIA QUERIES #####
+ * #########################
+ */
 
 @include media-small-desktop-down {
     .vol-filter {

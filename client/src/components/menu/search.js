@@ -30,18 +30,22 @@ class Search extends React.Component {
     }
 
     search = async (query) => {
-        if (query === '') return;
+        if (query === '') {
+            this.setState({ results: null, query: '' });
+            return;
+        }
 
-        if (this.props.eventList === null) {
+        var eventList = this.props.eventList;
+        if (eventList === null) {
             const res = await getEventList();
             if (res.status !== 200) {
                 alert('Error fetching events list!');
                 return;
             }
-            this.props.setEventList(res.data);
+            eventList = res.data;
         }
 
-        this.fuse = new Fuse(this.props.eventList, { useExtendedSearch: true, keys: ['name', 'club'] });
+        this.fuse = new Fuse(eventList, { useExtendedSearch: true, keys: ['name', 'club'] });
 
         const rawResults = this.fuse.search(`'${query}`);
 
@@ -61,12 +65,16 @@ class Search extends React.Component {
     };
 
     render() {
-        var defaultMessage = null;
-        if (this.state.results === null) defaultMessage = <p className="default-search">Search for an Event here!</p>;
+        // Create the message - no searches, 0 results, or n results
+        var message;
+        if (this.state.results === null) message = 'Search for an Event here!';
+        else if (this.state.results.length === 0) message = 'No results found :(';
+        else message = `${this.state.results.length} results found!`;
+
         return (
-            <div className="Search">
+            <div className="search">
                 <SearchBar className="search-page-bar" search={this.search} default={this.state.query}></SearchBar>
-                {defaultMessage}
+                <p className="search-message">{message}</p>
                 <div className="search-result-list">{this.state.results}</div>
             </div>
         );

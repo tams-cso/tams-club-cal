@@ -1,19 +1,31 @@
+/**
+ * This is the component for one search result. It contains all the important event display info,
+ * along with the type of event on the left. Hovering over this element will grey the background.
+ */
+
 @import '../../custom.scss';
 
-.SearchResult {
-    border-radius: 0.25rem;
-    background-color: $background;
-    transition: 0.2s;
-    cursor: pointer;
+.search-result {
     padding: 0.5rem;
     display: flex;
-    text-align: left;
     overflow: hidden;
+    border-radius: 0.25rem;
+
+    text-align: left;
+    background-color: $background;
+    cursor: pointer;
+    transition: 0.2s;
 }
 
-.SearchResult:hover {
+.search-result:hover {
     background-color: $background-tint;
 }
+
+/*
+ * ###############################
+ * ##### POSITION CONTAINERS #####
+ * ###############################
+ */
 
 .search-result-right {
     display: flex;
@@ -27,7 +39,13 @@
     justify-content: flex-start;
 }
 
-.SearchResult .event-type {
+/*
+ * #####################
+ * ##### INFO TEXT #####
+ * #####################
+ */
+
+.search-result-event-type {
     height: 0.8rem;
     width: 0.8rem;
     flex-grow: 0;
@@ -38,21 +56,22 @@
     margin: 0 1em 0 0;
 }
 
-.SearchResult .event-type-signup {
+.search-result-event-type.signup {
     background-color: $type-signup;
 }
 
-.SearchResult .event-club-name {
+.search-result-event-club-name {
     width: 4rem;
     padding-right: 0.5rem;
-    font-size: 0.65rem;
-    color: $text-lighter;
     overflow: hidden;
+
+    font-size: 0.65rem;
     white-space: nowrap;
     text-overflow: ellipsis;
+    color: $text-lighter;
 }
 
-.SearchResult .event-datetime {
+.search-result-event-datetime {
     font-size: 0.75rem;
     color: $text-light;
 }

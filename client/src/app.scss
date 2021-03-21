@@ -1,4 +1,20 @@
+/**
+ * App is the main component that holds the router and all other paths. There
+ * are a few special selectors that apply certain styles that make the pages
+ * work well.
+ *
+ * 1) There is a padding for the menu at the top of the page.
+ * 2) Many element formats provide a general formatting for the enitre site.
+ * 3) There are also reusable classes that can be applied across a variety of pages, such as "center-div"
+ */
+
 @import './custom.scss';
+
+/*
+ * #############################
+ * ##### ELEMENT MODIFIERS #####
+ * #############################
+ */
 
 // Min height is so scrollbar always shows
 // I can't do 'overflow: scroll' beacuse it would break the sticky containers TT
@@ -50,21 +66,21 @@ input {
 
 label {
     margin-right: 1rem;
-    color: $text-light;
     font-family: $title-font;
     font-weight: 300;
+    color: $text-light;
 }
 
 button {
-    font-family: $title-font;
     outline: none;
     color: $text-primary;
+    font-family: $title-font;
 }
 
 a {
-    color: $primary;
     text-decoration: none;
     font-weight: 400;
+    color: $primary;
     transition: 0.2s;
 }
 
@@ -95,7 +111,6 @@ a:hover {
 }
 
 // DARK THEME POG
-
 .App.dark {
     --background: #212121;
     --background-tint: #444444;
@@ -121,6 +136,12 @@ a:hover {
     filter: drop-shadow(0 0 0.1rem $background-tint);
 }
 
+/*
+ * ###########################
+ * ##### PAGE FORMATTING #####
+ * ###########################
+ */
+
 .page {
     padding: 2.5rem 0 0.5rem;
 }
@@ -130,6 +151,12 @@ a:hover {
     bottom: 1rem;
     left: 1rem;
 }
+
+/*
+ * ###############################
+ * ##### GENERAL USE CLASSES #####
+ * ###############################
+ */
 
 .smol-spacer {
     height: 0.25rem;

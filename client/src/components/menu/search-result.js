@@ -9,13 +9,13 @@ class SearchResult extends React.Component {
         var time = getFormattedTime(this.props.event);
 
         return (
-            <div className="SearchResult" onClick={this.props.onClick}>
-                <div className={'event-type event-type-' + this.props.event.type}></div>
+            <div className="search-result" onClick={this.props.onClick}>
+                <div className={`search-result-event-type ${this.props.event.type}`}></div>
                 <div className="search-result-right">
-                    <p className="event-name">{this.props.event.name}</p>
+                    <p className="search-result-event-name">{this.props.event.name}</p>
                     <div className="search-result-bottom">
-                        <p className="event-club-name">{this.props.event.club}</p>
-                        <p className="event-datetime">
+                        <p className="search-result-event-club-name">{this.props.event.club}</p>
+                        <p className="search-result-event-datetime">
                             {date}
                             <span>&nbsp; • &nbsp;</span>
                             {time}
