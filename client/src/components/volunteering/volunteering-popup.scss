@@ -1,3 +1,8 @@
+/**
+ * The Volunteering Popup component holds the information for a volunteering opportunity. 
+ * The edit button at the botton will pull up the editing page for the specific element.
+ */
+
 @import '../../custom.scss';
 
 .VolunteeringPopup {
@@ -51,6 +56,12 @@
 .VolunteeringPopup .active {
     display: block;
 }
+
+/*
+ * #########################
+ * ##### MEDIA QUERIES #####
+ * #########################
+ */
 
 @include media-phone-down {
     .VolunteeringPopup {
