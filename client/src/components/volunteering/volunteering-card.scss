@@ -1,27 +1,46 @@
+/**
+ * The volunteering card contains the information for a specific volunteering:
+ *
+ * 1) The card will be red if it is closed
+ * 2) On hover, the box shadow will increase slightly
+ * 3) The volunteering filters at the bottom are colored to match a filter
+ */
+
 @import '../../custom.scss';
 
+// Relative positioning for the overlay to use absolute positioning
 .volunteering-card {
-    background-color: $background;
-    box-shadow: 0 0 0.3rem $background-tint;
-    text-align: center;
+    position: relative;
     width: 9rem;
     height: 7.5rem;
+
+    box-shadow: 0 0 0.3rem $background-tint;
+    text-align: center;
+    background-color: $background;
+    cursor: pointer;
     transition: 0.3s;
 }
 
 .volunteering-card:hover {
-    cursor: pointer;
     box-shadow: 0 0 0.2rem 0.1rem $background-dark;
 }
 
 .volunteering-card-overlay {
-    padding: 0.25rem;
-    width: 8.5rem;
-    height: 7rem;
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    background-color: #00000033;
 }
 
-.volunteering-card-overlay.overlay-closed {
-    background-color: #00000033;
+// Red tint on closed cards for dark theme
+.dark .volunteering-card-overlay {
+    background-color: #FF000010;
+}
+
+.volunteering-card-content {
+    width: 8.5rem;
+    height: 7rem;
+    padding: 0.25rem;
 }
 
 .volunteering-card-status {

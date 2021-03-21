@@ -1,5 +1,5 @@
 import React from 'react';
-import { formatVolunteeringFilters } from '../../functions/util';
+import { formatVolunteeringFilters, isActive } from '../../functions/util';
 import './volunteering-card.scss';
 
 class VolunteeringCard extends React.Component {
@@ -8,7 +8,8 @@ class VolunteeringCard extends React.Component {
         var filterObjects = formatVolunteeringFilters(this.props.vol.filters, this.props.vol.signupTime);
         return (
             <div className="volunteering-card" onClick={this.props.onClick}>
-                <div className={'volunteering-card-overlay' + (!this.props.vol.filters.open ? ' overlay-closed' : '')}>
+                <div className={isActive('volunteering-card-overlay', !this.props.vol.filters.open)}></div>
+                <div className="volunteering-card-content">
                     <div
                         className={
                             'volunteering-card-status status ' + (this.props.vol.filters.open ? 'open' : 'closed')
