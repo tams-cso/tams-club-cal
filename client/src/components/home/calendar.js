@@ -14,16 +14,15 @@ dayjs.extend(objectSupport);
 class Calendar extends React.Component {
     constructor(props) {
         super(props);
-        this.state = {
-        };
+        this.state = {};
     }
 
     createCalendarHeader = () => {
         return data.daysOfTheWeek.map((day) => {
             return (
-                <div className="calendar-day-names" key={day}>
+                <p className="calendar-day-names" key={day}>
                     {day}
-                </div>
+                </p>
             );
         });
     };
@@ -64,7 +63,11 @@ class Calendar extends React.Component {
             var calEvents = [];
             while (eventCount < this.props.eventList.length) {
                 const day = this.props.eventList[eventCount].startDayjs;
-                if (dayjs(day).year() === currYear && dayjs(day).month() === currMonth && dayjs(day).date() === currDay) {
+                if (
+                    dayjs(day).year() === currYear &&
+                    dayjs(day).month() === currMonth &&
+                    dayjs(day).date() === currDay
+                ) {
                     calEvents.push(this.props.eventList[eventCount]);
                     eventCount++;
                 } else break;
@@ -75,7 +78,9 @@ class Calendar extends React.Component {
                     key={currMonth + currYear + '-' + currDay}
                     events={calEvents}
                     activatePopup={this.props.activatePopup}
-                    currentDay={currDay === dayjs().date() && currMonth === dayjs().month() && currYear == dayjs().year()}
+                    currentDay={
+                        currDay === dayjs().date() && currMonth === dayjs().month() && currYear == dayjs().year()
+                    }
                     sideMonth={true}
                 ></CalendarDay>
             );
@@ -89,7 +94,11 @@ class Calendar extends React.Component {
             var calEvents = [];
             while (eventCount < this.props.eventList.length) {
                 const day = this.props.eventList[eventCount].startDayjs;
-                if (dayjs(day).year() === currYear && dayjs(day).month() === currMonth && dayjs(day).date() === currDay) {
+                if (
+                    dayjs(day).year() === currYear &&
+                    dayjs(day).month() === currMonth &&
+                    dayjs(day).date() === currDay
+                ) {
                     calEvents.push(this.props.eventList[eventCount]);
                     eventCount++;
                 } else break;
@@ -100,7 +109,9 @@ class Calendar extends React.Component {
                     key={currMonth + currYear + '-' + currDay}
                     events={calEvents}
                     activatePopup={this.props.activatePopup}
-                    currentDay={currDay === dayjs().date() && currMonth === dayjs().month() && currYear == dayjs().year()}
+                    currentDay={
+                        currDay === dayjs().date() && currMonth === dayjs().month() && currYear == dayjs().year()
+                    }
                     sideMonth={false}
                 ></CalendarDay>
             );
@@ -112,7 +123,11 @@ class Calendar extends React.Component {
             var calEvents = [];
             while (eventCount < this.props.eventList.length) {
                 const day = this.props.eventList[eventCount].startDayjs;
-                if (dayjs(day).year() === currYear && dayjs(day).month() === currMonth && dayjs(day).date() === currDay) {
+                if (
+                    dayjs(day).year() === currYear &&
+                    dayjs(day).month() === currMonth &&
+                    dayjs(day).date() === currDay
+                ) {
                     calEvents.push(this.props.eventList[eventCount]);
                     eventCount++;
                 } else break;
@@ -123,7 +138,9 @@ class Calendar extends React.Component {
                     key={currMonth + currYear + '-' + currDay}
                     events={calEvents}
                     activatePopup={this.props.activatePopup}
-                    currentDay={currDay === dayjs().date() && currMonth === dayjs().month() && currYear == dayjs().year()}
+                    currentDay={
+                        currDay === dayjs().date() && currMonth === dayjs().month() && currYear == dayjs().year()
+                    }
                     sideMonth={true}
                 ></CalendarDay>
             );
