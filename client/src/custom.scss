@@ -7,21 +7,21 @@ $block-font: 'Source Sans Pro', sans-serif;
 $alt-font: 'Montserrat', sans-serif;
 $google-font: 'Roboto', sans-serif;
 
-// Color Variables
+// Color Variables (check app.js for css variables)
 
-$background: white;
-$background-tint: #dddddd;
-$background-dark: #aaaaaa;
-$primary: #00cd2d;
-$primary-dark: #01831d;
-$bad: #ff482f;
-$type-event: #ffc178;
-$type-event-darker: #ff9a3d;
-$type-signup: #d49dff;
-$text-primary: black;
-$text-light: #777777;
-$text-lighter: #9e9e9e;
-$google-blue: #4285f4;
+$background: var(--background);
+$background-tint: var(--background-tint);
+$background-dark: var(--background-dark);
+$primary: var(--primary);
+$primary-dark: var(--primary-dark);
+$bad: var(--bad);
+$type-event: var(--type-event);
+$type-event-darker: var(--type-event-darker);
+$type-signup: var(--type-signup);
+$text-primary: var(--text-primary);
+$text-light: var(--text-light);
+$text-lighter: var(--text-lighter);
+$google-blue: var(--google-blue);
 
 // Volunteering Filter Colors
 

@@ -20,13 +20,15 @@
 // I can't do 'overflow: scroll' beacuse it would break the sticky containers TT
 html,
 body,
-#root {
+#root,
+.App {
     min-height: 101vh;
     margin: 0;
 
     font-size: 36px;
     font-family: $block-font;
     color: $text-primary;
+    background-color: $background;
 }
 
 h1 {
@@ -34,12 +36,14 @@ h1 {
     text-align: center;
     font-family: $title-font;
     font-weight: 300;
+    color: $text-primary;
 }
 
 p {
     margin: 0;
     font-size: 0.75rem;
     font-weight: 400;
+    color: $text-primary;
 }
 
 textarea {
@@ -49,11 +53,15 @@ textarea {
 
     font-family: $block-font;
     font-weight: 400;
+    color: $text-primary;
+    background-color: $background;
 }
 
 input {
     font-family: $block-font;
     font-weight: 400;
+    color: $text-primary;
+    background-color: $background;
 }
 
 label {
@@ -65,6 +73,7 @@ label {
 
 button {
     outline: none;
+    color: $text-primary;
     font-family: $title-font;
 }
 
@@ -80,13 +89,67 @@ a:hover {
 }
 
 /*
+ * ##################
+ * ##### COLORS #####
+ * ##################
+ */
+
+.App {
+    --background: white;
+    --background-tint: #dddddd;
+    --background-dark: #aaaaaa;
+    --primary: #00cd2d;
+    --primary-dark: #01831d;
+    --bad: #ff482f;
+    --type-event: #ffc178;
+    --type-event-darker: #ff9a3d;
+    --type-signup: #d49dff;
+    --text-primary: black;
+    --text-light: #777777;
+    --text-lighter: #9e9e9e;
+    --google-blue: #4285f4;
+}
+
+// DARK THEME POG
+.App.dark {
+    --background: #212121;
+    --background-tint: #444444;
+    --background-dark: #555555;
+    --primary: #00cd2d;
+    --primary-dark: #01831d;
+    --bad: #ff482f;
+    --type-event: #ffc178;
+    --type-event-darker: #ff9a3d;
+    --type-signup: #d49dff;
+    --text-primary: #cccccc;
+    --text-light: #aaaaaa;
+    --text-lighter: #9e9e9e;
+    --google-blue: #4285f4;
+}
+
+.menu-bkgd {
+    position: fixed;
+    z-index: 99;
+    width: 100%;
+    height: 2.5rem;
+    background-color: $background;
+    filter: drop-shadow(0 0 0.1rem $background-tint);
+}
+
+/*
  * ###########################
  * ##### PAGE FORMATTING #####
  * ###########################
  */
 
 .page {
-    padding-top: 2.5rem;
+    padding: 2.5rem 0 0.5rem;
+}
+
+.toggle-dark-theme {
+    position: fixed;
+    bottom: 1rem;
+    left: 1rem;
 }
 
 /*

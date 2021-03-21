@@ -10,7 +10,7 @@ class DateSection extends React.Component {
         return (
             <div className="date-section">
                 <div className="date-section-line left"></div>
-                <div className="date-section-date">{this.props.date}</div>
+                <p className="date-section-date">{this.props.date}</p>
                 <div className="date-section-line right"></div>
             </div>
         );
