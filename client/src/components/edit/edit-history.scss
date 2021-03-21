@@ -1,3 +1,11 @@
+/**
+ * Edit history is displayed as a series of dropdown components:
+ *
+ * 1) Initially, it is a line of clickable text.
+ * 2) When clicked, it will expand to a table that shows all of the edits.
+ * 3) Clicking on an element will expand that cell and show a JSON version of the edit.
+ */
+
 @import '../../custom.scss';
 
 .edit-history {

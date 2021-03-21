@@ -1,8 +1,22 @@
+/**
+ * The edit login component contains two main components:
+ *
+ * 1) A "Sign in with Google" button that will change to "Logout"
+ *    when the user is signed in.
+ * 2) A message showing their ip if not signed in or their name if signed in.
+ */
+
 @import '../../custom.scss';
 
 .edit-login {
     margin: 1rem 2rem;
 }
+
+/*
+ * #############################
+ * ##### LOGIN TEXT + DIVS #####
+ * #############################
+ */
 
 .edit-login-top {
     margin-bottom: 1rem;
@@ -17,6 +31,17 @@
     color: $bad;
     margin: 0;
 }
+
+.edit-login-bottom {
+    font-size: 0.75rem;
+    text-align: center;
+}
+
+/*
+ * #############################
+ * ##### LOGIN WITH GOOGLE #####
+ * #############################
+ */
 
 .edit-login-with-google {
     padding: 0;
@@ -41,9 +66,4 @@
     font-weight: 700;
     font-size: 0.5rem;
     color: $background;
-}
-
-.edit-login-bottom {
-    font-size: 0.75rem;
-    text-align: center;
 }

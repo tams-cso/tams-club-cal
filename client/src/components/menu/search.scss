@@ -1,6 +1,12 @@
+/**
+ * Page to display the results of a search. The search bar at the top is used to do additional
+ * searches. This is a simple list of search result components.
+ */
+
 @import '../../custom.scss';
 
-.Search {
+.search {
+    margin-bottom: 1rem;
     text-align: center;
 }
 
@@ -11,11 +17,12 @@
     padding: 0.25rem;
 }
 
-.default-search {
-    margin-top: 1rem;
+.search-message {
+    margin: 0.5rem 0;
+    text-align: center;
     color: $text-light;
 }
 
 .search-result-list {
-    margin: 1rem 15% 0;
+    margin: 0 15%;
 }

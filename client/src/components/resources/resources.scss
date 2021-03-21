@@ -1,3 +1,7 @@
+/**
+ * The resources page is simply a list of links, in a flexbox.
+ */
+
 @import '../../custom.scss';
 
 .resources-links-title {
@@ -6,18 +10,24 @@
 }
 
 .resources-link-container {
+    margin-bottom: 1rem;
     display: flex;
     flex-direction: column;
     justify-content: center;
     align-items: center;
     flex-wrap: wrap;
-    margin-bottom: 1rem;
 }
 
 .resources-link {
     width: 9rem;
     margin: 0.4rem 0.4rem;
 }
+
+/*
+ * #########################
+ * ##### MEDIA QUERIES #####
+ * #########################
+ */
 
 @include media-small-desktop-down {
     .resources-link-container {

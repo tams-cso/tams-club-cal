@@ -1,6 +1,11 @@
 /**
- * Exec Edit component for editing execs of a club
- * // TODO: Add more to this desc
+ * Exec Edit component for editing execs of a club.
+ * This element also contains a few special input areas:
+ * 
+ * 1) The text inputs are for the string information and just normal inputs.
+ * 2) The canvas displays the profile picture, with an image upload 
+ *    component avaliable to upload new images.
+ * 3) The trash can icon will turn red when hovered and can be clicked on to delete the exec.
  */
 
 @import '../../custom.scss';

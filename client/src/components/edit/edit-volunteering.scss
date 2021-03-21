@@ -1,5 +1,17 @@
+/**
+ * Component for editing a volunteering opportunity. The filters at the bottom
+ * will fill when selected and only have a border if deselected. They will also
+ * fill on hover.
+ */
+
 @import '../../custom.scss';
 
+/*
+ * ##############################
+ * ##### GENERAL FORMATTING #####
+ * ##############################
+ */
+ 
 .edit-volunteering {
     text-align: left;
     font-size: 0.65rem;
@@ -25,6 +37,12 @@
     font-size: 0.75rem;
     resize: none;
 }
+
+/*
+ * ###########################
+ * ##### FORM FORMATTING #####
+ * ###########################
+ */
 
 .edit-volunteering-title-and-open {
     display: flex;
@@ -72,6 +90,12 @@
 .signup-time-input {
     width: 10rem;
 }
+
+/*
+ * ################################
+ * ##### VOLUNTEERING FILTERS #####
+ * ################################
+ */
 
 .edit-volunteering-filter {
     display: block;

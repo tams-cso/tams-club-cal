@@ -1,6 +1,10 @@
 /**
- * Committee Edit component for editing committees of a club
- * // TODO: Add more to this desc
+ * Committee Edit component for editing committees of a club.
+ * It consists of a series of input boxes:
+ * 
+ * 1) The main text inputs are for the name and links of the committee.
+ * 2) The text area is for entering the description.
+ * 3) And the delete icon on the right will turn red when hovered over.
  */
 
 @import '../../custom.scss';
@@ -11,6 +15,12 @@
     margin-bottom: 0.5rem;
     box-shadow: 0 0 0.2rem $background-tint;
 }
+
+/*
+ * #######################
+ * ##### TOP SECTION #####
+ * #######################
+ */
 
 .committee-edit-name-trash-container {
     display: flex;
@@ -26,6 +36,12 @@
 .committee-edit-trash-icon {
     margin-left: 0.5rem;
 }
+
+/*
+ * #####################
+ * ##### EDIT INFO #####
+ * #####################
+ */
 
 .committee-edit-label {
     margin-right: 0.5rem;

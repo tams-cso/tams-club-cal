@@ -1,3 +1,7 @@
+/**
+ * The Clubs page itself is very simple. It's just a grid of club cards!
+ */
+
 @import '../../custom.scss';
 
 .club-card-list {
@@ -16,6 +20,12 @@
     margin-bottom: 1rem;
     text-align: center;
 }
+
+/*
+ * ################################
+ * ##### WEBSITE AND FB ICONS #####
+ * ################################
+ */
 
 @include media-phone-down {
     .club-card-list {
