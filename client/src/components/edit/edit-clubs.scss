@@ -1,3 +1,15 @@
+/**
+ * The Edit Clubs page is probably the most complex component in the entire site.
+ * It consists of many nested components and a large image upload:
+ *
+ * 1) At the top is a canvas that displays image uploads, as well as an image upload
+ *    component that can be clicked on to change the image.
+ * 2) There is a button that can switch between independent and advised, changing in color.
+ * 3) Text inputs and text areas are avaliable for club info and descriptions.
+ * 4) The execs section is a flexbox list of exec edit cards, with an add exec button at the bottom.
+ * 5) The committees section is similar with committee edit cards.
+ */
+
 @import '../../custom.scss';
 
 .edit-clubs {
@@ -38,6 +50,12 @@
 .edit-clubs-edit-bottom {
     padding: 0.75rem;
 }
+
+/*
+ * ##########################
+ * ##### CLUB INFO EDIT #####
+ * ##########################
+ */
 
 .edit-clubs-name-advised-div {
     display: flex;
@@ -117,43 +135,14 @@
 }
 
 /*
- * #####################################
- * ##### SUBMIT AND DELETE BUTTONS #####
- * #####################################
+ * #################################
+ * ##### SUBMIT ACTION BUTTONS #####
+ * #################################
  */
 
 .edit-clubs-action-button-box {
     margin-top: 0.5rem;
     align-items: center;
-}
-
-.edit-clubs-trash-group {
-    height: fit-content;
-    flex-grow: 1;
-    display: flex;
-}
-
-.edit-clubs-trash-group.inactive {
-    display: none !important;
-}
-
-.edit-clubs-delete-text {
-    margin-top: 0.25rem;
-    margin-left: 0.25rem;
-    transition: 0.2s;
-}
-
-.edit-clubs-delete-box {
-    display: flex;
-    cursor: pointer;
-}
-
-.edit-clubs-delete-box:hover .edit-clubs-delete-text {
-    color: $bad;
-}
-
-.edit-clubs-delete-box:hover .trash-can-path {
-    fill: $bad;
 }
 
 .edit-clubs-action-button {

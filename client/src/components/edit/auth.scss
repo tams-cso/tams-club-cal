@@ -1,3 +1,9 @@
+/**
+ * The auth component handles the callback after users log in
+ * with their google accounts. It will simply display a loading
+ * message that will change when the user is redirected
+ */
+
 @import '../../custom.scss';
 
 .auth {
