@@ -205,10 +205,6 @@ a:hover {
     text-align: center;
 }
 
-.fixed {
-    position: fixed;
-}
-
 /*
  * ############################
  * ##### PSEUDO-SELECTORS #####
@@ -280,9 +276,5 @@ a:hover {
 
     .page {
         padding-top: 2rem;
-    }
-
-    .fixed {
-        position: static;
     }
 }

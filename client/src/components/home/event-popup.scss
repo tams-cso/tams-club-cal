@@ -28,8 +28,13 @@
 }
 
 .event-popup-left {
-    min-height: 8rem;
+    min-height: 10rem;
     border-right: 0.03rem solid $text-primary;
+}
+
+.event-popup-fixed-container {
+    position: fixed;
+    width: 11.5rem;
 }
 
 /*
@@ -110,6 +115,10 @@
     .event-popup-left {
         border: none;
         border-bottom: 0.03rem solid $text-primary;
+    }
+
+    .event-popup-fixed-container {
+        position: static;
     }
 
     .event-popup-type {
