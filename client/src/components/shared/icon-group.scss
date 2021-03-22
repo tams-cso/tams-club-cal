@@ -9,7 +9,7 @@
 // globe-style, fb-icon, and web-icon are defined classes in their respective svg files
 .globe-style {
     fill: none;
-    stroke: #231f20;
+    stroke: $text-primary;
     stroke-linejoin: round;
     stroke-width: 30px;
 }
