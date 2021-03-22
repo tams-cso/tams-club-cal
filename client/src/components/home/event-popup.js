@@ -56,7 +56,7 @@ class EventPopup extends React.Component {
             <div className="event-popup">
                 <div className="event-popup-display">
                     <div className="event-popup-left event-popup-home-side">
-                        <div className="fixed">
+                        <div className="event-popup-fixed-container">
                             {this.state.event.type === 'event' ? (
                                 <p className="event-popup-type event">Event</p>
                             ) : (
