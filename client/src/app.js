@@ -16,6 +16,7 @@ import './app.scss';
 import Resources from './components/resources/resources';
 import Auth from './components/edit/auth';
 import ActionButton from './components/shared/action-button';
+import Cookies from 'universal-cookie';
 
 class App extends React.Component {
     constructor(props) {
@@ -24,8 +25,18 @@ class App extends React.Component {
     }
 
     toggleDarkTheme = () => {
+        const cookies = new Cookies();
+        cookies.set('dark', !this.state.dark, { path: '/', sameSite: 'strict' });
         this.setState({ dark: !this.state.dark });
     };
+
+    componentDidMount() {
+        const cookies = new Cookies();
+        const dark = cookies.get('dark');
+        if (dark === undefined || dark === 'false') return;
+        else this.setState({ dark: true });
+    }
+
     render() {
         return (
             <div className={`App ${this.state.dark ? 'dark' : ''}`}>
