@@ -34,7 +34,18 @@ class EditEvents extends React.Component {
         this.handleInputChange = this.handleInputChange.bind(this);
     }
 
-    changeType = (type) => this.setState({ type });
+    changeType = (type) => {
+        // Set default signup time to 11:59 pm
+        var startTime = this.state.startTime;
+        var endDate = this.state.endDate;
+        var endTime = this.state.endTime;
+        if (type === 'signup') {
+            startTime = '23:59';
+            endDate = this.state.startDate;
+            endTime = startTime;
+        }
+        this.setState({ type, startTime });
+    }
 
     // React controlled forms
     handleInputChange(event) {
@@ -60,11 +71,14 @@ class EditEvents extends React.Component {
         // Calculate milliseconds from starting/ending datetimes
         var end = null;
         var start = parseTimeZone(`${this.state.startDate} ${this.state.startTime}`, getTimezone());
+
+        // Set the end time or set it equal to start time if it's a signup
         if (this.state.type === 'event')
             end = parseTimeZone(`${this.state.endDate} ${this.state.endTime}`, getTimezone());
         else
             end = start;
 
+        // Check for invalid ending times
         if (this.state.type === 'event' && end < start) {
             alert('Starting time cannot be after end time!');
             return;
