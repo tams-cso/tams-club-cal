@@ -30,6 +30,7 @@ class EditEvents extends React.Component {
             description: '',
             type: 'event',
             invalid: [],
+            interval: 0,
         };
         this.handleInputChange = this.handleInputChange.bind(this);
     }
@@ -44,8 +45,8 @@ class EditEvents extends React.Component {
             endDate = this.state.startDate;
             endTime = startTime;
         }
-        this.setState({ type, startTime });
-    }
+        this.setState({ type, startTime, endDate, endTime });
+    };
 
     // React controlled forms
     handleInputChange(event) {
@@ -53,8 +54,29 @@ class EditEvents extends React.Component {
         this.setState({ [target.name]: target.value });
     }
 
-    handleDateChange = (name, value) => {
-        this.setState({ [name]: value });
+    // When user edits the ending time, we will update the interval betwwen start/end
+    // If the ending time is set AFTER the starting time, then we will set the end to the start time
+    updateTimeInterval = () => {
+        if (this.state.type === 'signup') return;
+        var start = parseTimeZone(`${this.state.startDate} ${this.state.startTime}`, getTimezone());
+        var end = parseTimeZone(`${this.state.endDate} ${this.state.endTime}`, getTimezone());
+
+        if (start > end) end = start;
+        const endDatetime = millisToDateAndTime(end);
+
+        this.setState({ interval: end - start, endDate: endDatetime.date, endTime: endDatetime.time });
+    };
+
+    // When the user edits the starting time, we will update the end time to preserve the
+    // interval between the starting/ending times
+    syncEndDateTimeToStart = () => {
+        if (this.state.type === 'signup') return;
+
+        var start = parseTimeZone(`${this.state.startDate} ${this.state.startTime}`, getTimezone());
+        var end = start + this.state.interval;
+
+        const endDatetime = millisToDateAndTime(end);
+        this.setState({ endDate: endDatetime.date, endTime: endDatetime.time });
     };
 
     // Submit the form and make a POST request
@@ -75,8 +97,7 @@ class EditEvents extends React.Component {
         // Set the end time or set it equal to start time if it's a signup
         if (this.state.type === 'event')
             end = parseTimeZone(`${this.state.endDate} ${this.state.endTime}`, getTimezone());
-        else
-            end = start;
+        else end = start;
 
         // Check for invalid ending times
         if (this.state.type === 'event' && end < start) {
@@ -91,7 +112,7 @@ class EditEvents extends React.Component {
             this.state.clubName,
             start,
             end,
-            this.state.description,
+            this.state.description
         );
 
         // POST event
@@ -129,6 +150,7 @@ class EditEvents extends React.Component {
                 startTime: getDefaulEditTime(false),
                 endDate: getDefaulEditDate(),
                 endTime: getDefaulEditTime(true),
+                interval: 3600000,
             });
         } else {
             // Convert to string times
@@ -147,6 +169,7 @@ class EditEvents extends React.Component {
                 endTime: endDatetime.time,
                 description: event.description,
                 type: event.type,
+                interval: event.end - event.start,
             });
         }
     };
@@ -187,6 +210,7 @@ class EditEvents extends React.Component {
                         type="date"
                         value={this.state.endDate}
                         onChange={this.handleInputChange}
+                        onBlur={this.updateTimeInterval}
                     ></input>
                     <input
                         name="endTime"
@@ -194,6 +218,7 @@ class EditEvents extends React.Component {
                         type="time"
                         value={this.state.endTime}
                         onChange={this.handleInputChange}
+                        onBlur={this.updateTimeInterval}
                     ></input>
                     <br />
                 </div>
@@ -241,6 +266,7 @@ class EditEvents extends React.Component {
                     type="date"
                     value={this.state.startDate}
                     onChange={this.handleInputChange}
+                    onBlur={this.syncEndDateTimeToStart}
                 ></input>
                 <input
                     name="startTime"
@@ -248,6 +274,7 @@ class EditEvents extends React.Component {
                     type="time"
                     value={this.state.startTime}
                     onChange={this.handleInputChange}
+                    onBlur={this.syncEndDateTimeToStart}
                 ></input>
                 <br />
                 {endObj}
