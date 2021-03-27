@@ -17,6 +17,7 @@ import Resources from './components/resources/resources';
 import Auth from './components/edit/auth';
 import ActionButton from './components/shared/action-button';
 import Cookies from 'universal-cookie';
+import { isActive } from './functions/util';
 
 class App extends React.Component {
     constructor(props) {
@@ -38,6 +39,7 @@ class App extends React.Component {
     }
 
     render() {
+        const isStaging = window.location.origin !== 'https://tams.club';
         return (
             <div className={`App ${this.state.dark ? 'dark' : ''}`}>
                 <BrowserRouter>
@@ -48,6 +50,7 @@ class App extends React.Component {
                     >
                         !
                     </ActionButton>
+                    <p className={isActive('staging-text', isStaging)}>STAGING</p>
                     <RoutingRequests />
                     <Menu />
                     <div className="page">

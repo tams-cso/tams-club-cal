@@ -152,6 +152,15 @@ a:hover {
     left: 1rem;
 }
 
+.staging-text {
+    position: fixed;
+    top: 0.75rem;
+    left: 1rem;
+    color: $bad;
+    font-family: $title-font;
+    z-index: 101;
+}
+
 /*
  * ###############################
  * ##### GENERAL USE CLASSES #####
@@ -244,6 +253,11 @@ a:hover {
     html {
         font-size: 32px;
     }
+
+    .staging-text {
+        left: 0.5rem;
+        font-size: 0.6rem;
+    }
 }
 
 @include media-tablet-down {
@@ -276,5 +290,9 @@ a:hover {
 
     .page {
         padding-top: 2rem;
+    }
+
+    .staging-text {
+        left: 3rem;
     }
 }
