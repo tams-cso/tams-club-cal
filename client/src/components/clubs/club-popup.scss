@@ -190,8 +190,8 @@
         font-size: 1.25rem;
     }
 
-    .club-popup-committees {
-        display: flex;
+    .club-popup-committees-list {
+        display: flex !important;
         flex-direction: column;
         align-items: center;
     }
