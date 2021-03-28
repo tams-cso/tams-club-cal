@@ -17,9 +17,10 @@
     margin: 1rem 2rem 0;
 }
 
+// Image will always be at a 36:15 scale ratio of w:h
 .edit-clubs-image {
-    width: 36rem;
-    height: 15rem;
+    width: 90vw;
+    height: calc(90vw * 15 / 36);
     margin: auto;
     display: block;
     object-fit: cover;
