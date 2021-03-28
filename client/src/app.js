@@ -34,8 +34,13 @@ class App extends React.Component {
     componentDidMount() {
         const cookies = new Cookies();
         const dark = cookies.get('dark');
-        if (dark === undefined || dark === 'false') return;
-        else this.setState({ dark: true });
+        const defaultDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+        if (dark === undefined) {
+            if (defaultDark) {
+                cookies.set('dark', true, { path: '/', sameSite: 'strict' });
+                this.setState({ dark: true });
+            }
+        } else if (dark === 'true') this.setState({ dark: true });
     }
 
     render() {
