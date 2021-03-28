@@ -5,56 +5,49 @@
 
 @import '../../custom.scss';
 
-.VolunteeringPopup {
-    text-align: center;
+.volunteering-popup {
     padding: 0.5rem;
     width: 14rem;
+    overflow-x: auto;
+    text-align: center;
 }
 
-.VolunteeringPopup .filter {
+.volunteering-popup .filter {
     font-size: 0.65rem;
 }
 
-.res-popup-open {
+.vol-popup-open {
     font-size: 0.65rem;
 }
 
-.res-popup-open.open {
+.vol-popup-open.open {
     color: $primary;
 }
 
-.res-popup-open.closed {
+.vol-popup-open.closed {
     color: $bad;
 }
 
-.res-popup-name {
+.vol-popup-name {
     font-size: 1.25rem;
     font-family: $title-font;
     font-weight: 300;
 }
 
-.res-popup-club {
+.vol-popup-club {
     font-size: 0.9rem;
     font-family: $title-font;
     font-weight: 300;
     color: $text-light;
 }
 
-.res-popup-description {
+.vol-popup-description {
     font-size: 0.65rem;
     white-space: pre-line;
 }
 
-.VolunteeringPopup .action-button {
+.volunteering-popup .action-button {
     margin-top: 0.5rem;
-}
-
-.VolunteeringPopup .inactive {
-    display: none;
-}
-
-.VolunteeringPopup .active {
-    display: block;
 }
 
 /*
@@ -64,7 +57,7 @@
  */
 
 @include media-phone-down {
-    .VolunteeringPopup {
+    .volunteering-popup {
         width: 90vw;
         padding: 5vw;
         padding-bottom: 10vw;
