@@ -58,3 +58,15 @@
     font-weight: 300;
     color: $primary;
 }
+
+/*
+ * #########################
+ * ##### MEDIA QUERIES #####
+ * #########################
+ */
+
+@include media-tablet-down {
+    .add-button:hover {
+        width: 2rem !important;
+    }
+}
