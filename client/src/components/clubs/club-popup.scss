@@ -182,16 +182,12 @@
         margin-top: 0.5rem;
     }
 
-    .club-popup-edit-button {
-        display: none;
-    }
-
     .club-popup-tab-item {
         font-size: 1.25rem;
     }
 
-    .club-popup-committees {
-        display: flex;
+    .club-popup-committees-list {
+        display: flex !important;
         flex-direction: column;
         align-items: center;
     }

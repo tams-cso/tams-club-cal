@@ -47,27 +47,27 @@ class VolunteeringPopup extends React.Component {
     render() {
         // Return 'loading' if the current popup is not defined
         if (this.state.vol === null || this.state.vol === undefined)
-            return <Loading className="VolunteeringPopup"></Loading>;
+            return <Loading className="volunteering-popup"></Loading>;
 
         // Get a list of filters
         const filters = formatVolunteeringFilters(this.state.vol.filters, this.state.vol.signupTime);
 
         // Parse description links
-        const description = parseLinks('res-popup-description', this.state.vol.description);
+        const description = parseLinks('vol-popup-description', this.state.vol.description);
 
         return (
-            <div className="VolunteeringPopup">
+            <div className="volunteering-popup">
                 <div className={'display' + (!this.props.edit ? ' active' : ' inactive')}>
                     {this.state.vol.filters.open ? (
-                        <p className="res-popup-open open">Open</p>
+                        <p className="vol-popup-open open">Open</p>
                     ) : (
-                        <p className="res-popup-open closed">Closed</p>
+                        <p className="vol-popup-open closed">Closed</p>
                     )}
-                    <p className="res-popup-name">{this.state.vol.name}</p>
-                    <p className="res-popup-club">{this.state.vol.club}</p>
+                    <p className="vol-popup-name">{this.state.vol.name}</p>
+                    <p className="vol-popup-club">{this.state.vol.club}</p>
                     {description}
                     {filters}
-                    <ActionButton className="res-popup-edit" onClick={this.openEdit}>
+                    <ActionButton className="vol-popup-edit" onClick={this.openEdit}>
                         Edit
                     </ActionButton>
                 </div>

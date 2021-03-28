@@ -10,9 +10,10 @@
 @import '../../custom.scss';
 
 .exec-card {
+    margin: 0 2rem 1rem 2rem;
     display: flex;
     flex-direction: row;
-    margin: 0 2rem 1rem 2rem;
+    text-align: left;
 }
 
 /*
@@ -55,18 +56,15 @@
 .exec-card-name {
     max-width: 50%;
     overflow-x: hidden;
-    white-space: nowrap;
 }
 
 .exec-card-position {
     max-width: 50%;
     padding-left: 0.75rem;
     padding-bottom: 0.1rem;
-    overflow: hidden;
+    overflow-x: hidden;
 
     font-size: 0.6rem;
-    white-space: nowrap;
-    text-overflow: ellipsis;
     color: $text-lighter;
 }
 

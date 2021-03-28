@@ -52,7 +52,7 @@ class Volunteering extends React.Component {
 
         return (
             <div className="Resources">
-                <Popup history={this.props.history} noscroll>
+                <Popup history={this.props.history}>
                     <VolunteeringPopup></VolunteeringPopup>
                 </Popup>
                 <AddButton type="Volunteering"></AddButton>
