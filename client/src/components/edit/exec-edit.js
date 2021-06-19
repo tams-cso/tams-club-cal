@@ -4,7 +4,6 @@ import Image from '../shared/image';
 import { imgUrl } from '../../functions/util';
 
 import { ReactComponent as TrashIcon } from '../../files/trash-can.svg';
-import defaultProfile from '../../files/default-profile.png';
 import './exec-edit.scss';
 
 class ExecEdit extends React.Component {
@@ -17,7 +16,7 @@ class ExecEdit extends React.Component {
                         id={`exec-img-${this.props.num}`}
                         src={imgUrl(this.props.exec.img)}
                         alt="profile pic"
-                        default={defaultProfile}
+                        default={'/default-profile.png'}
                     ></Image>
                     <ImageUpload
                         className="exec-edit-img-upload"

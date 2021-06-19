@@ -1,7 +1,6 @@
 import React from 'react';
 import Image from '../shared/image';
 import { imgUrl } from '../../functions/util';
-import defaultProfile from '../../files/default-profile.png';
 import './exec-card.scss';
 
 class ExecCard extends React.Component {
@@ -12,7 +11,7 @@ class ExecCard extends React.Component {
                     className="exec-img"
                     src={imgUrl(this.props.exec.img)}
                     alt="profile pic"
-                    default={defaultProfile}
+                    default={'/default-profile.png'}
                 ></Image>
                 <div className="exec-card-info">
                     <div className="exec-card-name-position-group">

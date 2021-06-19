@@ -1,6 +1,5 @@
 import React from 'react';
 import { postFeedback } from '../../functions/api';
-import logo from '../../files/logo-banner.png';
 import './about.scss';
 
 class About extends React.Component {
@@ -28,7 +27,7 @@ class About extends React.Component {
     render() {
         return (
             <div className="about">
-                <img className="about-header" alt="TAMS Club Calendar" src={logo}></img>
+                <img className="about-header" alt="TAMS Club Calendar" src={'/logo-banner.png'}></img>
                 <p className="about-info-p">
                     Welcome to the TAMS Club Calendar! This is a simple web app that displays all the student
                     organization events at TAMS, along with a list of clubs and other resources. Our vision is a
