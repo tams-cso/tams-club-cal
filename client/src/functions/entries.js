@@ -209,7 +209,7 @@ export function CalendarDates(current, previous, next, dayObj) {
  */
 export function DateDivider(date) {
     this.date = date;
-    this.objId = '';
+    this.id = '';
 }
 
 /**

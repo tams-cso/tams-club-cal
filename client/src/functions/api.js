@@ -2,6 +2,8 @@ import Cookies from 'universal-cookie';
 import config from '../files/config.json';
 import { FetchResponse } from './entries';
 
+const BACKEND_URL = process.env.NODE_ENV !== 'production' ? '' : config.backend;
+
 /**
  * Performs GET request to endpoint
  * @param {string} url API endpoint to GET
@@ -10,7 +12,7 @@ import { FetchResponse } from './entries';
  */
 async function getRequest(url, auth = null) {
     try {
-        const res = await fetch(`${config.backend}${url}?key=${config.apiKey}`, { headers: { authorization: auth } });
+        const res = await fetch(`${BACKEND_URL}${url}`, { headers: { authorization: auth } });
         const data = await res.json();
         return new FetchResponse(res.status, data);
     } catch (error) {
@@ -36,7 +38,7 @@ async function postRequest(url, body, json = true, auth = null) {
         const options = { method: 'POST', body, authorization: auth };
         if (json) options.headers = { 'Content-Type': 'application/json' };
 
-        const res = await fetch(`${config.backend}${url}?key=${config.apiKey}`, options);
+        const res = await fetch(`${BACKEND_URL}${url}?key=${config.apiKey}`, options);
         const data = await res.json();
         return new FetchResponse(res.status, data);
     } catch (error) {

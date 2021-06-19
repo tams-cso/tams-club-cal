@@ -65,7 +65,7 @@ class Home extends React.Component {
         events.forEach((e) => {
             // If this is a date section, push the previous group of events in a sticky container
             // This is so the 'position: sticky' works for the date section
-            if (e.objId === '') {
+            if (e.id === '') {
                 eventComponents.push(
                     <div className="schedule-view-sticky-container" key={eventComponents.length}>
                         {groupComponents}
@@ -79,9 +79,9 @@ class Home extends React.Component {
                 groupComponents.push(
                     <ScheduleEvent
                         event={e}
-                        key={e.objId}
+                        key={e.id}
                         onClick={() => {
-                            this.activatePopup(e.objId);
+                            this.activatePopup(e.id);
                         }}
                     ></ScheduleEvent>
                 );
