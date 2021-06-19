@@ -20,6 +20,7 @@ const createStyles = makeStyles((theme) => ({
     },
     bar: {
         position: 'sticky',
+        zIndex: theme.zIndex.drawer + 1,
     },
     logo: {
         flexGrow: 1,
