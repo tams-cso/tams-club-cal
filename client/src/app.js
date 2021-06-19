@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { BrowserRouter, Route, Switch } from 'react-router-dom';
-import { createMuiTheme, ThemeProvider, CssBaseline } from '@material-ui/core';
+import { createMuiTheme, ThemeProvider } from '@material-ui/core/styles';
+import CssBaseline from '@material-ui/core/CssBaseline';
 
 import Menu from './components/menu/menu';
 import About from './components/about/about';
@@ -48,24 +49,20 @@ const App = () => {
     return (
         <ThemeProvider theme={theme}>
             <CssBaseline />
-            <div className="App">
-                <BrowserRouter>
-                    <Menu setDarkTheme={setDarkTheme} darkTheme={darkTheme} />
-                    <div className="page">
-                        <Switch>
-                            <Route exact path={['/', '/events']} component={Home} />
-                            <Route exact path="/volunteering" component={Volunteering} />
-                            <Route exact path="/clubs" component={Clubs} />
-                            <Route exact path="/resources" component={Resources} />
-                            <Route exact path="/about" component={About} />
-                            <Route exact path="/auth" component={Auth} />
-                            <Route exact path="/admin" component={Admin} />
-                            <Route path="/edit" component={Edit} />
-                            <Route component={NotFound} />
-                        </Switch>
-                    </div>
-                </BrowserRouter>
-            </div>
+            <BrowserRouter>
+                <Menu setDarkTheme={setDarkTheme} darkTheme={darkTheme} />
+                <Switch>
+                    <Route exact path="/" component={Home} />
+                    <Route exact path="/volunteering" component={Volunteering} />
+                    <Route exact path="/clubs" component={Clubs} />
+                    <Route exact path="/resources" component={Resources} />
+                    <Route exact path="/about" component={About} />
+                    <Route exact path="/auth" component={Auth} />
+                    <Route exact path="/admin" component={Admin} />
+                    <Route path="/edit" component={Edit} />
+                    <Route component={NotFound} />
+                </Switch>
+            </BrowserRouter>
         </ThemeProvider>
     );
 };

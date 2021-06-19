@@ -18,6 +18,9 @@ const createStyles = makeStyles((theme) => ({
         paddingBottom: '0.75rem',
         backgroundColor: theme.palette.type === 'light' ? theme.palette.primary.main : theme.palette.grey[900],
     },
+    bar: {
+        position: 'sticky',
+    },
     logo: {
         flexGrow: 1,
     },
@@ -57,7 +60,7 @@ const Menu = (props) => {
     };
 
     return (
-        <Appbar className="menu">
+        <Appbar className={classes.bar}>
             <Toolbar className={classes.root}>
                 <AppIcon className={classes.logo}></AppIcon>
                 <MenuLink to="/">Home</MenuLink>
