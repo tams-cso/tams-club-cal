@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { BrowserRouter, Route, Switch } from 'react-router-dom';
 import { createMuiTheme, ThemeProvider, CssBaseline } from '@material-ui/core';
 
@@ -13,9 +13,12 @@ import Admin from './components/admin/admin';
 
 import Resources from './components/resources/resources';
 import Auth from './components/edit/auth';
+import Cookies from 'universal-cookie';
 
 const App = () => {
-    const [darkTheme, setDarkTheme] = useState(false);
+    const cookies = new Cookies();
+
+    const [darkTheme, setDarkTheme] = useState(cookies.get('dark') === 'true');
     const theme = createMuiTheme({
         palette: {
             type: darkTheme ? 'dark' : 'light',
@@ -37,6 +40,10 @@ const App = () => {
             },
         },
     });
+
+    useEffect(() => {
+        cookies.set('dark', darkTheme, { sameSite: 'strict' });
+    }, [darkTheme]);
 
     return (
         <ThemeProvider theme={theme}>

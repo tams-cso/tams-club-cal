@@ -1,33 +1,43 @@
-import React from 'react';
-import { NavLink } from 'react-router-dom';
+import React, { useEffect, useState } from 'react';
+import { NavLink, useLocation } from 'react-router-dom';
 import { makeStyles, fade } from '@material-ui/core/styles';
 import Typography from '@material-ui/core/Typography';
 
 const useStyles = makeStyles((theme) => ({
-    root: (props) => ({
-        backgroundColor: props.active ? fade(theme.palette.common.white, 0.3) : 'transparent',
+    root: {
+        backgroundColor: 'transparent',
         '&:hover': {
-            backgroundColor: fade(theme.palette.common.black, 0.1),
+            backgroundColor: fade(theme.palette.type === 'light' ? '#000000' : '#ffffff', 0.1),
         },
         textDecoration: 'none',
         marginLeft: '1rem',
         marginRight: '1rem',
         borderRadius: '0.25rem',
-        transition: '0.2s'
-    }),
+        transition: '0.2s',
+    },
+    rootActive: {
+        backgroundColor: fade('#ffffff', 0.3),
+    },
     text: {
-        color: 'white',
+        color: theme.palette.type === 'light' ? 'white' : theme.palette.grey[400],
         marginLeft: '0.5rem',
         marginRight: '0.5rem',
     },
 }));
 
 const MenuLink = (props) => {
-    const active = window.location.pathname.indexOf(props.to) !== -1;
-    const classes = useStyles({ active });
+    const [active, setActive] = useState(false);
+    const classes = useStyles();
+
+    let location = useLocation();
+    useEffect(() => {
+        setActive(
+            location.pathname === props.to || location.pathname.slice(0, location.pathname.length - 1) === props.to
+        );
+    }, [location]);
 
     return (
-        <NavLink className={classes.root} to={props.to} exact>
+        <NavLink className={`${classes.root} ${active ? classes.rootActive : ''}`} to={props.to} exact>
             <Typography variant="h6" className={classes.text}>
                 {props.children}
             </Typography>
