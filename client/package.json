@@ -7,6 +7,8 @@
         "Dylan Li <dylanli.yitong@gmail.com> (https://github.com/The-Box-Lord/)"
     ],
     "dependencies": {
+        "@material-ui/core": "^4.11.4",
+        "@material-ui/icons": "^4.11.2",
         "browser-image-compression": "^1.0.14",
         "dayjs": "^1.10.5",
         "fuse.js": "^6.4.6",

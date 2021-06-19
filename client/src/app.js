@@ -1,5 +1,6 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { BrowserRouter, Route, Switch } from 'react-router-dom';
+import { createMuiTheme, ThemeProvider, CssBaseline } from '@material-ui/core';
 
 import Menu from './components/menu/menu';
 import About from './components/about/about';
@@ -7,57 +8,42 @@ import Clubs from './components/clubs/clubs';
 import Home from './components/home/home';
 import NotFound from './components/404/404';
 import Volunteering from './components/volunteering/volunteering';
-import Search from './components/menu/search';
-import RoutingRequests from './functions/routing-requests';
 import Edit from './components/edit/edit';
 import Admin from './components/admin/admin';
 
-import './app.scss';
 import Resources from './components/resources/resources';
 import Auth from './components/edit/auth';
-import ActionButton from './components/shared/action-button';
-import Cookies from 'universal-cookie';
-import { isActive } from './functions/util';
 
-class App extends React.Component {
-    constructor(props) {
-        super(props);
-        this.state = { dark: false };
-    }
+const App = () => {
+    const [darkTheme, setDarkTheme] = useState(false);
+    const theme = createMuiTheme({
+        palette: {
+            type: darkTheme ? 'dark' : 'light',
+            primary: {
+                main: '#00c853',
+                light: '#96ed98',
+                dark: '#31893d',
+            },
+            secondary: {
+                main: '#ffcc80',
+                light: '#ffffb0',
+                dark: '#ca9b52',
+            },
+        },
+        typography: {
+            h6: {
+                fontFamily: ['Bubblegum Sans', 'Roboto', 'Helvetica', 'Arial', 'sans-serif'],
+                fontSize: '1.5rem',
+            },
+        },
+    });
 
-    toggleDarkTheme = () => {
-        const cookies = new Cookies();
-        cookies.set('dark', !this.state.dark, { path: '/', sameSite: 'strict' });
-        this.setState({ dark: !this.state.dark });
-    };
-
-    componentDidMount() {
-        const cookies = new Cookies();
-        const dark = cookies.get('dark');
-        const defaultDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
-        if (dark === undefined) {
-            if (defaultDark) {
-                cookies.set('dark', true, { path: '/', sameSite: 'strict' });
-                this.setState({ dark: true });
-            }
-        } else if (dark === 'true') this.setState({ dark: true });
-    }
-
-    render() {
-        const isStaging = window.location.origin !== 'https://tams.club';
-        return (
-            <div className={`App ${this.state.dark ? 'dark' : ''}`}>
+    return (
+        <ThemeProvider theme={theme}>
+            <CssBaseline />
+            <div className="App">
                 <BrowserRouter>
-                    <ActionButton
-                        className="toggle-dark-theme"
-                        onClick={this.toggleDarkTheme}
-                        title="Toggle Dark Theme!"
-                    >
-                        !
-                    </ActionButton>
-                    <p className={isActive('staging-text', isStaging)}>STAGING</p>
-                    <RoutingRequests />
-                    <Menu />
+                    <Menu setDarkTheme={setDarkTheme} darkTheme={darkTheme} />
                     <div className="page">
                         <Switch>
                             <Route exact path={['/', '/events']} component={Home} />
@@ -65,7 +51,6 @@ class App extends React.Component {
                             <Route exact path="/clubs" component={Clubs} />
                             <Route exact path="/resources" component={Resources} />
                             <Route exact path="/about" component={About} />
-                            <Route exact path="/search" component={Search} />
                             <Route exact path="/auth" component={Auth} />
                             <Route exact path="/admin" component={Admin} />
                             <Route path="/edit" component={Edit} />
@@ -74,8 +59,8 @@ class App extends React.Component {
                     </div>
                 </BrowserRouter>
             </div>
-        );
-    }
-}
+        </ThemeProvider>
+    );
+};
 
 export default App;

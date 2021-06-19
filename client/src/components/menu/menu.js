@@ -1,120 +1,35 @@
 import React from 'react';
-import { connect } from 'react-redux';
-import { NavLink, withRouter } from 'react-router-dom';
-import SearchBar from './search-bar';
+import MenuLink from './menu-link';
+import Appbar from '@material-ui/core/AppBar';
+import Toolbar from '@material-ui/core/Toolbar';
+import AppIcon from './app-icon';
+import { makeStyles } from '@material-ui/core/styles';
 
-import { getMobileDropdown } from '../../redux/selectors';
-import { setMobileDropdown } from '../../redux/actions';
-import { ReactComponent as Logo } from '../../files/logo-small.svg';
-import './menu.scss';
+const createStyles = makeStyles({
+    root: {
+        paddingTop: '0.75rem',
+        paddingBottom: '0.75rem',
+    },
+    logo: {
+        flexGrow: 1,
+    },
+});
 
-class Menu extends React.Component {
-    constructor(props) {
-        super(props);
-        this.state = { searchBar: <SearchBar className="menu-item"></SearchBar> };
-    }
+const Menu = () => {
+    const classes = createStyles();
 
-    clickDropdown = () => {
-        this.props.setMobileDropdown(!this.props.mobileDropdown);
-    };
-
-    navHome = () => {
-        this.props.history.push('/');
-    };
-
-    logoActive = () => {
-        return ['/', '/events', '/edit/events', '/edit/volunteering', '/edit/clubs'].includes(window.location.pathname);
-    };
-
-    componentDidMount() {
-        if (location.pathname.includes('/search')) this.setState({ searchBar: null });
-    }
-
-    componentDidUpdate(prevProps) {
-        if (this.props.location === prevProps.location) return;
-
-        if (this.props.location.pathname.includes('/search')) this.setState({ searchBar: null });
-        else this.setState({ searchBar: <SearchBar className="menu-item"></SearchBar> });
-        if (this.props.location.search === '' && this.props.location.pathname !== prevProps.location.pathname) {
-            window.scrollTo(0, 0);
-        }
-    }
-
-    render() {
-        return (
-            <div className="menu">
-                <div className="menu-list">
-                    <NavLink
-                        className="menu-item menu-logo"
-                        activeClassName="active"
-                        to="/"
-                        isActive={this.logoActive}
-                        exact
-                    >
-                        <div className="menu-logo-tams">TAMS</div>
-                        <div className="menu-logo-club">Club Calendar</div>
-                    </NavLink>
-                    <NavLink className="menu-item" activeClassName="active" to="/volunteering" exact>
-                        Volunteering
-                    </NavLink>
-                    <NavLink className="menu-item" activeClassName="active" to="/clubs" exact>
-                        Clubs
-                    </NavLink>
-                    <NavLink className="menu-item" activeClassName="active" to="/resources" exact>
-                        Resources
-                    </NavLink>
-                    <NavLink className="menu-item" activeClassName="active" to="/about" exact>
-                        About
-                    </NavLink>
-                    <div className="search-bar-wrapper menu-item">{this.state.searchBar}</div>
-                </div>
-                <div className="mobile-menu">
-                    <Logo className="mobile-menu-logo" onClick={this.navHome}></Logo>
-                    <svg
-                        className={'hamburger' + (this.props.mobileDropdown ? ' ham-active' : '')}
-                        viewBox="0 0 100 80"
-                        width="30"
-                        height="30"
-                        onClick={this.clickDropdown}
-                    >
-                        <rect width="80" height="15"></rect>
-                        <rect y="30" width="80" height="15"></rect>
-                        <rect y="60" width="80" height="15"></rect>
-                    </svg>
-                </div>
-                <div className={'mobile-menu-dropdown' + (this.props.mobileDropdown ? ' drop-active' : '')}>
-                    <NavLink
-                        className="menu-item mob-item"
-                        activeClassName="active"
-                        isActive={() => ['/', '/events'].includes(window.location.pathname)}
-                        to="/"
-                        exact
-                    >
-                        Home
-                    </NavLink>
-                    <NavLink className="menu-item mob-item" activeClassName="active" to="/volunteering" exact>
-                        Volunteering
-                    </NavLink>
-                    <NavLink className="menu-item mob-item" activeClassName="active" to="/clubs" exact>
-                        Clubs
-                    </NavLink>
-                    <NavLink className="menu-item mob-item" activeClassName="active" to="/resources" exact>
-                        Resources
-                    </NavLink>
-                    <NavLink className="menu-item mob-item" activeClassName="active" to="/about" exact>
-                        About
-                    </NavLink>
-                </div>
-            </div>
-        );
-    }
-}
-
-const mapStateToProps = (state) => {
-    return {
-        mobileDropdown: getMobileDropdown(state),
-    };
+    return (
+        <Appbar className="menu">
+            <Toolbar className={classes.root}>
+                <AppIcon className={classes.logo}></AppIcon>
+                <MenuLink to="/">Home</MenuLink>
+                <MenuLink to="/volunteering">Volunteering</MenuLink>
+                <MenuLink to="/clubs">Clubs</MenuLink>
+                <MenuLink to="/resources">Resources</MenuLink>
+                <MenuLink to="/about">About</MenuLink>
+            </Toolbar>
+        </Appbar>
+    );
 };
-const mapDispatchToProps = { setMobileDropdown };
 
-export default connect(mapStateToProps, mapDispatchToProps)(withRouter(Menu));
+export default Menu;
