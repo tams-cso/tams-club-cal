@@ -23,13 +23,13 @@ const createStyles = makeStyles((theme) => ({
     button: {
         width: drawerWidth - 50,
         marginTop: '1rem',
-        color: theme.palette.grey[700],
+        color: theme.palette.type === 'light' ? theme.palette.grey[700] : theme.palette.grey[500],
     },
     buttonActive: {
-        color: theme.palette.primary.main,
-        backgroundColor: '#eee',
+        color: theme.palette.type === 'light' ? theme.palette.primary.main : theme.palette.primary.light,
+        backgroundColor: theme.palette.type === 'light' ? theme.palette.grey[200] : theme.palette.grey[700],
         '&:hover': {
-            backgroundColor: '#eee',
+            backgroundColor: theme.palette.type === 'light' ? theme.palette.grey[200] : theme.palette.grey[700],
         },
     },
 }));
