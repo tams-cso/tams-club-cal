@@ -22,7 +22,7 @@ const MenuIcon = (props) => {
     const classes = useStyles();
     return (
         <Tooltip title={props.title} aria-label={props['aria-label']}>
-            <ButtonBase onClick={props.onClick} className={classes.root} display="flex" alignItems="center">
+            <ButtonBase onClick={props.onClick} className={classes.root}>
                 {props.children}
             </ButtonBase>
         </Tooltip>

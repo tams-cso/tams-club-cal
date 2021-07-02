@@ -53,7 +53,7 @@ function AppIcon(props) {
     const classes = createStyles();
     return (
         <NavLink className={`${props.className} ${classes.root}`} to="/">
-            <Box display="flex" flexDirection="row" alignItems="center">
+            <Box>
                 <SvgIcon viewBox="0 0 39.53 29.56" titleAccess="app-icon" fontSize="large" className={classes.svg}>
                     <rect className={classes.a} x="3.14" y="0.5" width="25.92" height="25.92" />
                     <polygon className={classes.b} points="0.5 3.14 3.14 0.5 3.14 26.42 0.5 29.06 0.5 3.14" />
