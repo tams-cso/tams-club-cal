@@ -16,6 +16,11 @@ const createStyles = makeStyles((theme) => ({
         marginLeft: '1rem',
         color: darkSwitch(theme, theme.palette.common.white, theme.palette.primary.main),
     },
+    centerBox: {
+        display: 'flex',
+        flexDirection: 'row',
+        alignItems: 'center',
+    },
     a: {
         fill: '#7cc466',
         stroke: '#231f20',
@@ -53,7 +58,7 @@ function AppIcon(props) {
     const classes = createStyles();
     return (
         <NavLink className={`${props.className} ${classes.root}`} to="/">
-            <Box>
+            <Box className={classes.centerBox}>
                 <SvgIcon viewBox="0 0 39.53 29.56" titleAccess="app-icon" fontSize="large" className={classes.svg}>
                     <rect className={classes.a} x="3.14" y="0.5" width="25.92" height="25.92" />
                     <polygon className={classes.b} points="0.5 3.14 3.14 0.5 3.14 26.42 0.5 29.06 0.5 3.14" />
