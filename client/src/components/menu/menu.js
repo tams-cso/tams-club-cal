@@ -14,8 +14,6 @@ import { githubLink } from '../../files/data.json';
 
 const createStyles = makeStyles((theme) => ({
     root: {
-        paddingTop: '0.75rem',
-        paddingBottom: '0.75rem',
         backgroundColor: theme.palette.type === 'light' ? theme.palette.primary.main : theme.palette.grey[900],
     },
     bar: {
