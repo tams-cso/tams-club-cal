@@ -1,5 +1,7 @@
-import { ButtonBase, fade, makeStyles, Tooltip } from '@material-ui/core';
-import Box from '@material-ui/core/Box';
+import { fade, makeStyles } from '@material-ui/core/styles';
+import ButtonBase from '@material-ui/core/ButtonBase';
+import Tooltip from '@material-ui/core/Tooltip';
+import { darkSwitch } from '../../functions/util';
 
 const useStyles = makeStyles((theme) => ({
     root: {
@@ -9,7 +11,7 @@ const useStyles = makeStyles((theme) => ({
         borderRadius: '10rem',
         backgroundColor: 'transparent',
         '&:hover': {
-            backgroundColor: fade(theme.palette.type === 'light' ? '#000000' : '#ffffff', 0.1),
+            backgroundColor: fade(darkSwitch(theme, theme.palette.common.black, theme.palette.common.white), 0.1),
         },
         cursor: 'pointer',
         transition: '0.2s',

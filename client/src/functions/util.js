@@ -205,14 +205,39 @@ export function millisToDateAndTime(millis) {
     };
 }
 
+// TODO: Remove all references to this function
+// /**
+//  * Adds 'active' or 'inactive' to an element's classname.
+//  *
+//  * @param {string} className Base name of the class
+//  * @param {boolean} state State variable, true would be active
+//  */
+// export function isActive(className, state) {
+//     return `${className} ${state ? 'active' : 'inactive'}`;
+// }
+
 /**
- * Adds 'active' or 'inactive' to an element's classname.
+ * Adds an extra 'active' classname to an element's classname if state is true.
  *
- * @param {string} className Base name of the class
  * @param {boolean} state State variable, true would be active
+ * @param {string} defualtClassName Base name of the class
+ * @param {string} activeClassName Name of the active class
+ * @returns {string} Classname string
  */
-export function isActive(className, state) {
-    return `${className} ${state ? 'active' : 'inactive'}`;
+export function isActive(state, defaultClassName, activeClassName) {
+    return `${defaultClassName} ${state ? activeClassName : ''}`;
+}
+
+/**
+ * Sets a style depending on whether or not the theme is light/dark
+ * 
+ * @param {import('@material-ui/core').Theme} theme The Mui theme object
+ * @param {string} light Light theme style
+ * @param {string} dark Dark theme style
+ * @returns {string} Style string
+ */
+export function darkSwitch(theme, light, dark) {
+    return theme.palette.type === 'light' ? light : dark;
 }
 
 /**

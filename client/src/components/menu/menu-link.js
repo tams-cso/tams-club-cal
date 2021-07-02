@@ -3,6 +3,7 @@ import { NavLink, useLocation } from 'react-router-dom';
 import { makeStyles, fade } from '@material-ui/core/styles';
 import Typography from '@material-ui/core/Typography';
 import { Box } from '@material-ui/core';
+import { darkSwitch, isActive } from '../../functions/util';
 
 const useStyles = makeStyles((theme) => ({
     root: {
@@ -10,9 +11,10 @@ const useStyles = makeStyles((theme) => ({
         paddingLeft: '1rem',
         paddingRight: '1rem',
         textDecoration: 'none',
+        borderColor: 'transparent',
         backgroundColor: 'transparent',
         '&:hover': {
-            backgroundColor: fade(theme.palette.type === 'light' ? '#000000' : '#ffffff', 0.1),
+            backgroundColor: fade(darkSwitch(theme, theme.palette.common.black, theme.palette.common.white), 0.1),
         },
         transition: '0.2s',
     },
@@ -26,7 +28,10 @@ const useStyles = makeStyles((theme) => ({
     text: {
         marginLeft: '0.5rem',
         marginRight: '0.5rem',
-        color: theme.palette.type === 'light' ? 'white' : theme.palette.grey[400],
+        color: darkSwitch(theme, theme.palette.grey[200], theme.palette.grey[400]),
+    },
+    textActive: {
+        color: darkSwitch(theme, theme.palette.common.white, theme.palette.primary.light),
     },
     textCenter: {
         height: '4rem',
@@ -48,9 +53,9 @@ const MenuLink = (props) => {
     }, [location]);
 
     return (
-        <NavLink className={`${classes.root} ${active ? classes.rootActive : ''}`} to={props.to} exact>
+        <NavLink className={isActive(active, classes.root, classes.rootActive)} to={props.to} exact>
             <Box className={classes.textCenter}>
-                <Typography variant="h6" className={classes.text}>
+                <Typography variant="h6" className={isActive(active, classes.text, classes.textActive)}>
                     {props.children}
                 </Typography>
             </Box>

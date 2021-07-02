@@ -6,6 +6,7 @@ import SvgIcon from '@material-ui/core/SvgIcon';
 import WbSunnyRoundedIcon from '@material-ui/icons/WbSunnyRounded';
 import Brightness2RoundedIcon from '@material-ui/icons/Brightness2Rounded';
 import AccountCircleOutlinedIcon from '@material-ui/icons/AccountCircleOutlined';
+import { darkSwitch } from '../../functions/util';
 
 import AppIcon from './app-icon';
 import MenuLink from './menu-link';
@@ -14,7 +15,7 @@ import { githubLink } from '../../files/data.json';
 
 const createStyles = makeStyles((theme) => ({
     root: {
-        backgroundColor: theme.palette.type === 'light' ? theme.palette.primary.main : theme.palette.grey[900],
+        backgroundColor: darkSwitch(theme, theme.palette.primary.main, theme.palette.grey[900]),
     },
     bar: {
         position: 'sticky',
@@ -24,18 +25,18 @@ const createStyles = makeStyles((theme) => ({
         flexGrow: 1,
     },
     icon: {
-        fill: theme.palette.type === 'light' ? 'white' : theme.palette.grey[400],
+        fill: darkSwitch(theme, 'white', theme.palette.grey[400]),
         fontSize: '2rem',
     },
     githubWrapper: {
-        color: theme.palette.type === 'light' ? 'white' : theme.palette.grey[400],
+        color: darkSwitch(theme, 'white', theme.palette.grey[400]),
         lineHeight: 0,
     },
     githubIcon: {
         fontSize: '2rem',
     },
     githubPath: {
-        fill: theme.palette.type === 'light' ? 'white' : theme.palette.grey[400],
+        fill: darkSwitch(theme, 'white', theme.palette.grey[400]),
         fillRule: 'evenodd',
     },
 }));

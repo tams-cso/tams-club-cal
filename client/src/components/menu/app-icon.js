@@ -3,6 +3,7 @@ import { makeStyles } from '@material-ui/core/styles';
 import SvgIcon from '@material-ui/core/SvgIcon';
 import Typography from '@material-ui/core/Typography';
 import Box from '@material-ui/core/Box';
+import { darkSwitch } from '../../functions/util';
 
 const createStyles = makeStyles((theme) => ({
     root: {
@@ -13,7 +14,7 @@ const createStyles = makeStyles((theme) => ({
     },
     title: {
         marginLeft: '1rem',
-        color: theme.palette.type === 'light' ? 'white' : theme.palette.primary.main,
+        color: darkSwitch(theme, theme.palette.common.white, theme.palette.primary.main),
     },
     a: {
         fill: '#7cc466',
