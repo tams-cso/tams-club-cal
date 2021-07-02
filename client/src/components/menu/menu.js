@@ -25,18 +25,18 @@ const createStyles = makeStyles((theme) => ({
         flexGrow: 1,
     },
     icon: {
-        fill: darkSwitch(theme, 'white', theme.palette.grey[400]),
+        fill: darkSwitch(theme, theme.palette.common.white, theme.palette.grey[400]),
         fontSize: '2rem',
     },
     githubWrapper: {
-        color: darkSwitch(theme, 'white', theme.palette.grey[400]),
+        color: darkSwitch(theme, theme.palette.common.white, theme.palette.grey[400]),
         lineHeight: 0,
     },
     githubIcon: {
         fontSize: '2rem',
     },
     githubPath: {
-        fill: darkSwitch(theme, 'white', theme.palette.grey[400]),
+        fill: darkSwitch(theme, theme.palette.common.white, theme.palette.grey[400]),
         fillRule: 'evenodd',
     },
 }));
@@ -64,9 +64,8 @@ const Menu = (props) => {
             <Toolbar className={classes.root}>
                 <AppIcon className={classes.logo}></AppIcon>
                 <MenuLink to="/">Home</MenuLink>
-                <MenuLink to="/volunteering">Volunteering</MenuLink>
                 <MenuLink to="/clubs">Clubs</MenuLink>
-                <MenuLink to="/resources">Resources</MenuLink>
+                <MenuLink to="/volunteering">Volunteering</MenuLink>
                 <MenuLink to="/about">About</MenuLink>
                 <MenuIcon
                     title={`Switch to ${props.darkTheme ? 'light' : 'dark'} theme`}

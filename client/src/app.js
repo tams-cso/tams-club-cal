@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { BrowserRouter, Route, Switch } from 'react-router-dom';
 import { createMuiTheme, ThemeProvider } from '@material-ui/core/styles';
 import CssBaseline from '@material-ui/core/CssBaseline';
+import Cookies from 'universal-cookie';
 
 import Menu from './components/menu/menu';
 import About from './components/about/about';
@@ -11,10 +12,7 @@ import NotFound from './components/404/404';
 import Volunteering from './components/volunteering/volunteering';
 import Edit from './components/edit/edit';
 import Admin from './components/admin/admin';
-
-import Resources from './components/resources/resources';
 import Auth from './components/edit/auth';
-import Cookies from 'universal-cookie';
 
 const App = () => {
     const cookies = new Cookies();
@@ -55,7 +53,6 @@ const App = () => {
                     <Route exact path="/" component={Home} />
                     <Route exact path="/volunteering" component={Volunteering} />
                     <Route exact path="/clubs" component={Clubs} />
-                    <Route exact path="/resources" component={Resources} />
                     <Route exact path="/about" component={About} />
                     <Route exact path="/auth" component={Auth} />
                     <Route exact path="/admin" component={Admin} />
