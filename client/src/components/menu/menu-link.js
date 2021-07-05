@@ -55,7 +55,7 @@ const MenuLink = (props) => {
     return (
         <NavLink className={isActive(active, classes.root, classes.rootActive)} to={props.to} exact>
             <Box className={classes.textCenter}>
-                <Typography variant="h6" className={isActive(active, classes.text, classes.textActive)}>
+                <Typography variant="h5" className={isActive(active, classes.text, classes.textActive)}>
                     {props.children}
                 </Typography>
             </Box>

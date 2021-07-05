@@ -1,20 +1,12 @@
 import React from 'react';
-import './date-section.scss';
+import { Typography } from '@material-ui/core';
 
-class DateSection extends React.Component {
-    constructor(props) {
-        super(props);
-    }
-
-    render() {
-        return (
-            <div className="date-section">
-                <div className="date-section-line left"></div>
-                <p className="date-section-date">{this.props.date}</p>
-                <div className="date-section-line right"></div>
-            </div>
-        );
-    }
-}
+const DateSection = () => {
+    return (
+        <Typography variant="h6" component="h2">
+            Monday 12/10/2021
+        </Typography>
+    );
+};
 
 export default DateSection;

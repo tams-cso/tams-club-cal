@@ -50,6 +50,9 @@ const createStyles = makeStyles((theme) => ({
         marginTop: '1rem',
         marginBottom: '0.5rem',
     },
+    listIcon: {
+        minWidth: '40px',
+    },
 }));
 
 const HomeDrawer = (props) => {
@@ -78,32 +81,32 @@ const HomeDrawer = (props) => {
             <Divider variant="middle" className={classes.divider} />
             <List>
                 <ListItem button component="a" href={data.examCalendar}>
-                    <ListItemIcon>
+                    <ListItemIcon className={classes.listIcon}>
                         <EventRoundedIcon />
                     </ListItemIcon>
                     <ListItemText primary="Exam Calendar" />
                 </ListItem>
                 <ListItem button component="a" href={data.academicsGuide}>
-                    <ListItemIcon>
+                    <ListItemIcon className={classes.listIcon}>
                         <CreateRoundedIcon />
                     </ListItemIcon>
                     <ListItemText primary="Academics Guide" />
                 </ListItem>
                 <ListItem button component="a" href={data.clubLeaderResources}>
-                    <ListItemIcon>
+                    <ListItemIcon className={classes.listIcon}>
                         <EmojiPeopleRoundedIcon />
                     </ListItemIcon>
                     <ListItemText primary="Club Leader Resources" />
                 </ListItem>
                 <ListItem button component="a" href={data.tamsWiki}>
-                    <ListItemIcon>
+                    <ListItemIcon className={classes.listIcon}>
                         <PublicRoundedIcon />
                     </ListItemIcon>
                     <ListItemText primary="TAMS Wiki" />
                 </ListItem>
                 {/* TODO: Check if staging and use data.addStagingCalendar */}
                 <ListItem button component="a" href={data.addCalendar}>
-                    <ListItemIcon>
+                    <ListItemIcon className={classes.listIcon}>
                         <EventAvailableRoundedIcon />
                     </ListItemIcon>
                     <ListItemText primary="Add this to your Calendar!" />

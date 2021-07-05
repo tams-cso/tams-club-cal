@@ -33,10 +33,10 @@ const App = () => {
             },
         },
         typography: {
-            h6: {
+            h5: {
                 fontFamily: ['Bubblegum Sans', 'Roboto', 'Helvetica', 'Arial', 'sans-serif'],
                 fontSize: '1.5rem',
-            },
+            }
         },
     });
 
