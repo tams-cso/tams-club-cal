@@ -82,7 +82,7 @@ function AppIcon(props) {
                     <path className={classes.f} d="M22.28,8.58c.78,4.28,5.31,10.2,5.31,10.2" />
                     <path className={classes.f} d="M18.38,8.46c0,3.09,2.89,7.51,5.13,10.25" />
                 </SvgIcon>
-                <Typography variant="h6" className={classes.title}>
+                <Typography variant="h5" className={classes.title}>
                     TAMS Club Calendar
                 </Typography>
             </Box>
