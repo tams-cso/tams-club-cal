@@ -1,4 +1,4 @@
-import dayjs from 'dayjs';
+import dayjs, { Dayjs } from 'dayjs';
 import utc from 'dayjs/plugin/utc';
 import timezone from 'dayjs/plugin/timezone';
 import isLeapYear from 'dayjs/plugin/isLeapYear';
@@ -22,6 +22,64 @@ export function getParams(query) {
 }
 
 /**
+ * Adds an extra 'active' classname to an element's classname if state is true.
+ *
+ * @param {boolean} state State variable, true would be active
+ * @param {string} defualtClassName Base name of the class
+ * @param {string} activeClassName Name of the active class
+ * @returns {string} Classname string
+ */
+export function isActive(state, defaultClassName, activeClassName) {
+    return `${defaultClassName} ${state ? activeClassName : ''}`;
+}
+
+/**
+ * Sets a style depending on whether or not the theme is light/dark
+ * 
+ * @param {import('@material-ui/core').Theme} theme The Mui theme object
+ * @param {string} light Light theme style
+ * @param {string} dark Dark theme style
+ * @returns {string} Style string
+ */
+export function darkSwitch(theme, light, dark) {
+    return theme.palette.type === 'light' ? light : dark;
+}
+
+/**
+ * Returns the dayjs object, corrected to the current time zone
+ * 
+ * @param {Number} millis UTC millisecond time
+ * @returns {dayjs.Dayjs} The dayjs object in the correct time zone
+ */
+export function toTz(millis) {
+    return dayjs(Number(millis)).tz('America/Chicago');
+}
+
+/**
+ * Formats a UTC millisecond time while converting to America/Chicago timezone
+ * 
+ * @param {Number} millis UTC millisecond time to format
+ * @param {string} format Dayjs format to format the time to
+ * @returns {string} The formatted time
+ */
+export function formatTime(millis, format) {
+    return toTz(millis).format(format);
+}
+
+/**
+ * Checks if the date is the same between two UTC millisecond times, in the current time zone.
+ * 
+ * @param {Number} first The first UTC millisecond time
+ * @param {Number} second The second UTC millisecond time
+ * @returns {boolean} True if the two times fall on the same date (between 00:00:00.000 and 23:59:59.999)
+ */
+export function isSameDate(first, second) {
+    return formatTime(first, 'MM/DD/YYYY') === formatTime(second, 'MM/DD/YYYY');
+}
+
+// ================== OLD FUNCTIONS =================== //
+
+/**
  * Parses a time using dayjs and returns the seconds in milliseconds.
  * See the docs for dayjs: https://day.js.org/docs/en/timezone/timezone
  *
@@ -29,7 +87,7 @@ export function getParams(query) {
  * @param {string} tz Tz database time zone (https://en.wikipedia.org/wiki/List_of_tz_database_time_zones)
  * @returns {number} Milliseconds since Jan 1, 1970 [UTC time]
  */
-export function parseTimeZone(input, tz) {
+export function parseToTimeZone(input, tz) {
     return dayjs.tz(input, 'YYYY-MM-DD HH:mm', tz).valueOf();
 }
 
@@ -203,41 +261,6 @@ export function millisToDateAndTime(millis) {
         date: dayObj.format('YYYY-MM-DD'),
         time: dayObj.format('HH:mm'),
     };
-}
-
-// TODO: Remove all references to this function
-// /**
-//  * Adds 'active' or 'inactive' to an element's classname.
-//  *
-//  * @param {string} className Base name of the class
-//  * @param {boolean} state State variable, true would be active
-//  */
-// export function isActive(className, state) {
-//     return `${className} ${state ? 'active' : 'inactive'}`;
-// }
-
-/**
- * Adds an extra 'active' classname to an element's classname if state is true.
- *
- * @param {boolean} state State variable, true would be active
- * @param {string} defualtClassName Base name of the class
- * @param {string} activeClassName Name of the active class
- * @returns {string} Classname string
- */
-export function isActive(state, defaultClassName, activeClassName) {
-    return `${defaultClassName} ${state ? activeClassName : ''}`;
-}
-
-/**
- * Sets a style depending on whether or not the theme is light/dark
- * 
- * @param {import('@material-ui/core').Theme} theme The Mui theme object
- * @param {string} light Light theme style
- * @param {string} dark Dark theme style
- * @returns {string} Style string
- */
-export function darkSwitch(theme, light, dark) {
-    return theme.palette.type === 'light' ? light : dark;
 }
 
 /**

@@ -13,6 +13,7 @@ import Volunteering from './components/volunteering/volunteering';
 import Edit from './components/edit/edit';
 import Admin from './components/admin/admin';
 import Auth from './components/edit/auth';
+import ErrorPage from './components/404/error-page';
 
 const App = () => {
     const cookies = new Cookies();
@@ -33,10 +34,23 @@ const App = () => {
             },
         },
         typography: {
+            h3: {
+                fontSize: '1.25rem',
+                fontWeight: '500',
+            },
+            h4: {
+                fontFamily: ['Roboto Mono', 'monospace'],
+                fontSize: '1.25rem',
+                fontWeight: '500',
+                color: '#555555',
+            },
             h5: {
                 fontFamily: ['Bubblegum Sans', 'Roboto', 'Helvetica', 'Arial', 'sans-serif'],
                 fontSize: '1.5rem',
-            }
+            },
+            h6: {
+                fontWeight: '600',
+            },
         },
     });
 
@@ -57,6 +71,7 @@ const App = () => {
                     <Route exact path="/auth" component={Auth} />
                     <Route exact path="/admin" component={Admin} />
                     <Route path="/edit" component={Edit} />
+                    <Route exact path="/error" component={ErrorPage} />
                     <Route component={NotFound} />
                 </Switch>
             </BrowserRouter>

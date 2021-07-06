@@ -54,6 +54,12 @@ function addEmail() {
     return email;
 }
 
+/**
+ * Gets the list of events
+ * Default options will return ~20 events including the current day
+ * 
+ * @returns {Promise<FetchResponse>} Will return the object or error object
+ */
 export async function getEventList() {
     return getRequest('/events');
 }

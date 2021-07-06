@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { makeStyles } from '@material-ui/core/styles';
 import HomeDrawer from './home-drawer';
-import EventsList from './events-list';
+import EventList from './event-list';
 
 const createStyles = makeStyles({
     root: {
@@ -17,7 +17,7 @@ const Home = () => {
     return (
         <div className={classes.root}>
             <HomeDrawer scheduleView={scheduleView} setScheduleView={setScheduleView}></HomeDrawer>
-            <EventsList></EventsList>
+            <EventList></EventList>
         </div>
     );
 };

@@ -1,5 +1,38 @@
 [
     {
+        "_id": "604fecf6d9580b776ea1163e",
+        "id": "f7b7c012-4c1f-4b0a-b6e8-388b7227f24e",
+        "eventId": "wirohgju234ngf9u23ngfu24ne",
+        "type": "event",
+        "name": "Sports Trivia Night GA",
+        "description": "Hey what’s GOOOOOOD everyone! 🥎🏈🎾🏐🏀⚾️⚽️\n\nGet your alarms 🕖(and friends) ready for tonight at 7 PM (03/15 7:00 PM) for Sports Club’s Trivia GA hosted by 😍 Stone Nwamadi, Isha Simha, Aadhunik Sundar, and myself 😍. Get in teams of 2 for a chance to win a 💵prize 💵! Even if you’re not too familiar with sports, make sure to join us for a special bonus game 😛 at the end. Here's the link:\n\nhttps://unt.zoom.us/j/81711183852\n\nPlz plz plz 🥺turn your cameras 📷 on so its not 😀 awkward 😀",
+        "club": "Sports Club",
+        "start": 1626138000000,
+        "end": 1626141600000
+    },
+    {
+        "_id": "60408815834fbb19e9aea93c",
+        "id": "57c12ea9-f457-4f8a-9980-922a5b01a988",
+        "eventId": "kb7bho3j4ngff1ud10c40pqj7o",
+        "type": "event",
+        "name": "HOPE Auction Hype GA",
+        "description": "✨IT’S HOPE AUCTION WEEK Y’ALL!!!✨\n\nGet excited for the BIGGEST social event of the year with us at our HOPE Auction Hype GA at 7 PM tomorrow, Monday 3/01 (yes it’s march already :0). We will be going over how you can attend, what to expect, and other spicy 🌶 details.\nZoom link: https://unt.zoom.us/j/96695787300\nSee everyone there! 🎉🎉🎉",
+        "club": "HOPE",
+        "start": 1626138000000,
+        "end": 1626141600000
+    },
+    {
+        "_id": "429fed003e9d0ea0ef9edc0c",
+        "id": "eed7a45f-8ca8-489c-be59-aaf993bfe097",
+        "eventId": "gjf2348fjeifmn2fnm23ifn2ut",
+        "type": "event",
+        "name": "Biocomputing GA",
+        "description": "Hello ducks!!!\n\nAre you interested in computer science? Are you interested in biology? Come to our Biocomputing GA today (March 10) @ 7 pm to see what crazy stuff computer science and biology combined have created! There will be (virtual) food and drinks!!!!!\n\nWhen? 3/10/21 @ 7 pm\nWhere? Zoom University: https://unt.zoom.us/j/7855998924?pwd=aFZTNHlrRkt2RExrMDlZSmJnTWhlQT09\n\nBio + cs … what more can you ask?\nPost created by: Dylan, Jocelyn, Brianna, Timothy, and Kanav",
+        "club": "CSO",
+        "start": 1626141600000,
+        "end": 1626231600000
+    },
+    {
         "_id": "604083d041c8791688957d56",
         "id": "2354dffd-4f1b-46fc-8edb-b292b9517132",
         "eventId": "p6vjk3g8u4opptpohe4as783no",
@@ -9,16 +42,5 @@
         "club": "HOPE",
         "start": 1626566400000,
         "end": 1626580800000
-    },
-    {
-        "_id": { "$oid": "60408815834fbb19e9aea93c" },
-        "id": "57c12ea9-f457-4f8a-9980-922a5b01a988",
-        "eventId": "kb7bho3j4ngff1ud10c40pqj7o",
-        "type": "event",
-        "name": "HOPE Auction Hype GA",
-        "description": "✨IT’S HOPE AUCTION WEEK Y’ALL!!!✨\n\nGet excited for the BIGGEST social event of the year with us at our HOPE Auction Hype GA at 7 PM tomorrow, Monday 3/01 (yes it’s march already :0). We will be going over how you can attend, what to expect, and other spicy 🌶 details.\nZoom link: https://unt.zoom.us/j/96695787300\nSee everyone there! 🎉🎉🎉",
-        "club": "HOPE",
-        "start": 1626138000000,
-        "end": 1626141600000
     }
 ]

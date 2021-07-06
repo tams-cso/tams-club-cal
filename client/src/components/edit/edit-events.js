@@ -4,7 +4,7 @@ import ActionButton from '../shared/action-button';
 import { getEvent, postEvent } from '../../functions/api';
 import { Event } from '../../functions/entries';
 import {
-    parseTimeZone,
+    parseToTimeZone,
     getTimezone,
     getParams,
     millisToDateAndTime,
@@ -58,8 +58,8 @@ class EditEvents extends React.Component {
     // If the ending time is set AFTER the starting time, then we will set the end to the start time
     updateTimeInterval = () => {
         if (this.state.type === 'signup') return;
-        var start = parseTimeZone(`${this.state.startDate} ${this.state.startTime}`, getTimezone());
-        var end = parseTimeZone(`${this.state.endDate} ${this.state.endTime}`, getTimezone());
+        var start = parseToTimeZone(`${this.state.startDate} ${this.state.startTime}`, getTimezone());
+        var end = parseToTimeZone(`${this.state.endDate} ${this.state.endTime}`, getTimezone());
 
         if (start > end) end = start;
         const endDatetime = millisToDateAndTime(end);
@@ -72,7 +72,7 @@ class EditEvents extends React.Component {
     syncEndDateTimeToStart = () => {
         if (this.state.type === 'signup') return;
 
-        var start = parseTimeZone(`${this.state.startDate} ${this.state.startTime}`, getTimezone());
+        var start = parseToTimeZone(`${this.state.startDate} ${this.state.startTime}`, getTimezone());
         var end = start + this.state.interval;
 
         const endDatetime = millisToDateAndTime(end);
@@ -92,11 +92,11 @@ class EditEvents extends React.Component {
 
         // Calculate milliseconds from starting/ending datetimes
         var end = null;
-        var start = parseTimeZone(`${this.state.startDate} ${this.state.startTime}`, getTimezone());
+        var start = parseToTimeZone(`${this.state.startDate} ${this.state.startTime}`, getTimezone());
 
         // Set the end time or set it equal to start time if it's a signup
         if (this.state.type === 'event')
-            end = parseTimeZone(`${this.state.endDate} ${this.state.endTime}`, getTimezone());
+            end = parseToTimeZone(`${this.state.endDate} ${this.state.endTime}`, getTimezone());
         else end = start;
 
         // Check for invalid ending times
