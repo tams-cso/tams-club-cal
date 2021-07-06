@@ -11,17 +11,19 @@ import { getEventList } from '../../functions/api';
 import { isSameDate } from '../../functions/util';
 
 import EventListSection from './event-list-section';
+import Loading from '../shared/loading';
 
 const useStyles = makeStyles({
     root: {
         overflowX: 'hidden',
+        minHeight: '100vh'
     },
 });
 
 const EventList = () => {
     const dispatch = useDispatch();
     const eventList = useSelector(getSavedEventList);
-    const [eventComponentList, setEventComponentList] = useState([]);
+    const [eventComponentList, setEventComponentList] = useState(<Loading />);
     const history = useHistory();
 
     useEffect(async () => {

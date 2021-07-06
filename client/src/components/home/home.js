@@ -17,7 +17,7 @@ const Home = () => {
     return (
         <div className={classes.root}>
             <HomeDrawer scheduleView={scheduleView} setScheduleView={setScheduleView}></HomeDrawer>
-            <EventList></EventList>
+            <EventList />
         </div>
     );
 };
