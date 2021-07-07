@@ -6,8 +6,7 @@ import { makeStyles } from '@material-ui/core';
 
 const useStyles = makeStyles({
     card: {
-        width: 'min-content',
-        margin: 'auto',
+        margin: '0 20%',
         padding: '1rem',
     },
     text: {
@@ -15,14 +14,30 @@ const useStyles = makeStyles({
     },
 });
 
-const Loading = () => {
+/**
+ * Loading screen for all data, as well as an error message display
+ * if the error field is defined.
+ * 
+ * @param {object} props React props object
+ * @param {string} props.error If true, shows error message
+ */
+const Loading = (props) => {
     const classes = useStyles();
     return (
         <Container>
             <Card elevation={2} className={classes.card}>
-                <Typography variant="h2" className={classes.text}>
-                    Loading...
-                </Typography>
+                {props.error !== undefined ? (
+                    <React.Fragment>
+                        <Typography variant="h2" className={classes.text}>
+                            ERROR :(
+                        </Typography>
+                        <Typography className={classes.text}>{props.children}</Typography>
+                    </React.Fragment>
+                ) : (
+                    <Typography variant="h2" className={classes.text}>
+                        Loading...
+                    </Typography>
+                )}
             </Card>
         </Container>
     );

@@ -13,6 +13,7 @@ import CreateRoundedIcon from '@material-ui/icons/CreateRounded';
 import EmojiPeopleRoundedIcon from '@material-ui/icons/EmojiPeopleRounded';
 import PublicRoundedIcon from '@material-ui/icons/PublicRounded';
 import EventAvailableRoundedIcon from '@material-ui/icons/EventAvailableRounded';
+import Typography from '@material-ui/core/Typography';
 
 import { darkSwitch } from '../../functions/util';
 import data from '../../files/data.json';
@@ -24,7 +25,7 @@ const createStyles = makeStyles((theme) => ({
         width: drawerWidth,
     },
     spacer: {
-        margin: '0.5rem',
+        width: drawerWidth,
         marginBottom: '0',
     },
     buttonContainer: {
@@ -53,6 +54,10 @@ const createStyles = makeStyles((theme) => ({
     listIcon: {
         minWidth: '40px',
     },
+    externalLinksTitle: {
+        textAlign: 'center',
+        marginTop: '1rem',
+    },
 }));
 
 const HomeDrawer = (props) => {
@@ -64,7 +69,8 @@ const HomeDrawer = (props) => {
     return (
         <Drawer variant="permanent" className={classes.root}>
             <Toolbar className={classes.spacer} />
-            <div className={classes.buttonContainer}>
+            {/* TODO: Add the calendar view back in */}
+            {/* <div className={classes.buttonContainer}>
                 <Button
                     className={`${classes.button} ${props.scheduleView ? classes.buttonActive : ''}`}
                     onClick={switchView}
@@ -78,7 +84,10 @@ const HomeDrawer = (props) => {
                     Calendar View
                 </Button>
             </div>
-            <Divider variant="middle" className={classes.divider} />
+            <Divider variant="middle" className={classes.divider} /> */}
+            <Typography variant="h3" className={classes.externalLinksTitle}>
+                External Links
+            </Typography>
             <List>
                 <ListItem button component="a" href={data.examCalendar}>
                     <ListItemIcon className={classes.listIcon}>
@@ -109,7 +118,7 @@ const HomeDrawer = (props) => {
                     <ListItemIcon className={classes.listIcon}>
                         <EventAvailableRoundedIcon />
                     </ListItemIcon>
-                    <ListItemText primary="Add this to your Calendar!" />
+                    <ListItemText primary="Add to Google Calendar!" />
                 </ListItem>
             </List>
         </Drawer>

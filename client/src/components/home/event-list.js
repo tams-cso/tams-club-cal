@@ -16,7 +16,7 @@ import Loading from '../shared/loading';
 const useStyles = makeStyles({
     root: {
         overflowX: 'hidden',
-        minHeight: '100vh'
+        minHeight: '100vh',
     },
 });
 
@@ -28,9 +28,14 @@ const EventList = () => {
 
     useEffect(async () => {
         // Fetch the events list on mount from database
+        if (eventList !== null) return;
         const events = await getEventList();
         if (events.status !== 200) {
-            history.push('/error?from=events');
+            setEventComponentList(
+                <Loading error="true">
+                    Could not get event data. Please reload the page or contact the site manager to fix this issue.
+                </Loading>
+            );
             return;
         }
         dispatch(setEventList(events.data));
