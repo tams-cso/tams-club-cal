@@ -11,10 +11,10 @@ import { makeStyles } from '@material-ui/core';
 const useStyles = makeStyles((theme) => ({
     root: {
         overflowX: 'hidden',
-        paddingTop: '1rem',
-        paddingBottom: '1rem',
+        padding: 0,
     },
     wrapper: {
+        padding: '1rem',
         display: 'flex',
         flexDirection: 'row',
         justifyContent: 'flex-start',
