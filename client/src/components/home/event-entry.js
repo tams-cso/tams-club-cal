@@ -1,10 +1,11 @@
 import React from 'react';
+import { NavLink } from 'react-router-dom';
 import ListItem from '@material-ui/core/ListItem';
 import Box from '@material-ui/core/Box';
 import Typography from '@material-ui/core/Typography';
 
 import { Event } from '../../functions/entries';
-import { formatTime } from '../../functions/util';
+import { darkSwitch, formatTime } from '../../functions/util';
 import { makeStyles } from '@material-ui/core';
 
 const useStyles = makeStyles((theme) => ({
@@ -13,6 +14,12 @@ const useStyles = makeStyles((theme) => ({
         paddingTop: '1rem',
         paddingBottom: '1rem',
     },
+    wrapper: {
+        display: 'flex',
+        flexDirection: 'row',
+        justifyContent: 'flex-start',
+        textDecoration: 'none',
+    },
     rightBox: {
         overflow: 'hidden',
     },
@@ -20,6 +27,9 @@ const useStyles = makeStyles((theme) => ({
         flexShrink: 0,
         width: '16rem',
         textAlign: 'center',
+    },
+    name: {
+        color: darkSwitch(theme, theme.palette.common.black, theme.palette.grey[200]),
     },
     description: {
         overflow: 'hidden',
@@ -47,15 +57,19 @@ const EventEntry = (props) => {
     const classes = useStyles();
     return (
         <ListItem button className={classes.root}>
-            <Typography variant="h4" className={classes.time}>
-                {formattedDateTime}
-            </Typography>
-            <Box className={classes.rightBox}>
-                <Typography variant="h3" component="p">
-                    {props.event.name}
+            <NavLink to={`/events?${props.event.id}`} className={classes.wrapper}>
+                <Typography variant="h4" className={classes.time}>
+                    {formattedDateTime}
                 </Typography>
-                <Typography className={classes.description}>{`${props.event.club} - ${displayDescription}`}</Typography>
-            </Box>
+                <Box className={classes.rightBox}>
+                    <Typography variant="h3" component="p" className={classes.name}>
+                        {props.event.name}
+                    </Typography>
+                    <Typography
+                        className={classes.description}
+                    >{`${props.event.club} - ${displayDescription}`}</Typography>
+                </Box>
+            </NavLink>
         </ListItem>
     );
 };

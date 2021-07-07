@@ -20,9 +20,9 @@ const EventListSection = (props) => {
             <List>
                 {props.eventList.map((event, index) => {
                     return (
-                        <React.Fragment>
+                        <React.Fragment key={index}>
                             {index === 0 ? null : <Divider variant="middle" />}
-                            <EventEntry event={event} key={index} />
+                            <EventEntry event={event} />
                         </React.Fragment>
                     );
                 })}

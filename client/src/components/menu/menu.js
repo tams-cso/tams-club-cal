@@ -12,8 +12,9 @@ import AppIcon from './app-icon';
 import MenuLink from './menu-link';
 import MenuIcon from './menu-icon';
 import { githubLink } from '../../files/data.json';
+import { useLocation } from 'react-router';
 
-const createStyles = makeStyles((theme) => ({
+const useStyles = makeStyles((theme) => ({
     root: {
         backgroundColor: darkSwitch(theme, theme.palette.primary.main, theme.palette.grey[900]),
     },
@@ -42,7 +43,6 @@ const createStyles = makeStyles((theme) => ({
 }));
 
 const Menu = (props) => {
-    const classes = createStyles();
     const [currentDarkThemeIcon, setCurrentDarkThemeIcon] = useState(null);
 
     useEffect(() => {
@@ -59,11 +59,13 @@ const Menu = (props) => {
         props.setDarkTheme(!props.darkTheme);
     };
 
+    const classes = useStyles();
+    const location = useLocation();
     return (
         <Appbar className={classes.bar}>
             <Toolbar className={classes.root}>
                 <AppIcon className={classes.logo}></AppIcon>
-                <MenuLink to="/">Home</MenuLink>
+                <MenuLink to="/" isActive={() => ['/', '/events'].includes(location.pathname)}>Home</MenuLink>
                 <MenuLink to="/clubs">Clubs</MenuLink>
                 <MenuLink to="/volunteering">Volunteering</MenuLink>
                 <MenuLink to="/about">About</MenuLink>

@@ -3,7 +3,7 @@ import { makeStyles } from '@material-ui/core/styles';
 import HomeDrawer from './home-drawer';
 import EventList from './event-list';
 
-const createStyles = makeStyles({
+const useStyles = makeStyles({
     root: {
         display: 'flex',
         paddingTop: '1rem',
@@ -12,7 +12,7 @@ const createStyles = makeStyles({
 
 const Home = () => {
     const [scheduleView, setScheduleView] = useState(true);
-    const classes = createStyles();
+    const classes = useStyles();
 
     return (
         <div className={classes.root}>

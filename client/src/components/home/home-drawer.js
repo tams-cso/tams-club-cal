@@ -20,7 +20,7 @@ import data from '../../files/data.json';
 
 const drawerWidth = 280;
 
-const createStyles = makeStyles((theme) => ({
+const useStyles = makeStyles((theme) => ({
     root: {
         width: drawerWidth,
     },
@@ -61,7 +61,7 @@ const createStyles = makeStyles((theme) => ({
 }));
 
 const HomeDrawer = (props) => {
-    const classes = createStyles();
+    const classes = useStyles();
 
     const switchView = (schedule = true) => {
         props.setScheduleView(schedule);

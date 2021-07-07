@@ -5,15 +5,15 @@ import CssBaseline from '@material-ui/core/CssBaseline';
 import Cookies from 'universal-cookie';
 
 import Menu from './components/menu/menu';
+import Home from './components/home/home';
+import Event from './components/events/event';
 import About from './components/about/about';
 import Clubs from './components/clubs/clubs';
-import Home from './components/home/home';
 import NotFound from './components/404/404';
 import Volunteering from './components/volunteering/volunteering';
 import Edit from './components/edit/edit';
 import Admin from './components/admin/admin';
 import Auth from './components/edit/auth';
-import ErrorPage from './components/404/error-page';
 
 const App = () => {
     const cookies = new Cookies();
@@ -65,13 +65,13 @@ const App = () => {
                 <Menu setDarkTheme={setDarkTheme} darkTheme={darkTheme} />
                 <Switch>
                     <Route exact path="/" component={Home} />
+                    <Route exact path="/events" component={Event} />
                     <Route exact path="/volunteering" component={Volunteering} />
                     <Route exact path="/clubs" component={Clubs} />
                     <Route exact path="/about" component={About} />
                     <Route exact path="/auth" component={Auth} />
                     <Route exact path="/admin" component={Admin} />
                     <Route path="/edit" component={Edit} />
-                    <Route exact path="/error" component={ErrorPage} />
                     <Route component={NotFound} />
                 </Switch>
             </BrowserRouter>

@@ -5,7 +5,7 @@ import Typography from '@material-ui/core/Typography';
 import Box from '@material-ui/core/Box';
 import { darkSwitch } from '../../functions/util';
 
-const createStyles = makeStyles((theme) => ({
+const useStyles = makeStyles((theme) => ({
     root: {
         textDecoration: 'none',
     },
@@ -55,7 +55,7 @@ const createStyles = makeStyles((theme) => ({
 }));
 
 function AppIcon(props) {
-    const classes = createStyles();
+    const classes = useStyles();
     return (
         <NavLink className={`${props.className} ${classes.root}`} to="/">
             <Box className={classes.centerBox}>

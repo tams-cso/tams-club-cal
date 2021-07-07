@@ -48,7 +48,9 @@ const MenuLink = (props) => {
     let location = useLocation();
     useEffect(() => {
         setActive(
-            location.pathname === props.to || location.pathname.slice(0, location.pathname.length - 1) === props.to
+            location.pathname === props.to ||
+                location.pathname.slice(0, location.pathname.length - 1) === props.to ||
+                props.isActive
         );
     }, [location]);
 

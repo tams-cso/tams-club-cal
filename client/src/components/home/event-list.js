@@ -1,5 +1,4 @@
 import React, { useEffect, useState } from 'react';
-import { useHistory } from 'react-router';
 import { useDispatch, useSelector } from 'react-redux';
 import { makeStyles } from '@material-ui/core';
 import Container from '@material-ui/core/Container';
@@ -24,7 +23,6 @@ const EventList = () => {
     const dispatch = useDispatch();
     const eventList = useSelector(getSavedEventList);
     const [eventComponentList, setEventComponentList] = useState(<Loading />);
-    const history = useHistory();
 
     useEffect(async () => {
         // Fetch the events list on mount from database
