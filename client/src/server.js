@@ -9,7 +9,7 @@ export default function () {
                 const data = eventsList.find((e) => e.id === req.params.id);
                 if (data !== undefined) return data;
                 else return new Response(400, null, { error: 'Unable to retrive current event' });
-            })
+            }, { timing: 1000 })
         },
     });
 }

@@ -2,7 +2,7 @@ import React from 'react';
 import Container from '@material-ui/core/Container';
 import Card from '@material-ui/core/Card';
 import Typography from '@material-ui/core/Typography';
-import { makeStyles } from '@material-ui/core';
+import { makeStyles } from '@material-ui/core/styles';
 
 const useStyles = makeStyles({
     card: {
@@ -28,13 +28,13 @@ const Loading = (props) => {
             <Card elevation={2} className={classes.card}>
                 {props.error !== undefined ? (
                     <React.Fragment>
-                        <Typography variant="h2" className={classes.text}>
+                        <Typography variant="h1" className={classes.text}>
                             ERROR :(
                         </Typography>
                         <Typography className={classes.text}>{props.children}</Typography>
                     </React.Fragment>
                 ) : (
-                    <Typography variant="h2" className={classes.text}>
+                    <Typography variant="h1" className={classes.text}>
                         Loading...
                     </Typography>
                 )}

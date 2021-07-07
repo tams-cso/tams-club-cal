@@ -5,8 +5,8 @@ import Box from '@material-ui/core/Box';
 import Typography from '@material-ui/core/Typography';
 
 import { Event } from '../../functions/entries';
-import { darkSwitch, formatTime } from '../../functions/util';
-import { makeStyles } from '@material-ui/core';
+import { darkSwitch, formatEventTime } from '../../functions/util';
+import { makeStyles } from '@material-ui/core/styles';
 
 const useStyles = makeStyles((theme) => ({
     root: {
@@ -47,19 +47,15 @@ const useStyles = makeStyles((theme) => ({
  * @param {Event} props.event The events object
  */
 const EventEntry = (props) => {
-    // Format the starting date/time
-    let formattedDateTime = formatTime(props.event.start, 'h:mma');
-    if (props.event.type === 'event') formattedDateTime += formatTime(props.event.end, ' - h:mma');
-
     // Replace all the newlines in the description with a pipe
     const displayDescription = props.event.description.replace(/\n/g, ' | ');
 
     const classes = useStyles();
     return (
         <ListItem button className={classes.root}>
-            <NavLink to={`/events?${props.event.id}`} className={classes.wrapper}>
+            <NavLink to={`/events?id=${props.event.id}`} className={classes.wrapper}>
                 <Typography variant="h4" className={classes.time}>
-                    {formattedDateTime}
+                    {formatEventTime(props.event)}
                 </Typography>
                 <Box className={classes.rightBox}>
                     <Typography variant="h3" component="p" className={classes.name}>

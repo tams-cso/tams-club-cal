@@ -34,6 +34,13 @@ const App = () => {
             },
         },
         typography: {
+            h1: {
+                fontSize: '2rem',
+            },
+            h2: {
+                fontSize: '2.5rem',
+                lineHeight: 1.167
+            },
             h3: {
                 fontSize: '1.25rem',
                 fontWeight: '500',
@@ -42,7 +49,7 @@ const App = () => {
                 fontFamily: ['Roboto Mono', 'monospace'],
                 fontSize: '1.25rem',
                 fontWeight: '500',
-                color: '#555555',
+                color: darkTheme ? '#aaaaaa' : '#555555',
             },
             h5: {
                 fontFamily: ['Bubblegum Sans', 'Roboto', 'Helvetica', 'Arial', 'sans-serif'],

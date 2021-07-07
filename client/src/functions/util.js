@@ -1,10 +1,13 @@
-import dayjs, { Dayjs } from 'dayjs';
+import React from 'react';
+import dayjs from 'dayjs';
 import utc from 'dayjs/plugin/utc';
 import timezone from 'dayjs/plugin/timezone';
 import isLeapYear from 'dayjs/plugin/isLeapYear';
 import customParseFormat from 'dayjs/plugin/customParseFormat';
 import imageCompression from 'browser-image-compression';
-import { EventInfo, DateAndTime, CalendarDates, DateDivider } from './entries';
+import Link from '@material-ui/core/Link';
+
+import { EventInfo, DateAndTime, CalendarDates, DateDivider, Event } from './entries';
 import config from '../files/config.json';
 
 dayjs.extend(utc);
@@ -14,12 +17,48 @@ dayjs.extend(customParseFormat);
 
 /**
  * Gets query parameters
+ *
  * @param {string} query key value to get from the querystring
  * @returns {string | null} The value of the query parameter or null if missing
  */
 export function getParams(query) {
     return new URLSearchParams(window.location.search).get(query);
 }
+
+/**
+ * Takes in text and a classname, parses the links, and creates
+ * a Fragment with the links in Link elements
+ *
+ * @param {string} text The text to parse and display
+ * @returns {object} A React jsx fragment containing text and link components
+ */
+export function parseLinks(text) {
+    const re = /((?:http|https):\/\/.+?)(?:\.|\?|!)?(?:\s|$)/g;
+    let m;
+    let matches = [];
+    do {
+        m = re.exec(text);
+        if (m) matches.push(m);
+    } while (m);
+
+    let tempText = text;
+    let outText = [];
+    let prevIndex = 0;
+    matches.forEach((m) => {
+        outText.push(tempText.substring(prevIndex, tempText.indexOf(m[1])));
+        outText.push(
+            <Link key={m[1]} href={m[1]} alt={m[1]}>
+                {m[1]}
+            </Link>
+        );
+        tempText = tempText.substring(tempText.indexOf(m[1]) + m[1].length);
+    });
+    outText.push(tempText);
+
+    return <React.Fragment>{outText}</React.Fragment>;
+}
+
+// ================== CSS AND MUI FUNCTIONS =================== //
 
 /**
  * Adds an extra 'active' classname to an element's classname if state is true.
@@ -35,7 +74,7 @@ export function isActive(state, defaultClassName, activeClassName) {
 
 /**
  * Sets a style depending on whether or not the theme is light/dark
- * 
+ *
  * @param {import('@material-ui/core').Theme} theme The Mui theme object
  * @param {string} light Light theme style
  * @param {string} dark Dark theme style
@@ -45,9 +84,11 @@ export function darkSwitch(theme, light, dark) {
     return theme.palette.type === 'light' ? light : dark;
 }
 
+// ================== DATE AND TIME FUNCTIONS =================== //
+
 /**
  * Returns the dayjs object, corrected to the current time zone
- * 
+ *
  * @param {Number} millis UTC millisecond time
  * @returns {dayjs.Dayjs} The dayjs object in the correct time zone
  */
@@ -57,7 +98,7 @@ export function toTz(millis) {
 
 /**
  * Formats a UTC millisecond time while converting to America/Chicago timezone
- * 
+ *
  * @param {Number} millis UTC millisecond time to format
  * @param {string} format Dayjs format to format the time to
  * @returns {string} The formatted time
@@ -68,13 +109,39 @@ export function formatTime(millis, format) {
 
 /**
  * Checks if the date is the same between two UTC millisecond times, in the current time zone.
- * 
+ *
  * @param {Number} first The first UTC millisecond time
  * @param {Number} second The second UTC millisecond time
  * @returns {boolean} True if the two times fall on the same date (between 00:00:00.000 and 23:59:59.999)
  */
 export function isSameDate(first, second) {
     return formatTime(first, 'MM/DD/YYYY') === formatTime(second, 'MM/DD/YYYY');
+}
+
+/**
+ * Formats the full date of the event.
+ * Includes an end date if not the same as the start date.
+ *
+ * @param {Event} event The event object
+ * @returns
+ */
+export function formatEventDate(event) {
+    let formattedTime = formatTime(event.start, 'dddd, MMMM d, YYYY');
+    if (!isSameDate(event.start, event.end)) formattedTime += formatTime(event.end, ' - dddd, MMMM d, YYYY');
+    return formattedTime;
+}
+
+/**
+ * Formats the time of the event.
+ * Includes an end time if not the same as the start time.
+ *
+ * @param {Event} event The event object
+ * @returns
+ */
+export function formatEventTime(event) {
+    let formattedTime = formatTime(event.start, 'h:mma');
+    if (event.start !== event.end) formattedTime += formatTime(event.end, ' - h:mma');
+    return formattedTime;
 }
 
 // ================== OLD FUNCTIONS =================== //
@@ -330,40 +397,6 @@ export function catchError(status, message = '') {
 }
 
 /**
- * Takes in text and a classname, parses the links, and creates
- * a paragraph element with the links in <a> tags
- *
- * @param {string} className Classname prop to add to outer paragraph element
- * @param {string} text The text to parse and display
- * @returns {object} A React jsx <p> component with links wrapped in <a> tags
- */
-export function parseLinks(className, text) {
-    const re = /((?:http|https):\/\/.+?)(?:\.|\?|!)?(?:\s|$)/g;
-    var m;
-    var matches = [];
-    do {
-        m = re.exec(text);
-        if (m) matches.push(m);
-    } while (m);
-
-    var tempText = text;
-    var outText = [];
-    var prevIndex = 0;
-    matches.forEach((m) => {
-        outText.push(tempText.substring(prevIndex, tempText.indexOf(m[1])));
-        outText.push(
-            <a key={m[1]} href={m[1]} alt={m[1]}>
-                {m[1]}
-            </a>
-        );
-        tempText = tempText.substring(tempText.indexOf(m[1]) + m[1].length);
-    });
-    outText.push(tempText);
-
-    return <p className={className}>{outText}</p>;
-}
-
-/**
  * If on an edit page, will redirect the user to the resource that is being edited.
  *
  * @param {Location} location Location object
@@ -411,7 +444,7 @@ export function getDefaulEditDate() {
 export function getDefaulEditTime(endTime) {
     // Will take next whole hour
     var day = dayjs().second(0).minute(0).add(1, 'hour');
-    
+
     // Add 1 hour if end time
     if (endTime) day = day.add(1, 'hour');
     return day.format('HH:mm');
