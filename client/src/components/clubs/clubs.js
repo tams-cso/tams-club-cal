@@ -1,9 +1,9 @@
 import React, { useEffect, useState } from 'react';
-import { connect, useDispatch, useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import Grid from '@material-ui/core/Grid';
 import { getClubList } from '../../functions/api';
 import { getSavedClubList } from '../../redux/selectors';
-import { openPopup, setClubList } from '../../redux/actions';
+import { setClubList } from '../../redux/actions';
 
 import ClubCard from './club-card';
 import Loading from '../shared/loading';
@@ -44,11 +44,4 @@ const Clubs = () => {
     return <PageWrapper>{clubCardList}</PageWrapper>;
 };
 
-const mapStateToProps = (state) => {
-    return {
-        clubList: getSavedClubList(state),
-    };
-};
-const mapDispatchToProps = { openPopup };
-
-export default connect(mapStateToProps, mapDispatchToProps)(Clubs);
+export default Clubs;
