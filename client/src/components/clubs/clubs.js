@@ -1,45 +1,48 @@
-import React from 'react';
-import { connect } from 'react-redux';
+import React, { useEffect, useState } from 'react';
+import { connect, useDispatch, useSelector } from 'react-redux';
+import Grid from '@material-ui/core/Grid';
+import { getClubList } from '../../functions/api';
+import { getSavedClubList } from '../../redux/selectors';
+import { openPopup, setClubList } from '../../redux/actions';
 
 import ClubCard from './club-card';
-import ClubPopup from './club-popup';
-import Popup from '../shared/popup';
-
-import { getSavedClubList } from '../../redux/selectors';
-import { openPopup } from '../../redux/actions';
-
-import './clubs.scss';
 import Loading from '../shared/loading';
-import AddButton from '../shared/add-button';
+import PageWrapper from '../shared/page-wrapper';
 
-class Clubs extends React.Component {
-    activatePopup = (id) => {
-        this.props.history.push(`/clubs?id=${id}`);
-        this.props.openPopup(id, 'clubs');
-    };
+const Clubs = () => {
+    const dispatch = useDispatch();
+    const clubList = useSelector(getSavedClubList);
+    const [clubCardList, setClubCardList] = useState(<Loading />);
 
-    createCards = () => {
-        return this.props.clubList.map((c) => {
-            return <ClubCard club={c} key={c.name} onClick={this.activatePopup.bind(this, c.objId)}></ClubCard>;
-        });
-    };
+    useEffect(async () => {
+        // Fetch the events list on mount from database
+        if (clubList !== null) return;
+        const clubs = await getClubList();
+        console.log(clubs)
+        if (clubs.status !== 200) {
+            setClubCardList(
+                <Loading error="true">
+                    Could not get club data. Please reload the page or contact the site manager to fix this issue.
+                </Loading>
+            );
+            return;
+        }
+        dispatch(setClubList(clubs.data));
+    }, []);
 
-    render() {
-        if (this.props.clubList === null) return <Loading className="clubs"></Loading>;
-
-        const cards = this.createCards();
-
-        return (
-            <div className="Clubs">
-                <Popup history={this.props.history}>
-                    <ClubPopup></ClubPopup>
-                </Popup>
-                <AddButton type="Club"></AddButton>
-                <div className="club-card-list">{cards}</div>
-            </div>
+    useEffect(() => {
+        if (clubList === null) return;
+        setClubCardList(
+            <Grid>
+                {clubList.map((c) => (
+                    <ClubCard club={c} key={c.name} />
+                ))}
+            </Grid>
         );
-    }
-}
+    }, [clubList]);
+
+    return <PageWrapper>{clubCardList}</PageWrapper>;
+};
 
 const mapStateToProps = (state) => {
     return {
