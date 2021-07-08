@@ -2,21 +2,14 @@ import React, { useEffect, useState } from 'react';
 import { useHistory } from 'react-router-dom';
 import { useSelector } from 'react-redux';
 import { makeStyles } from '@material-ui/core/styles';
-
 import { getSavedEventList } from '../../redux/selectors';
 import { getParams } from '../../functions/util';
+import { getEvent } from '../../functions/api';
 
 import HomeDrawer from '../home/home-drawer';
 import Loading from '../shared/loading';
-import { getEvent } from '../../functions/api';
 import EventCard from './event-card';
-
-const useStyles = makeStyles({
-    root: {
-        display: 'flex',
-        paddingTop: '1rem',
-    },
-});
+import PageWrapper from '../shared/page-wrapper';
 
 const Event = () => {
     const [event, setEvent] = useState(null);
@@ -55,13 +48,12 @@ const Event = () => {
         } else setEvent(event);
     }, []);
 
-    const classes = useStyles();
     return (
-        <div className={classes.root}>
+        <PageWrapper>
             <HomeDrawer />
             {error}
             {event === null ? <Loading /> : <EventCard event={event} />}
-        </div>
+        </PageWrapper>
     );
 };
 

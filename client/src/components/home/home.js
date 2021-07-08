@@ -1,24 +1,14 @@
-import React, { useState } from 'react';
-import { makeStyles } from '@material-ui/core/styles';
+import React from 'react';
 import HomeDrawer from './home-drawer';
 import EventList from './event-list';
-
-const useStyles = makeStyles({
-    root: {
-        display: 'flex',
-        paddingTop: '1rem',
-    },
-});
+import PageWrapper from '../shared/page-wrapper';
 
 const Home = () => {
-    const [scheduleView, setScheduleView] = useState(true);
-    const classes = useStyles();
-
     return (
-        <div className={classes.root}>
-            <HomeDrawer scheduleView={scheduleView} setScheduleView={setScheduleView}></HomeDrawer>
+        <PageWrapper>
+            <HomeDrawer />
             <EventList />
-        </div>
+        </PageWrapper>
     );
 };
 
