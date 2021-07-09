@@ -1,4 +1,5 @@
 import React, { useEffect, useRef, useState } from 'react';
+import { makeStyles } from '@material-ui/core';
 import Card from '@material-ui/core/Card';
 import CardActionArea from '@material-ui/core/CardActionArea';
 import CardMedia from '@material-ui/core/CardMedia';
@@ -6,9 +7,7 @@ import CardContent from '@material-ui/core/CardContent';
 import Typography from '@material-ui/core/Typography';
 import { Club } from '../../functions/entries';
 import { darkSwitch } from '../../functions/util';
-
 import Image from '../shared/image';
-import { makeStyles } from '@material-ui/core';
 
 const dims = {
     width: 360,

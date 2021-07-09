@@ -23,6 +23,7 @@ const Clubs = () => {
     const dispatch = useDispatch();
     const clubList = useSelector(getSavedClubList);
     const [clubCardList, setClubCardList] = useState(<Loading />);
+    const classes = useStyles();
 
     useEffect(async () => {
         // Fetch the events list on mount from database
@@ -39,7 +40,6 @@ const Clubs = () => {
         dispatch(setClubList(clubs.data));
     }, []);
 
-    const classes = useStyles();
     useEffect(() => {
         if (clubList === null) return;
         setClubCardList(

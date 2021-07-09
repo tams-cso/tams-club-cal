@@ -6,7 +6,6 @@ import Cookies from 'universal-cookie';
 
 import Menu from './components/menu/menu';
 import Home from './components/home/home';
-import Event from './components/events/event';
 import About from './components/about/about';
 import Clubs from './components/clubs/clubs';
 import NotFound from './components/404/404';
@@ -72,7 +71,7 @@ const App = () => {
                 <Menu setDarkTheme={setDarkTheme} darkTheme={darkTheme} />
                 <Switch>
                     <Route exact path="/" component={Home} />
-                    <Route exact path="/events" component={Event} />
+                    <Route exact path="/events" component={Home} />
                     <Route exact path="/volunteering" component={Volunteering} />
                     <Route exact path="/clubs" component={Clubs} />
                     <Route exact path="/about" component={About} />
