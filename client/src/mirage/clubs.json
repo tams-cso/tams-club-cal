@@ -1,7 +1,7 @@
 [
     {
         "_id": "604086f4834fbb19e9aea92f",
-        "objId": "f3bd55e7-ebe1-4c6c-89ec-06bc6cd2992e",
+        "id": "f3bd55e7-ebe1-4c6c-89ec-06bc6cd2992e",
         "name": "Computer Science Organization (CSO this is a really long name for some reason and wraps)",
         "advised": true,
         "fb": "https://www.facebook.com/groups/CSO2021",
@@ -100,7 +100,7 @@
     },
     {
         "_id": "604086f6834fbb19e9aea934",
-        "objId": "2b14d749-029b-411e-8966-b38327b045c3",
+        "id": "2b14d749-029b-411e-8966-b38327b045c3",
         "name": "Helping Other People Everywhere (HOPE)",
         "advised": true,
         "fb": "https://www.facebook.com/groups/hope2021",
@@ -259,7 +259,7 @@
     },
     {
         "_id": "6045ba06aea45a5d1ac3cf1f",
-        "objId": "a86fafb2-fc75-4406-819e-46fa4bd57a76",
+        "id": "a86fafb2-fc75-4406-819e-46fa4bd57a76",
         "name": "Ballot",
         "advised": true,
         "fb": "https://www.facebook.com/groups/265378090967162/",
@@ -298,6 +298,25 @@
                 "description": "",
                 "img": ""
             }
+        ],
+        "committees": []
+    },
+    {
+        "_id": "60cbe6940bad1d6497e02098",
+        "id": "6ebe634e-69cb-4df8-a536-3ddb25aedc81",
+        "name": "TAMS Culinary Society (TCS)",
+        "advised": false,
+        "fb": "https://www.facebook.com/groups/tamsculinarysociety",
+        "website": "",
+        "description": "TCS is a student-led cooking club that is dedicated to bringing together a community through cooking and food. We offer after-curfew food, cater to TAMS events, and host food-related events. Our goal this year is to provide a virtual cooking experience through live streams and cooking sessions to help chefs of all levels sharpen their skills while creating delicious food.",
+        "coverImgThumbnail": "https://cdn.michaelzhao.xyz/misc/tcs.png",
+        "coverImg": "https://cdn.michaelzhao.xyz/misc/tcs.png",
+        "execs": [
+            { "name": "Vigna Lavu", "position": "President", "description": "", "img": "" },
+            { "name": "Ailsa Kokoricha", "position": "Vice President", "description": "", "img": "" },
+            { "name": "Nicholas Tran", "position": "Treasurer", "description": "", "img": "" },
+            { "name": "Aurelia Wang", "position": "Logistics Supervisor", "description": "", "img": "" },
+            { "name": "Claire Zeng", "position": "Events Coordinator", "description": "", "img": "" }
         ],
         "committees": []
     }
