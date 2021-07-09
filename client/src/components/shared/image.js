@@ -1,32 +1,33 @@
-import React from 'react';
+import { makeStyles } from '@material-ui/core';
+import React, { useState } from 'react';
 
-class Image extends React.Component {
-    constructor(props) {
-        super(props);
-        this.state = { src: this.props.src };
-    }
+const useStyles = makeStyles({
+    root: {
+        position: 'absolute',
+        width: '100%',
+        height: 'inherit',
+        objectFit: 'cover',
+        fontSize: 0,
+    },
+});
 
-    error = () => {
-        this.setState({ src: this.props.default });
+const Image = (props) => {
+    const [src, setSrc] = useState(props.src);
+
+    const inavlidImage = () => {
+        setSrc(props.default);
     };
 
-    componentDidUpdate(prevProps) {
-        if (this.props.src !== prevProps.src) {
-            this.setState({ src: this.props.src });
-        }
-    }
-
-    render() {
-        return (
-            <img
-                id={this.props.id}
-                className={this.props.className}
-                src={this.state.src}
-                alt={this.props.alt}
-                onError={this.error}
-            ></img>
-        );
-    }
-}
+    const classes = useStyles();
+    return (
+        <img
+            id={props.id}
+            className={`${props.className} ${classes.root}`}
+            src={src}
+            alt={props.alt}
+            onError={inavlidImage}
+        />
+    );
+};
 
 export default Image;
