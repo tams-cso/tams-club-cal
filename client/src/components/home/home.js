@@ -16,12 +16,8 @@ const Home = () => {
         const id = getParams('id');
 
         // Return the user to the home page if missing and ID
-        if (id === null) {
-            setDisplay(<EventList />)
-        }
-        else {
-            setDisplay(<EventDisplay id={id} />)
-        }
+        if (id === null) setDisplay(<EventList />);
+        else setDisplay(<EventDisplay id={id} />);
     }, [location]);
 
     return (

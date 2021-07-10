@@ -1,4 +1,5 @@
 import React, { useEffect, useRef, useState } from 'react';
+import { NavLink } from 'react-router-dom';
 import { makeStyles } from '@material-ui/core';
 import Card from '@material-ui/core/Card';
 import CardActionArea from '@material-ui/core/CardActionArea';
@@ -21,14 +22,18 @@ const useStyles = makeStyles((theme) => ({
         margin: 'auto',
         [theme.breakpoints.down('xs')]: {
             width: 320,
-        }
+        },
     },
     actionArea: {
         width: dims.width,
         height: dims.height,
         [theme.breakpoints.down('xs')]: {
             width: 320,
-        }
+        },
+    },
+    navLink: {
+        color: 'unset',
+        textDecoration: 'none',
     },
     image: {
         width: dims.width,
@@ -36,8 +41,8 @@ const useStyles = makeStyles((theme) => ({
         top: 0,
         [theme.breakpoints.down('xs')]: {
             width: 320,
-            height: 130
-        }
+            height: 130,
+        },
     },
     text: {
         position: 'absolute',
@@ -49,7 +54,7 @@ const useStyles = makeStyles((theme) => ({
         [theme.breakpoints.down('xs')]: {
             top: 130,
             height: 270,
-        }
+        },
     },
     advised: {
         color: theme.palette.primary.main,
@@ -110,27 +115,29 @@ const ClubCard = (props) => {
     return (
         <Card className={classes.root}>
             <CardActionArea className={classes.actionArea}>
-                <CardMedia>
-                    <Image
-                        className={classes.image}
-                        src={props.club.coverImgThumbnail}
-                        default="/default-cover.webp"
-                    />
-                </CardMedia>
-                <CardContent className={classes.text}>
-                    <Typography
-                        variant="subtitle2"
-                        className={props.club.advised ? classes.advised : classes.independent}
-                    >
-                        {props.club.advised ? 'Advised' : 'Independent'}
-                    </Typography>
-                    <Typography variant="h6" component="h2">
-                        {props.club.name}
-                    </Typography>
-                    <Typography className={`${classes.description} ${descHeight || ''}`} ref={description}>
-                        {props.club.description}
-                    </Typography>
-                </CardContent>
+                <NavLink to={`/clubs?id=${props.club.id}`} className={`${classes.actionArea} ${classes.navLink}`}>
+                    <CardMedia>
+                        <Image
+                            className={classes.image}
+                            src={props.club.coverImgThumbnail}
+                            default="/default-cover.webp"
+                        />
+                    </CardMedia>
+                    <CardContent className={classes.text}>
+                        <Typography
+                            variant="subtitle2"
+                            className={props.club.advised ? classes.advised : classes.independent}
+                        >
+                            {props.club.advised ? 'Advised' : 'Independent'}
+                        </Typography>
+                        <Typography variant="h6" component="h2">
+                            {props.club.name}
+                        </Typography>
+                        <Typography className={`${classes.description} ${descHeight || ''}`} ref={description}>
+                            {props.club.description}
+                        </Typography>
+                    </CardContent>
+                </NavLink>
             </CardActionArea>
         </Card>
     );

@@ -77,10 +77,20 @@ export async function postEvent(event, id = '') {
     return postRequest(`/events/${id}`, event);
 }
 
+/**
+ * Gets the list of all clubs.
+ * 
+ * @returns {Promise<FetchResponse>} Will return the object or error object
+ */
 export async function getClubList() {
     return getRequest('/clubs');
 }
 
+/**
+ * Gets a specific club by ID.
+ * 
+ * @returns {Promise<FetchResponse>} Will return the object or error object
+ */
 export async function getClub(id) {
     return getRequest(`/clubs/${id}`);
 }

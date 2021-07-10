@@ -26,6 +26,8 @@ const Image = (props) => {
             src={src}
             alt={props.alt}
             onError={inavlidImage}
+            width={props.width}
+            height={props.height}
         />
     );
 };
