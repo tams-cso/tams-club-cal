@@ -7,12 +7,21 @@ import CardMedia from '@material-ui/core/CardMedia';
 import CardContent from '@material-ui/core/CardContent';
 import CardActions from '@material-ui/core/CardActions';
 import Button from '@material-ui/core/Button';
+import Link from '@material-ui/core/Link';
 import Typography from '@material-ui/core/Typography';
+import Tabs from '@material-ui/core/Tabs';
+import Tab from '@material-ui/core/Tab';
+import Paper from '@material-ui/core/Paper';
+
 import { getSavedClubList } from '../../redux/selectors';
 import { getClub } from '../../functions/api';
+import { darkSwitch, darkSwitchGrey } from '../../functions/util';
 
 import Loading from '../shared/loading';
 import Image from '../shared/image';
+import Paragraph from '../shared/paragraph';
+import ExecCard from './exec-card';
+import CommitteeCard from './committee-card';
 
 const useStyles = makeStyles((theme) => ({
     root: {
@@ -31,8 +40,35 @@ const useStyles = makeStyles((theme) => ({
         height: 'auto',
     },
     textWrapper: {
-        padding: 16,
+        padding: 20,
+    },
+    clubType: {
+        color: theme.palette.primary.main,
+    },
+    independent: {
+        color: theme.palette.secondary.main,
+    },
+    description: {
+        marginTop: 12,
+        color: darkSwitch(theme, theme.palette.grey[600], theme.palette.grey[400]),
+    },
+    links: {
+        display: 'block',
+        width: 'max-content',
+    },
+    tabs: {
+        marginTop: 12,
+    },
+    tabPage: {
         paddingTop: 12,
+    },
+    hidden: {
+        display: 'none',
+    },
+    empty: {
+        textAlign: 'center',
+        marginBottom: 12,
+        color: darkSwitchGrey(theme),
     },
     buttonCenter: {
         margin: 'auto',
@@ -49,6 +85,8 @@ const useStyles = makeStyles((theme) => ({
 const ClubDisplay = (props) => {
     const [club, setClub] = useState(null);
     const [error, setError] = useState(null);
+    const [links, setLinks] = useState(null);
+    const [tabValue, setTabValue] = useState(0);
     const clubList = useSelector(getSavedClubList);
     const classes = useStyles();
 
@@ -69,18 +107,33 @@ const ClubDisplay = (props) => {
         // Save the event or set an error if invalid ID
         if (club === null) {
             setError(
-                <Loading error="true">
-                    Invalid event ID. Please return to the events list page to refresh the content
-                </Loading>
+                <Loading error>Invalid event ID. Please return to the clubs list page to refresh the content</Loading>
             );
         } else setClub(club);
     }, [props.id]);
+
+    useEffect(() => {
+        if (club === null) return;
+        setLinks(
+            club.links.map((c) => (
+                <Link href={c} variant="body1" className={classes.links} key={c}>
+                    {c}
+                </Link>
+            ))
+        );
+    }, [club]);
+
+    const handleTabChange = (event, newValue) => {
+        setTabValue(newValue);
+    };
 
     return (
         <React.Fragment>
             {error}
             {club === null ? (
-                <Loading />
+                error ? null : (
+                    <Loading />
+                )
             ) : (
                 <Container className={classes.root}>
                     <Card>
@@ -88,7 +141,51 @@ const ClubDisplay = (props) => {
                             <Image className={classes.image} src={club.coverImg} default="/default-cover.webp" />
                         </CardMedia>
                         <CardContent className={classes.textWrapper}>
+                            <Typography className={`${classes.clubType} ${club.advised ? '' : classes.independent}`}>
+                                {club.advised ? 'Advised' : 'Independent'}
+                            </Typography>
                             <Typography variant="h1">{club.name}</Typography>
+                            <Paragraph text={club.description} className={classes.description} />
+                            <Typography variant="h6">Links</Typography>
+                            {links}
+                            <Tabs
+                                centered
+                                value={tabValue}
+                                onChange={handleTabChange}
+                                indicatorColor="secondary"
+                                textColor="secondary"
+                                aria-label="execs and committees tab"
+                                className={classes.tabs}
+                            >
+                                <Tab label="Execs"></Tab>
+                                <Tab label="Committees"></Tab>
+                            </Tabs>
+                            <Paper
+                                elevation={0}
+                                variant="outlined"
+                                square
+                                className={`${classes.tabPage} ${tabValue === 0 ? '' : classes.hidden}`}
+                            >
+                                {club.execs.length === 0 ? (
+                                    <Typography className={classes.empty}>No execs...</Typography>
+                                ) : (
+                                    club.execs.map((e) => <ExecCard exec={e} key={e.name}></ExecCard>)
+                                )}
+                            </Paper>
+                            <Paper
+                                elevation={0}
+                                variant="outlined"
+                                square
+                                className={`${classes.tabPage} ${tabValue === 1 ? '' : classes.hidden}`}
+                            >
+                                {club.committees.length === 0 ? (
+                                    <Typography className={classes.empty}>No committees...</Typography>
+                                ) : (
+                                    club.committees.map((c) => (
+                                        <CommitteeCard committee={c} key={c.name}></CommitteeCard>
+                                    ))
+                                )}
+                            </Paper>
                         </CardContent>
                         <CardActions>
                             <Button size="medium" className={classes.buttonCenter}>

@@ -30,7 +30,7 @@ const ClubList = () => {
         const clubs = await getClubList();
         if (clubs.status !== 200) {
             setClubCardList(
-                <Loading error="true">
+                <Loading error>
                     Could not get club data. Please reload the page or contact the site manager to fix this issue.
                 </Loading>
             );

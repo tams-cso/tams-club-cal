@@ -1,28 +1,68 @@
 import React from 'react';
-import Image from '../shared/image';
-import { imgUrl } from '../../functions/util';
-import './exec-card.scss';
+import { makeStyles } from '@material-ui/styles';
+import Box from '@material-ui/core/Box';
+import Paper from '@material-ui/core/Paper';
+import { darkSwitchGrey } from '../../functions/util';
+import { Exec } from '../../functions/entries';
 
-class ExecCard extends React.Component {
-    render() {
-        return (
-            <div className="exec-card">
+import Image from '../shared/image';
+import { Typography } from '@material-ui/core';
+import Paragraph from '../shared/paragraph';
+
+const useStyles = makeStyles((theme) => ({
+    root: {
+        width: '100%',
+        padding: 12,
+        paddingTop: 0,
+        display: 'flex',
+        flexDirection: 'row',
+    },
+    imageWrapper: {
+        marginRight: 12,
+        flexBasis: '20%',
+        flexShrink: 0,
+        height: 'min-content',
+    },
+    name: {
+        fontSize: '1.75rem',
+        lineHeight: 1.1,
+    },
+    position: {},
+    description: {
+        color: darkSwitchGrey(theme),
+    },
+}));
+
+/**
+ * Displays the information for an exec of a club
+ *
+ * @param {object} props React props object
+ * @param {Exec} props.exec The exec to display
+ * @returns
+ */
+const ExecCard = (props) => {
+    const classes = useStyles();
+    return (
+        <Box className={classes.root}>
+            <Paper elevation={2} className={classes.imageWrapper}>
                 <Image
-                    className="exec-img"
-                    src={imgUrl(this.props.exec.img)}
+                    className={classes.image}
+                    src={props.exec.img}
                     alt="profile pic"
-                    default={'/default-profile.png'}
+                    default="/default-profile.webp"
                 ></Image>
-                <div className="exec-card-info">
-                    <div className="exec-card-name-position-group">
-                        <div className="exec-card-name">{this.props.exec.name}</div>
-                        <div className="exec-card-position">{this.props.exec.position}</div>
-                    </div>
-                    <div className="exec-card-description">{this.props.exec.description}</div>
-                </div>
-            </div>
-        );
-    }
-}
+            </Paper>
+            <Box className="exec-card-info">
+                <Typography variant="h2" className={classes.name}>
+                    {props.exec.name}
+                </Typography>
+                <Typography variant="subtitle1" className={classes.position}>
+                    {props.exec.position}
+                </Typography>
+                <Paragraph text={props.exec.description} className={classes.description} />
+            </Box>
+        </Box>
+    );
+};
 
 export default ExecCard;

@@ -1,5 +1,5 @@
 import { makeStyles } from '@material-ui/core';
-import React from 'react';
+import React, { useEffect } from 'react';
 
 const useStyles = makeStyles({
     root: {
@@ -10,6 +10,10 @@ const useStyles = makeStyles({
 
 const PageWrapper = (props) => {
     const classes = useStyles();
+    
+    useEffect(() => {
+        window.scrollTo(0, 0);
+    }, []);
     return <div className={`${classes.root} ${props.className || ''}`}>{props.children}</div>;
 };
 

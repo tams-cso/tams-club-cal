@@ -30,7 +30,7 @@ const EventList = () => {
         const events = await getEventList();
         if (events.status !== 200) {
             setEventComponentList(
-                <Loading error="true">
+                <Loading error>
                     Could not get event data. Please reload the page or contact the site manager to fix this issue.
                 </Loading>
             );

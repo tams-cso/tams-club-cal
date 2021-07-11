@@ -84,6 +84,16 @@ export function darkSwitch(theme, light, dark) {
     return theme.palette.type === 'light' ? light : dark;
 }
 
+/**
+ * Sets a grey (400/600) depending on whether or not the theme is light/dark
+ *
+ * @param {import('@material-ui/core').Theme} theme The Mui theme object
+ * @returns {string} Style string
+ */
+export function darkSwitchGrey(theme) {
+    return darkSwitch(theme, theme.palette.grey[600], theme.palette.grey[400]);
+}
+
 // ================== DATE AND TIME FUNCTIONS =================== //
 
 /**

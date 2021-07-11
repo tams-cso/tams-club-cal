@@ -28,7 +28,11 @@ const Paragraph = (props) => {
     const classes = useStyles();
 
     const paragraphs = props.text.split('\n');
-    const paragraphElements = paragraphs.map((p) => <Typography className={classes.root}>{parseLinks(p)}</Typography>);
+    const paragraphElements = paragraphs.map((p, i) => (
+        <Typography className={classes.root} key={i}>
+            {parseLinks(p)}
+        </Typography>
+    ));
     return <div className={props.className}>{paragraphElements}</div>;
 };
 

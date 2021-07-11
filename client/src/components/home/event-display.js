@@ -82,7 +82,7 @@ const EventDisplay = (props) => {
         // Save the event or set an error if invalid ID
         if (event === null) {
             setError(
-                <Loading error="true">
+                <Loading error>
                     Invalid event ID. Please return to the events list page to refresh the content
                 </Loading>
             );
@@ -93,7 +93,9 @@ const EventDisplay = (props) => {
         <React.Fragment>
             {error}
             {event === null ? (
-                <Loading />
+                error ? null : (
+                    <Loading />
+                )
             ) : (
                 <Container className={classes.root}>
                     <Card>
