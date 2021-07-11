@@ -13,7 +13,6 @@ client/build
 */.env
 .env
 .vscode
-client/src/files/config.json
 
 */npm-debug.log*
 */yarn-debug.log*

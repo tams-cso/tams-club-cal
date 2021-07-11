@@ -8,7 +8,6 @@ import imageCompression from 'browser-image-compression';
 import Link from '@material-ui/core/Link';
 
 import { EventInfo, DateAndTime, CalendarDates, DateDivider, Event } from './entries';
-import config from '../files/config.json';
 
 dayjs.extend(utc);
 dayjs.extend(timezone);
@@ -364,7 +363,7 @@ export async function compressUploadedImage(imageFile, maxWidthOrHeight) {
  * @param {string} path Path of file (eg. /7ad67e9c87f78de90d.png)
  */
 export function imgUrl(path) {
-    if (path.startsWith('/')) return `${config.backend}/static${path}`;
+    if (path.startsWith('/')) return `/static${path}`;
     return path;
 }
 

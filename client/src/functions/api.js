@@ -1,8 +1,7 @@
 import Cookies from 'universal-cookie';
-import config from '../files/config.json';
 import { FetchResponse } from './entries';
 
-const BACKEND_URL = process.env.NODE_ENV !== 'production' ? '' : config.backend;
+const BACKEND_URL = process.env.NODE_ENV !== 'production' ? '' : 'https://api.tams.club';
 
 /**
  * Performs GET request to endpoint
@@ -38,7 +37,7 @@ async function postRequest(url, body, json = true, auth = null) {
         const options = { method: 'POST', body, authorization: auth };
         if (json) options.headers = { 'Content-Type': 'application/json' };
 
-        const res = await fetch(`${BACKEND_URL}${url}?key=${config.apiKey}`, options);
+        const res = await fetch(`${BACKEND_URL}${url}`, options);
         const data = await res.json();
         return new FetchResponse(res.status, data);
     } catch (error) {

@@ -20,16 +20,6 @@ cd tams-club-cal/client && yarn install
 cd ../server && yarn install
 ```
 
-Create the config file at `client/src/files/config.json` (**For the `backend` field, don't put a `/` after**):
-
-```json
-{
-    "backend": "[address that the backend server is hosted on (eg. http://localhost:5000)]",
-    "apiKey": "[(optional) API key for backend. The https://dev.tams.club backend used for development does NOT need this]",
-    "calendarUrl": "[(optional) Public sharing URL for Google Calendar if syncing (should start with 'https://calendar.google.com/calendar')]"
-}
-```
-
 If you would like to help develop the backend, email or message [MichaelZhao21](https://github.com/MichaelZhao21) to get access to the database. If you are just developing frontend, you can simply use `https://dev.tams.club` as the backend address in the json file and only run the frontend (`client` folder). You will not need to do the following step if you are only developing frontend.
 
 Create the environmental variable file at `server/.env`:
