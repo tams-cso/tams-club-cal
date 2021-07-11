@@ -15,7 +15,7 @@ import Paper from '@material-ui/core/Paper';
 
 import { getSavedClubList } from '../../redux/selectors';
 import { getClub } from '../../functions/api';
-import { darkSwitch, darkSwitchGrey } from '../../functions/util';
+import { darkSwitchGrey } from '../../functions/util';
 
 import Loading from '../shared/loading';
 import Image from '../shared/image';
@@ -50,7 +50,7 @@ const useStyles = makeStyles((theme) => ({
     },
     description: {
         marginTop: 12,
-        color: darkSwitch(theme, theme.palette.grey[600], theme.palette.grey[400]),
+        color: darkSwitchGrey(theme),
     },
     links: {
         display: 'block',

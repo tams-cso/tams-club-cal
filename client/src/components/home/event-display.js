@@ -12,7 +12,7 @@ import Divider from '@material-ui/core/Divider';
 import Typography from '@material-ui/core/Typography';
 import Paragraph from '../shared/paragraph';
 import { getSavedEventList } from '../../redux/selectors';
-import { darkSwitch, formatEventDate, formatEventTime } from '../../functions/util';
+import { darkSwitch, darkSwitchGrey, formatEventDate, formatEventTime } from '../../functions/util';
 import { getEvent } from '../../functions/api';
 
 import Loading from '../shared/loading';
@@ -42,7 +42,7 @@ const useStyles = makeStyles((theme) => ({
     },
     eventClub: {
         marginBottom: 16,
-        color: darkSwitch(theme, theme.palette.grey[600], theme.palette.grey[400]),
+        color: darkSwitchGrey(theme),
     },
     eventType: {
         color: darkSwitch(theme, theme.palette.grey[600], theme.palette.secondary.main),

@@ -7,7 +7,7 @@ import CardMedia from '@material-ui/core/CardMedia';
 import CardContent from '@material-ui/core/CardContent';
 import Typography from '@material-ui/core/Typography';
 import { Club } from '../../functions/entries';
-import { darkSwitch } from '../../functions/util';
+import { darkSwitchGrey } from '../../functions/util';
 import Image from '../shared/image';
 
 const useStyles = makeStyles((theme) => ({
@@ -49,7 +49,7 @@ const useStyles = makeStyles((theme) => ({
         display: '-webkit-box !important',
         ['-webkit-box-orient']: 'vertical',
         ['-webkit-line-clamp']: 5,
-        color: darkSwitch(theme, theme.palette.grey[600], theme.palette.grey[400]),
+        color: darkSwitchGrey(theme),
     },
 }));
 
