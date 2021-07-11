@@ -3,10 +3,10 @@ import React, { useState } from 'react';
 
 const useStyles = makeStyles({
     root: {
-        position: 'absolute',
         width: '100%',
         height: 'inherit',
         objectFit: 'cover',
+        display: 'block',
         fontSize: 0,
     },
 });

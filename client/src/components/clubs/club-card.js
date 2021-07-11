@@ -10,51 +10,24 @@ import { Club } from '../../functions/entries';
 import { darkSwitch } from '../../functions/util';
 import Image from '../shared/image';
 
-const dims = {
-    width: 360,
-    height: 400,
-};
-
 const useStyles = makeStyles((theme) => ({
     root: {
-        width: dims.width,
-        height: dims.height,
         margin: 'auto',
-        [theme.breakpoints.down('xs')]: {
-            width: 320,
-        },
     },
     actionArea: {
-        width: dims.width,
-        height: dims.height,
-        [theme.breakpoints.down('xs')]: {
-            width: 320,
-        },
+        display: 'block',
     },
     navLink: {
-        color: 'unset',
         textDecoration: 'none',
+        color: 'unset',
     },
     image: {
-        width: dims.width,
-        height: 150,
         top: 0,
-        [theme.breakpoints.down('xs')]: {
-            width: 320,
-            height: 130,
-        },
     },
     text: {
-        position: 'absolute',
-        top: 150,
-        padding: 20,
         height: 250,
-        display: 'flex',
-        flexDirection: 'column',
-        [theme.breakpoints.down('xs')]: {
-            top: 130,
-            height: 270,
-        },
+        padding: 16,
+        paddingTop: 12,
     },
     advised: {
         color: theme.palette.primary.main,
@@ -62,29 +35,21 @@ const useStyles = makeStyles((theme) => ({
     independent: {
         color: theme.palette.secondary.main,
     },
-    description: {
-        flexShrink: 1,
+    title: {
         overflow: 'hidden',
-        height: 'initial',
         display: '-webkit-box !important',
         ['-webkit-box-orient']: 'vertical',
-        color: darkSwitch(theme, theme.palette.grey[600], theme.palette.grey[400]),
+        ['-webkit-line-clamp']: 2,
+    },
+    description: {
+        flexShrink: 1,
+        height: 'initial',
         marginTop: 8,
-    },
-    descXL: {
-        ['-webkit-line-clamp']: 7,
-    },
-    descL: {
-        ['-webkit-line-clamp']: 6,
-    },
-    descM: {
+        overflow: 'hidden',
+        display: '-webkit-box !important',
+        ['-webkit-box-orient']: 'vertical',
         ['-webkit-line-clamp']: 5,
-    },
-    descS: {
-        ['-webkit-line-clamp']: 3,
-    },
-    descXS: {
-        ['-webkit-line-clamp']: 1,
+        color: darkSwitch(theme, theme.palette.grey[600], theme.palette.grey[400]),
     },
 }));
 
@@ -97,20 +62,6 @@ const useStyles = makeStyles((theme) => ({
 const ClubCard = (props) => {
     const classes = useStyles();
     const description = useRef();
-    const [descHeight, setDescHeight] = useState(null);
-
-    useEffect(() => {
-        if (descHeight !== null) return;
-        // Use the height (initial) of the remaining flexbox
-        // to determine how many lines of the description to show
-        const h = description.current.clientHeight;
-        console.log(h);
-        if (h >= 160) setDescHeight(classes.descXL);
-        else if (h >= 144) setDescHeight(classes.descL);
-        else if (h >= 114) setDescHeight(classes.descM);
-        else if (h >= 70) setDescHeight(classes.descS);
-        else setDescHeight(classes.descXS);
-    }, []);
 
     return (
         <Card className={classes.root}>
@@ -130,12 +81,10 @@ const ClubCard = (props) => {
                         >
                             {props.club.advised ? 'Advised' : 'Independent'}
                         </Typography>
-                        <Typography variant="h6" component="h2">
+                        <Typography variant="h6" component="h2" className={classes.title}>
                             {props.club.name}
                         </Typography>
-                        <Typography className={`${classes.description} ${descHeight || ''}`} ref={description}>
-                            {props.club.description}
-                        </Typography>
+                        <Typography className={`${classes.description}`}>{props.club.description}</Typography>
                     </CardContent>
                 </NavLink>
             </CardActionArea>

@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { useSelector } from 'react-redux';
+import { makeStyles } from '@material-ui/core';
 import Container from '@material-ui/core/Container';
 import Card from '@material-ui/core/Card';
 import CardMedia from '@material-ui/core/CardMedia';
@@ -7,7 +8,6 @@ import CardContent from '@material-ui/core/CardContent';
 import CardActions from '@material-ui/core/CardActions';
 import Button from '@material-ui/core/Button';
 import Typography from '@material-ui/core/Typography';
-import { makeStyles } from '@material-ui/core';
 import { getSavedClubList } from '../../redux/selectors';
 import { getClub } from '../../functions/api';
 
@@ -20,18 +20,19 @@ const useStyles = makeStyles((theme) => ({
         [theme.breakpoints.down('md')]: {
             maxWidth: '100%',
         },
-        position: 'relative',
     },
     imageWrapper: {
         width: '100%',
-        position: 'relative',
+        height: 'auto',
+        display: 'block',
     },
     image: {
         width: '100%',
-        height: 250,
+        height: 'auto',
     },
     textWrapper: {
-        marginTop: 250,
+        padding: 16,
+        paddingTop: 12,
     },
     buttonCenter: {
         margin: 'auto',
@@ -87,7 +88,7 @@ const ClubDisplay = (props) => {
                             <Image className={classes.image} src={club.coverImg} default="/default-cover.webp" />
                         </CardMedia>
                         <CardContent className={classes.textWrapper}>
-                            <Typography>{club.name}</Typography>
+                            <Typography variant="h1">{club.name}</Typography>
                         </CardContent>
                         <CardActions>
                             <Button size="medium" className={classes.buttonCenter}>
