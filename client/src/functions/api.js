@@ -120,8 +120,16 @@ export async function postVolunteering(vol, id = '') {
     return postRequest(`/volunteering/${id}`, vol);
 }
 
-export async function postFeedback(feedback) {
-    return postRequest('/feedback', { feedback });
+/**
+ * Submits a new feedback object
+ * 
+ * @param {object} feedbackObject Feedback object
+ * @param {string} feedbackObject.feedback The feedback from the text area
+ * @param {string} [feedbackObject.name] The name of the user who submitted the feedback
+ * @returns {Promise<FetchResponse>} Will return the object or error object
+ */
+export async function postFeedback(feedbackObject) {
+    return postRequest('/feedback', feedbackObject);
 }
 
 export async function getIp() {

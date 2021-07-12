@@ -1,69 +1,122 @@
-import React from 'react';
+import React, { useState } from 'react';
+import { makeStyles } from '@material-ui/core';
+import Container from '@material-ui/core/Container';
+import Typography from '@material-ui/core/Typography';
+import TextField from '@material-ui/core/TextField';
+import Button from '@material-ui/core/Button';
+import SendIcon from '@material-ui/icons/Send';
+import Box from '@material-ui/core/Box';
 import { postFeedback } from '../../functions/api';
-import './about.scss';
 
-class About extends React.Component {
-    constructor(props) {
-        super(props);
-        this.state = { feedbackValue: '' };
+import Paragraph from '../shared/paragraph';
+import Image from '../shared/image';
+import data from '../../files/data.json';
 
-        this.handleChange = this.handleChange.bind(this);
-        this.handleSubmit = this.handleSubmit.bind(this);
-    }
+const useStyles = makeStyles({
+    root: {
+        paddingTop: 16,
+    },
+    image: {
+        margin: 'auto',
+        marginBottom: 16,
+    },
+    center: {
+        textAlign: 'center',
+        marginTop: 32,
+        marginBottom: 8,
+    },
+    area: {
+        width: '100%',
+        margin: '16px 0 8px',
+    },
+    submitWrapper: {
+        width: '100%',
+        display: 'flex',
+        flexDirection: 'row',
+        alignItems: 'center',
+    },
+    field: {
+        flexGrow: 1,
+        marginRight: 12,
+    },
+});
 
-    handleChange(event) {
-        this.setState({ feedbackValue: event.target.value });
-    }
+const About = () => {
+    const [feedback, setFeedback] = useState('');
+    const [name, setName] = useState('');
+    const [error, setError] = useState(false);
+    const classes = useStyles();
 
-    async handleSubmit() {
-        const res = await postFeedback(this.state.feedbackValue.trim());
-        if (res.status == 200) {
-            this.setState({ feedbackValue: '' });
-            alert('Thank you for your feedback!');
+    const handleChange = (event) => {
+        switch (event.target.id) {
+            case 'feedback':
+                setFeedback(event.target.value);
+                break;
+            case 'name':
+                setName(event.target.value);
+                break;
         }
-        else alert('Could not submit feedback :(');
-    }
+    };
 
-    render() {
-        return (
-            <div className="about">
-                <img className="about-header" alt="TAMS Club Calendar" src={'/logo-banner.png'}></img>
-                <p className="about-info-p">
-                    Welcome to the TAMS Club Calendar! This is a simple web app that displays all the student
-                    organization events at TAMS, along with a list of clubs and other resources. Our vision is a
-                    community-maintained resource that’s avaliable to anyone and can be updated by anyone as well.
-                </p>
-                <p className="about-info-p">
-                    We are an open-source project, meaning that anyone and everyone can help contribute to the
-                    development of the website! You can go to the&nbsp;
-                    <b>
-                        <a href="https://github.com/MichaelZhao21/tams-club-cal">Github repository</a>
-                    </b>
-                    &nbsp;where this project is being hosted. There is more information on that page on how to
-                    contribute and help code. If you can't code and still want to help, there is a feedback form below
-                    where you can write whatever you would like! The way programs like these get better, after all, is
-                    through independent user feedback. Thank you once again for checking out tams.club, and we hope you
-                    enjoy the rest of your day! :D
-                </p>
-                <h1 className="feedback-header">Feedback</h1>
-                <p className="about-info-p">
-                    We would love to hear what you think and what ideas you would like to see! Here’s the form for any
-                    bugs, comments, suggestions, and anything else you would like us to know!
-                </p>
-                <div className="center-div">
-                    <textarea
-                        id="feedback-form"
-                        placeholder="Enter feedback here..."
-                        value={this.state.feedbackValue}
-                        onChange={this.handleChange}
-                    />
-                </div>
-                <div className="center-button">
-                    <input id="feedback-submit" type="submit" value="Submit" onClick={this.handleSubmit} />
-                </div>
-            </div>
-        );
-    }
-}
+    const handleSubmit = async () => {
+        if (feedback.trim().length === 0) {
+            setError(true);
+            return;
+        }
+
+        const res = await postFeedback({
+            feedback: feedback.trim(),
+            name: name.trim(),
+        });
+        
+        if (res.status == 200) {
+            setFeedback('');
+            setName('');
+            alert('Thank you for your feedback!');
+        } else alert('Could not submit feedback :(');
+    };
+
+    return (
+        <Container className={classes.root}>
+            <Image src="/logo-banner.png" alt="TAMS Club Calendar" className={classes.image}></Image>
+            <Paragraph text={data.aboutText} fontSize="1.1rem" />
+            <Typography variant="h2" className={classes.center}>
+                Feedback
+            </Typography>
+            <Paragraph text={data.aboutFeedback} fontSize="1.1rem" />
+            <form className={classes.form} noValidate autoComplete="off">
+                <TextField
+                    id="feedback"
+                    label="Feedback"
+                    multiline
+                    variant="outlined"
+                    value={feedback}
+                    onChange={handleChange}
+                    className={classes.area}
+                    error={error}
+                    helperText={error ? "Feedback cannot be empty" : ''}
+                ></TextField>
+                <Box className={classes.submitWrapper}>
+                    <TextField
+                        id="name"
+                        label="Name (optional)"
+                        value={name}
+                        onChange={handleChange}
+                        className={classes.field}
+                    ></TextField>
+                    <Button
+                        variant="contained"
+                        color="primary"
+                        className={classes.submit}
+                        endIcon={<SendIcon />}
+                        onClick={handleSubmit}
+                    >
+                        Submit
+                    </Button>
+                </Box>
+            </form>
+        </Container>
+    );
+};
 
 export default About;

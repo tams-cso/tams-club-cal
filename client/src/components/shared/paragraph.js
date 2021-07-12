@@ -8,6 +8,7 @@ const useStyles = makeStyles({
         marginBottom: 8,
         whiteSpace: 'pre-line',
         overflowX: 'hidden',
+        fontSize: (props) => props.fontSize || '1rem',
     },
 });
 
@@ -21,11 +22,12 @@ const useStyles = makeStyles({
  * @param {object} props React props object
  * @param {string} props.className React class name
  * @param {string} props.text Text to display
+ * @param {string} [props.fontSize] Font size for the text
  */
 const Paragraph = (props) => {
     if (props.text === undefined) return <Typography className={props.className}></Typography>;
 
-    const classes = useStyles();
+    const classes = useStyles({ fontSize: props.fontSize });
 
     const paragraphs = props.text.split('\n');
     const paragraphElements = paragraphs.map((p, i) => (
