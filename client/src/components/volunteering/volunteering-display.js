@@ -3,6 +3,7 @@ import { useSelector } from 'react-redux';
 import { makeStyles } from '@material-ui/core/styles';
 import { getSavedVolunteeringList } from '../../redux/selectors';
 import { getVolunteering } from '../../functions/api';
+import { darkSwitchGrey } from '../../functions/util';
 
 import Container from '@material-ui/core/Container';
 import Card from '@material-ui/core/Card';
@@ -11,7 +12,11 @@ import CardActions from '@material-ui/core/CardActions';
 import Button from '@material-ui/core/Button';
 import Box from '@material-ui/core/Box';
 import Typography from '@material-ui/core/Typography';
+import Divider from '@material-ui/core/Divider';
+import Hidden from '@material-ui/core/Hidden';
 import Loading from '../shared/loading';
+import FilterList from './filter-list';
+import Paragraph from '../shared/paragraph';
 
 const useStyles = makeStyles((theme) => ({
     root: {
@@ -20,10 +25,30 @@ const useStyles = makeStyles((theme) => ({
             maxWidth: '100%',
         },
     },
-    gridRoot: {
-        width: '100%',
+    container: {
         display: 'flex',
-        justifyContent: 'center',
+        flexDirection: 'row',
+        [theme.breakpoints.down('sm')]: {
+            flexDirection: 'column',
+        },
+    },
+    side: {
+        flexBasis: '50%',
+        flexShrink: 0,
+        flexGrow: 1,
+    },
+    left: {
+        paddingRight: 12,
+    },
+    open: {
+        fontSize: '1.1rem',
+        color: theme.palette.primary.main,
+    },
+    closed: {
+        color: theme.palette.error.main,
+    },
+    club: {
+        color: darkSwitchGrey(theme),
     },
     buttonCenter: {
         margin: 'auto',
@@ -78,8 +103,24 @@ const EventDisplay = (props) => {
                 <Container className={classes.root}>
                     <Card>
                         <CardContent>
-                            <Box className={classes.gridRoot}>
-                                <Typography>{volunteering.name}</Typography>
+                            <Box className={classes.container}>
+                                <Box className={`${classes.side} ${classes.left}`}>
+                                    <Typography
+                                        variant="subtitle2"
+                                        className={`${classes.open} ${volunteering.filters.open ? '' : classes.closed}`}
+                                    >
+                                        {volunteering.filters.open ? 'Open' : 'Closed'}
+                                    </Typography>
+                                    <Typography variant="h2">{volunteering.name}</Typography>
+                                    <Typography variant="subtitle1" className={classes.club}>
+                                        {volunteering.club}
+                                    </Typography>
+                                    <Paragraph text={volunteering.description} />
+                                </Box>
+                                <Hidden smDown>
+                                    <Divider orientation="vertical" flexItem />
+                                </Hidden>
+                                <FilterList filters={volunteering.filters} className={classes.side} />
                             </Box>
                         </CardContent>
                         <CardActions>

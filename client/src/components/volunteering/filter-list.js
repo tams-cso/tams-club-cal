@@ -15,7 +15,7 @@ import FilterItem from './filter-item';
  */
 const FilterList = (props) => {
     return (
-        <List dense>
+        <List dense className={props.className || ''}>
             <FilterItem
                 icon={<DashboardRoundedIcon htmlColor="#ffb258" />}
                 color="#ffb258"
