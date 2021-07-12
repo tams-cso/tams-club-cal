@@ -1,7 +1,12 @@
 import React, { useEffect, useState } from 'react';
 import { useSelector } from 'react-redux';
 import { makeStyles } from '@material-ui/core';
+import { getSavedClubList } from '../../redux/selectors';
+import { getClub } from '../../functions/api';
+import { darkSwitchGrey } from '../../functions/util';
+
 import Container from '@material-ui/core/Container';
+import Paper from '@material-ui/core/Paper';
 import Card from '@material-ui/core/Card';
 import CardMedia from '@material-ui/core/CardMedia';
 import CardContent from '@material-ui/core/CardContent';
@@ -11,12 +16,6 @@ import Link from '@material-ui/core/Link';
 import Typography from '@material-ui/core/Typography';
 import Tabs from '@material-ui/core/Tabs';
 import Tab from '@material-ui/core/Tab';
-import Paper from '@material-ui/core/Paper';
-
-import { getSavedClubList } from '../../redux/selectors';
-import { getClub } from '../../functions/api';
-import { darkSwitchGrey } from '../../functions/util';
-
 import Loading from '../shared/loading';
 import Image from '../shared/image';
 import Paragraph from '../shared/paragraph';

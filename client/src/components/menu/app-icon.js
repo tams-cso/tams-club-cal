@@ -1,9 +1,10 @@
 import { NavLink } from 'react-router-dom';
 import { makeStyles } from '@material-ui/core/styles';
+import { darkSwitch } from '../../functions/util';
+
 import SvgIcon from '@material-ui/core/SvgIcon';
 import Typography from '@material-ui/core/Typography';
 import Box from '@material-ui/core/Box';
-import { darkSwitch } from '../../functions/util';
 
 const useStyles = makeStyles((theme) => ({
     root: {

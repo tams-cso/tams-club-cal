@@ -1,9 +1,10 @@
 import React, { useEffect, useState } from 'react';
 import { NavLink, useLocation } from 'react-router-dom';
 import { makeStyles, fade } from '@material-ui/core/styles';
-import Typography from '@material-ui/core/Typography';
-import { Box } from '@material-ui/core';
 import { darkSwitch, isActive } from '../../functions/util';
+
+import Typography from '@material-ui/core/Typography';
+import Box from '@material-ui/core/Box';
 
 const useStyles = makeStyles((theme) => ({
     root: {

@@ -1,7 +1,8 @@
 import { fade, makeStyles } from '@material-ui/core/styles';
+import { darkSwitch } from '../../functions/util';
+
 import ButtonBase from '@material-ui/core/ButtonBase';
 import Tooltip from '@material-ui/core/Tooltip';
-import { darkSwitch } from '../../functions/util';
 
 const useStyles = makeStyles((theme) => ({
     root: {

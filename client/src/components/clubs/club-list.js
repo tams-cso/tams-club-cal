@@ -1,12 +1,12 @@
 import React, { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { makeStyles } from '@material-ui/core';
-import Grid from '@material-ui/core/Grid';
-import Container from '@material-ui/core/Container';
 import { getClubList } from '../../functions/api';
 import { getSavedClubList } from '../../redux/selectors';
 import { setClubList } from '../../redux/actions';
 
+import Grid from '@material-ui/core/Grid';
+import Container from '@material-ui/core/Container';
 import ClubCard from './club-card';
 import Loading from '../shared/loading';
 

@@ -2,6 +2,10 @@ import React, { useEffect, useState } from 'react';
 import { useSelector } from 'react-redux';
 import { makeStyles } from '@material-ui/core/styles';
 import { capitalize } from '@material-ui/core';
+import { getSavedEventList } from '../../redux/selectors';
+import { darkSwitch, darkSwitchGrey, formatEventDate, formatEventTime } from '../../functions/util';
+import { getEvent } from '../../functions/api';
+
 import Container from '@material-ui/core/Container';
 import Card from '@material-ui/core/Card';
 import CardContent from '@material-ui/core/CardContent';
@@ -11,10 +15,6 @@ import Box from '@material-ui/core/Box';
 import Divider from '@material-ui/core/Divider';
 import Typography from '@material-ui/core/Typography';
 import Paragraph from '../shared/paragraph';
-import { getSavedEventList } from '../../redux/selectors';
-import { darkSwitch, darkSwitchGrey, formatEventDate, formatEventTime } from '../../functions/util';
-import { getEvent } from '../../functions/api';
-
 import Loading from '../shared/loading';
 
 const useStyles = makeStyles((theme) => ({

@@ -1,12 +1,12 @@
 import React from 'react';
 import { makeStyles } from '@material-ui/styles';
-import Box from '@material-ui/core/Box';
-import Paper from '@material-ui/core/Paper';
 import { darkSwitchGrey } from '../../functions/util';
 import { Exec } from '../../functions/entries';
 
+import Box from '@material-ui/core/Box';
+import Paper from '@material-ui/core/Paper';
+import Typography from '@material-ui/core/Typography';
 import Image from '../shared/image';
-import { Typography } from '@material-ui/core';
 import Paragraph from '../shared/paragraph';
 
 const useStyles = makeStyles((theme) => ({

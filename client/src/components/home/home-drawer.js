@@ -1,22 +1,20 @@
 import React from 'react';
 import { makeStyles } from '@material-ui/core/styles';
+import { darkSwitch } from '../../functions/util';
+import data from '../../files/data.json';
+
 import Drawer from '@material-ui/core/Drawer';
-import Button from '@material-ui/core/Button';
 import Toolbar from '@material-ui/core/Toolbar';
-import Divider from '@material-ui/core/Divider';
 import List from '@material-ui/core/List';
 import ListItem from '@material-ui/core/ListItem';
 import ListItemIcon from '@material-ui/core/ListItemIcon';
 import ListItemText from '@material-ui/core/ListItemText';
+import Typography from '@material-ui/core/Typography';
 import EventRoundedIcon from '@material-ui/icons/EventRounded';
 import CreateRoundedIcon from '@material-ui/icons/CreateRounded';
 import EmojiPeopleRoundedIcon from '@material-ui/icons/EmojiPeopleRounded';
 import PublicRoundedIcon from '@material-ui/icons/PublicRounded';
 import EventAvailableRoundedIcon from '@material-ui/icons/EventAvailableRounded';
-import Typography from '@material-ui/core/Typography';
-
-import { darkSwitch } from '../../functions/util';
-import data from '../../files/data.json';
 
 const drawerWidth = 280;
 
@@ -60,31 +58,11 @@ const useStyles = makeStyles((theme) => ({
     },
 }));
 
-const HomeDrawer = (props) => {
+const HomeDrawer = () => {
     const classes = useStyles();
-
-    const switchView = (schedule = true) => {
-        props.setScheduleView(schedule);
-    };
     return (
         <Drawer variant="permanent" className={classes.root}>
             <Toolbar className={classes.spacer} />
-            {/* TODO: Add the calendar view back in */}
-            {/* <div className={classes.buttonContainer}>
-                <Button
-                    className={`${classes.button} ${props.scheduleView ? classes.buttonActive : ''}`}
-                    onClick={switchView}
-                >
-                    Schedule View
-                </Button>
-                <Button
-                    className={`${classes.button} ${!props.scheduleView ? classes.buttonActive : ''}`}
-                    onClick={switchView.bind(this, false)}
-                >
-                    Calendar View
-                </Button>
-            </div>
-            <Divider variant="middle" className={classes.divider} /> */}
             <Typography variant="h3" className={classes.externalLinksTitle}>
                 External Links
             </Typography>

@@ -1,18 +1,18 @@
 import React, { useEffect, useState } from 'react';
+import { useLocation } from 'react-router';
 import { makeStyles } from '@material-ui/core/styles';
+import { darkSwitch } from '../../functions/util';
+import { githubLink } from '../../files/data.json';
+
 import Appbar from '@material-ui/core/AppBar';
 import Toolbar from '@material-ui/core/Toolbar';
 import SvgIcon from '@material-ui/core/SvgIcon';
 import WbSunnyRoundedIcon from '@material-ui/icons/WbSunnyRounded';
 import Brightness2RoundedIcon from '@material-ui/icons/Brightness2Rounded';
 import AccountCircleOutlinedIcon from '@material-ui/icons/AccountCircleOutlined';
-import { darkSwitch } from '../../functions/util';
-
 import AppIcon from './app-icon';
 import MenuLink from './menu-link';
 import MenuIcon from './menu-icon';
-import { githubLink } from '../../files/data.json';
-import { useLocation } from 'react-router';
 
 const useStyles = makeStyles((theme) => ({
     root: {

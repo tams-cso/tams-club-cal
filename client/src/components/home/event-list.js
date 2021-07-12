@@ -1,14 +1,13 @@
 import React, { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { makeStyles } from '@material-ui/core/styles';
-import Container from '@material-ui/core/Container';
-import Typography from '@material-ui/core/Typography';
-
 import { setEventList } from '../../redux/actions';
 import { getSavedEventList } from '../../redux/selectors';
 import { getEventList } from '../../functions/api';
 import { isSameDate } from '../../functions/util';
 
+import Container from '@material-ui/core/Container';
+import Typography from '@material-ui/core/Typography';
 import EventListSection from './event-list-section';
 import Loading from '../shared/loading';
 

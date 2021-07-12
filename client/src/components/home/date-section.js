@@ -1,7 +1,7 @@
 import React from 'react';
-import { Typography } from '@material-ui/core';
-import { Event } from '../../functions/entries';
 import { formatTime } from '../../functions/util';
+
+import Typography from '@material-ui/core/Typography';
 
 /**
  * 

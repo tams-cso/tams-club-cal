@@ -1,14 +1,19 @@
 import React, { useEffect } from 'react';
 import { Link, useHistory } from 'react-router-dom';
-import { List, ListItem, ListItemIcon, ListItemText, makeStyles } from '@material-ui/core';
+import { makeStyles } from '@material-ui/core';
+import { darkSwitchGrey } from '../../functions/util';
+
 import Container from '@material-ui/core/Container';
 import Paper from '@material-ui/core/Paper';
 import Typography from '@material-ui/core/Typography';
+import List from '@material-ui/core/List';
+import ListItem from '@material-ui/core/ListItem';
+import ListItemIcon from '@material-ui/core/ListItemIcon';
+import ListItemText from '@material-ui/core/ListItemText';
 import HomeRoundedIcon from '@material-ui/icons/HomeRounded';
 import AppsRoundedIcon from '@material-ui/icons/AppsRounded';
 import EmojiPeopleRoundedIcon from '@material-ui/icons/EmojiPeopleRounded';
 import InfoRoundedIcon from '@material-ui/icons/InfoRounded';
-import { darkSwitchGrey } from '../../functions/util';
 
 const useStyles = makeStyles((theme) => ({
     root: {

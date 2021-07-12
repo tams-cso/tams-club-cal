@@ -1,12 +1,12 @@
 import React from 'react';
 import { NavLink } from 'react-router-dom';
-import ListItem from '@material-ui/core/ListItem';
-import Box from '@material-ui/core/Box';
-import Typography from '@material-ui/core/Typography';
-
-import { Event } from '../../functions/entries';
-import { darkSwitch, formatEventTime } from '../../functions/util';
 import { makeStyles } from '@material-ui/core/styles';
+import { darkSwitch, formatEventTime } from '../../functions/util';
+import { Event } from '../../functions/entries';
+
+import Box from '@material-ui/core/Box';
+import ListItem from '@material-ui/core/ListItem';
+import Typography from '@material-ui/core/Typography';
 
 const useStyles = makeStyles((theme) => ({
     root: {

@@ -1,7 +1,8 @@
 import React from 'react';
 import { makeStyles } from '@material-ui/core';
-import Typography from '@material-ui/core/Typography';
 import { parseLinks } from '../../functions/util';
+
+import Typography from '@material-ui/core/Typography';
 
 const useStyles = makeStyles({
     root: {

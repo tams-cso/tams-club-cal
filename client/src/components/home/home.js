@@ -2,10 +2,10 @@ import React, { useEffect, useState } from 'react';
 import { useLocation } from 'react-router';
 import { getParams } from '../../functions/util';
 
+import PageWrapper from '../shared/page-wrapper';
 import HomeDrawer from './home-drawer';
 import EventList from './event-list';
 import EventDisplay from './event-display';
-import PageWrapper from '../shared/page-wrapper';
 
 const Home = () => {
     const [display, setDisplay] = useState(null);
