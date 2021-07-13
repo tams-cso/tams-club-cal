@@ -28,7 +28,7 @@ export default function () {
             );
             this.get('/volunteering', () => volunteeringList, { timing: 1000 });
             this.get(
-                '/clubs/:id',
+                '/volunteering/:id',
                 (schema, req) => {
                     const data = volunteeringList.find((v) => v.id === req.params.id);
                     if (data !== undefined) return data;
