@@ -47,6 +47,9 @@ const useStyles = makeStyles((theme) => ({
     eventType: {
         color: darkSwitch(theme, theme.palette.grey[600], theme.palette.secondary.main),
     },
+    date: {
+        fontWeight: 400,
+    },
     buttonCenter: {
         margin: 'auto',
     },
@@ -82,9 +85,7 @@ const EventDisplay = (props) => {
         // Save the event or set an error if invalid ID
         if (event === null) {
             setError(
-                <Loading error>
-                    Invalid event ID. Please return to the events list page to refresh the content
-                </Loading>
+                <Loading error>Invalid event ID. Please return to the events list page to refresh the content</Loading>
             );
         } else setEvent(event);
     }, [props.id]);
@@ -109,10 +110,12 @@ const EventDisplay = (props) => {
                                     <Typography variant="subtitle1" component="p" className={classes.eventClub}>
                                         {event.club}
                                     </Typography>
-                                    <Typography variant="h3" gutterBottom>
+                                    <Typography variant="h3" gutterBottom className={classes.date}>
                                         {formatEventDate(event)}
                                     </Typography>
-                                    <Typography variant="h3">{formatEventTime(event)}</Typography>
+                                    <Typography variant="h3" className={classes.date}>
+                                        {formatEventTime(event)}
+                                    </Typography>
                                 </Box>
                                 <Divider orientation="vertical" flexItem />
                                 <Paragraph
