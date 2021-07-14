@@ -1,7 +1,7 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect } from 'react';
 import { BrowserRouter, Route, Switch, useLocation } from 'react-router-dom';
 import { makeStyles } from '@material-ui/core';
-import { getParams } from '../../functions/util';
+import Cookies from 'universal-cookie';
 
 import Container from '@material-ui/core/Container';
 import Paper from '@material-ui/core/Paper';
@@ -10,7 +10,6 @@ import PageWrapper from '../shared/page-wrapper';
 import EditLogin from './edit-login';
 import EditEvents from './edit-events';
 import EditHistory from './edit-history';
-import Cookies from 'universal-cookie';
 
 const useStyles = makeStyles({
     root: {
@@ -37,12 +36,12 @@ const Edit = () => {
             <Container>
                 <Paper>
                     <EditLogin />
-                    {/* <EditHistory /> */}
                     <BrowserRouter>
                         <Switch>
                             <Route path="/edit/events" component={EditEvents} />
                             {/* <Route path="/edit/clubs" component={EditClubs} /> */}
                             {/* <Route path="/edit/volunteering" component={EditVolunteering} /> */}
+                            <Route path="/edit/history/:resource" component={EditHistory} />
                             <Route>
                                 <Typography variant="h1" className={classes.error}>
                                     ERROR: Invalid editing URL :(

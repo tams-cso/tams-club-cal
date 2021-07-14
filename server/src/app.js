@@ -8,7 +8,7 @@ const helmet = require('helmet');
 const morgan = require('morgan');
 const cookieParser = require('cookie-parser');
 const mongoose = require('mongoose');
-const { checkEnv } = require('./functions/util');
+const { checkEnv, sendError } = require('./functions/util');
 
 // Import routers
 const authRouter = require('./routes/authRouter');
@@ -38,12 +38,11 @@ app.use(function (req, res, next) {
     // Set this in the .env file as ORIGIN
     // This will return as an error if no origin in headers OR if the origin does not match the expected origin
     // The block will be skipped if no ORIGIN environmental variable is defined
-    if (
-        req.headers.origin === undefined ||
-        (process.env.ORIGIN !== undefined && req.headers.origin.indexOf(process.env.ORIGIN) === -1)
-    ) {
-        sendError(res, 403, 'Invalid request origin.');
-        return;
+    if (process.env.ORIGIN !== undefined && req.path !== '/auth/login') {
+        if (req.headers.origin === undefined || req.headers.origin.indexOf(process.env.ORIGIN) === -1) {
+            sendError(res, 403, 'Invalid request origin.');
+            return;
+        }
     }
 
     // Continue looking for path matches
