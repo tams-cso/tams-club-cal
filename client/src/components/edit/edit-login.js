@@ -1,104 +1,109 @@
-import React from 'react';
+import { Button, makeStyles } from '@material-ui/core';
+import React, { useEffect, useState } from 'react';
 import Cookies from 'universal-cookie';
-import { getAuthUrl, getIp, postRefreshAuth } from '../../functions/api';
-import { ReactComponent as GoogleLogo } from '../../files/google-logo.svg';
-import './edit-login.scss';
-import { isActive } from '../../functions/util';
-import ActionButton from '../shared/action-button';
+import { getIp, getLoggedIn, getUserInfo } from '../../functions/api';
 
-class EditLogin extends React.Component {
-    constructor(props) {
-        super(props);
-        this.state = { message: 'Fetching login information...', loaded: false, loggedIn: false };
-    }
+import Box from '@material-ui/core/Box';
+import Typography from '@material-ui/core/Typography';
+import { darkSwitchGrey } from '../../functions/util';
 
-    loginWithGoogle = async () => {
+const useStyles = makeStyles((theme) => ({
+    root: {
+        padding: '16px 24px',
+        display: 'flex',
+        justifyContent: 'space-between',
+        alignItems: 'center',
+        [theme.breakpoints.down('sm')]: {
+            flexDirection: 'column',
+        },
+    },
+    editText: {
+        color: theme.palette.secondary.main,
+        [theme.breakpoints.down('sm')]: {
+            marginBottom: 12,
+        },
+    },
+    signInButton: {
+        padding: 4,
+    },
+    message: {
+        paddingBottom: 24,
+        paddingRight: 24,
+        textAlign: 'right',
+        color: darkSwitchGrey(theme),
+    },
+}));
+
+const EditLogin = () => {
+    const [loading, setLoading] = useState(true);
+    const [message, setMessage] = useState(null);
+    const classes = useStyles();
+    const [loginButton, setLoginButton] = useState(
+        <Button
+            disabled={!loading}
+            className={`g_id_signin ${classes.signInButton}`}
+            data-type="standard"
+            data-shape="rectangular"
+            data-theme="filled_blue"
+            data-text="signin_with"
+            data-size="large"
+            data-logo_alignment="left"
+        ></Button>
+    );
+    const [logoutButton, setLogoutButton] = useState(null);
+
+    const logout = () => {
+        // Remove token and refresh
         const cookies = new Cookies();
-
-        const res = await getAuthUrl();
-        if (res.status !== 200) {
-            alert('Could not connect to login server. Please try refreshing the page :(');
-            return;
-        }
-
-        cookies.set('state', res.data.state, { path: '/' });
-        cookies.set('url', window.location.toString(), { path: '/' });
-        window.location.href = res.data.authUrl;
+        cookies.remove('token', { path: '/' });
+        history.go(0);
     };
 
-    logout = () => {
+    useEffect(async () => {
         const cookies = new Cookies();
-        cookies.remove('auth_email', { path: '/' });
-        window.location.href = window.location.toString();
-    };
+        const token = cookies.get('token');
 
-    async componentDidMount() {
-        const cookies = new Cookies();
-        const email = cookies.get('auth_email');
-
-        // Fetch the IP if not logged in
-        if (email === undefined) {
-            this.getAndShowIp();
-            return;
+        // Check if valid token and compare with database
+        if (token !== undefined) {
+            const res = await getLoggedIn(token);
+            if (res.status === 200 && res.data.loggedIn) {
+                // If all is good, display the logged in prompt!
+                const userRes = await getUserInfo(token);
+                setLoginButton(null);
+                setLogoutButton(
+                    <Button variant="contained" color="primary" onClick={logout}>
+                        Log out
+                    </Button>
+                );
+                setMessage(`You are logged in as ${userRes.data.name}!`);
+                setLoading(false);
+                return;
+            }
         }
+        const ip = await getIp();
+        setMessage(`Edits will be made under your ip address [${ip.data.ip}].`);
+        setLoading(false);
+    }, []);
 
-        // Get name from logged in email
-        // TODO: Fetch profile picture with 'picture' field of user data
-        const res = await postRefreshAuth(email);
-        if (res.status !== 200) {
-            cookies.remove('auth_email', { path: '/' });
-            this.getAndShowIp();
-            // alert('Could not connect to the server! Please reload the page.');
-            return;
-        }
-
-        // Set state of logged in
-        if (this.props.setLoggedIn) this.props.setLoggedIn(true);
-        this.setState({
-            message: `You are logged in as ${res.data.name} (${email}).`,
-            loaded: true,
-            loggedIn: true,
-        });
-    }
-
-    getAndShowIp = async () => {
-        const res = await getIp();
-        if (res.status !== 200) {
-            alert('Could not connect to the server! Please reload the page.');
-            return;
-        }
-
-        var message = 'You are not logged in.';
-        if (!this.props.admin)
-            message += ` Any edits you make will be saved with your current ip address [${res.data.ip}]`;
-        
-            this.setState({ message, loaded: true });
-        return;
-    }
-
-    render() {
-        return (
-            <div className="edit-login">
-                <div className="edit-login-top">
-                    <h1 className="edit-login-title">{this.props.admin ? 'Admin Menu' : 'EDIT MODE'}</h1>
-                    <ActionButton
-                        className={isActive('edit-login-logout', this.state.loaded && this.state.loggedIn)}
-                        onClick={this.logout}
-                    >
-                        Logout
-                    </ActionButton>
-                    <button
-                        className={isActive('edit-login-with-google', this.state.loaded && !this.state.loggedIn)}
-                        onClick={this.loginWithGoogle}
-                    >
-                        <GoogleLogo></GoogleLogo>
-                        <p className="edit-login-google-text">Sign in with Google</p>
-                    </button>
-                </div>
-                <div className="edit-login-bottom">{this.state.message}</div>
-            </div>
-        );
-    }
-}
+    return (
+        <React.Fragment>
+            <Box className={classes.root}>
+                <Typography variant="h3" className={classes.editText}>
+                    EDIT MODE
+                </Typography>
+                <div
+                    id="g_id_onload"
+                    data-client_id="629507270355-bgs4cj26r91979g5of4ko4j8opd2jsvk.apps.googleusercontent.com"
+                    data-context="signin"
+                    data-ux_mode="popup"
+                    data-login_uri="http://localhost:5000/auth/login"
+                ></div>
+                {loginButton}
+                {logoutButton}
+            </Box>
+            <Typography className={classes.message}>{message}</Typography>
+        </React.Fragment>
+    );
+};
 
 export default EditLogin;

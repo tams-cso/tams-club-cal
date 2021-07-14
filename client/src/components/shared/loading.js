@@ -20,14 +20,15 @@ const useStyles = makeStyles({
  * if the error field is defined.
  * 
  * @param {object} props React props object
- * @param {string} props.error If true, shows error message
+ * @param {boolean} props.error If true, shows error message
+ * @param {string} props.children The error message
  */
 const Loading = (props) => {
     const classes = useStyles();
     return (
         <Container>
             <Card elevation={2} className={classes.card}>
-                {props.error !== undefined ? (
+                {props.error ? (
                     <React.Fragment>
                         <Typography variant="h1" className={classes.text}>
                             ERROR :(

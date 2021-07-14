@@ -10,7 +10,7 @@ import Button from '@material-ui/core/Button';
 import SendIcon from '@material-ui/icons/Send';
 import Paragraph from '../shared/paragraph';
 import Image from '../shared/image';
-import data from '../../files/data.json';
+import data from '../../data.json';
 
 const useStyles = makeStyles({
     root: {

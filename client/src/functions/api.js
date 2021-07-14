@@ -1,4 +1,3 @@
-import Cookies from 'universal-cookie';
 import { FetchResponse } from './entries';
 
 const BACKEND_URL = process.env.NODE_ENV !== 'production' ? '' : 'https://api.tams.club';
@@ -31,7 +30,7 @@ async function getRequest(url, auth = null) {
 async function postRequest(url, body, json = true, auth = null) {
     try {
         if (json) {
-            body.email = addEmail();
+            body.email = '';
             body = JSON.stringify(body);
         }
         const options = { method: 'POST', body, authorization: auth };
@@ -46,17 +45,12 @@ async function postRequest(url, body, json = true, auth = null) {
     }
 }
 
-function addEmail() {
-    const cookies = new Cookies();
-    const email = cookies.get('auth_email');
-    if (email === undefined) return null;
-    return email;
-}
+/* ########## EVENTS API ########### */
 
 /**
  * Gets the list of events.
  * Default options will return ~20 events including the current day.
- * 
+ *
  * @returns {Promise<FetchResponse>} Will return the object or error object
  */
 export async function getEventList() {
@@ -65,7 +59,6 @@ export async function getEventList() {
 
 /**
  * Gets a specific event by ID.
- * 
  * @returns {Promise<FetchResponse>} Will return the object or error object
  */
 export async function getEvent(id) {
@@ -76,9 +69,10 @@ export async function postEvent(event, id = '') {
     return postRequest(`/events/${id}`, event);
 }
 
+/* ########## CLUBS API ########### */
+
 /**
  * Gets the list of all clubs.
- * 
  * @returns {Promise<FetchResponse>} Will return the object or error object
  */
 export async function getClubList() {
@@ -87,7 +81,6 @@ export async function getClubList() {
 
 /**
  * Gets a specific club by ID.
- * 
  * @returns {Promise<FetchResponse>} Will return the object or error object
  */
 export async function getClub(id) {
@@ -96,7 +89,7 @@ export async function getClub(id) {
 
 export async function postClub(club, id = '') {
     // Add email to club
-    club.email = addEmail();
+    club.email = '';
 
     var data = new FormData();
     data.append('data', JSON.stringify(club));
@@ -107,6 +100,8 @@ export async function postClub(club, id = '') {
     }
     return postRequest(`/clubs/${id}`, data, false);
 }
+
+/* ########## VOLUNTEERING API ########### */
 
 export async function getVolunteeringList() {
     return getRequest('/volunteering');
@@ -120,9 +115,11 @@ export async function postVolunteering(vol, id = '') {
     return postRequest(`/volunteering/${id}`, vol);
 }
 
+/* ########## MISC API ########### */
+
 /**
- * Submits a new feedback object
- * 
+ * Submits a new feedback object.
+ *
  * @param {object} feedbackObject Feedback object
  * @param {string} feedbackObject.feedback The feedback from the text area
  * @param {string} [feedbackObject.name] The name of the user who submitted the feedback
@@ -132,20 +129,31 @@ export async function postFeedback(feedbackObject) {
     return postRequest('/feedback', feedbackObject);
 }
 
+/**
+ * Fetches the current client's IP address.
+ * @returns {Promise<FetchResponse>} Will return the object or error object
+ */
 export async function getIp() {
     return getRequest('/auth/ip');
 }
 
-export async function getAuthUrl() {
-    return getRequest('/auth');
+/**
+ * Checks if a user's token is in the database
+ * @param {string} token User auth token
+ * @returns {Promise<FetchResponse>} Will return the object or error object
+ */
+export async function getLoggedIn(token) {
+    return postRequest('/auth', { token });
 }
 
-export async function postAuth(code) {
-    return postRequest('/auth', { code });
-}
-
-export async function postRefreshAuth(email) {
-    return postRequest('/auth/refresh', { email });
+/**
+ * Gets the name and email of the logged in user
+ * @param {string} token User auth token
+ * @returns {Promise<FetchResponse>} Will return the object or error object
+ */
+export async function getUserInfo(token) {
+    // TODO: convert this token path to an Authorization Bearer header instead
+    return getRequest(`/auth/user/${token}`);
 }
 
 export async function postTrustedAuth(email) {

@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { useLocation } from 'react-router';
 import { makeStyles } from '@material-ui/core/styles';
 import { darkSwitch } from '../../functions/util';
-import { githubLink } from '../../files/data.json';
+import { githubLink } from '../../data.json';
 
 import Appbar from '@material-ui/core/AppBar';
 import Toolbar from '@material-ui/core/Toolbar';

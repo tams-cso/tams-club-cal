@@ -1,7 +1,7 @@
 import React from 'react';
 import { makeStyles } from '@material-ui/core/styles';
 import { darkSwitch } from '../../functions/util';
-import data from '../../files/data.json';
+import data from '../../data.json';
 
 import Drawer from '@material-ui/core/Drawer';
 import Toolbar from '@material-ui/core/Toolbar';

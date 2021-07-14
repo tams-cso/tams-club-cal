@@ -2,8 +2,24 @@ const fs = require('fs');
 const path = require('path');
 const formidable = require('formidable');
 const crypto = require('crypto');
-const statusList = require('./status.json');
-const { getLoggedInData } = require('./auth');
+
+const statusList = require('../files/status.json');
+const envList = require('../files/env.json');
+
+/**
+ * Checks that all the neccessary environmental variables
+ * are defined before running the app.
+ * The function will throw an error and exit the app if
+ * a variable is missing.
+ */
+function checkEnv() {
+    envList.forEach((e) => {
+        if (process.env[e] === undefined) {
+            console.error(`ERROR: The ${e} environmental variable was not defined.`);
+            process.exit(1);
+        }
+    });
+}
 
 /**
  * Sends an error with the provided status
@@ -45,7 +61,7 @@ function logRequest(req) {
  */
 async function parseForm(req, res, callback) {
     // Import this function here to avoid circular dependencies
-    const { uploadImage } = require('./images');
+    const { uploadImage } = require('../images');
 
     const form = new formidable.IncomingForm();
     form.parse(req, async (err, fields, files) => {
@@ -83,17 +99,6 @@ async function hasOldPicture(oldId) {
     return oldId !== null && oldId !== undefined && oldId.startsWith('/') && typeof oldId === 'string';
 }
 
-async function parseUser(req, club = null) {
-    const email = club === null ? req.body.email : club.email;
-    if (email !== null) {
-        const user = await getLoggedInData(email);
-        if (user !== null) {
-            return { name: user.name, email: user.email };
-        }
-    }
-    return { name: getIp(req) };
-}
-
 /**
  * Extracts the IP address from the header of the express request object
  *
@@ -125,4 +130,4 @@ function isTrusted(email) {
     return process.env.TRUSTED.indexOf(email) !== -1;
 }
 
-module.exports = { sendError, logRequest, parseForm, getIp, genState, parseUser, isTrusted };
+module.exports = { checkEnv, sendError, logRequest, parseForm, getIp, genState, isTrusted };

@@ -2,82 +2,28 @@ require('dotenv').config();
 
 const express = require('express');
 const app = express();
-const fs = require('fs');
-const path = require('path');
 const cors = require('cors');
-const bodyParser = require('body-parser');
-const cron = require('node-cron');
+const compression = require('compression');
+const helmet = require('helmet');
+const morgan = require('morgan');
+const cookieParser = require('cookie-parser');
+const mongoose = require('mongoose');
+const { checkEnv } = require('./functions/util');
 
-const {
-    getClubList,
-    getClub,
-    addFeedback,
-    addEvent,
-    getEvent,
-    getEventList,
-    getVolunteeringList,
-    updateVolunteering,
-    updateEvent,
-    updateClub,
-    addVolunteering,
-    addClub,
-    getVolunteering,
-    findUser,
-    getSpecificDb,
-    addToSpecificDb,
-    getHistoryList,
-    getHistoryData,
-    getHistoryInfo,
-    uploadLogs,
-} = require('./database');
-const { getImage, deleteExpiredImages } = require('./images');
-const { sendError, logRequest, parseForm, getIp, genState, parseUser, isTrusted } = require('./util');
-const { getAuthUrl, getTokensAndInfo, getSavedUser } = require('./auth');
-const { addToCalendar, updateCalendar } = require('./gcal');
+// Import routers
+const authRouter = require('./routes/authRouter');
 
-// Clean up the 'cache' folder on start
-fs.readdir(path.join(__dirname, 'cache'), (err, files) => {
-    if (err) throw err;
+// Check for the correct environmental variables
+checkEnv();
 
-    for (const file of files) {
-        if (file !== '.placeholder') {
-            fs.unlink(path.join(__dirname, 'cache', file), (err) => {
-                if (err) throw err;
-            });
-        }
-    }
-});
-
-// Schedule cron tasks on start
-// These tasks will run at 09:00 UTC (3:00 AM CST)
-cron.schedule('0 9 * * *', async () => {
-    // Upload and clear log file
-    const logFile = path.join(__dirname, 'logs', 'main.log');
-    if (fs.existsSync(logFile)) {
-        const data = fs.readFileSync(logFile, 'utf-8');
-        const res = await uploadLogs(data);
-        if (res === 1)
-            fs.unlink(logFile, (err) => {
-                if (err) console.dir(err);
-                else console.log('Backed up log file!');
-            });
-    }
-
-    // Delete pictures marked for deletion after 30 days
-    deleteExpiredImages().then((d) => {
-        if (d === -1) return;
-        console.log(`Deleted ${d} expired images`);
-    })
-});
-
-// Check for defined API key and set NO_KEY constant
-// If API_KEY env variable undefined, then NO_KEY will be true
-const NO_KEY = process.env.API_KEY === undefined;
-
-// Use CORS and bodyparser to recieve calls
+// Use middleware to recieve calls and log
 app.use(cors());
-app.use(bodyParser.json());
-app.use(bodyParser.urlencoded({ limit: '50mb', extended: true, parameterLimit: 50000 }));
+app.use(compression());
+app.use(helmet());
+app.use(cookieParser());
+app.use(morgan('combined'));
+app.use(express.json());
+app.use(express.urlencoded({ limit: '50mb', extended: true, parameterLimit: 50000 }));
 
 // Trust proxy
 app.set('trust proxy', true);
@@ -88,34 +34,17 @@ app.use(function (req, res, next) {
     req.header('Access-Control-Allow-Origin', '*');
     req.header('Access-Control-Allow-Headers', 'X-Requested-With');
 
-    const static = req.path.includes('static');
-
-    // Check for correct API key
-    // and return '401 Unauthorized' if incorrect or not found
-    // If there is no key defined OR it's a static image call, ignore this block
-    if (!(NO_KEY || static)) {
-        if (!(req.body.key === process.env.API_KEY || req.query.key === process.env.API_KEY)) {
-            sendError(res, 401, 'Invalid API key. Pass the key in the POST body or in the querystring.');
-            return;
-        }
-    }
-
     // Check for correct origin
     // Set this in the .env file as ORIGIN
-    // This will throw an error if no origin is defined OR if the origin does not match the expected origin
+    // This will return as an error if no origin in headers OR if the origin does not match the expected origin
     // The block will be skipped if no ORIGIN environmental variable is defined
-    if (!static) {
-        if (
-            req.headers.origin === undefined ||
-            (process.env.ORIGIN !== undefined && req.headers.origin.indexOf(process.env.ORIGIN) === -1)
-        ) {
-            sendError(res, 403, 'Invalid request origin.');
-            return;
-        }
+    if (
+        req.headers.origin === undefined ||
+        (process.env.ORIGIN !== undefined && req.headers.origin.indexOf(process.env.ORIGIN) === -1)
+    ) {
+        sendError(res, 403, 'Invalid request origin.');
+        return;
     }
-
-    // Log everything but static file requests
-    if (!static) logRequest(req);
 
     // Continue looking for path matches
     next();
@@ -132,252 +61,20 @@ app.get('/', (req, res, next) => {
     });
 });
 
-// Get event list
-app.get('/events', async (req, res, next) => {
-    const data = await getEventList();
-    if (data.good === -1) sendError(res, 500, 'Unable to retrive events list');
-    else {
-        res.status(200);
-        res.send(data.events);
-    }
-});
+// API main routes
+app.use('/auth', authRouter);
 
-// Get single event by id
-app.get('/events/:id', async (req, res, next) => {
-    const event = await getEvent(req.params.id);
-    if (event.good === -1) sendError(res, 500, 'Unable to retrive current event');
-    else if (event.good === 0) sendError(res, 400, 'Invalid event objId');
-    else {
-        res.status(200);
-        res.send(event);
-    }
-});
-
-// Add event
-app.post('/events', async (req, res, next) => {
-    const user = await parseUser(req);
-    const data = await addEvent(req.body, user);
-    if (data.good === -1) sendError(res, 500, 'Unable to add event');
-    else {
-        addToCalendar(req.body, data.objId);
-        res.status(200);
-        res.send({ id: data.objId });
-    }
-});
-
-// Update event
-app.post('/events/:id', async (req, res, next) => {
-    const user = await parseUser(req);
-    const good = await updateEvent(req.body, req.params.id, user);
-    if (good === -1) sendError(res, 500, 'Unable to update event');
-    else if (good === 0) sendError(res, 400, 'Invalid event id');
-    else {
-        updateCalendar(req.body, req.params.id);
-        res.status(200);
-        res.send({ status: 200 });
-    }
-});
-
-// Gets club list
-app.get('/clubs', async (req, res, next) => {
-    const data = await getClubList();
-    if (data.good === -1) sendError(res, 500, 'Unable to retrive club list');
-    else {
-        res.status(200);
-        res.send(data.clubs);
-    }
-});
-
-// Get single club by id
-app.get('/clubs/:id', async (req, res, next) => {
-    const club = await getClub(req.params.id);
-    if (club.good === -1) sendError(res, 500, 'Unable to retrive current club');
-    else if (club.good === 0) sendError(res, 400, 'Invalid club objId');
-    else {
-        res.status(200);
-        res.send(club);
-    }
-});
-
-// Add a club
-app.post('/clubs', async (req, res, next) => {
-    parseForm(req, res, async (club) => {
-        const user = await parseUser(req, club);
-        const data = await addClub(club, user);
-        if (data.good === -1) sendError(res, 500, 'Unable to add club');
-        else {
-            res.status(200);
-            res.send({ id: data.objId });
-        }
-    });
-});
-
-// Update a club
-app.post('/clubs/:id', async (req, res, next) => {
-    parseForm(req, res, async (club, oldImages) => {
-        const user = await parseUser(req, club);
-        const good = await updateClub(club, req.params.id, user, oldImages);
-        if (good === -1) sendError(res, 500, 'Unable to update clubs');
-        else if (good === 0) sendError(res, 400, 'Invalid club id');
-        else {
-            res.status(200);
-            res.send({ status: 200 });
-        }
-    });
-});
-
-// Get volunteering list
-app.get('/volunteering', async (req, res, next) => {
-    const data = await getVolunteeringList();
-    if (data.good === -1) sendError(res, 500, 'Unable to retrive volunteering list');
-    else {
-        res.status(200);
-        res.send(data.volunteering);
-    }
-});
-
-// Get single volunteering by id
-app.get('/volunteering/:id', async (req, res, next) => {
-    const volunteering = await getVolunteering(req.params.id);
-    if (volunteering.good === -1) sendError(res, 500, 'Unable to retrive current volunteering');
-    else if (volunteering.good === 0) sendError(res, 400, 'Invalid volunteering id');
-    else {
-        res.status(200);
-        res.send(volunteering);
-    }
-});
-
-// Add volunteering
-app.post('/volunteering', async (req, res, next) => {
-    const user = await parseUser(req);
-    const data = await addVolunteering(req.body, user);
-    if (data.good === -1) sendError(res, 500, 'Unable to add volunteering');
-    else {
-        res.status(200);
-        res.send({ id: data.id });
-    }
-});
-
-// Update volunteering
-app.post('/volunteering/:id', async (req, res, next) => {
-    const user = await parseUser(req);
-    const good = await updateVolunteering(req.body, req.params.id, user);
-    if (good === -1) sendError(res, 500, 'Unable to update volunteering');
-    else if (good === 0) sendError(res, 400, 'Invalid volunteering ID');
-    else {
-        res.status(200);
-        res.send({ status: 200 });
-    }
-});
-
-app.get('/history', async (req, res, next) => {
-    const history = await getHistoryList();
-    if (history.good === -1) sendError(res, 500, 'Unable to retrieve history data');
-    else res.send(history.data);
-});
-
-app.get('/history/:resource/:id', async (req, res, next) => {
-    const history = await getHistoryInfo(req.params.resource, req.params.id);
-    if (history.good === -1) sendError(res, 500, 'Unable to retrieve history object');
-    else if (history.good === 0) sendError(res, 400, 'Invalid history resource or id');
-    else res.send(history.data);
-});
-
-app.get('/history/:resource/:id/:index', async (req, res, next) => {
-    const history = await getHistoryData(req.params.resource, req.params.id, req.params.index);
-    if (history.good === -1) sendError(res, 500, 'Unable to retrieve history data');
-    else if (history.good === 0) sendError(res, 400, 'Invalid history resource, id, or index');
-    else res.send(history.data);
-});
-
-// Add feedback
-app.post('/feedback', async (req, res, next) => {
-    if (req.body.feedback == '') {
-        sendError(res, 400, 'Empty feedback text!');
-        return;
-    }
-    const user = await parseUser(req);
-    const good = await addFeedback(req.body.feedback, user);
-    if (good === -1) sendError(res, 500, 'Unable to add feedback');
-    else {
-        res.status(200);
-        res.send({ status: 200 });
-    }
-});
-
-// Send client ip address
-app.get('/auth/ip', async (req, res, next) => {
-    res.send({ ip: getIp(req) });
-});
-
-// Send auth string
-app.get('/auth', async (req, res, next) => {
-    const state = genState();
-    res.send({ authUrl: getAuthUrl(state, req.headers.origin), state });
-});
-
-// Fetch access tokens with auth code
-app.post('/auth', async (req, res, next) => {
-    const data = await getTokensAndInfo(req.body.code, false, req.headers.origin);
-    if (data === null) sendError(res, 500, 'Failed to fetch user information');
-    else res.send({ email: data.email });
-});
-
-// Get name from email
-app.post('/auth/refresh', async (req, res, next) => {
-    const savedUser = getSavedUser(req.body.email);
-    if (savedUser !== null) {
-        res.send({ name: savedUser.name });
-        return;
-    }
-
-    const user = await findUser(req.body.email);
-    if (user === null) {
-        sendError(res, 400, 'Invalid email');
-        return;
-    }
-
-    const data = await getTokensAndInfo(user.refresh, true, req.headers.origin);
-    if (data === null) sendError(res, 500, 'Failed to fetch user');
-    else res.send({ name: data.name });
-});
-
-// Check if the email is trusted (for admin dashboard)
-app.post('/auth/trusted', async (req, res, next) => {
-    res.send({ trusted: isTrusted(req.body.email) });
-});
-
-// Get the raw contents of one collection
-app.get('/admin/db/:db/:collection', async (req, res, next) => {
-    if (!isTrusted(req.headers.authorization)) {
-        sendError(res, 403, 'Invalid or untrusted email');
-        return;
-    }
-
-    const data = await getSpecificDb(req.params.db, req.params.collection);
-    if (data.good === -1) sendError(res, 500, 'Unable to retrive collection');
-    else {
-        res.status(200);
-        res.send(data.collection);
-    }
-});
-
-app.post('/admin/db/:db/:collection', async (req, res, next) => {
-    if (!isTrusted(req.body.email)) {
-        sendError(res, 403, 'Invalid or untrusted email');
-        return;
-    }
-
-    const insertRes = await addToSpecificDb(req.params.db, req.params.collection, req.body.data);
-    if (insertRes === -1) sendError(res, 500, 'Unable to add to collection');
-    else {
-        res.status(200);
-        res.send({ status: 200 });
-    }
-});
-
-app.get(/\/static\/.*/, async (req, res, next) => {
-    getImage(req.path.substring(7), res);
-});
-
+// Start express server
 app.listen(process.env.PORT | 5000, () => console.log(`Listening on port ${process.env.PORT | 5000}`));
+
+// Start mongoose
+const mongoUrl = `mongodb+srv://${process.env.MONGO_USER}:${process.env.MONGO_PASS}@${process.env.MONGO_URL}/data?retryWrites=true&w=majority`;
+mongoose.connect(mongoUrl, { useNewUrlParser: true, useUnifiedTopology: true });
+
+// Callbacks for db connections
+const db = mongoose.connection;
+db.on('error', (error) => {
+    console.error(error);
+    process.exit(1);
+});
+db.once('open', () => console.log('Connected to mongodb database!'));
