@@ -62,8 +62,6 @@ const useStyles = makeStyles((theme) => ({
  */
 const ClubCard = (props) => {
     const classes = useStyles();
-    const description = useRef();
-
     return (
         <Card className={classes.root}>
             <CardActionArea className={classes.actionArea}>
