@@ -1,214 +1,241 @@
-import React from 'react';
-import { getVolunteering, postVolunteering } from '../../functions/api';
-import { Volunteering } from '../../functions/entries';
-import { getParams, returnToLastLocation } from '../../functions/util';
-import Loading from '../shared/loading';
-import './edit-volunteering.scss';
+import React, { useEffect, useState } from 'react';
+import { useHistory } from 'react-router';
+import { useDispatch } from 'react-redux';
+import { makeStyles } from '@material-ui/core';
+import { useForm } from 'react-hook-form';
+import Cookies from 'universal-cookie';
+import { openPopup } from '../../redux/actions';
+import { getParams, redirect } from '../../functions/util';
+import { Filters, Volunteering } from '../../functions/entries';
+import { postVolunteering } from '../../functions/api';
 
-class EditVolunteering extends React.Component {
-    constructor(props) {
-        super(props);
-        this.state = {
-            volunteering: null,
-            new: false,
-            open: true,
-            name: '',
-            club: '',
-            description: '',
-            filters: {},
-        };
-        this.handleInputChange = this.handleInputChange.bind(this);
-    }
+import { Controller } from 'react-hook-form';
+import Typography from '@material-ui/core/Typography';
+import Button from '@material-ui/core/Button';
+import TextField from '@material-ui/core/TextField';
+import Hidden from '@material-ui/core/Hidden';
+import Box from '@material-ui/core/Box';
+import Switch from '@material-ui/core/Switch';
+import FormControlLabel from '@material-ui/core/FormControlLabel';
+import Checkbox from '@material-ui/core/Checkbox';
+import Backdrop from '@material-ui/core/Backdrop';
+import CircularProgress from '@material-ui/core/CircularProgress';
 
-    handleInputChange = (event) => {
-        const target = event.target;
-        this.setState({ [target.name]: target.value });
-    };
+const useStyles = makeStyles((theme) => ({
+    title: {
+        textAlign: 'center',
+        fontSize: '3rem',
+    },
+    form: {
+        padding: 24,
+    },
+    boxWrapper: {
+        marginBottom: 16,
+        display: 'flex',
+        [theme.breakpoints.down('sm')]: {
+            flexDirection: 'column',
+        },
+    },
+    name: {
+        [theme.breakpoints.up('md')]: {
+            marginLeft: 12,
+        },
+    },
+    filtersTitle: {
+        display: 'inline',
+        [theme.breakpoints.up('md')]: {
+            marginRight: 16,
+        },
+    },
+    check: {
+        alignSelf: 'flex-start',
+        [theme.breakpoints.up('md')]: {
+            marginLeft: 8,
+            marginTop: 6,
+        },
+    },
+    spacer: {
+        width: 20,
+        [theme.breakpoints.down('sm')]: {
+            height: 16,
+        },
+    },
+    field: {
+        width: '100%',
+        marginBottom: 16,
+    },
+    grow: {
+        flexGrow: 1,
+    },
+    area: {
+        width: '100%',
+        margin: '16px 0',
+    },
+    submit: {
+        margin: 'auto',
+        display: 'block',
+    },
+    backdrop: {
+        zIndex: theme.zIndex.drawer + 1,
+        color: '#fff',
+    },
+    uploading: {
+        marginRight: 12,
+    },
+}));
 
-    changeFilter = (filter) => {
-        var filterList = this.state.filters;
-        filterList[filter] = !filterList[filter];
-        this.setState({ filters: filterList });
-    };
+const EditVolunteering = () => {
+    const [id, setId] = useState(null);
+    const [backdrop, setBackdrop] = useState(false);
+    const history = useHistory();
+    const dispatch = useDispatch();
+    const classes = useStyles();
+    const {
+        register,
+        handleSubmit,
+        control,
+        formState: { errors },
+    } = useForm();
 
-    changeOpen = () => {
-        this.setState({ open: !this.state.open });
-    };
-
-    submit = async () => {
-        var invalid = this.testValid();
-        if (invalid.length !== 0) {
-            var message = '';
-            invalid.forEach((i) => (message += `${i} cannot be empty!\n`));
-            alert(message);
-            return;
-        }
-
-        // Updated 'open' filter
-        var filters = this.state.filters;
-        filters['open'] = this.state.open;
-
-        // Create volunteering object
-        var volunteeringObj = new Volunteering(
-            this.state.name,
-            this.state.club,
-            this.state.description,
-            filters,
-            this.state.signupTime || null,
-        );
-
-        // POST volunteering
-        var res;
-        if (this.state.new) res = await postVolunteering(volunteeringObj);
-        else res = await postVolunteering(volunteeringObj, this.state.volunteering._id);
-
-        // Get response and send to user
-        if (res.status === 200) {
-            alert(`Successfully ${this.state.new ? 'added' : 'edited'} volunteering!`);
-            window.location.href = `${window.location.origin}/volunteering${window.location.search}`;
-        } else alert(`${this.state.new ? 'Adding' : 'Editing'} volunteering failed :(`);
-    };
-
-    testValid = () => {
-        var invalid = [];
-        if (this.state.name === '') invalid.push('Volunteering name');
-        if (this.state.club === '') invalid.push('Club name');
-        if (this.state.filters.weekly && this.state.signupTime === '') invalid.push('Signup time');
-        return invalid;
-    };
-
-    resetState = (volunteering, isNew = false) => {
-        if (volunteering === null) volunteering = this.state.vol;
-        this.setState({
-            new: isNew,
-            volunteering,
-            name: volunteering.name,
-            club: volunteering.club,
-            description: volunteering.description,
-            open: volunteering.filters.open,
-            signupTime: volunteering.signupTime,
-            filters: { ...volunteering.filters },
-        });
-    };
-
-    async componentDidMount() {
-        // Get id from url params
+    useEffect(() => {
+        // Extract ID from url search params
         const id = getParams('id');
 
-        // Empty form if new
+        // Set the ID state variable
+        if (id !== null) setId(id);
+    }, []);
+
+    const onSubmit = async (data) => {
+        const cookies = new Cookies();
         if (id === null) {
-            this.resetState(new Volunteering(), true);
-            return;
-        }
-
-        // Fill form with volunteering
-        const res = await getVolunteering(id);
-
-        if (res.status === 200) this.resetState(res.data);
-        else {
-            alert(`Could not get volunteering with the requested ID '${id}'. Redirecting to 'new volunteering' page`);
-            window.location.href = `${window.location.origin}/edit/volunteering`;
-        }
-    }
-
-    render() {
-        // Return loading if volunteering not got
-        if (this.state.volunteering === null && !this.state.new) return <Loading></Loading>;
-
-        // If the weekly filter is active, show edit field for signup time
-        var signupTime = null;
-        if (this.state.filters.weekly) {
-            signupTime = (
-                <>
-                    <label htmlFor="signupTime">Signup Time</label>
-                    <input
-                        name="signupTime"
-                        className="line-in signup-time-input"
-                        type="text"
-                        placeholder="eg. Sunday 11pm"
-                        value={this.state.signupTime}
-                        onChange={this.handleInputChange}
-                    ></input>
-                </>
+            const newVolunteering = new Volunteering(
+                null,
+                data.name,
+                data.club,
+                data.description || '',
+                new Filters(
+                    data.limited || false,
+                    data.semester || false,
+                    data.setTimes || false,
+                    data.weekly || false,
+                    data.open || false
+                )
             );
-        }
 
-        return (
-            <div className="edit-volunteering">
-                <div className="edit-volunteering-title-and-open">
-                    <button
-                        className={'edit-volunteering-open-switch' + (this.state.open ? ' open' : ' closed')}
-                        onClick={this.changeOpen}
-                    >
-                        {this.state.open ? 'Open' : 'Closed'}
-                    </button>
-                    <input
-                        name="name"
-                        className="line-in edit-volunteering-name-input"
-                        type="text"
-                        placeholder="Volunteering name"
-                        value={this.state.name}
-                        onChange={this.handleInputChange}
-                    ></input>
-                </div>
-                <label htmlFor="club">Club Name</label>
-                <input
-                    name="club"
-                    className="line-in edit-volunteering-club-name-input"
-                    type="text"
-                    placeholder="Enter related club(s)"
-                    value={this.state.club}
-                    onChange={this.handleInputChange}
-                ></input>
-                <br />
-                <label>Description</label>
-                <br />
-                <textarea
-                    name="description"
-                    className="edit-volunteering-description-input"
-                    type="text"
-                    placeholder="Enter a description for your volunteering (use http/https to hyperlink urls automatically)"
-                    value={this.state.description}
-                    onChange={this.handleInputChange}
-                ></textarea>
-                <div className="filter-buttons">
-                    <button
-                        className={'vol-filter limited' + (this.state.filters.limited ? ' active' : '')}
-                        onClick={() => {
-                            this.changeFilter('limited');
-                        }}
-                    >
-                        Limited Slots
-                    </button>
-                    <button
-                        className={'vol-filter semester' + (this.state.filters.semester ? ' active' : '')}
-                        onClick={() => {
-                            this.changeFilter('semester');
-                        }}
-                    >
-                        Semester Long
-                    </button>
-                    <button
-                        className={'vol-filter set-times' + (this.state.filters.setTimes ? ' active' : '')}
-                        onClick={() => {
-                            this.changeFilter('setTimes');
-                        }}
-                    >
-                        Set Volunteering Times
-                    </button>
-                    <button
-                        className={'vol-filter weekly' + (this.state.filters.weekly ? ' active' : '')}
-                        onClick={() => {
-                            this.changeFilter('weekly');
-                        }}
-                    >
-                        Weekly Signups
-                    </button>
-                </div>
-                {signupTime}
-            </div>
-        );
-    }
-}
+            setBackdrop(true);
+            const res = await postVolunteering(newVolunteering);
+            setBackdrop(false);
+
+            if (res.status === 200) {
+                redirect('/');
+                cookies.set('success', 'add-volunteering', { sameSite: 'strict', path: '/' });
+            } else dispatch(openPopup('Unable to upload data. Please refresh the page or try again.', 4));
+        }
+    };
+
+    return (
+        <React.Fragment>
+            <Backdrop open={backdrop} className={classes.backdrop}>
+                <Typography variant="h1" className={classes.uploading}>
+                    Uploading volunteering...
+                </Typography>
+                <CircularProgress color="inherit" />
+            </Backdrop>
+            <Typography variant="h1" className={classes.title}>
+                {id ? 'Edit Volunteering' : 'Add Volunteering'}
+            </Typography>
+            <form onSubmit={handleSubmit(onSubmit)} className={classes.form}>
+                <Box className={classes.boxWrapper}>
+                    <Controller
+                        control={control}
+                        name="open"
+                        render={({ field: { onChange, onBlur, value } }) => (
+                            <FormControlLabel
+                                label="Open"
+                                labelPlacement="start"
+                                control={<Switch color="primary" value={value} onChange={onChange} onBlur={onBlur} />}
+                            />
+                        )}
+                    />
+                    <div className={classes.spacer} />
+                    <TextField
+                        {...register('name', { required: true })}
+                        label="Volunteering Name"
+                        variant="outlined"
+                        defaultValue=""
+                        error={errors.name !== undefined}
+                        helperText={errors.name ? 'Please enter a name' : null}
+                        className={`${classes.grow} ${classes.name}`}
+                    />
+                    <div className={classes.spacer} />
+                    <TextField
+                        {...register('club', { required: true })}
+                        label="Club"
+                        variant="outlined"
+                        defaultValue=""
+                        error={errors.club !== undefined}
+                        helperText={errors.club ? 'Please enter a name' : null}
+                        className={classes.grow}
+                    />
+                </Box>
+                <Hidden smDown>
+                    <Typography className={classes.filtersTitle}>Filters:</Typography>
+                </Hidden>
+                <Controller
+                    control={control}
+                    name="limited"
+                    render={({ field: { onChange, onBlur, value } }) => (
+                        <FormControlLabel
+                            control={<Checkbox onChange={onChange} onBlur={onBlur} value={value} />}
+                            label="Limited Slots"
+                        />
+                    )}
+                />
+                <Controller
+                    control={control}
+                    name="semester"
+                    render={({ field: { onChange, onBlur, value } }) => (
+                        <FormControlLabel
+                            control={<Checkbox onChange={onChange} onBlur={onBlur} value={value} />}
+                            label="Semester Long Committment"
+                        />
+                    )}
+                />
+                <Controller
+                    control={control}
+                    name="setTimes"
+                    render={({ field: { onChange, onBlur, value } }) => (
+                        <FormControlLabel
+                            control={<Checkbox onChange={onChange} onBlur={onBlur} value={value} />}
+                            label="Set Time Slots"
+                        />
+                    )}
+                />
+                <Controller
+                    control={control}
+                    name="weekly"
+                    render={({ field: { onChange, onBlur, value } }) => (
+                        <FormControlLabel
+                            control={<Checkbox onChange={onChange} onBlur={onBlur} value={value} />}
+                            label="Weekly Volunteering"
+                        />
+                    )}
+                />
+                <TextField
+                    {...register('description', { required: false })}
+                    label="Description (optional)"
+                    variant="outlined"
+                    multiline
+                    rows={4}
+                    defaultValue=""
+                    className={classes.area}
+                />
+                <Button type="submit" variant="outlined" color="primary" className={classes.submit}>
+                    Submit
+                </Button>
+            </form>
+        </React.Fragment>
+    );
+};
 
 export default EditVolunteering;

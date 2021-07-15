@@ -48,6 +48,10 @@ const Popup = () => {
         const messageMap = {
             'add-event': 'Successfully added event!',
             'update-event': 'Successfully updated event!',
+            'add-club': 'Successfully add club!',
+            'update-club': 'Successfully updated club!',
+            'add-volunteering': 'Successfully added volunteering!',
+            'update-volunteering': 'Successfully updated volunteering!',
         };
         return messageMap[success] || '';
     };

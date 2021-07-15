@@ -14,6 +14,7 @@ import EventIcon from '@material-ui/icons/Event';
  * @param {*} props.name Name of the field
  * @param {*} props.label Label of the field
  * @param {*} props.className Classname of the input object
+ * @param {boolean} props.end True if ending time, which means I will have to add 1 hour
  * @returns
  */
 const DateTimeInput = (props) => {
@@ -22,7 +23,7 @@ const DateTimeInput = (props) => {
             control={props.control}
             rules={{ required: props.required || false }}
             name={props.name}
-            defaultValue={dayjs()}
+            defaultValue={props.end ? dayjs().add(1, 'hour') : dayjs()}
             render={({ field: { onChange, onBlur, value }, fieldState: { error } }) => (
                 <DateTimePicker
                     className={props.className}

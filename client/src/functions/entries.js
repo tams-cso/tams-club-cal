@@ -85,18 +85,18 @@ export function Committee(name, description, heads, fb, website) {
 /**
  * An object containing the information for a volunteering opportunity
  *
+ * @param {string} id The unique UUIDv4 for the volunteering opportunity
  * @param {string} name The name of the volunteering opportunity
  * @param {string} club The club name that is offering the volunteering opportunity
  * @param {string} description Description of the volunteering opportunity
  * @param {Filters} filters Object used for filtering volunteering opportunities
- * @param {string} signupTime Time of weekly signups, null if no weekly signups
  */
-export function Volunteering(name, club, description, filters, signupTime) {
+export function Volunteering(id, name, club, description, filters) {
+    this.id = id || '';
     this.name = name || '';
     this.club = club || '';
     this.description = description || '';
     this.filters = filters || new Filters();
-    this.signupTime = signupTime || '';
 }
 
 /**
