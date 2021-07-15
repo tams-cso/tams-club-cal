@@ -4,7 +4,8 @@ import { useLocation } from 'react-router';
 
 const useStyles = makeStyles({
     root: {
-        paddingTop: '1rem',
+        paddingTop: 16,
+        paddingBottom: 16,
         display: 'flex',
     },
 });
