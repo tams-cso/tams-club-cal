@@ -1,9 +1,11 @@
 import React, { useEffect, useState } from 'react';
 import { BrowserRouter, Route, Switch } from 'react-router-dom';
-import { createMuiTheme, ThemeProvider } from '@material-ui/core/styles';
-import CssBaseline from '@material-ui/core/CssBaseline';
+import { createMuiTheme, ThemeProvider } from '@material-ui/core';
 import Cookies from 'universal-cookie';
+import DayjsUtils from '@date-io/dayjs';
 
+import { MuiPickersUtilsProvider } from '@material-ui/pickers';
+import CssBaseline from '@material-ui/core/CssBaseline';
 import Menu from './components/menu/menu';
 import Home from './components/home/home';
 import About from './components/about/about';
@@ -67,20 +69,22 @@ const App = () => {
     return (
         <ThemeProvider theme={theme}>
             <CssBaseline />
-            <BrowserRouter>
-                <Menu setDarkTheme={setDarkTheme} darkTheme={darkTheme} />
-                <Switch>
-                    <Route exact path="/" component={Home} />
-                    <Route exact path="/events" component={Home} />
-                    <Route exact path="/volunteering" component={Volunteering} />
-                    <Route exact path="/clubs" component={Clubs} />
-                    <Route exact path="/about" component={About} />
-                    <Route exact path="/auth" component={Auth} />
-                    <Route exact path="/admin" component={Admin} />
-                    <Route path="/edit" component={Edit} />
-                    <Route component={NotFound} />
-                </Switch>
-            </BrowserRouter>
+            <MuiPickersUtilsProvider utils={DayjsUtils}>
+                <BrowserRouter>
+                    <Menu setDarkTheme={setDarkTheme} darkTheme={darkTheme} />
+                    <Switch>
+                        <Route exact path="/" component={Home} />
+                        <Route exact path="/events" component={Home} />
+                        <Route exact path="/volunteering" component={Volunteering} />
+                        <Route exact path="/clubs" component={Clubs} />
+                        <Route exact path="/about" component={About} />
+                        <Route exact path="/auth" component={Auth} />
+                        <Route exact path="/admin" component={Admin} />
+                        <Route path="/edit" component={Edit} />
+                        <Route component={NotFound} />
+                    </Switch>
+                </BrowserRouter>
+            </MuiPickersUtilsProvider>
         </ThemeProvider>
     );
 };
