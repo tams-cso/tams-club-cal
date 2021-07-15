@@ -1,5 +1,5 @@
 import React from 'react';
-import dayjs from 'dayjs';
+import dayjs, { Dayjs } from 'dayjs';
 import utc from 'dayjs/plugin/utc';
 import timezone from 'dayjs/plugin/timezone';
 import isLeapYear from 'dayjs/plugin/isLeapYear';
@@ -55,6 +55,14 @@ export function parseLinks(text) {
     outText.push(tempText);
 
     return <React.Fragment>{outText}</React.Fragment>;
+}
+
+/**
+ * Redirect user and reload the page to a specified path
+ * @param {string} path Path to redirect to (starts with /)
+ */
+export function redirect(path) {
+    window.location = `${window.location.origin}${path}`;
 }
 
 // ================== CSS AND MUI FUNCTIONS =================== //
@@ -151,6 +159,14 @@ export function formatEventTime(event) {
     let formattedTime = formatTime(event.start, 'h:mma');
     if (event.start !== event.end) formattedTime += formatTime(event.end, ' - h:mma');
     return formattedTime;
+}
+
+/**
+ *
+ * @param {Dayjs} date Dayjs date object
+ */
+export function dateToMillis(date) {
+    return date.valueOf();
 }
 
 // ================== OLD FUNCTIONS =================== //

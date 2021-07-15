@@ -12,6 +12,9 @@ export default function () {
                 if (data !== undefined) return data;
                 else return new Response(400, {}, { error: 'Unable to retrive current event' });
             });
+            this.post('/events', () => {
+                return new Response(200, {}, { n: 1 });
+            }, { timing: 2000 });
             this.get('/clubs', () => clubList, { timing: 1000 });
             this.get('/clubs/:id', (schema, req) => {
                 const data = clubList.find((c) => c.id === req.params.id);

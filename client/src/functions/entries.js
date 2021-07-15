@@ -7,18 +7,18 @@ import { Dayjs } from 'dayjs';
  * @param {string} eventId The ID assigned by the Google Calendar API to the calendar event
  * @param {"event"|"signup"} type The type of the event
  * @param {string} name The name of the event
- * @param {string} description The description of the event
  * @param {string} club The name of the club that is hosting the event
- * @param {string} start The time in UTC milliseconds that the event starts
- * @param {string} end The time in UTC milliseconds that the event ends
+ * @param {string} description The description of the event
+ * @param {Number} start The time in UTC milliseconds that the event starts
+ * @param {Number} end The time in UTC milliseconds that the event ends
  */
 export function Event(id, eventId, type, name, description, club, start, end) {
     this.id = id || '';
     this.eventId = eventId || '';
     this.type = type || 'event';
     this.name = name || '';
-    this.description = description || '';
     this.club = club || '';
+    this.description = description || '';
     this.start = start || '';
     this.end = end || '';
 }

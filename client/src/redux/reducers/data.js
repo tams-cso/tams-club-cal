@@ -1,4 +1,4 @@
-import { RESET_DATA_STATE, SET_CLUB_LIST, SET_EVENT_LIST, SET_VOLUNTEERING_LIST, SET_TOKEN } from './actionTypes';
+import { RESET_DATA_STATE, SET_CLUB_LIST, SET_EVENT_LIST, SET_VOLUNTEERING_LIST, SET_TOKEN } from '../actionTypes';
 
 const initialState = {
     eventList: null,
@@ -7,7 +7,7 @@ const initialState = {
     token: null,
 };
 
-export default function reducer(state = initialState, action) {
+export default function data(state = initialState, action) {
     switch (action.type) {
         case RESET_DATA_STATE: {
             return initialState;

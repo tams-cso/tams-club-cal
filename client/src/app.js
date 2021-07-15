@@ -6,6 +6,7 @@ import DayjsUtils from '@date-io/dayjs';
 
 import { MuiPickersUtilsProvider } from '@material-ui/pickers';
 import CssBaseline from '@material-ui/core/CssBaseline';
+import Popup from './components/popup/popup';
 import Menu from './components/menu/menu';
 import Home from './components/home/home';
 import About from './components/about/about';
@@ -71,6 +72,7 @@ const App = () => {
             <CssBaseline />
             <MuiPickersUtilsProvider utils={DayjsUtils}>
                 <BrowserRouter>
+                    <Popup />
                     <Menu setDarkTheme={setDarkTheme} darkTheme={darkTheme} />
                     <Switch>
                         <Route exact path="/" component={Home} />

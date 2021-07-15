@@ -1,16 +1,18 @@
-import { FetchResponse } from './entries';
+import { Event, FetchResponse } from './entries';
+import Cookies from 'universal-cookie';
 
 const BACKEND_URL = process.env.NODE_ENV !== 'production' ? '' : 'https://api.tams.club';
 
 /**
  * Performs GET request to endpoint
+ * 
  * @param {string} url API endpoint to GET
- * @param {string} [auth] Authentication email
+ * @param {boolean} [auth] True if adding token
  * @returns {Promise<FetchResponse>} Will return the object or error object
  */
-async function getRequest(url, auth = null) {
+async function getRequest(url, auth = false) {
     try {
-        const res = await fetch(`${BACKEND_URL}${url}`, { headers: { authorization: auth } });
+        const res = await fetch(`${BACKEND_URL}${url}`, { headers: createHeaders(auth, false) });
         const data = await res.json();
         return new FetchResponse(res.status, data);
     } catch (error) {
@@ -21,20 +23,16 @@ async function getRequest(url, auth = null) {
 
 /**
  * Performs POST request to endpoint
+ * 
  * @param {string} url API endpoint to POST
  * @param {object} body POST body content
  * @param {boolean} [json] Adds a JSON content type header if true
- * @param {string} [auth] Authentication email
+ * @param {boolean} [auth] True if adding token
  * @returns {Promise<FetchResponse>} Will return the object or error object
  */
-async function postRequest(url, body, json = true, auth = null) {
+async function postRequest(url, body, json = true, auth = false) {
     try {
-        if (json) {
-            body.email = '';
-            body = JSON.stringify(body);
-        }
-        const options = { method: 'POST', body, authorization: auth };
-        if (json) options.headers = { 'Content-Type': 'application/json' };
+        const options = { method: 'POST', body, headers: createHeaders(auth, json) };
 
         const res = await fetch(`${BACKEND_URL}${url}`, options);
         const data = await res.json();
@@ -43,6 +41,23 @@ async function postRequest(url, body, json = true, auth = null) {
         console.dir(error);
         return new FetchResponse(404, null);
     }
+}
+
+/**
+ * Creates the header object for fetch requests
+ * 
+ * @param {boolean} auth True if adding authorization string
+ * @param {boolean} json True if adding json content type
+ * @returns {Headers} Header object
+ */
+function createHeaders(auth, json) {
+    const cookies = new Cookies();
+    const token = cookies.get('token');
+
+    let headers = new Headers();
+    if (auth && token) headers.set('Authorization', `Bearer ${token}`);
+    if (json) headers.set('Content-Type', 'application/json');
+    return headers;
 }
 
 /* ########## EVENTS API ########### */
@@ -65,8 +80,14 @@ export async function getEvent(id) {
     return getRequest(`/events/${id}`);
 }
 
-export async function postEvent(event, id = '') {
-    return postRequest(`/events/${id}`, event);
+/**
+ * Create a new event
+ *
+ * @param {Event} event Event object
+ * @returns {Promise<FetchResponse>} Will return the object or error object
+ */
+export async function postEvent(event) {
+    return postRequest(`/events`, event);
 }
 
 /* ########## CLUBS API ########### */
