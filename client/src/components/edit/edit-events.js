@@ -50,8 +50,13 @@ const EditEvents = () => {
         register,
         handleSubmit,
         formState: { errors },
+        setError,
+        clearErrors,
         control,
+        watch,
     } = useForm();
+    const watchStart = watch('start');
+    const watchEnd = watch('end');
 
     useEffect(() => {
         // Extract ID from url search params
@@ -61,6 +66,12 @@ const EditEvents = () => {
         if (id === null) setId('');
         else setId(id);
     }, [location]);
+
+    useEffect(() => {
+        if (watchEnd === undefined) return;
+        if (watchEnd.isBefore(watchStart)) setError('end');
+        else clearErrors('end');
+    }, [watchStart, watchEnd]);
 
     const onSubmit = async (data) => {
         console.log(data);

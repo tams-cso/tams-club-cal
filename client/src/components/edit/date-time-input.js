@@ -23,7 +23,7 @@ const DateTimeInput = (props) => {
             rules={{ required: props.required || false }}
             name={props.name}
             defaultValue={dayjs()}
-            render={({ field: { onChange, onBlur, value } }) => (
+            render={({ field: { onChange, onBlur, value }, fieldState: { error } }) => (
                 <DateTimePicker
                     className={props.className}
                     inputVariant="outlined"
@@ -32,6 +32,8 @@ const DateTimeInput = (props) => {
                     value={value}
                     onChange={onChange}
                     onBlur={onBlur}
+                    error={error}
+                    helperText={error ? 'End date/time should be after start' : ''}
                     InputProps={{
                         endAdornment: (
                             <InputAdornment position="end">
