@@ -53,7 +53,9 @@ const useStyles = makeStyles((theme) => ({
     },
     links: {
         display: 'block',
-        width: 'max-content',
+        overflow: 'hidden',
+        textOverflow: 'ellipsis',
+        whiteSpace: 'nowrap',
     },
     tabs: {
         marginTop: 12,

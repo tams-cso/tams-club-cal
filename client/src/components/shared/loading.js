@@ -5,20 +5,23 @@ import Container from '@material-ui/core/Container';
 import Card from '@material-ui/core/Card';
 import Typography from '@material-ui/core/Typography';
 
-const useStyles = makeStyles({
+const useStyles = makeStyles((theme) => ({
     card: {
         margin: '0 20%',
         padding: '1rem',
+        [theme.breakpoints.down('sm')]: {
+            margin: 0,
+        },
     },
     text: {
         textAlign: 'center',
     },
-});
+}));
 
 /**
  * Loading screen for all data, as well as an error message display
  * if the error field is defined.
- * 
+ *
  * @param {object} props React props object
  * @param {boolean} props.error If true, shows error message
  * @param {string} props.children The error message

@@ -55,6 +55,14 @@ const useStyles = makeStyles((theme) => ({
     },
 }));
 
+/**
+ * Displays the app icon
+ *
+ * @param {object} props React props object
+ * @param {string} props.className React classname
+ * @param {boolean} props.noText Won't display logo text if true
+ * @returns
+ */
 function AppIcon(props) {
     const classes = useStyles();
     return (
@@ -83,9 +91,11 @@ function AppIcon(props) {
                     <path className={classes.f} d="M22.28,8.58c.78,4.28,5.31,10.2,5.31,10.2" />
                     <path className={classes.f} d="M18.38,8.46c0,3.09,2.89,7.51,5.13,10.25" />
                 </SvgIcon>
-                <Typography variant="h5" className={classes.title}>
-                    TAMS Club Calendar
-                </Typography>
+                {props.noText ? null : (
+                    <Typography variant="h5" className={classes.title}>
+                        TAMS Club Calendar
+                    </Typography>
+                )}
             </Box>
         </NavLink>
     );

@@ -2,9 +2,7 @@ import React from 'react';
 import { getClub, postClub } from '../../functions/api';
 import { Club, Committee, Exec } from '../../functions/entries';
 import { compressUploadedImage, getParams, imgUrl, isActive } from '../../functions/util';
-import ActionButton from '../shared/action-button';
 import Loading from '../shared/loading';
-import SubmitGroup from '../shared/submit-group';
 import CommitteeEdit from './committee-edit';
 import './edit-clubs.scss';
 import ExecEdit from './exec-edit';
@@ -309,7 +307,6 @@ class EditClubs extends React.Component {
                             Add Committee
                         </ActionButton>
                     </div>
-                    <SubmitGroup submit={this.submit}></SubmitGroup>
                 </div>
             </div>
         );

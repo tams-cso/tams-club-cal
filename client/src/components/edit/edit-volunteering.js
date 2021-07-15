@@ -2,9 +2,7 @@ import React from 'react';
 import { getVolunteering, postVolunteering } from '../../functions/api';
 import { Volunteering } from '../../functions/entries';
 import { getParams, returnToLastLocation } from '../../functions/util';
-import ActionButton from '../shared/action-button';
 import Loading from '../shared/loading';
-import SubmitGroup from '../shared/submit-group';
 import './edit-volunteering.scss';
 
 class EditVolunteering extends React.Component {
@@ -208,7 +206,6 @@ class EditVolunteering extends React.Component {
                     </button>
                 </div>
                 {signupTime}
-                <SubmitGroup submit={this.submit}></SubmitGroup>
             </div>
         );
     }
