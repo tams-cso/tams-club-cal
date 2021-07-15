@@ -76,7 +76,6 @@ const useStyles = makeStyles((theme) => ({
 const EditEvents = () => {
     const [id, setId] = useState(null);
     const [backdrop, setBackdrop] = useState(false);
-    const history = useHistory();
     const dispatch = useDispatch();
     const classes = useStyles();
     const {
@@ -90,7 +89,7 @@ const EditEvents = () => {
     } = useForm();
     const watchStart = watch('start');
     const watchEnd = watch('end');
-    const watchType = watch('type');
+    const watchNoEnd = watch('noEnd');
 
     useEffect(() => {
         // Extract ID from url search params
@@ -101,7 +100,8 @@ const EditEvents = () => {
     }, []);
 
     useEffect(() => {
-        if (watchEnd === undefined) return;
+        // TODO: Keep interval the same when changing start time
+        if (watchEnd === undefined || watchNoEnd) return;
         if (watchEnd.isBefore(watchStart)) setError('end');
         else clearErrors('end');
     }, [watchStart, watchEnd]);
@@ -109,7 +109,7 @@ const EditEvents = () => {
     const onSubmit = async (data) => {
         const cookies = new Cookies();
         const startTime = dateToMillis(data.start);
-        const endTime = dateToMillis(data.end);
+        const endTime = data.noEnd ? startTime : dateToMillis(data.end);
         if (id === null) {
             const newEvent = new Event(
                 null,
@@ -142,7 +142,7 @@ const EditEvents = () => {
                 <CircularProgress color="inherit" />
             </Backdrop>
             <Typography variant="h1" className={classes.title}>
-                Edit Event
+                {id ? 'Edit Event' : 'Add Event'}
             </Typography>
             <form onSubmit={handleSubmit(onSubmit)} className={classes.form}>
                 <Box className={classes.boxWrapper}>
@@ -180,12 +180,16 @@ const EditEvents = () => {
                     <div className={classes.spacer} />
                     <DateTimeInput
                         name="start"
-                        label={watchType === 'signup' ? 'Date/time' : 'Start date/time'}
+                        label={watchNoEnd ? 'Date/time' : 'Start date/time'}
                         control={control}
                         required={true}
                     />
-                    <div className={classes.spacer} />
-                    <DateTimeInput name="end" label="End date/time" control={control} required={true} />
+                    {watchNoEnd ? null : (
+                        <React.Fragment>
+                            <div className={classes.spacer} />
+                            <DateTimeInput name="end" label="End date/time" control={control} required={true} end />
+                        </React.Fragment>
+                    )}
                     <Controller
                         control={control}
                         name="noEnd"
