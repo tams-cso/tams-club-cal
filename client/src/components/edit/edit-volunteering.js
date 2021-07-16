@@ -1,5 +1,4 @@
 import React, { useEffect, useState } from 'react';
-import { useHistory } from 'react-router';
 import { useDispatch } from 'react-redux';
 import { makeStyles } from '@material-ui/core';
 import { useForm } from 'react-hook-form';
@@ -18,8 +17,7 @@ import Box from '@material-ui/core/Box';
 import Switch from '@material-ui/core/Switch';
 import FormControlLabel from '@material-ui/core/FormControlLabel';
 import Checkbox from '@material-ui/core/Checkbox';
-import Backdrop from '@material-ui/core/Backdrop';
-import CircularProgress from '@material-ui/core/CircularProgress';
+import UploadBackdrop from '../shared/upload-backdrop';
 
 const useStyles = makeStyles((theme) => ({
     title: {
@@ -87,7 +85,6 @@ const useStyles = makeStyles((theme) => ({
 const EditVolunteering = () => {
     const [id, setId] = useState(null);
     const [backdrop, setBackdrop] = useState(false);
-    const history = useHistory();
     const dispatch = useDispatch();
     const classes = useStyles();
     const {
@@ -135,12 +132,7 @@ const EditVolunteering = () => {
 
     return (
         <React.Fragment>
-            <Backdrop open={backdrop} className={classes.backdrop}>
-                <Typography variant="h1" className={classes.uploading}>
-                    Uploading volunteering...
-                </Typography>
-                <CircularProgress color="inherit" />
-            </Backdrop>
+            <UploadBackdrop open={backdrop} />
             <Typography variant="h1" className={classes.title}>
                 {id ? 'Edit Volunteering' : 'Add Volunteering'}
             </Typography>

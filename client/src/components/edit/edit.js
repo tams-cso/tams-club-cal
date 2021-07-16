@@ -12,6 +12,7 @@ import PageWrapper from '../shared/page-wrapper';
 import EditLogin from './edit-login';
 import EditHistory from './edit-history';
 import EditEvents from './edit-events';
+import EditClubs from './edit-clubs';
 import EditVolunteering from './edit-volunteering';
 
 const useStyles = makeStyles((theme) => ({
@@ -53,7 +54,7 @@ const Edit = () => {
                     <BrowserRouter>
                         <Switch>
                             <Route path="/edit/events" component={EditEvents} />
-                            {/* <Route path="/edit/clubs" component={EditClubs} /> */}
+                            <Route path="/edit/clubs" component={EditClubs} />
                             <Route path="/edit/volunteering" component={EditVolunteering} />
                             <Route path="/edit/history/:resource" component={EditHistory} />
                             <Route>

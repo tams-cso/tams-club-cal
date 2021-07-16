@@ -1,13 +1,13 @@
 import React, { useEffect, useState } from 'react';
-import { useHistory } from 'react-router';
 import { useDispatch } from 'react-redux';
 import { makeStyles } from '@material-ui/core';
 import { useForm } from 'react-hook-form';
+import Cookies from 'universal-cookie';
 import { openPopup } from '../../redux/actions';
 import { dateToMillis, getParams, redirect } from '../../functions/util';
 import { Event } from '../../functions/entries';
-
 import { postEvent } from '../../functions/api';
+
 import { Controller } from 'react-hook-form';
 import Typography from '@material-ui/core/Typography';
 import Button from '@material-ui/core/Button';
@@ -18,9 +18,7 @@ import Select from '@material-ui/core/Select';
 import MenuItem from '@material-ui/core/MenuItem';
 import FormControlLabel from '@material-ui/core/FormControlLabel';
 import Checkbox from '@material-ui/core/Checkbox';
-import Backdrop from '@material-ui/core/Backdrop';
-import CircularProgress from '@material-ui/core/CircularProgress';
-import Cookies from 'universal-cookie';
+import UploadBackdrop from '../shared/upload-backdrop';
 
 const useStyles = makeStyles((theme) => ({
     title: {
@@ -63,13 +61,6 @@ const useStyles = makeStyles((theme) => ({
     submit: {
         margin: 'auto',
         display: 'block',
-    },
-    backdrop: {
-        zIndex: theme.zIndex.drawer + 1,
-        color: '#fff',
-    },
-    uploading: {
-        marginRight: 12,
     },
 }));
 
@@ -135,12 +126,7 @@ const EditEvents = () => {
 
     return (
         <React.Fragment>
-            <Backdrop open={backdrop} className={classes.backdrop}>
-                <Typography variant="h1" className={classes.uploading}>
-                    Uploading event...
-                </Typography>
-                <CircularProgress color="inherit" />
-            </Backdrop>
+            <UploadBackdrop open={backdrop} />
             <Typography variant="h1" className={classes.title}>
                 {id ? 'Edit Event' : 'Add Event'}
             </Typography>
