@@ -1,26 +1,26 @@
-import { Dayjs } from 'dayjs';
-
 /**
  * An object containing the information for calendar events
  *
- * @param {string} id The unique UUIDv4 for the event
- * @param {string} eventId The ID assigned by the Google Calendar API to the calendar event
- * @param {"event"|"signup"} type The type of the event
- * @param {string} name The name of the event
- * @param {string} club The name of the club that is hosting the event
- * @param {string} description The description of the event
- * @param {Number} start The time in UTC milliseconds that the event starts
- * @param {Number} end The time in UTC milliseconds that the event ends
+ * @param {string} [id] The unique UUIDv4 for the event
+ * @param {string} [eventId] The ID assigned by the Google Calendar API to the calendar event
+ * @param {"event"|"signup"} [type] The type of the event
+ * @param {string} [name] The name of the event
+ * @param {string} [club] The name of the club that is hosting the event
+ * @param {string} [description] The description of the event
+ * @param {Number} [start] The time in UTC milliseconds that the event starts
+ * @param {Number} [end] The time in UTC milliseconds that the event ends
  */
-export function Event(id, eventId, type, name, description, club, start, end) {
-    this.id = id || '';
-    this.eventId = eventId || '';
-    this.type = type || 'event';
-    this.name = name || '';
-    this.club = club || '';
-    this.description = description || '';
-    this.start = start || '';
-    this.end = end || '';
+export class Event {
+    constructor(id, eventId, type, name, description, club, start, end) {
+        this.id = id || '';
+        this.eventId = eventId || '';
+        this.type = type || 'event';
+        this.name = name || '';
+        this.club = club || '';
+        this.description = description || '';
+        this.start = start || '';
+        this.end = end || '';
+    }
 }
 
 /**
@@ -37,16 +37,16 @@ export function Event(id, eventId, type, name, description, club, start, end) {
  * @param {Committee[]} [committees] Array of committee objects
  */
 export class Club {
-    constructor(id = null, name = null, advised = false, links = [''], description = '', coverImgThumbnail = '', coverImg = '', execs = [], committees = []) {
-        this.id = id;
-        this.name = name;
-        this.advised = advised;;
-        this.links = links;
-        this.description = description;
-        this.coverImgThumbnail = coverImgThumbnail;
-        this.coverImg = coverImg;
-        this.execs = execs;
-        this.committees = committees;
+    constructor(id = null, name, advised, links, description, coverImgThumbnail, coverImg, execs, committees) {
+        this.id = id || null;
+        this.name = name || null;
+        this.advised = advised || false;
+        this.links = links || [''];
+        this.description = description || '';
+        this.coverImgThumbnail = coverImgThumbnail || '';
+        this.coverImg = coverImg || '';
+        this.execs = execs || [];
+        this.committees = committees || [];
     }
 }
 
@@ -59,11 +59,11 @@ export class Club {
  * @param {string} [img] The image URL of the exec
  */
 export class Exec {
-    constructor(name = null, position = null, description = '', img = '') {
-        this.name = name;
-        this.position = position;
-        this.description = description;
-        this.img = img;
+    constructor(name, position, description, img) {
+        this.name = name || null;
+        this.position = position || null;
+        this.description = description || '';
+        this.img = img || '';
     }
 }
 
@@ -76,57 +76,63 @@ export class Exec {
  * @param {string[]} [fb] List of links
  */
 export class Committee {
-    constructor(name = null, description = '', heads = [], links = []) {
-        this.name = name;
-        this.description = description;
-        this.heads = heads;
-        this.links = links;
+    constructor(name, description, heads, links) {
+        this.name = name || null;
+        this.description = description || '';
+        this.heads = heads || [];
+        this.links = links || [];
     }
 }
 
 /**
  * An object containing the image blobs for a club to upload
  *
- * @param {Blob} coverPhoto Uploaded cover photo for a club
- * @param {Blob[]} profilePictures All exec profile pictures
+ * @param {Blob} [coverPhoto] Uploaded cover photo for a club
+ * @param {Blob[]} [profilePictures] All exec profile pictures
  */
-export function ClubImageBlobs(coverPhoto, profilePictures) {
-    this.coverPhoto = coverPhoto || null;
-    this.profilePictures = profilePictures || [];
+export class ClubImageBlobs {
+    constructor(coverPhoto, profilePictures) {
+        this.coverPhoto = coverPhoto || null;
+        this.profilePictures = profilePictures || [];
+    }
 }
 
 /**
  * An object containing the information for a volunteering opportunity
  *
- * @param {string} id The unique UUIDv4 for the volunteering opportunity
- * @param {string} name The name of the volunteering opportunity
- * @param {string} club The club name that is offering the volunteering opportunity
- * @param {string} description Description of the volunteering opportunity
- * @param {Filters} filters Object used for filtering volunteering opportunities
+ * @param {string} [id] The unique UUIDv4 for the volunteering opportunity
+ * @param {string} [name] The name of the volunteering opportunity
+ * @param {string} [club] The club name that is offering the volunteering opportunity
+ * @param {string} [description] Description of the volunteering opportunity
+ * @param {Filters} [filters] Object used for filtering volunteering opportunities
  */
-export function Volunteering(id, name, club, description, filters) {
-    this.id = id || '';
-    this.name = name || '';
-    this.club = club || '';
-    this.description = description || '';
-    this.filters = filters || new Filters();
+export class Volunteering {
+    constructor(id, name, club, description, filters) {
+        this.id = id || '';
+        this.name = name || '';
+        this.club = club || '';
+        this.description = description || '';
+        this.filters = filters || new Filters();
+    }
 }
 
 /**
  * An object with the filters for a volunteering opportunity
  *
- * @param {boolean} limited True if limited volunteering opportunity
- * @param {boolean} semester True if semester long
- * @param {boolean} setTimes True if set volunteering times
- * @param {boolean} weekly True if weekly volunteering opportunity
- * @param {boolean} open True if open
+ * @param {boolean} [limited] True if limited volunteering opportunity
+ * @param {boolean} [semester] True if semester long
+ * @param {boolean} [setTimes] True if set volunteering times
+ * @param {boolean} [weekly] True if weekly volunteering opportunity
+ * @param {boolean} [open] True if open
  */
-export function Filters(limited, semester, setTimes, weekly, open) {
-    this.limited = limited || false;
-    this.semester = semester || false;
-    this.setTimes = setTimes || false;
-    this.weekly = weekly || false;
-    this.open = open || false;
+export class Filters {
+    constructor(limited, semester, setTimes, weekly, open) {
+        this.limited = limited || false;
+        this.semester = semester || false;
+        this.setTimes = setTimes || false;
+        this.weekly = weekly || false;
+        this.open = open || false;
+    }
 }
 
 /**
@@ -134,40 +140,9 @@ export function Filters(limited, semester, setTimes, weekly, open) {
  * @param {number} status The HTTP status code
  * @param {object} data Data of the request
  */
-export function FetchResponse(status, data) {
-    this.status = status;
-    this.data = data;
+export class FetchResponse {
+    constructor(status, data) {
+        this.status = status;
+        this.data = data;
+    }
 }
-
-/**
- * Holds the list of numbered dates for the calendar to +/- 1 month
- *
- * @param {number[]} current List of dates in the current month
- * @param {number[]} previous List of dates in the previous month
- * @param {number[]} next List of dates in the next month
- * @param {Dayjs} dayObj The dayjs object containing the current date
- */
-export function CalendarDates(current, previous, next, dayObj) {
-    this.current = current;
-    this.previous = previous;
-    this.next = next;
-    this.dayObj = dayObj;
-}
-
-/**
- * A date divider object to be parsed by the home event list creator
- * The object ID will be set to an empty string to differentiate
- * between the EventInfo objects
- *
- * @param {string} date Date formatted as YYYY-MM-DD
- */
-export function DateDivider(date) {
-    this.date = date;
-    this.id = '';
-}
-
-/**
- * @typedef {Object} DateAndTime
- * @property {string} date The date in the format (YYYY-MM-DD)
- * @property {string} time The time in the format (HH:MM)
- */

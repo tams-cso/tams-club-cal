@@ -7,7 +7,7 @@ import customParseFormat from 'dayjs/plugin/customParseFormat';
 import imageCompression from 'browser-image-compression';
 import Link from '@material-ui/core/Link';
 
-import { EventInfo, DateAndTime, CalendarDates, DateDivider, Event } from './entries';
+import { EventInfo, Event } from './entries';
 
 dayjs.extend(utc);
 dayjs.extend(timezone);
@@ -199,39 +199,6 @@ export function convertToTimeZone(millis, tz) {
 }
 
 /**
- * Takes a list of sorted events and injects DateDivider objects into it
- *
- * @param {EventInfo[]} eventList List of events, with an extra dayjs object defined
- */
-export function insertDateDividers(eventList) {
-    // Current date will store the latest date divider added, to prevent repeats
-    var currDate = '';
-
-    // Iterate through the list of sorted events
-    for (var i = 0; i < eventList.length; i++) {
-        // Create formatted date from the start datetime of the event
-        var date = eventList[i].startDayjs.format('YYYY-MM-DD');
-
-        // If the date doesn't have a divider, add it to the list
-        if (currDate != date) {
-            currDate = date;
-            eventList.splice(i, 0, new DateDivider(date));
-            i++;
-        }
-    }
-}
-
-/**
- * Converts a date to a readable date section label
- *
- * @param {string} date Date passed in formatted as YYYY-MM-DD
- * @returns {string} Readable date section label
- */
-export function createDateHeader(date) {
-    return dayjs(date).format('dddd M/D/YY');
-}
-
-/**
  * Gets the starting and ending time display for an event
  *
  * @param {EventInfo} event The event object
@@ -312,47 +279,6 @@ export function formatVolunteeringFilters(filters, signupTime) {
  */
 export function getMonthAndYear(offset = 0) {
     return dayjs().add(offset, 'month').format('MMMM YYYY');
-}
-
-/**
- * Creates the 3 numerical lists of calendar days, for the current, previous, and next months
- *
- * @param {number} [offset] Month offset (0 if undefined)
- * @param {string} [dateString] The calendar date (MMM D, YYYY)
- * @returns {CalendarDates} Object with lists of calendar dates
- */
-export function generateCalendarDays(offset = 0, dateString = '') {
-    // Creates a DayJS object from date or offset
-    var day = dayjs();
-    if (dateString !== '') day = dayjs(dateString, 'MMM D, YYYY');
-    day = day.add(offset, 'month').date(1);
-
-    // Creates the dates for the current, previous, and next calendar month
-    const current = [],
-        previous = [],
-        next = [];
-
-    // Iterate through the dates and push numbers into arrays
-    for (let i = 1; i <= day.daysInMonth(); i++) current.push(i);
-    for (let i = day.day(), j = day.subtract(1, 'month').daysInMonth(); i > 0; i--) previous.unshift(j--);
-    for (let i = day.date(day.daysInMonth()).day() + 1, j = 1; i < 7; i++) next.push(j++);
-
-    // Returns an object containing the data
-    return new CalendarDates(current, previous, next, day);
-}
-
-/**
- * Converts millisecond time to editing date and time
- *
- * @param {number} millis The UTC millisecond time
- * @returns {DateAndTime} The date and time objects
- */
-export function millisToDateAndTime(millis) {
-    var dayObj = convertToTimeZone(millis, getTimezone());
-    return {
-        date: dayObj.format('YYYY-MM-DD'),
-        time: dayObj.format('HH:mm'),
-    };
 }
 
 /**
