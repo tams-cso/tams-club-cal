@@ -6,7 +6,7 @@ import { getIp, getLoggedIn, getUserInfo } from '../../functions/api';
 import Box from '@material-ui/core/Box';
 import Typography from '@material-ui/core/Typography';
 import { darkSwitchGrey } from '../../functions/util';
-import GoogleLoginButton from './google-login-button';
+import GoogleLoginButton from './util/google-login-button';
 
 const useStyles = makeStyles((theme) => ({
     root: {

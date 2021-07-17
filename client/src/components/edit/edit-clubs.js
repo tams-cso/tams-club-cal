@@ -1,32 +1,45 @@
 import React, { useEffect, useState } from 'react';
 import { useDispatch } from 'react-redux';
-import { makeStyles } from '@material-ui/core';
+import { FormGroup, makeStyles } from '@material-ui/core';
 import { useForm } from 'react-hook-form';
 import Cookies from 'universal-cookie';
 import { openPopup } from '../../redux/actions';
 import { dateToMillis, getParams, redirect } from '../../functions/util';
-import { Event } from '../../functions/entries';
-import { postEvent } from '../../functions/api';
+import { Club, Committee, Event } from '../../functions/entries';
+import { getClub, postEvent } from '../../functions/api';
 
 import { Controller } from 'react-hook-form';
 import Typography from '@material-ui/core/Typography';
 import Button from '@material-ui/core/Button';
 import TextField from '@material-ui/core/TextField';
-import DateTimeInput from './date-time-input';
+import DateTimeInput from './util/date-time-input';
 import Box from '@material-ui/core/Box';
 import Select from '@material-ui/core/Select';
 import MenuItem from '@material-ui/core/MenuItem';
 import FormControlLabel from '@material-ui/core/FormControlLabel';
 import Checkbox from '@material-ui/core/Checkbox';
 import UploadBackdrop from '../shared/upload-backdrop';
+import LinkInputList from './util/link-input-list';
+import EditCommitteeList from './club-utils/edit-committee-list';
+import ControlledTextField from './util/controlled-text-field';
+import Loading from '../shared/loading';
+import ControlledSelect from './util/controlled-select';
 
 const useStyles = makeStyles((theme) => ({
     title: {
         textAlign: 'center',
         fontSize: '3rem',
     },
+    subtitle: {
+        paddingTop: 24,
+        textAlign: 'center',
+        fontSize: '2rem',
+    },
     form: {
         padding: 24,
+        [theme.breakpoints.down('sm')]: {
+            padding: 12,
+        },
     },
     boxWrapper: {
         marginBottom: 16,
@@ -56,7 +69,6 @@ const useStyles = makeStyles((theme) => ({
     },
     area: {
         width: '100%',
-        marginBottom: 16,
     },
     submit: {
         margin: 'auto',
@@ -67,52 +79,44 @@ const useStyles = makeStyles((theme) => ({
 const EditClubs = () => {
     const [id, setId] = useState(null);
     const [backdrop, setBackdrop] = useState(false);
+    const [club, setClub] = useState(null);
     const dispatch = useDispatch();
     const classes = useStyles();
     const {
         register,
-        handleSubmit,
-        setError,
-        clearErrors,
-        watch,
         control,
+        handleSubmit,
+        setValue,
         formState: { errors },
+        watch,
     } = useForm();
-    const watchStart = watch('start');
-    const watchEnd = watch('end');
-    const watchNoEnd = watch('noEnd');
+    const text = watch('name');
 
-    useEffect(() => {
+    useEffect(async () => {
         // Extract ID from url search params
         const id = getParams('id');
 
         // Set the ID state variable
-        if (id !== null) setId(id);
+        if (id !== null) {
+            const currClub = await getClub(id);
+            if (currClub.status === 200) {
+                setId(id);
+                setClub(currClub.data);
+            } else openPopup('Error fetching club info. Please refresh the page or add a new club.', 4);
+        } else setClub(new Club());
     }, []);
 
     useEffect(() => {
-        // TODO: Keep interval the same when changing start time
-        if (watchEnd === undefined || watchNoEnd) return;
-        if (watchEnd.isBefore(watchStart)) setError('end');
-        else clearErrors('end');
-    }, [watchStart, watchEnd]);
+        if (club === null) return;
+        setValue('advised', club.advised ? 'advised' : 'independent');
+    }, [club]);
 
     const onSubmit = async (data) => {
+        console.log(data);
         const cookies = new Cookies();
-        const startTime = dateToMillis(data.start);
-        const endTime = data.noEnd ? startTime : dateToMillis(data.end);
         if (id === null) {
-            const newEvent = new Event(
-                null,
-                null,
-                data.type || 'event',
-                data.name,
-                data.club,
-                data.description || '',
-                startTime,
-                endTime
-            );
-
+            const newClub = new Club();
+            return;
             setBackdrop(true);
             const res = await postEvent(newEvent);
             setBackdrop(false);
@@ -124,82 +128,68 @@ const EditClubs = () => {
         }
     };
 
-    return (
+    return club === null ? (
+        <Loading />
+    ) : (
         <React.Fragment>
             <UploadBackdrop open={backdrop} />
             <Typography variant="h1" className={classes.title}>
-                {id ? 'Edit Event' : 'Add Event'}
+                {id ? 'Edit Club' : 'Add Club'}
             </Typography>
             <form onSubmit={handleSubmit(onSubmit)} className={classes.form}>
                 <Box className={classes.boxWrapper}>
-                    <Select
-                        {...register('type')}
-                        id="select-event-type"
-                        defaultValue="event"
+                    <ControlledSelect
+                        control={control}
+                        setValue={setValue}
+                        value={club.advised ? 'advised' : 'independent'}
+                        name="advised"
                         variant="outlined"
                         className={classes.type}
                     >
-                        <MenuItem value="event">Event</MenuItem>
-                        <MenuItem value="signup">Signup/Deadline</MenuItem>
-                    </Select>
+                        <MenuItem value="advised">Advised</MenuItem>
+                        <MenuItem value="independent">Independent</MenuItem>
+                    </ControlledSelect>
                     <div className={classes.spacer} />
-                    <TextField
-                        {...register('name', { required: true })}
-                        label="Event Name"
+                    <ControlledTextField
+                        control={control}
+                        setValue={setValue}
+                        value={club.name}
+                        label="Club Name"
+                        name="name"
                         variant="outlined"
-                        defaultValue=""
-                        error={errors.name !== undefined}
-                        helperText={errors.name ? 'Please enter a name' : null}
+                        required
+                        errorMessage="Please enter a name"
                         className={classes.grow}
                     />
                 </Box>
-                <Box className={classes.boxWrapper}>
-                    <TextField
-                        {...register('club', { required: true })}
-                        label="Club"
-                        variant="outlined"
-                        defaultValue=""
-                        error={errors.club !== undefined}
-                        helperText={errors.club ? 'Please enter a name' : null}
-                        className={classes.grow}
-                    />
-                    <div className={classes.spacer} />
-                    <DateTimeInput
-                        name="start"
-                        label={watchNoEnd ? 'Date/time' : 'Start date/time'}
-                        control={control}
-                        required={true}
-                    />
-                    {watchNoEnd ? null : (
-                        <React.Fragment>
-                            <div className={classes.spacer} />
-                            <DateTimeInput name="end" label="End date/time" control={control} required={true} end />
-                        </React.Fragment>
-                    )}
-                    <Controller
-                        control={control}
-                        name="noEnd"
-                        defaultValue={false}
-                        render={({ field: { onChange, onBlur, value } }) => (
-                            <FormControlLabel
-                                control={<Checkbox />}
-                                label="No end time"
-                                className={classes.check}
-                                onChange={onChange}
-                                onBlur={onBlur}
-                                value={value}
-                            />
-                        )}
-                    />
-                </Box>
-                <TextField
-                    {...register('description', { required: false })}
+                <ControlledTextField
+                    control={control}
+                    setValue={setValue}
+                    value={club.description}
                     label="Description (optional)"
+                    name="description"
                     variant="outlined"
                     multiline
                     rows={4}
-                    defaultValue=""
                     className={classes.area}
+                />
+                <LinkInputList
+                    control={control}
+                    register={register}
+                    setValue={setValue}
+                    name="links"
+                    label="Link (start with http/https)"
+                    links={club.links}
+                />
+                <Typography variant="h2" className={classes.subtitle}>
+                    Committees
+                </Typography>
+                <EditCommitteeList
+                    control={control}
+                    register={register}
+                    setValue={setValue}
+                    errors={errors}
+                    committeeList={club ? club.committees : null}
                 />
                 <Button type="submit" variant="outlined" color="primary" className={classes.submit}>
                     Submit

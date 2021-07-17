@@ -178,7 +178,7 @@ const EditVolunteering = () => {
                     name="limited"
                     render={({ field: { onChange, onBlur, value } }) => (
                         <FormControlLabel
-                            control={<Checkbox onChange={onChange} onBlur={onBlur} value={value} />}
+                            control={<Checkbox onChange={onChange} onBlur={onBlur} checked={value} />}
                             label="Limited Slots"
                         />
                     )}
@@ -188,7 +188,7 @@ const EditVolunteering = () => {
                     name="semester"
                     render={({ field: { onChange, onBlur, value } }) => (
                         <FormControlLabel
-                            control={<Checkbox onChange={onChange} onBlur={onBlur} value={value} />}
+                            control={<Checkbox onChange={onChange} onBlur={onBlur} checked={value} />}
                             label="Semester Long Committment"
                         />
                     )}
@@ -198,7 +198,7 @@ const EditVolunteering = () => {
                     name="setTimes"
                     render={({ field: { onChange, onBlur, value } }) => (
                         <FormControlLabel
-                            control={<Checkbox onChange={onChange} onBlur={onBlur} value={value} />}
+                            control={<Checkbox onChange={onChange} onBlur={onBlur} checked={value} />}
                             label="Set Time Slots"
                         />
                     )}
@@ -208,7 +208,7 @@ const EditVolunteering = () => {
                     name="weekly"
                     render={({ field: { onChange, onBlur, value } }) => (
                         <FormControlLabel
-                            control={<Checkbox onChange={onChange} onBlur={onBlur} value={value} />}
+                            control={<Checkbox onChange={onChange} onBlur={onBlur} checked={value} />}
                             label="Weekly Volunteering"
                         />
                     )}

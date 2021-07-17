@@ -1,5 +1,4 @@
 import React from 'react';
-import './image-upload.scss';
 
 class ImageUpload extends React.Component {
     render() {

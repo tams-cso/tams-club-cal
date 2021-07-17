@@ -12,7 +12,7 @@ import { Controller } from 'react-hook-form';
 import Typography from '@material-ui/core/Typography';
 import Button from '@material-ui/core/Button';
 import TextField from '@material-ui/core/TextField';
-import DateTimeInput from './date-time-input';
+import DateTimeInput from './util/date-time-input';
 import Box from '@material-ui/core/Box';
 import Select from '@material-ui/core/Select';
 import MenuItem from '@material-ui/core/MenuItem';
@@ -74,6 +74,7 @@ const EditEvents = () => {
         handleSubmit,
         setError,
         clearErrors,
+        setValue,
         watch,
         control,
         formState: { errors },
