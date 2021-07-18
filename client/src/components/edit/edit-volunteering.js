@@ -6,18 +6,19 @@ import Cookies from 'universal-cookie';
 import { openPopup } from '../../redux/actions';
 import { getParams, redirect } from '../../functions/util';
 import { Filters, Volunteering } from '../../functions/entries';
-import { postVolunteering } from '../../functions/api';
+import { getVolunteering, postVolunteering } from '../../functions/api';
 
 import { Controller } from 'react-hook-form';
 import Typography from '@material-ui/core/Typography';
 import Button from '@material-ui/core/Button';
-import TextField from '@material-ui/core/TextField';
 import Hidden from '@material-ui/core/Hidden';
 import Box from '@material-ui/core/Box';
 import Switch from '@material-ui/core/Switch';
 import FormControlLabel from '@material-ui/core/FormControlLabel';
 import Checkbox from '@material-ui/core/Checkbox';
+import ControlledTextField from './util/controlled-text-field';
 import UploadBackdrop from '../shared/upload-backdrop';
+import Loading from '../shared/loading';
 
 const useStyles = makeStyles((theme) => ({
     title: {
@@ -58,17 +59,6 @@ const useStyles = makeStyles((theme) => ({
             height: 16,
         },
     },
-    field: {
-        width: '100%',
-        marginBottom: 16,
-    },
-    grow: {
-        flexGrow: 1,
-    },
-    area: {
-        width: '100%',
-        margin: '16px 0',
-    },
     submit: {
         margin: 'auto',
         display: 'block',
@@ -84,6 +74,7 @@ const useStyles = makeStyles((theme) => ({
 
 const EditVolunteering = () => {
     const [id, setId] = useState(null);
+    const [volunteering, setVolunteering] = useState(null);
     const [backdrop, setBackdrop] = useState(false);
     const dispatch = useDispatch();
     const classes = useStyles();
@@ -91,15 +82,22 @@ const EditVolunteering = () => {
         register,
         handleSubmit,
         control,
+        setValue,
         formState: { errors },
     } = useForm();
 
-    useEffect(() => {
+    useEffect(async () => {
         // Extract ID from url search params
         const id = getParams('id');
 
-        // Set the ID state variable
-        if (id !== null) setId(id);
+        // Set the ID and volunteering state variable
+        if (id !== null) {
+            const currVolunteering = await getVolunteering(id);
+            if (currVolunteering.status === 200) {
+                setId(id);
+                setVolunteering(currVolunteering.data);
+            } else openPopup('Error fetching volunteering info. Please refresh the page or add a new event.', 4);
+        } else setVolunteering(new Volunteering());
     }, []);
 
     const onSubmit = async (data) => {
@@ -130,7 +128,9 @@ const EditVolunteering = () => {
         }
     };
 
-    return (
+    return volunteering === null ? (
+        <Loading />
+    ) : (
         <React.Fragment>
             <UploadBackdrop open={backdrop} />
             <Typography variant="h1" className={classes.title}>
@@ -150,24 +150,29 @@ const EditVolunteering = () => {
                         )}
                     />
                     <div className={classes.spacer} />
-                    <TextField
-                        {...register('name', { required: true })}
+                    <ControlledTextField
+                        control={control}
+                        setValue={setValue}
+                        value={volunteering.name}
                         label="Volunteering Name"
+                        name="name"
                         variant="outlined"
-                        defaultValue=""
-                        error={errors.name !== undefined}
-                        helperText={errors.name ? 'Please enter a name' : null}
-                        className={`${classes.grow} ${classes.name}`}
+                        grow
+                        required
+                        errorMessage="Please enter a name"
+                        className={classes.name}
                     />
                     <div className={classes.spacer} />
-                    <TextField
-                        {...register('club', { required: true })}
+                    <ControlledTextField
+                        control={control}
+                        setValue={setValue}
+                        value={volunteering.club}
                         label="Club"
+                        name="club"
                         variant="outlined"
-                        defaultValue=""
-                        error={errors.club !== undefined}
-                        helperText={errors.club ? 'Please enter a name' : null}
-                        className={classes.grow}
+                        grow
+                        required
+                        errorMessage="Please enter a club name"
                     />
                 </Box>
                 <Hidden smDown>
@@ -213,14 +218,14 @@ const EditVolunteering = () => {
                         />
                     )}
                 />
-                <TextField
-                    {...register('description', { required: false })}
+                <ControlledTextField
+                    control={control}
+                    setValue={setValue}
+                    value={event.description}
                     label="Description (optional)"
+                    name="description"
                     variant="outlined"
-                    multiline
-                    rows={4}
-                    defaultValue=""
-                    className={classes.area}
+                    area
                 />
                 <Button type="submit" variant="outlined" color="primary" className={classes.submit}>
                     Submit

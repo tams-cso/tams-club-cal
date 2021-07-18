@@ -6,19 +6,20 @@ import Cookies from 'universal-cookie';
 import { openPopup } from '../../redux/actions';
 import { dateToMillis, getParams, redirect } from '../../functions/util';
 import { Event } from '../../functions/entries';
-import { postEvent } from '../../functions/api';
+import { getEvent, postEvent } from '../../functions/api';
 
 import { Controller } from 'react-hook-form';
 import Typography from '@material-ui/core/Typography';
 import Button from '@material-ui/core/Button';
-import TextField from '@material-ui/core/TextField';
 import DateTimeInput from './util/date-time-input';
 import Box from '@material-ui/core/Box';
-import Select from '@material-ui/core/Select';
 import MenuItem from '@material-ui/core/MenuItem';
 import FormControlLabel from '@material-ui/core/FormControlLabel';
 import Checkbox from '@material-ui/core/Checkbox';
+import ControlledTextField from './util/controlled-text-field';
+import ControlledSelect from './util/controlled-select';
 import UploadBackdrop from '../shared/upload-backdrop';
+import Loading from '../shared/loading';
 
 const useStyles = makeStyles((theme) => ({
     title: {
@@ -51,13 +52,6 @@ const useStyles = makeStyles((theme) => ({
             height: 16,
         },
     },
-    grow: {
-        flexGrow: 1,
-    },
-    area: {
-        width: '100%',
-        marginBottom: 16,
-    },
     submit: {
         margin: 'auto',
         display: 'block',
@@ -66,29 +60,34 @@ const useStyles = makeStyles((theme) => ({
 
 const EditEvents = () => {
     const [id, setId] = useState(null);
+    const [event, setEvent] = useState(null);
     const [backdrop, setBackdrop] = useState(false);
     const dispatch = useDispatch();
     const classes = useStyles();
     const {
-        register,
         handleSubmit,
         setError,
         clearErrors,
         setValue,
         watch,
         control,
-        formState: { errors },
     } = useForm();
     const watchStart = watch('start');
     const watchEnd = watch('end');
     const watchNoEnd = watch('noEnd');
 
-    useEffect(() => {
+    useEffect(async () => {
         // Extract ID from url search params
         const id = getParams('id');
 
-        // Set the ID state variable
-        if (id !== null) setId(id);
+        // Set the ID and event state variable
+        if (id !== null) {
+            const currEvent = await getEvent(id);
+            if (currEvent.status === 200) {
+                setId(id);
+                setEvent(currEvent.data);
+            } else openPopup('Error fetching event info. Please refresh the page or add a new event.', 4);
+        } else setEvent(new Event());
     }, []);
 
     useEffect(() => {
@@ -125,7 +124,9 @@ const EditEvents = () => {
         }
     };
 
-    return (
+    return event === null ? (
+        <Loading />
+    ) : (
         <React.Fragment>
             <UploadBackdrop open={backdrop} />
             <Typography variant="h1" className={classes.title}>
@@ -133,36 +134,41 @@ const EditEvents = () => {
             </Typography>
             <form onSubmit={handleSubmit(onSubmit)} className={classes.form}>
                 <Box className={classes.boxWrapper}>
-                    <Select
-                        {...register('type')}
-                        id="select-event-type"
-                        defaultValue="event"
+                    <ControlledSelect
+                        control={control}
+                        setValue={setValue}
+                        value={event.type}
+                        name="type"
                         variant="outlined"
                         className={classes.type}
                     >
                         <MenuItem value="event">Event</MenuItem>
                         <MenuItem value="signup">Signup/Deadline</MenuItem>
-                    </Select>
+                    </ControlledSelect>
                     <div className={classes.spacer} />
-                    <TextField
-                        {...register('name', { required: true })}
+                    <ControlledTextField
+                        control={control}
+                        setValue={setValue}
+                        value={event.name}
                         label="Event Name"
+                        name="name"
                         variant="outlined"
-                        defaultValue=""
-                        error={errors.name !== undefined}
-                        helperText={errors.name ? 'Please enter a name' : null}
-                        className={classes.grow}
+                        grow
+                        required
+                        errorMessage="Please enter a name"
                     />
                 </Box>
                 <Box className={classes.boxWrapper}>
-                    <TextField
-                        {...register('club', { required: true })}
+                    <ControlledTextField
+                        control={control}
+                        setValue={setValue}
+                        value={event.club}
                         label="Club"
+                        name="club"
                         variant="outlined"
-                        defaultValue=""
-                        error={errors.club !== undefined}
-                        helperText={errors.club ? 'Please enter a name' : null}
-                        className={classes.grow}
+                        grow
+                        required
+                        errorMessage="Please enter a club name"
                     />
                     <div className={classes.spacer} />
                     <DateTimeInput
@@ -193,14 +199,14 @@ const EditEvents = () => {
                         )}
                     />
                 </Box>
-                <TextField
-                    {...register('description', { required: false })}
+                <ControlledTextField
+                    control={control}
+                    setValue={setValue}
+                    value={event.description}
                     label="Description (optional)"
+                    name="description"
                     variant="outlined"
-                    multiline
-                    rows={4}
-                    defaultValue=""
-                    className={classes.area}
+                    area
                 />
                 <Button type="submit" variant="outlined" color="primary" className={classes.submit}>
                     Submit

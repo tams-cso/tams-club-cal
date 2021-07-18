@@ -2,6 +2,17 @@ import React, { useEffect } from 'react';
 
 import { Controller } from 'react-hook-form';
 import TextField from '@material-ui/core/TextField';
+import { makeStyles } from '@material-ui/core';
+
+const useStyles = makeStyles({
+    grow: {
+        flexGrow: 1,
+    },
+    area: {
+        width: '100%',
+        marginBottom: 16,
+    },
+});
 
 /**
  * Displays a controlled text field to edit.
@@ -9,18 +20,20 @@ import TextField from '@material-ui/core/TextField';
  *
  * @param {object} props React props object
  * @param {*} props.control React hook form controller
+ * @param {Function} [props.setValue] React hook form setValue function; required if value is defined
+ * @param {string} [props.value] Default value for the field
  * @param {string} props.label Text field label
  * @param {string} props.name Name for the input
  * @param {'standard' | 'outlined' | 'filled'} [props.variant] Variant of the text field
- * @param {number} [props.rows] Number of rows to display
- * @param {boolean} [props.multiline] True if a multiline input
- * @param {string} [props.value] Default value for the field
- * @param {Function} [props.setValue] React hook form setValue function; required if value is defined
+ * @param {boolean} [props.area] True if a textarea; will give it multiline, show 4 rows, 100% width, and a 16px margin bottom
+ * @param {boolean} [props.grow] If true, the element will have flex grow set to 1
  * @param {boolean} [props.required] True if field is required
  * @param {string} [props.errorMessage] Error message to display in the case of an error; required if 'required' defined
  * @param {string} [props.className] React classname
  */
 const ControlledTextField = (props) => {
+    const classes = useStyles();
+
     useEffect(() => {
         if (!props.value) return;
         props.setValue(props.name, props.value);
@@ -35,14 +48,13 @@ const ControlledTextField = (props) => {
                 <TextField
                     label={props.label}
                     variant={props.variant || 'standard'}
-                    rows={props.rows || 1}
-                    multiline={props.multiline || false}
+                    multiline={props.area}
                     error={error}
                     helperText={error ? props.errorMessage : null}
                     onChange={onChange}
                     onBlur={onBlur}
                     value={value}
-                    className={props.className}
+                    className={`${props.className} ${props.grow ? classes.grow : ''} ${props.area ? classes.area : ''}`}
                 />
             )}
         ></Controller>

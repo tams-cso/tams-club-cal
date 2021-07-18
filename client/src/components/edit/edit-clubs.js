@@ -1,29 +1,23 @@
 import React, { useEffect, useState } from 'react';
 import { useDispatch } from 'react-redux';
-import { FormGroup, makeStyles } from '@material-ui/core';
+import { makeStyles } from '@material-ui/core';
 import { useForm } from 'react-hook-form';
 import Cookies from 'universal-cookie';
 import { openPopup } from '../../redux/actions';
-import { dateToMillis, getParams, redirect } from '../../functions/util';
-import { Club, Committee, Event } from '../../functions/entries';
+import { getParams, redirect } from '../../functions/util';
+import { Club } from '../../functions/entries';
 import { getClub, postEvent } from '../../functions/api';
 
-import { Controller } from 'react-hook-form';
 import Typography from '@material-ui/core/Typography';
 import Button from '@material-ui/core/Button';
-import TextField from '@material-ui/core/TextField';
-import DateTimeInput from './util/date-time-input';
 import Box from '@material-ui/core/Box';
-import Select from '@material-ui/core/Select';
 import MenuItem from '@material-ui/core/MenuItem';
-import FormControlLabel from '@material-ui/core/FormControlLabel';
-import Checkbox from '@material-ui/core/Checkbox';
-import UploadBackdrop from '../shared/upload-backdrop';
 import LinkInputList from './util/link-input-list';
 import EditCommitteeList from './club-utils/edit-committee-list';
 import ControlledTextField from './util/controlled-text-field';
-import Loading from '../shared/loading';
 import ControlledSelect from './util/controlled-select';
+import Loading from '../shared/loading';
+import UploadBackdrop from '../shared/upload-backdrop';
 
 const useStyles = makeStyles((theme) => ({
     title: {
@@ -64,12 +58,6 @@ const useStyles = makeStyles((theme) => ({
             height: 16,
         },
     },
-    grow: {
-        flexGrow: 1,
-    },
-    area: {
-        width: '100%',
-    },
     submit: {
         margin: 'auto',
         display: 'block',
@@ -78,8 +66,8 @@ const useStyles = makeStyles((theme) => ({
 
 const EditClubs = () => {
     const [id, setId] = useState(null);
-    const [backdrop, setBackdrop] = useState(false);
     const [club, setClub] = useState(null);
+    const [backdrop, setBackdrop] = useState(false);
     const dispatch = useDispatch();
     const classes = useStyles();
     const {
@@ -88,15 +76,13 @@ const EditClubs = () => {
         handleSubmit,
         setValue,
         formState: { errors },
-        watch,
     } = useForm();
-    const text = watch('name');
 
     useEffect(async () => {
         // Extract ID from url search params
         const id = getParams('id');
 
-        // Set the ID state variable
+        // Set the ID and club state variable
         if (id !== null) {
             const currClub = await getClub(id);
             if (currClub.status === 200) {
@@ -157,9 +143,9 @@ const EditClubs = () => {
                         label="Club Name"
                         name="name"
                         variant="outlined"
+                        grow
                         required
                         errorMessage="Please enter a name"
-                        className={classes.grow}
                     />
                 </Box>
                 <ControlledTextField
@@ -169,9 +155,7 @@ const EditClubs = () => {
                     label="Description (optional)"
                     name="description"
                     variant="outlined"
-                    multiline
-                    rows={4}
-                    className={classes.area}
+                    area
                 />
                 <LinkInputList
                     control={control}

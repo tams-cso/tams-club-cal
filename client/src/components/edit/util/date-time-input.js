@@ -6,16 +6,16 @@ import { DateTimePicker } from '@material-ui/pickers';
 import InputAdornment from '@material-ui/core/InputAdornment';
 import IconButton from '@material-ui/core/IconButton';
 import EventIcon from '@material-ui/icons/Event';
+
 /**
  * Displays a date time input
  * @param {object} props React props object
  * @param {*} props.control Form control object
- * @param {*} props.required Is this field required
- * @param {*} props.name Name of the field
- * @param {*} props.label Label of the field
- * @param {*} props.className Classname of the input object
+ * @param {boolean} props.required Is this field required
+ * @param {string} props.name Name of the field
+ * @param {string} props.label Label of the field
+ * @param {string} props.className Classname of the input object
  * @param {boolean} props.end True if ending time, which means I will have to add 1 hour
- * @returns
  */
 const DateTimeInput = (props) => {
     return (
