@@ -10,7 +10,6 @@ import Typography from '@material-ui/core/Typography';
 import Button from '@material-ui/core/Button';
 import PageWrapper from '../shared/page-wrapper';
 import EditLogin from './edit-login';
-import EditHistory from './edit-history';
 import EditEvents from './edit-events';
 import EditClubs from './edit-clubs';
 import EditVolunteering from './edit-volunteering';
@@ -56,7 +55,7 @@ const Edit = () => {
                             <Route path="/edit/events" component={EditEvents} />
                             <Route path="/edit/clubs" component={EditClubs} />
                             <Route path="/edit/volunteering" component={EditVolunteering} />
-                            <Route path="/edit/history/:resource" component={EditHistory} />
+                            {/* <Route path="/edit/history/:resource" component={EditHistory} /> */}
                             <Route>
                                 <Typography variant="h1" className={classes.error}>
                                     ERROR: Invalid editing URL :(
