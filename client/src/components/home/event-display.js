@@ -9,13 +9,13 @@ import { getEvent } from '../../functions/api';
 import Container from '@material-ui/core/Container';
 import Card from '@material-ui/core/Card';
 import CardContent from '@material-ui/core/CardContent';
-import CardActions from '@material-ui/core/CardActions';
-import Button from '@material-ui/core/Button';
 import Box from '@material-ui/core/Box';
 import Divider from '@material-ui/core/Divider';
+import Hidden from '@material-ui/core/Hidden';
 import Typography from '@material-ui/core/Typography';
 import Paragraph from '../shared/paragraph';
 import Loading from '../shared/loading';
+import AddButton from '../shared/add-button';
 
 const useStyles = makeStyles((theme) => ({
     root: {
@@ -28,17 +28,31 @@ const useStyles = makeStyles((theme) => ({
         width: '100%',
         display: 'flex',
         justifyContent: 'center',
+        [theme.breakpoints.down('sm')]: {
+            flexDirection: 'column',
+        },
     },
     gridSide: {
         width: '50%',
         textAlign: 'left',
+        [theme.breakpoints.down('sm')]: {
+            width: '100%',
+        },
     },
     gridLeft: {
         padding: 8,
+        [theme.breakpoints.down('sm')]: {
+            padding: 0,
+        },
     },
     gridRight: {
         marginLeft: 12,
         padding: '8px 0',
+        [theme.breakpoints.down('sm')]: {
+            margin: 0,
+            marginTop: 16,
+            padding: 0,
+        },
     },
     eventClub: {
         marginBottom: 16,
@@ -49,9 +63,6 @@ const useStyles = makeStyles((theme) => ({
     },
     date: {
         fontWeight: 400,
-    },
-    buttonCenter: {
-        margin: 'auto',
     },
 }));
 
@@ -99,6 +110,7 @@ const EventDisplay = (props) => {
                 )
             ) : (
                 <Container className={classes.root}>
+                    <AddButton color="secondary" path={`/edit/events?id=${event.id}`} edit />
                     <Card>
                         <CardContent>
                             <Box className={classes.gridRoot}>
@@ -117,18 +129,15 @@ const EventDisplay = (props) => {
                                         {formatEventTime(event)}
                                     </Typography>
                                 </Box>
-                                <Divider orientation="vertical" flexItem />
+                                <Hidden smDown>
+                                    <Divider orientation="vertical" flexItem />
+                                </Hidden>
                                 <Paragraph
                                     text={event.description}
                                     className={`${classes.gridSide} ${classes.gridRight}`}
                                 />
                             </Box>
                         </CardContent>
-                        <CardActions>
-                            <Button size="medium" className={classes.buttonCenter}>
-                                Edit
-                            </Button>
-                        </CardActions>
                     </Card>
                 </Container>
             )}

@@ -10,8 +10,6 @@ import Paper from '@material-ui/core/Paper';
 import Card from '@material-ui/core/Card';
 import CardMedia from '@material-ui/core/CardMedia';
 import CardContent from '@material-ui/core/CardContent';
-import CardActions from '@material-ui/core/CardActions';
-import Button from '@material-ui/core/Button';
 import Link from '@material-ui/core/Link';
 import Typography from '@material-ui/core/Typography';
 import Tabs from '@material-ui/core/Tabs';
@@ -21,6 +19,7 @@ import Image from '../shared/image';
 import Paragraph from '../shared/paragraph';
 import ExecCard from './exec-card';
 import CommitteeCard from './committee-card';
+import AddButton from '../shared/add-button';
 
 const useStyles = makeStyles((theme) => ({
     root: {
@@ -70,9 +69,6 @@ const useStyles = makeStyles((theme) => ({
         textAlign: 'center',
         marginBottom: 12,
         color: darkSwitchGrey(theme),
-    },
-    buttonCenter: {
-        margin: 'auto',
     },
 }));
 
@@ -137,6 +133,7 @@ const ClubDisplay = (props) => {
                 )
             ) : (
                 <Container className={classes.root}>
+                    <AddButton color="secondary" path={`/edit/clubs?id=${club.id}`} edit />
                     <Card>
                         <CardMedia className={classes.imageWrapper}>
                             <Image className={classes.image} src={club.coverImg} default="/default-cover.webp" />
@@ -188,11 +185,6 @@ const ClubDisplay = (props) => {
                                 )}
                             </Paper>
                         </CardContent>
-                        <CardActions>
-                            <Button size="medium" className={classes.buttonCenter}>
-                                Edit
-                            </Button>
-                        </CardActions>
                     </Card>
                 </Container>
             )}

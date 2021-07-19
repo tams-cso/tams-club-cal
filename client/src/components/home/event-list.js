@@ -10,6 +10,7 @@ import Container from '@material-ui/core/Container';
 import Typography from '@material-ui/core/Typography';
 import EventListSection from './event-list-section';
 import Loading from '../shared/loading';
+import AddButton from '../shared/add-button';
 
 const useStyles = makeStyles({
     root: {
@@ -71,6 +72,7 @@ const EventList = () => {
     const classes = useStyles();
     return (
         <Container maxWidth="lg" className={classes.root}>
+            <AddButton color="primary" path="/edit/events" />
             {eventComponentList}
         </Container>
     );

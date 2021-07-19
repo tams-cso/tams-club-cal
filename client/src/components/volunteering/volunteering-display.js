@@ -8,8 +8,6 @@ import { darkSwitchGrey } from '../../functions/util';
 import Container from '@material-ui/core/Container';
 import Card from '@material-ui/core/Card';
 import CardContent from '@material-ui/core/CardContent';
-import CardActions from '@material-ui/core/CardActions';
-import Button from '@material-ui/core/Button';
 import Box from '@material-ui/core/Box';
 import Typography from '@material-ui/core/Typography';
 import Divider from '@material-ui/core/Divider';
@@ -17,6 +15,7 @@ import Hidden from '@material-ui/core/Hidden';
 import Loading from '../shared/loading';
 import FilterList from './filter-list';
 import Paragraph from '../shared/paragraph';
+import AddButton from '../shared/add-button';
 
 const useStyles = makeStyles((theme) => ({
     root: {
@@ -49,9 +48,6 @@ const useStyles = makeStyles((theme) => ({
     },
     club: {
         color: darkSwitchGrey(theme),
-    },
-    buttonCenter: {
-        margin: 'auto',
     },
 }));
 
@@ -101,6 +97,7 @@ const EventDisplay = (props) => {
                 )
             ) : (
                 <Container className={classes.root}>
+                    <AddButton color="secondary" path={`/edit/volunteering?id=${volunteering.id}`} edit />
                     <Card>
                         <CardContent>
                             <Box className={classes.container}>
@@ -123,11 +120,6 @@ const EventDisplay = (props) => {
                                 <FilterList filters={volunteering.filters} className={classes.side} />
                             </Box>
                         </CardContent>
-                        <CardActions>
-                            <Button size="medium" className={classes.buttonCenter}>
-                                Edit
-                            </Button>
-                        </CardActions>
                     </Card>
                 </Container>
             )}

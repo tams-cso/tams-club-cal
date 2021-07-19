@@ -9,6 +9,7 @@ import Grid from '@material-ui/core/Grid';
 import Container from '@material-ui/core/Container';
 import Loading from '../shared/loading';
 import VolunteeringCard from './volunteering-card';
+import AddButton from '../shared/add-button';
 
 const useStyles = makeStyles((theme) => ({
     gridItem: {
@@ -52,7 +53,9 @@ const ClubList = () => {
         );
     }, [volunteeringList]);
 
-    return <Container>{volunteeringCardList}</Container>;
+    return <Container>
+        <AddButton color="primary" path="/edit/volunteering" />
+        {volunteeringCardList}</Container>;
 };
 
 export default ClubList;
