@@ -1,10 +1,7 @@
 import React from 'react';
 import { makeStyles } from '@material-ui/core/styles';
-import { darkSwitch } from '../../functions/util';
 import data from '../../data.json';
 
-import Drawer from '@material-ui/core/Drawer';
-import Toolbar from '@material-ui/core/Toolbar';
 import List from '@material-ui/core/List';
 import ListItem from '@material-ui/core/ListItem';
 import ListItemIcon from '@material-ui/core/ListItemIcon';
@@ -16,53 +13,20 @@ import EmojiPeopleRoundedIcon from '@material-ui/icons/EmojiPeopleRounded';
 import PublicRoundedIcon from '@material-ui/icons/PublicRounded';
 import EventAvailableRoundedIcon from '@material-ui/icons/EventAvailableRounded';
 
-const drawerWidth = 280;
-
-const useStyles = makeStyles((theme) => ({
-    root: {
-        width: drawerWidth,
-    },
-    spacer: {
-        width: drawerWidth,
-        marginBottom: '0',
-    },
-    buttonContainer: {
-        width: drawerWidth,
-        overflow: 'auto',
-        display: 'flex',
-        flexDirection: 'column',
-        alignItems: 'center',
-    },
-    button: {
-        width: drawerWidth - 50,
-        marginTop: '1rem',
-        color: darkSwitch(theme, theme.palette.grey[700], theme.palette.grey[500]),
-    },
-    buttonActive: {
-        color: darkSwitch(theme, theme.palette.primary.main, theme.palette.primary.light),
-        backgroundColor: darkSwitch(theme, theme.palette.grey[200], theme.palette.grey[700]),
-        '&:hover': {
-            backgroundColor: darkSwitch(theme, theme.palette.grey[200], theme.palette.grey[700]),
-        },
-    },
-    divider: {
-        marginTop: '1rem',
-        marginBottom: '0.5rem',
-    },
+const useStyles = makeStyles({
     listIcon: {
-        minWidth: '40px',
+        minWidth: 40,
     },
     externalLinksTitle: {
         textAlign: 'center',
         marginTop: '1rem',
     },
-}));
+});
 
-const HomeDrawer = () => {
+const HomeDrawerList = () => {
     const classes = useStyles();
     return (
-        <Drawer variant="permanent" className={classes.root}>
-            <Toolbar className={classes.spacer} />
+        <React.Fragment>
             <Typography variant="h3" className={classes.externalLinksTitle}>
                 External Links
             </Typography>
@@ -99,8 +63,8 @@ const HomeDrawer = () => {
                     <ListItemText primary="Add to Google Calendar!" />
                 </ListItem>
             </List>
-        </Drawer>
+        </React.Fragment>
     );
 };
 
-export default HomeDrawer;
+export default HomeDrawerList;

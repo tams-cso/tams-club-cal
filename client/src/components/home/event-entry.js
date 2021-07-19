@@ -14,22 +14,33 @@ const useStyles = makeStyles((theme) => ({
         padding: 0,
     },
     wrapper: {
-        padding: '1rem',
+        padding: 16,
         display: 'flex',
         flexDirection: 'row',
         justifyContent: 'flex-start',
         textDecoration: 'none',
+        [theme.breakpoints.down('sm')]: {
+            padding: '8px 0',
+        },
     },
     rightBox: {
         overflow: 'hidden',
     },
     time: {
+        width: 256,
         flexShrink: 0,
-        width: '16rem',
         textAlign: 'center',
+        [theme.breakpoints.down('sm')]: {
+            width: 90,
+            fontSize: '0.9rem',
+            textAlign: 'left'
+        },
     },
     name: {
         color: darkSwitch(theme, theme.palette.common.black, theme.palette.grey[200]),
+        [theme.breakpoints.down('sm')]: {
+            fontSize: '1rem',
+        },
     },
     description: {
         overflow: 'hidden',
@@ -37,6 +48,9 @@ const useStyles = makeStyles((theme) => ({
         whiteSpace: 'nowrap',
         fontSize: '0.85rem',
         color: theme.palette.grey[600],
+        [theme.breakpoints.down('sm')]: {
+            fontSize: '0.75rem',
+        },
     },
 }));
 

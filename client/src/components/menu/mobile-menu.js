@@ -8,6 +8,7 @@ import Toolbar from '@material-ui/core/Toolbar';
 import SvgIcon from '@material-ui/core/SvgIcon';
 import Drawer from '@material-ui/core/Drawer';
 import IconButton from '@material-ui/core/IconButton';
+import Typography from '@material-ui/core/Typography';
 import List from '@material-ui/core/List';
 import ListItem from '@material-ui/core/ListItem';
 import ListItemIcon from '@material-ui/core/ListItemIcon';
@@ -20,6 +21,7 @@ import InfoRoundedIcon from '@material-ui/icons/InfoRounded';
 import MenuIcon from './menu-icon';
 import AppIcon from './app-icon';
 import { Link } from 'react-router-dom';
+import HomeDrawerList from '../home/home-drawer-list';
 
 const useStyles = makeStyles((theme) => ({
     root: {
@@ -49,6 +51,13 @@ const useStyles = makeStyles((theme) => ({
         fill: darkSwitch(theme, theme.palette.common.white, theme.palette.grey[400]),
         fillRule: 'evenodd',
     },
+    hamburger: {
+        fill: darkSwitch(theme, theme.palette.common.white, theme.palette.grey[400]),
+    },
+    title: {
+        textAlign: 'center',
+        marginTop: '1rem',
+    },
 }));
 
 /**
@@ -72,9 +81,16 @@ const MobileMenu = (props) => {
             <AppBar className={classes.bar}>
                 <Toolbar className={classes.root}>
                     <IconButton aria-label="open mobile menu" onClick={toggleDrawer.bind(this, true)}>
-                        <MenuHamburgerIcon />
+                        <MenuHamburgerIcon className={classes.hamburger} />
                     </IconButton>
                     <AppIcon className={classes.logo} noText></AppIcon>
+                    <MenuIcon
+                        title={`Switch to ${props.darkTheme ? 'light' : 'dark'} theme`}
+                        aria-label="toggle-theme"
+                        onClick={props.toggleDarkTheme}
+                    >
+                        {props.currentDarkThemeIcon}
+                    </MenuIcon>
                     <MenuIcon title="GitHub repository" aria-label="github-repository">
                         <a href={githubLink} className={classes.githubWrapper}>
                             <SvgIcon viewBox="0 0 32.58 31.77" className={classes.githubIcon}>
@@ -85,16 +101,12 @@ const MobileMenu = (props) => {
                             </SvgIcon>
                         </a>
                     </MenuIcon>
-                    <MenuIcon
-                        title={`Switch to ${props.darkTheme ? 'light' : 'dark'} theme`}
-                        aria-label="toggle-theme"
-                        onClick={props.toggleDarkTheme}
-                    >
-                        {props.currentDarkThemeIcon}
-                    </MenuIcon>
                 </Toolbar>
             </AppBar>
             <Drawer anchor="left" open={drawerOpen} onClose={toggleDrawer.bind(this, false)}>
+                <Typography variant="h3" className={classes.title}>
+                    Navigation
+                </Typography>
                 <List className={classes.list}>
                     <ListItem button component={Link} to="/" onClick={toggleDrawer.bind(this, false)}>
                         <ListItemIcon className={classes.listIcon}>
@@ -121,6 +133,7 @@ const MobileMenu = (props) => {
                         <ListItemText primary="About" />
                     </ListItem>
                 </List>
+                <HomeDrawerList />
             </Drawer>
         </React.Fragment>
     );
