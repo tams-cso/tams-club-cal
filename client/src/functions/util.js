@@ -4,7 +4,6 @@ import utc from 'dayjs/plugin/utc';
 import timezone from 'dayjs/plugin/timezone';
 import isLeapYear from 'dayjs/plugin/isLeapYear';
 import customParseFormat from 'dayjs/plugin/customParseFormat';
-import imageCompression from 'browser-image-compression';
 import Link from '@material-ui/core/Link';
 
 import { EventInfo, Event } from './entries';
@@ -291,24 +290,6 @@ export function formatVolunteeringFilters(filters, signupTime) {
  */
 export function getMonthAndYear(offset = 0) {
     return dayjs().add(offset, 'month').format('MMMM YYYY');
-}
-
-/**
- * Compresses the image to a specific max width or height
- * Cover Photos: 1728x756
- * Cover Photo Thumbnails: 432x189
- * Exec Profile Pictures: 256x256
- *
- * @param {Blob} imageFile Image file object
- * @param {number} maxWidthOrHeight The max width/height to scale down, in pixels
- * @returns {Promise<Blob>} The compressed image blob
- */
-export async function compressUploadedImage(imageFile, maxWidthOrHeight) {
-    try {
-        return await imageCompression(imageFile, { maxWidthOrHeight });
-    } catch (error) {
-        console.dir(error);
-    }
 }
 
 /**

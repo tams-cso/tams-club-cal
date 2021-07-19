@@ -1,7 +1,12 @@
 import { Club, ClubImageBlobs, Event, FetchResponse, Volunteering } from './entries';
 import Cookies from 'universal-cookie';
 
-const BACKEND_URL = process.env.NODE_ENV !== 'production' ? '' : 'https://api.tams.club';
+const BACKEND_URL =
+    process.env.NODE_ENV === 'production'
+        ? 'https://api.tams.club'
+        : process.env.REACT_APP_BACKEND === 'localhost'
+        ? 'http://localhost:5000'
+        : '';
 
 /**
  * Performs a GET request to the given endpoint.
