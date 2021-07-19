@@ -24,7 +24,9 @@ const useStyles = makeStyles((theme) => ({
     },
     name: {
         flexGrow: 1,
-        marginRight: 12,
+        [theme.breakpoints.up('sm')]: {
+            marginLeft: 16,
+        },
     },
     hidden: {
         display: 'none',
@@ -65,6 +67,7 @@ const EditCommitttee = (props) => {
         <ListItem className={deleted ? classes.hidden : null}>
             <Card elevation={3} className={classes.root}>
                 <Box className={classes.titleWrapper}>
+                    <TrashCan label="Committee" onClick={deleteMe} className={classes.trash} />
                     <ControlledTextField
                         control={props.control}
                         setValue={props.setValue}
@@ -76,7 +79,6 @@ const EditCommitttee = (props) => {
                         errorMessage="Please enter a name"
                         className={classes.name}
                     />
-                    <TrashCan label="Committee" onClick={deleteMe} className={classes.trash} />
                 </Box>
                 <LinkInputList
                     control={props.control}

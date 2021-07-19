@@ -3,6 +3,13 @@ import eventList from './mirage/events.json';
 import clubList from './mirage/clubs.json';
 import volunteeringList from './mirage/volunteering.json';
 
+// Cover photo:
+//   scale ratio -> 12:5
+//   actual size -> 1800 x 750
+// Profile photo
+//   scale ratio -> 1:1
+//   actual size -> 300 x 300
+
 export default function () {
     createServer({
         routes() {

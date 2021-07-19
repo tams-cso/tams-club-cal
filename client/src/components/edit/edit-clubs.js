@@ -17,7 +17,10 @@ import EditCommitteeList from './club-utils/edit-committee-list';
 import ControlledTextField from './util/controlled-text-field';
 import ControlledSelect from './util/controlled-select';
 import Loading from '../shared/loading';
-import UploadBackdrop from '../shared/upload-backdrop';
+import UploadBackdrop from './util/upload-backdrop';
+import ImageUpload from './club-utils/image-upload';
+import EditExecList from './club-utils/edit-exec-list';
+import TwoButtonBox from './util/two-button-box';
 
 const useStyles = makeStyles((theme) => ({
     title: {
@@ -68,6 +71,8 @@ const EditClubs = () => {
     const [id, setId] = useState(null);
     const [club, setClub] = useState(null);
     const [backdrop, setBackdrop] = useState(false);
+    const [cover, setCover] = useState(false);
+    const [profilePics, setProfilePics] = useState(null);
     const dispatch = useDispatch();
     const classes = useStyles();
     const {
@@ -87,9 +92,13 @@ const EditClubs = () => {
             const currClub = await getClub(id);
             if (currClub.status === 200) {
                 setId(id);
+                setProfilePics(Array(currClub.data.execs.length).fill(null));
                 setClub(currClub.data);
             } else openPopup('Error fetching club info. Please refresh the page or add a new club.', 4);
-        } else setClub(new Club());
+        } else {
+            setProfilePics([]);
+            setClub(new Club());
+        }
     }, []);
 
     useEffect(() => {
@@ -99,19 +108,25 @@ const EditClubs = () => {
 
     const onSubmit = async (data) => {
         console.log(data);
+        console.log(cover);
+        console.log(profilePics);
         const cookies = new Cookies();
         if (id === null) {
             const newClub = new Club();
             return;
-            setBackdrop(true);
-            const res = await postEvent(newEvent);
-            setBackdrop(false);
+            // setBackdrop(true);
+            // const res = await postEvent(newEvent);
+            // setBackdrop(false);
 
-            if (res.status === 200) {
-                redirect('/');
-                cookies.set('success', 'add-event', { sameSite: 'strict', path: '/' });
-            } else dispatch(openPopup('Unable to upload data. Please refresh the page or try again.', 4));
+            // if (res.status === 200) {
+            //     redirect('/');
+            //     cookies.set('success', 'add-event', { sameSite: 'strict', path: '/' });
+            // } else dispatch(openPopup('Unable to upload data. Please refresh the page or try again.', 4));
         }
+    };
+
+    const onCancel = () => {
+        redirect(`/clubs${id ? `?id=${id}` : ''}`);
     };
 
     return club === null ? (
@@ -157,6 +172,15 @@ const EditClubs = () => {
                     variant="outlined"
                     area
                 />
+                <ImageUpload
+                    setValue={setCover}
+                    src={club.coverImg}
+                    default="/default-cover.webp"
+                    alt="cover photo"
+                    width={300}
+                    height={125}
+                    aspect={12 / 5}
+                />
                 <LinkInputList
                     control={control}
                     register={register}
@@ -166,6 +190,18 @@ const EditClubs = () => {
                     links={club.links}
                 />
                 <Typography variant="h2" className={classes.subtitle}>
+                    Execs
+                </Typography>
+                <EditExecList
+                    control={control}
+                    register={register}
+                    setValue={setValue}
+                    errors={errors}
+                    profilePics={profilePics}
+                    setProfilePics={setProfilePics}
+                    execList={club.execs}
+                />
+                <Typography variant="h2" className={classes.subtitle}>
                     Committees
                 </Typography>
                 <EditCommitteeList
@@ -173,11 +209,9 @@ const EditClubs = () => {
                     register={register}
                     setValue={setValue}
                     errors={errors}
-                    committeeList={club ? club.committees : null}
+                    committeeList={club.committees}
                 />
-                <Button type="submit" variant="outlined" color="primary" className={classes.submit}>
-                    Submit
-                </Button>
+                <TwoButtonBox success="Submit" onCancel={onCancel} onSubmit={onSubmit} submit right />
             </form>
         </React.Fragment>
     );

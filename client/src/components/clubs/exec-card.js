@@ -17,7 +17,7 @@ const useStyles = makeStyles((theme) => ({
         display: 'flex',
         flexDirection: 'row',
     },
-    imageWrapper: {
+    image: {
         marginRight: 12,
         flexBasis: '20%',
         flexShrink: 0,
@@ -27,7 +27,6 @@ const useStyles = makeStyles((theme) => ({
         fontSize: '1.75rem',
         lineHeight: 1.1,
     },
-    position: {},
     description: {
         color: darkSwitchGrey(theme),
     },
@@ -44,19 +43,18 @@ const ExecCard = (props) => {
     const classes = useStyles();
     return (
         <Box className={classes.root}>
-            <Paper elevation={2} className={classes.imageWrapper}>
-                <Image
-                    className={classes.image}
-                    src={props.exec.img}
-                    alt="profile pic"
-                    default="/default-profile.webp"
-                ></Image>
-            </Paper>
+            <Image
+                className={classes.image}
+                src={props.exec.img}
+                alt="profile pic"
+                default="/default-profile.webp"
+                raised
+            ></Image>
             <Box className="exec-card-info">
                 <Typography variant="h2" className={classes.name}>
                     {props.exec.name}
                 </Typography>
-                <Typography variant="subtitle1" className={classes.position}>
+                <Typography variant="subtitle1">
                     {props.exec.position}
                 </Typography>
                 <Paragraph text={props.exec.description} className={classes.description} />

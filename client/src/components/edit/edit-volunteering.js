@@ -17,8 +17,9 @@ import Switch from '@material-ui/core/Switch';
 import FormControlLabel from '@material-ui/core/FormControlLabel';
 import Checkbox from '@material-ui/core/Checkbox';
 import ControlledTextField from './util/controlled-text-field';
-import UploadBackdrop from '../shared/upload-backdrop';
+import UploadBackdrop from './util/upload-backdrop';
 import Loading from '../shared/loading';
+import TwoButtonBox from './util/two-button-box';
 
 const useStyles = makeStyles((theme) => ({
     title: {
@@ -128,6 +129,10 @@ const EditVolunteering = () => {
         }
     };
 
+    const onCancel = () => {
+        redirect(`/volunteering${id ? `?id=${id}` : ''}`);
+    };
+
     return volunteering === null ? (
         <Loading />
     ) : (
@@ -227,9 +232,7 @@ const EditVolunteering = () => {
                     variant="outlined"
                     area
                 />
-                <Button type="submit" variant="outlined" color="primary" className={classes.submit}>
-                    Submit
-                </Button>
+                <TwoButtonBox success="Submit" onCancel={onCancel} onSubmit={onSubmit} submit right />
             </form>
         </React.Fragment>
     );
