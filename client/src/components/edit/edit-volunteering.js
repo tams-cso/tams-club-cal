@@ -114,7 +114,7 @@ const EditVolunteering = () => {
                     data.semester || false,
                     data.setTimes || false,
                     data.weekly || false,
-                    data.open || false
+                    data.open === 'open' || false
                 )
             );
 
@@ -226,7 +226,7 @@ const EditVolunteering = () => {
                 <ControlledTextField
                     control={control}
                     setValue={setValue}
-                    value={event.description}
+                    value={volunteering.description}
                     label="Description (optional)"
                     name="description"
                     variant="outlined"

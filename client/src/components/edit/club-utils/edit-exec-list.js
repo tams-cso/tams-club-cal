@@ -50,6 +50,7 @@ const EditExecList = (props) => {
 
     const addItem = () => {
         setAddedList([...addedList, new Exec()]);
+        props.setProfilePics([...props.profilePics, null]);
     };
 
     return (

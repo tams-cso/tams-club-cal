@@ -4,12 +4,11 @@ import { makeStyles } from '@material-ui/core';
 import { useForm } from 'react-hook-form';
 import Cookies from 'universal-cookie';
 import { openPopup } from '../../redux/actions';
-import { getParams, redirect } from '../../functions/util';
-import { Club } from '../../functions/entries';
-import { getClub, postEvent } from '../../functions/api';
+import { getParams, processLinkObjectList, redirect } from '../../functions/util';
+import { Club, ClubImageBlobs } from '../../functions/entries';
+import { getClub, postClub } from '../../functions/api';
 
 import Typography from '@material-ui/core/Typography';
-import Button from '@material-ui/core/Button';
 import Box from '@material-ui/core/Box';
 import MenuItem from '@material-ui/core/MenuItem';
 import LinkInputList from './util/link-input-list';
@@ -107,22 +106,48 @@ const EditClubs = () => {
     }, [club]);
 
     const onSubmit = async (data) => {
-        console.log(data);
-        console.log(cover);
-        console.log(profilePics);
         const cookies = new Cookies();
-        if (id === null) {
-            const newClub = new Club();
-            return;
-            // setBackdrop(true);
-            // const res = await postEvent(newEvent);
-            // setBackdrop(false);
 
-            // if (res.status === 200) {
-            //     redirect('/');
-            //     cookies.set('success', 'add-event', { sameSite: 'strict', path: '/' });
-            // } else dispatch(openPopup('Unable to upload data. Please refresh the page or try again.', 4));
+        if (id === null) {
+            const { execs, execProfilePics } = data.execs
+                ? processExecs(data.execs)
+                : { execs: [], execProfilePics: [] };
+            const filteredCommittees = data.committees ? data.committees.filter((c) => !c.deleted) : [];
+            const committees = filteredCommittees.map((c) => ({
+                ...c,
+                links: processLinkObjectList(c.links),
+            }));
+            const links = processLinkObjectList(data.links);
+
+            const newClub = new Club(
+                null,
+                data.name,
+                data.advised === 'advised',
+                links,
+                data.description || '',
+                null,
+                null,
+                execs,
+                committees
+            );
+            const newImages = new ClubImageBlobs(cover, execProfilePics);
+
+            setBackdrop(true);
+            const res = await postClub(newClub, newImages);
+            setBackdrop(false);
+
+            if (res.status === 200) {
+                redirect('/clubs');
+                cookies.set('success', 'add-club', { sameSite: 'strict', path: '/' });
+            } else dispatch(openPopup('Unable to upload data. Please refresh the page or try again.', 4));
         }
+    };
+
+    const processExecs = (execs) => {
+        const cleanedExecs = execs.map((e) => (e.deleted ? null : e));
+        const outProfilePics = profilePics.filter((p, i) => cleanedExecs[i] !== null);
+        const outExecs = cleanedExecs.filter((e) => e !== null);
+        return { execs: outExecs, execProfilePics: outProfilePics };
     };
 
     const onCancel = () => {

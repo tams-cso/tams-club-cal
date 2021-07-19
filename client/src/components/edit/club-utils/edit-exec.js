@@ -5,7 +5,6 @@ import { Committee } from '../../../functions/entries';
 import ListItem from '@material-ui/core/ListItem';
 import Box from '@material-ui/core/Box';
 import Card from '@material-ui/core/Card';
-import LinkInputList from '../util/link-input-list';
 import TrashCan from '../util/trash-can';
 import ControlledTextField from '../util/controlled-text-field';
 import ImageUpload from './image-upload';
@@ -81,6 +80,7 @@ const EditExec = (props) => {
 
     const deleteMe = () => {
         props.setValue(`${namePrefix}name`, 'deleted');
+        props.setValue(`${namePrefix}position`, 'deleted');
         props.setValue(`${namePrefix}deleted`, true);
         setDeleted(true);
     };

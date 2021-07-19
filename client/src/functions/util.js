@@ -65,6 +65,18 @@ export function redirect(path) {
     window.location = `${window.location.origin}${path}`;
 }
 
+/**
+ * This function will remove all deleted links and return
+ * a string list of the values, with the empty ones removed
+ * 
+ * @param {object[]} list List of link objects with deleted and value attributes
+ * @returns {string[]} List of all links
+ */
+export function processLinkObjectList(list) {
+    const filteredList = list.filter((l) => !l.deleted && l.value.trim() !== '');
+    return filteredList.map((l) => l.value);
+}
+
 // ================== CSS AND MUI FUNCTIONS =================== //
 
 /**

@@ -1,11 +1,11 @@
-import { Event, FetchResponse } from './entries';
+import { Club, ClubImageBlobs, Event, FetchResponse, Volunteering } from './entries';
 import Cookies from 'universal-cookie';
 
 const BACKEND_URL = process.env.NODE_ENV !== 'production' ? '' : 'https://api.tams.club';
 
 /**
- * Performs GET request to endpoint
- * 
+ * Performs a GET request to the given endpoint.
+ *
  * @param {string} url API endpoint to GET
  * @param {boolean} [auth] True if adding token
  * @returns {Promise<FetchResponse>} Will return the object or error object
@@ -22,8 +22,8 @@ async function getRequest(url, auth = false) {
 }
 
 /**
- * Performs POST request to endpoint
- * 
+ * Performs a POST request to the given endpoint.
+ *
  * @param {string} url API endpoint to POST
  * @param {object} body POST body content
  * @param {boolean} [json] Adds a JSON content type header if true
@@ -44,8 +44,8 @@ async function postRequest(url, body, json = true, auth = false) {
 }
 
 /**
- * Creates the header object for fetch requests
- * 
+ * Creates the header object for fetch requests.
+ *
  * @param {boolean} auth True if adding authorization string
  * @param {boolean} json True if adding json content type
  * @returns {Headers} Header object
@@ -81,13 +81,13 @@ export async function getEvent(id) {
 }
 
 /**
- * Create a new event
+ * Creates a new event
  *
  * @param {Event} event Event object
- * @returns {Promise<FetchResponse>} Will return the object or error object
+ * @returns {Promise<FetchResponse>} Will return the response or error object
  */
 export async function postEvent(event) {
-    return postRequest(`/events`, event);
+    return postRequest(`/events`, event, true, true);
 }
 
 /* ########## CLUBS API ########### */
@@ -108,32 +108,49 @@ export async function getClub(id) {
     return getRequest(`/clubs/${id}`);
 }
 
-export async function postClub(club, id = '') {
-    // Add email to club
-    club.email = '';
-
-    var data = new FormData();
+/**
+ * Creates a new club.
+ *
+ * @param {Club} club Club object
+ * @param {ClubImageBlobs} images Club image blobs object
+ * @returns {Promise<FetchResponse>} Will return the response or error object
+ */
+export async function postClub(club, images) {
+    const data = new FormData();
     data.append('data', JSON.stringify(club));
-    data.append('img', club.coverImgBlobs.img);
-    data.append('thumb', club.coverImgBlobs.thumb);
-    for (var i = 0; i < club.execProfilePicBlobs.length; i++) {
-        if (club.execProfilePicBlobs[i] !== undefined) data.append(`exec${i}`, club.execProfilePicBlobs[i]);
-    }
-    return postRequest(`/clubs/${id}`, data, false);
+    data.append('cover', images.coverPhoto);
+    images.profilePictures.forEach((p, i) => {
+        data.append(`exec${i}`, p);
+    });
+    return postRequest('/clubs', data, false, true);
 }
 
 /* ########## VOLUNTEERING API ########### */
 
+/**
+ * Gets the list of all volunteering opportunities.
+ * @returns {Promise<FetchResponse>} Will return the object or error object
+ */
 export async function getVolunteeringList() {
     return getRequest('/volunteering');
 }
 
+/**
+ * Gets a specific volunteering opportunity by ID.
+ * @returns {Promise<FetchResponse>} Will return the object or error object
+ */
 export async function getVolunteering(id) {
     return getRequest(`/volunteering/${id}`);
 }
 
-export async function postVolunteering(vol, id = '') {
-    return postRequest(`/volunteering/${id}`, vol);
+/**
+ * Creates a new volunteering opportunity
+ *
+ * @param {Volunteering} volunteering Volunteering object
+ * @returns {Promise<FetchResponse>} Will return the response or error object
+ */
+export async function postVolunteering(volunteering) {
+    return postRequest(`/volunteering`, volunteering, true, true);
 }
 
 /* ########## MISC API ########### */
@@ -176,6 +193,8 @@ export async function getUserInfo(token) {
     // TODO: convert this token path to an Authorization Bearer header instead
     return getRequest(`/auth/user/${token}`);
 }
+
+/* ########## OLD API ########### */
 
 export async function postTrustedAuth(email) {
     return postRequest('/auth/trusted', { email });

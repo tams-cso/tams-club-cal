@@ -47,6 +47,10 @@ const useStyles = makeStyles((theme) => ({
     canvas: {
         display: 'none',
     },
+    caption: {
+        textAlign: 'center',
+        marginTop: 8,
+    },
     popup: {
         zIndex: theme.zIndex.drawer + 1,
         color: '#fff',
@@ -96,9 +100,9 @@ const ImageUpload = (props) => {
             return;
         }
 
-        // Check file type
-        if (!file.type.startsWith('image')) {
-            setError('Please upload an image.');
+        // Check file type - only image that's not svg
+        if (!file.type.startsWith('image') || file.type.startsWith('image/svg+xml')) {
+            setError('Please upload an image (png/jpg/webp).');
             return;
         }
 
@@ -169,7 +173,7 @@ const ImageUpload = (props) => {
 
     const onCancel = () => {
         setUpImg(null);
-        setCrop({ unit: '%', height: 80, aspect: props.aspect });
+        setCrop({ unit: '%', width: 80, height: 80, x: 10, y: 10, aspect: props.aspect });
         setCompletedCrop(null);
         setPopupOpen(false);
     };
@@ -189,6 +193,7 @@ const ImageUpload = (props) => {
                                 imageStyle={{ maxHeight: '80vh', maxWidth: '100%', objectFit: 'cover' }}
                             />
                         </Box>
+                        <Typography className={classes.caption}>Click and drag to crop the image</Typography>
                         <TwoButtonBox
                             success="Upload"
                             onCancel={onCancel}
