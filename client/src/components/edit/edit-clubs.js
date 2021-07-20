@@ -106,6 +106,7 @@ const EditClubs = () => {
     }, [club]);
 
     const onSubmit = async (data) => {
+        if (!('name' in data)) return;
         const cookies = new Cookies();
 
         if (id === null) {
@@ -236,7 +237,7 @@ const EditClubs = () => {
                     errors={errors}
                     committeeList={club.committees}
                 />
-                <TwoButtonBox success="Submit" onCancel={onCancel} onSubmit={onSubmit} submit right />
+                <TwoButtonBox success="Submit" onCancel={onCancel} onSuccess={onSubmit} submit right />
             </form>
         </React.Fragment>
     );

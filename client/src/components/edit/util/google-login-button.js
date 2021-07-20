@@ -32,6 +32,7 @@ const GoogleLoginButton = (props) => {
                 data-context="signin"
                 data-ux_mode="redirect"
                 data-login_uri={backend}
+                data-auto_prompt="false"
             ></div>
             <Button
                 disabled={props.disabled || false}

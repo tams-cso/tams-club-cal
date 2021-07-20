@@ -102,6 +102,7 @@ const EditVolunteering = () => {
     }, []);
 
     const onSubmit = async (data) => {
+        if (!('name' in data)) return;
         const cookies = new Cookies();
         if (id === null) {
             const newVolunteering = new Volunteering(
@@ -232,7 +233,7 @@ const EditVolunteering = () => {
                     variant="outlined"
                     area
                 />
-                <TwoButtonBox success="Submit" onCancel={onCancel} onSubmit={onSubmit} submit right />
+                <TwoButtonBox success="Submit" onCancel={onCancel} onSuccess={onSubmit} submit right />
             </form>
         </React.Fragment>
     );

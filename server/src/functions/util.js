@@ -86,6 +86,29 @@ function objectToHistoryObject(data) {
 }
 
 /**
+ * Creates a history "fields" object from a created object.
+ * All fields that start with _ or is "id" will be omitted.
+ * This will compare the previous data with the current data and save all changes.
+ *
+ * @param {object} prevData Previous data object
+ * @param {object} data Data object
+ * @returns {object} History fields object
+ */
+function getDiff(prevData, data) {
+    let output = [];
+    Object.entries(data).forEach(([key, value]) => {
+        if (prevData[key] === value) return;
+        if (key.startsWith('_' || key === 'id' || key === 'history')) return;
+        output.push({
+            key,
+            oldValue: prevData[key],
+            newValue: value,
+        });
+    });
+    return output;
+}
+
+/**
  * Parses a multipart form club upload and returns the data in a callback function
  * @param {import('express').Request} req The Express request object
  * @param {import('express').Response} res The Express response object
@@ -140,4 +163,4 @@ function genState() {
     return crypto.randomBytes(16).toString('hex');
 }
 
-module.exports = { checkEnv, sendError, newId, objectToHistoryObject, parseForm, getIp, getEditor, genState };
+module.exports = { checkEnv, sendError, newId, objectToHistoryObject, getDiff, parseForm, getIp, getEditor, genState };

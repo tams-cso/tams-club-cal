@@ -49,6 +49,28 @@ async function postRequest(url, body, json = true, auth = false) {
 }
 
 /**
+ * Performs a POST request to the given endpoint.
+ *
+ * @param {string} url API endpoint to POST
+ * @param {object} body POST body content
+ * @param {boolean} [json] Adds a JSON content type header if true
+ * @param {boolean} [auth] True if adding token
+ * @returns {Promise<FetchResponse>} Will return the object or error object
+ */
+ async function putRequest(url, body, json = true, auth = false) {
+    try {
+        const options = { method: 'PUT', body: JSON.stringify(body), headers: createHeaders(auth, json) };
+
+        const res = await fetch(`${BACKEND_URL}${url}`, options);
+        const data = await res.json();
+        return new FetchResponse(res.status, data);
+    } catch (error) {
+        console.dir(error);
+        return new FetchResponse(404, null);
+    }
+}
+
+/**
  * Creates the header object for fetch requests.
  *
  * @param {boolean} auth True if adding authorization string
@@ -92,7 +114,18 @@ export async function getEvent(id) {
  * @returns {Promise<FetchResponse>} Will return the response or error object
  */
 export async function postEvent(event) {
-    return postRequest(`/events`, event, true, true);
+    return postRequest('/events', event, true, true);
+}
+
+/**
+ * Updates an event
+ * 
+ * @param {*} event Event object
+ * @param {*} id ID of the event to update
+ * @returns {Promise<FetchResponse>} Will return the response or error object
+ */
+export async function putEvent(event, id) {
+    return putRequest(`/events/${id}`, event, true, true);
 }
 
 /* ########## CLUBS API ########### */

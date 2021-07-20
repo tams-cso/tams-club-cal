@@ -6,7 +6,7 @@ import Cookies from 'universal-cookie';
 import { openPopup } from '../../redux/actions';
 import { dateToMillis, getParams, redirect } from '../../functions/util';
 import { Event } from '../../functions/entries';
-import { getEvent, postEvent } from '../../functions/api';
+import { getEvent, postEvent, putEvent } from '../../functions/api';
 
 import { Controller } from 'react-hook-form';
 import Typography from '@material-ui/core/Typography';
@@ -65,14 +65,7 @@ const EditEvents = () => {
     const [backdrop, setBackdrop] = useState(false);
     const dispatch = useDispatch();
     const classes = useStyles();
-    const {
-        handleSubmit,
-        setError,
-        clearErrors,
-        setValue,
-        watch,
-        control,
-    } = useForm();
+    const { handleSubmit, setError, clearErrors, setValue, watch, control } = useForm();
     const watchStart = watch('start');
     const watchEnd = watch('end');
     const watchNoEnd = watch('noEnd');
@@ -99,6 +92,7 @@ const EditEvents = () => {
     }, [watchStart, watchEnd]);
 
     const onSubmit = async (data) => {
+        if (!('name' in data)) return;
         const cookies = new Cookies();
         const startTime = dateToMillis(data.start);
         const endTime = data.noEnd ? startTime : dateToMillis(data.end);
@@ -121,6 +115,27 @@ const EditEvents = () => {
             if (res.status === 200) {
                 redirect('/');
                 cookies.set('success', 'add-event', { sameSite: 'strict', path: '/' });
+            } else dispatch(openPopup('Unable to upload data. Please refresh the page or try again.', 4));
+        } else {
+            const updatedEvent = new Event(
+                id,
+                event.eventId,
+                data.type || event.type,
+                data.name || event.name,
+                data.club || event.club,
+                data.description || event.description,
+                startTime || event.start,
+                endTime || event.end,
+                event.history
+            );
+
+            setBackdrop(true);
+            const res = await putEvent(updatedEvent, id);
+            setBackdrop(false);
+
+            if (res.status === 200) {
+                redirect('/');
+                cookies.set('success', 'update-event', { sameSite: 'strict', path: '/' });
             } else dispatch(openPopup('Unable to upload data. Please refresh the page or try again.', 4));
         }
     };
@@ -213,7 +228,7 @@ const EditEvents = () => {
                     variant="outlined"
                     area
                 />
-                <TwoButtonBox success="Submit" onCancel={onCancel} onSubmit={onSubmit} submit right />
+                <TwoButtonBox success="Submit" onCancel={onCancel} onSuccess={onSubmit} submit right />
             </form>
         </React.Fragment>
     );

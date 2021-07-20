@@ -11,13 +11,14 @@ import EventIcon from '@material-ui/icons/Event';
  * Displays a date time input
  * @param {object} props React props object
  * @param {*} props.control Form control object
- * @param {boolean} props.required Is this field required
+ * @param {boolean} [props.required] Is this field required
  * @param {string} props.name Name of the field
  * @param {string} props.label Label of the field
  * @param {string} props.className Classname of the input object
- * @param {boolean} props.end True if ending time, which means I will have to add 1 hour
+ * @param {boolean} [props.end] True if ending time, which means I will have to add 1 hour
  */
 const DateTimeInput = (props) => {
+    // TODO: Allow default times to be set?
     return (
         <Controller
             control={props.control}
