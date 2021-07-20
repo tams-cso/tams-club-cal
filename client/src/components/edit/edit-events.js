@@ -31,7 +31,7 @@ const useStyles = makeStyles((theme) => ({
         padding: 24,
         [theme.breakpoints.down('sm')]: {
             padding: 12,
-        }
+        },
     },
     boxWrapper: {
         marginBottom: 16,
@@ -115,53 +115,31 @@ const EditEvents = () => {
     const onSubmit = async (data) => {
         if (!('name' in data)) return;
         const cookies = new Cookies();
+
         const startTime = dateToMillis(data.start);
         const endTime = data.noEnd ? startTime : dateToMillis(data.end);
-        if (id === null) {
-            const newEvent = new Event(
-                null,
-                null,
-                data.type || 'event',
-                data.name,
-                data.club,
-                data.description || '',
-                startTime,
-                endTime
-            );
+        const newEvent = new Event(
+            id,
+            event.eventId,
+            data.type,
+            data.name,
+            data.club,
+            data.description,
+            startTime,
+            endTime,
+            event.history
+        );
 
-            setBackdrop(true);
-            const res = await postEvent(newEvent);
-            setBackdrop(false);
-
-            if (res.status === 200) {
-                redirect('/');
-                cookies.set('success', 'add-event', { sameSite: 'strict', path: '/' });
-            } else dispatch(openPopup('Unable to upload data. Please refresh the page or try again.', 4));
-        } else {
-            const updatedEvent = new Event(
-                id,
-                event.eventId,
-                data.type,
-                data.name,
-                data.club,
-                data.description,
-                startTime,
-                endTime,
-                event.history
-            );
-
-            setBackdrop(true);
-            const res = await putEvent(updatedEvent, id);
-            setBackdrop(false);
-
-            if (res.status === 200) {
-                redirect('/');
-                cookies.set('success', 'update-event', { sameSite: 'strict', path: '/' });
-            } else dispatch(openPopup('Unable to upload data. Please refresh the page or try again.', 4));
-        }
+        setBackdrop(true);
+        const res = id === null ? await postEvent(newEvent) : await putEvent(newEvent, id);
+        setBackdrop(false);
+        if (res.status === 200) {
+            cookies.set('success', id ? 'update-event' : 'add-event', { sameSite: 'strict', path: '/' });
+            back();
+        } else dispatch(openPopup('Unable to upload data. Please refresh the page or try again.', 4));
     };
 
-    const onCancel = () => {
+    const back = () => {
         redirect(`/events${id ? `?id=${id}` : ''}`);
     };
 
@@ -257,7 +235,7 @@ const EditEvents = () => {
                     variant="outlined"
                     area
                 />
-                <TwoButtonBox success="Submit" onCancel={onCancel} onSuccess={onSubmit} submit right />
+                <TwoButtonBox success="Submit" onCancel={back} onSuccess={onSubmit} submit right />
             </form>
         </React.Fragment>
     );
