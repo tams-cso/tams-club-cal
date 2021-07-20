@@ -38,7 +38,7 @@ const FilterList = (props) => {
                 Set Time Slots
             </FilterItem>
             <FilterItem icon={<EventRoundedIcon htmlColor="#d38cff" />} color="#d38cff" status={props.filters.weekly}>
-                Weekly Volunteering
+                Repeats Weekly
             </FilterItem>
         </List>
     );

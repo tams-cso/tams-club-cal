@@ -1,8 +1,7 @@
 const express = require('express');
 const { addToCalendar, updateCalendar } = require('../functions/gcal');
-const { sendError, newId, getEditor, objectToHistoryObject, getDiff } = require('../functions/util');
+const { sendError, newId, createNewHistory } = require('../functions/util');
 const Event = require('../models/event');
-const History = require('../models/history');
 const router = express.Router();
 
 /**
@@ -32,14 +31,7 @@ router.get('/', async (req, res, next) => {
  * Gets an event by id
  */
 router.get('/:id', async (req, res, next) => {
-    // Get ID
     const id = req.params.id;
-    if (!id) {
-        sendError(res, 400, 'No id provided!');
-        return;
-    }
-
-    // Get event
     const event = await Event.findOne({ id }).exec();
     if (event) res.send(event);
     else sendError(res, 400, 'Invalid event id');
@@ -66,15 +58,7 @@ router.post('/', async (req, res, next) => {
         end: Number(req.body.end),
         history: [historyId],
     });
-
-    const newHistory = new History({
-        id: historyId,
-        resource: 'events',
-        editId: id,
-        time: new Date().valueOf(),
-        editor: getEditor(req),
-        fields: objectToHistoryObject(newEvent.toObject()),
-    });
+    const newHistory = createNewHistory(req, newEvent, 'events', id, historyId);
 
     const eventRes = await newEvent.save();
     const historyRes = await newHistory.save();
@@ -93,18 +77,8 @@ router.put('/:id', async (req, res, next) => {
         return;
     }
 
-    const diff = getDiff(prev.toObject(), req.body);
-    console.log(diff);
     const historyId = newId();
-    const newHistory = new History({
-        id: historyId,
-        resource: 'events',
-        editId: id,
-        time: new Date().valueOf(),
-        editor: getEditor(req),
-        fields: diff,
-    });
-    
+    const newHistory = createNewHistory(req, prev, 'events', id, historyId, false);
     const calendarRes = await updateCalendar(req.body, prev.eventId);
     const eventRes = await Event.updateOne(
         { id },
@@ -121,6 +95,7 @@ router.put('/:id', async (req, res, next) => {
         }
     );
     const historyRes = await newHistory.save();
+    
     if (calendarRes === 1 && eventRes.n === 1 && historyRes === newHistory) res.send({ ok: 1 });
     else sendError(res, 500, 'Unable to update event in database.')
 });

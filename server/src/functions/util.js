@@ -1,9 +1,12 @@
 const formidable = require('formidable');
+const { Document } = require('mongoose');
+const { Request, Response } = require('express');
 const crypto = require('crypto');
 const uuid = require('uuid');
 
 const statusList = require('../files/status.json');
 const envList = require('../files/env.json');
+const History = require('../models/history');
 
 /**
  * Checks that all the neccessary environmental variables
@@ -48,7 +51,7 @@ function newId() {
 /**
  * Extracts the IP address from the header of the express request object
  *
- * @param {import('express').Request} req Express request object
+ * @param {Request} req Express request object
  * @returns {string} IP address of the user
  */
 function getIp(req) {
@@ -59,7 +62,7 @@ function getIp(req) {
  * Creates the editor object, where it will first save the ID, and if not avaliable, then it
  * will save the ip address of the client that edited the resource.
  *
- * @param {import('express').Request} req Express request object
+ * @param {Request} req Express request object
  * @returns {object} Returns { id, ip } with only one of them null, where id takes priority
  */
 function getEditor(req) {
@@ -69,8 +72,33 @@ function getEditor(req) {
 }
 
 /**
+ * Creates a history object given the data of the newly created resource.
+ * If prevData is not defined, it will simply convert the fields of the data
+ * passed in to a key/value pair, or else it will run the diff between the
+ * previous and new data (in req.body).
+ *
+ * @param {Request} req Express request object
+ * @param {Document} data Resource data (either new data or previous data depending on "isNew")
+ * @param {string} resource Resource name
+ * @param {string} id UUIDv4 for the resource
+ * @param {string} historyId UUIDv4 for the history object
+ * @param {boolean} [isNew] True if a new resource (default: true)
+ * @returns {Document} The history document
+ */
+function createNewHistory(req, data, resource, id, historyId, isNew = true) {
+    return new History({
+        id: historyId,
+        resource,
+        editId: id,
+        time: new Date().valueOf(),
+        editor: getEditor(req),
+        fields: isNew ? objectToHistoryObject(data.toObject()) : getDiff(data.toObject(), req.body),
+    });
+}
+
+/**
  * Creates a history "fields" object from a created object.
- * All fields that start with _ or is "id" will be omitted.
+ * All fields that start with _ or is "id"/"history" will be omitted.
  * This will simply map all key value pairs to "keys" and "newValue".
  *
  * @param {object} data Data object
@@ -82,7 +110,7 @@ function objectToHistoryObject(data) {
         oldValue: null,
         newValue: value,
     }));
-    return parsedFields.filter((f) => !f.key.startsWith('_') && f.key !== 'id');
+    return parsedFields.filter((f) => !f.key.startsWith('_') && f.key !== 'id' && f.key !== 'history');
 }
 
 /**
@@ -110,8 +138,8 @@ function getDiff(prevData, data) {
 
 /**
  * Parses a multipart form club upload and returns the data in a callback function
- * @param {import('express').Request} req The Express request object
- * @param {import('express').Response} res The Express response object
+ * @param {Request} req The Express request object
+ * @param {Response} res The Express response object
  * @param {Function} callback Callback function to run after parsing the form, passes in the club object as a parameter
  */
 async function parseForm(req, res, callback) {
@@ -163,4 +191,4 @@ function genState() {
     return crypto.randomBytes(16).toString('hex');
 }
 
-module.exports = { checkEnv, sendError, newId, objectToHistoryObject, getDiff, parseForm, getIp, getEditor, genState };
+module.exports = { checkEnv, sendError, newId, createNewHistory, parseForm, getIp, getEditor, genState };

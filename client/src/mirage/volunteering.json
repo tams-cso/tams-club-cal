@@ -1,6 +1,5 @@
 [
     {
-        "_id": "6046996d295abf60ec8cbdf5",
         "id": "ec208ec3-17fc-4225-ac64-e447841d43b2",
         "name": "Arts to Hearts",
         "club": "pROfiLE",
@@ -9,7 +8,6 @@
         "signupTime": ""
     },
     {
-        "_id": "6046998d295abf60ec8cbdf9",
         "id": "39b41bb9-9f9a-42b5-b3ab-8dba1d8a62bb",
         "name": "Connecting Us Everywhere",
         "club": "TAMS Linguistic Society",
@@ -18,7 +16,6 @@
         "signupTime": ""
     },
     {
-        "_id": "604699c0295abf60ec8cbdfe",
         "id": "6fb4c917-e88b-4b6a-95c6-8a5604ffc0bc",
         "name": "Denton Nursing Home",
         "club": "HOPExTMS",
@@ -28,7 +25,6 @@
         "signupTime": ""
     },
     {
-        "_id": "604699e4295abf60ec8cbe02",
         "id": "1ce5e9c5-2c0d-41b7-8e15-544460ec8231",
         "name": "Denton Tutoring",
         "club": "TAS",
@@ -37,7 +33,6 @@
         "signupTime": ""
     },
     {
-        "_id": "60469a2b295abf60ec8cbe0a",
         "id": "15b3cc9c-17b2-470f-9198-a253cb62c250",
         "name": "Driving Tomorrow Clothing Drive",
         "club": "Driving Tomorrow",
@@ -46,7 +41,6 @@
         "signupTime": ""
     },
     {
-        "_id": "60469a9c295abf60ec8cbe17",
         "id": "9752bfbd-ab20-4549-8b2f-0d3ceeaca253",
         "name": "Elm Fork",
         "club": "HOPE",

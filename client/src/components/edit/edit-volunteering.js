@@ -6,20 +6,19 @@ import Cookies from 'universal-cookie';
 import { openPopup } from '../../redux/actions';
 import { getParams, redirect } from '../../functions/util';
 import { Filters, Volunteering } from '../../functions/entries';
-import { getVolunteering, postVolunteering } from '../../functions/api';
+import { getVolunteering, postVolunteering, putVolunteering } from '../../functions/api';
 
 import { Controller } from 'react-hook-form';
 import Typography from '@material-ui/core/Typography';
-import Button from '@material-ui/core/Button';
 import Hidden from '@material-ui/core/Hidden';
 import Box from '@material-ui/core/Box';
 import Switch from '@material-ui/core/Switch';
 import FormControlLabel from '@material-ui/core/FormControlLabel';
-import Checkbox from '@material-ui/core/Checkbox';
 import ControlledTextField from './util/controlled-text-field';
 import UploadBackdrop from './util/upload-backdrop';
 import Loading from '../shared/loading';
 import TwoButtonBox from './util/two-button-box';
+import ControlledFilterCheckbox from './volunteering-utils/controlled-filter-checkbox';
 
 const useStyles = makeStyles((theme) => ({
     title: {
@@ -28,6 +27,9 @@ const useStyles = makeStyles((theme) => ({
     },
     form: {
         padding: 24,
+        [theme.breakpoints.down('sm')]: {
+            padding: 12,
+        },
     },
     boxWrapper: {
         marginBottom: 16,
@@ -47,29 +49,14 @@ const useStyles = makeStyles((theme) => ({
             marginRight: 16,
         },
     },
-    check: {
-        alignSelf: 'flex-start',
-        [theme.breakpoints.up('md')]: {
-            marginLeft: 8,
-            marginTop: 6,
-        },
-    },
     spacer: {
         width: 20,
         [theme.breakpoints.down('sm')]: {
             height: 16,
         },
     },
-    submit: {
-        margin: 'auto',
-        display: 'block',
-    },
-    backdrop: {
-        zIndex: theme.zIndex.drawer + 1,
-        color: '#fff',
-    },
-    uploading: {
-        marginRight: 12,
+    area: {
+        marginTop: 12,
     },
 }));
 
@@ -79,13 +66,7 @@ const EditVolunteering = () => {
     const [backdrop, setBackdrop] = useState(false);
     const dispatch = useDispatch();
     const classes = useStyles();
-    const {
-        register,
-        handleSubmit,
-        control,
-        setValue,
-        formState: { errors },
-    } = useForm();
+    const { handleSubmit, control, setValue } = useForm();
 
     useEffect(async () => {
         // Extract ID from url search params
@@ -101,36 +82,34 @@ const EditVolunteering = () => {
         } else setVolunteering(new Volunteering());
     }, []);
 
+    useEffect(() => {
+        if (!volunteering) return;
+        setValue('open', volunteering.filters.open);
+    }, [volunteering]);
+
     const onSubmit = async (data) => {
         if (!('name' in data)) return;
         const cookies = new Cookies();
-        if (id === null) {
-            const newVolunteering = new Volunteering(
-                null,
-                data.name,
-                data.club,
-                data.description || '',
-                new Filters(
-                    data.limited || false,
-                    data.semester || false,
-                    data.setTimes || false,
-                    data.weekly || false,
-                    data.open === 'open' || false
-                )
-            );
 
-            setBackdrop(true);
-            const res = await postVolunteering(newVolunteering);
-            setBackdrop(false);
+        const newVolunteering = new Volunteering(
+            id,
+            data.name,
+            data.club,
+            data.description,
+            new Filters(data.limited, data.semester, data.setTimes, data.weekly, data.open === 'open'),
+            volunteering.history
+        );
 
-            if (res.status === 200) {
-                redirect('/');
-                cookies.set('success', 'add-volunteering', { sameSite: 'strict', path: '/' });
-            } else dispatch(openPopup('Unable to upload data. Please refresh the page or try again.', 4));
-        }
+        setBackdrop(true);
+        const res = id === null ? await postVolunteering(newVolunteering) : await putVolunteering(newVolunteering, id);
+        if (res.status === 200) {
+            cookies.set('success', id ? 'update-volunteering' : 'add-volunteering', { sameSite: 'strict', path: '/' });
+            back();
+        } else dispatch(openPopup('Unable to upload data. Please refresh the page or try again.', 4));
+        setBackdrop(false);
     };
 
-    const onCancel = () => {
+    const back = () => {
         redirect(`/volunteering${id ? `?id=${id}` : ''}`);
     };
 
@@ -151,7 +130,16 @@ const EditVolunteering = () => {
                             <FormControlLabel
                                 label="Open"
                                 labelPlacement="start"
-                                control={<Switch color="primary" value={value} onChange={onChange} onBlur={onBlur} />}
+                                control={
+                                    <Switch
+                                        color="primary"
+                                        value={value}
+                                        onChange={onChange}
+                                        onBlur={onBlur}
+                                        checked={value}
+                                        defaultChecked={volunteering.filters.open}
+                                    />
+                                }
                             />
                         )}
                     />
@@ -184,45 +172,33 @@ const EditVolunteering = () => {
                 <Hidden smDown>
                     <Typography className={classes.filtersTitle}>Filters:</Typography>
                 </Hidden>
-                <Controller
+                <ControlledFilterCheckbox
                     control={control}
+                    setValue={setValue}
                     name="limited"
-                    render={({ field: { onChange, onBlur, value } }) => (
-                        <FormControlLabel
-                            control={<Checkbox onChange={onChange} onBlur={onBlur} checked={value} />}
-                            label="Limited Slots"
-                        />
-                    )}
+                    label="Limited Slots"
+                    value={volunteering.filters.limited}
                 />
-                <Controller
+                <ControlledFilterCheckbox
                     control={control}
+                    setValue={setValue}
                     name="semester"
-                    render={({ field: { onChange, onBlur, value } }) => (
-                        <FormControlLabel
-                            control={<Checkbox onChange={onChange} onBlur={onBlur} checked={value} />}
-                            label="Semester Long Committment"
-                        />
-                    )}
+                    label="Semester Long Committment"
+                    value={volunteering.filters.semester}
                 />
-                <Controller
+                <ControlledFilterCheckbox
                     control={control}
+                    setValue={setValue}
                     name="setTimes"
-                    render={({ field: { onChange, onBlur, value } }) => (
-                        <FormControlLabel
-                            control={<Checkbox onChange={onChange} onBlur={onBlur} checked={value} />}
-                            label="Set Time Slots"
-                        />
-                    )}
+                    label="Set Time Slots"
+                    value={volunteering.filters.setTimes}
                 />
-                <Controller
+                <ControlledFilterCheckbox
                     control={control}
+                    setValue={setValue}
                     name="weekly"
-                    render={({ field: { onChange, onBlur, value } }) => (
-                        <FormControlLabel
-                            control={<Checkbox onChange={onChange} onBlur={onBlur} checked={value} />}
-                            label="Weekly Volunteering"
-                        />
-                    )}
+                    label="Repeats Weekly"
+                    value={volunteering.filters.weekly}
                 />
                 <ControlledTextField
                     control={control}
@@ -232,8 +208,9 @@ const EditVolunteering = () => {
                     name="description"
                     variant="outlined"
                     area
+                    className={classes.area}
                 />
-                <TwoButtonBox success="Submit" onCancel={onCancel} onSuccess={onSubmit} submit right />
+                <TwoButtonBox success="Submit" onCancel={back} onSuccess={onSubmit} submit right />
             </form>
         </React.Fragment>
     );

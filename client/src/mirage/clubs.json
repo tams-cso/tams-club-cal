@@ -1,6 +1,5 @@
 [
     {
-        "_id": "604086f4834fbb19e9aea92f",
         "id": "f3bd55e7-ebe1-4c6c-89ec-06bc6cd2992e",
         "name": "Computer Science Organization (CSO)",
         "advised": true,
@@ -89,7 +88,6 @@
         ]
     },
     {
-        "_id": "604086f6834fbb19e9aea934",
         "id": "2b14d749-029b-411e-8966-b38327b045c3",
         "name": "Helping Other People Everywhere (HOPE)",
         "advised": true,
@@ -231,7 +229,6 @@
         ]
     },
     {
-        "_id": "6045ba06aea45a5d1ac3cf1f",
         "id": "a86fafb2-fc75-4406-819e-46fa4bd57a76",
         "name": "Ballot",
         "advised": true,
@@ -274,7 +271,6 @@
         "committees": []
     },
     {
-        "_id": "60cbe6940bad1d6497e02098",
         "id": "6ebe634e-69cb-4df8-a536-3ddb25aedc81",
         "name": "TAMS Culinary Society (TCS)",
         "advised": false,

@@ -13,6 +13,8 @@ const { checkEnv, sendError } = require('./functions/util');
 // Import routers
 const authRouter = require('./routes/authRouter');
 const eventsRouter = require('./routes/eventsRouter');
+const clubsRouter = require('./routes/clubsRouter');
+const volunteeringRouter = require('./routes/volunteeringRouter');
 
 // Check for the correct environmental variables
 checkEnv();
@@ -64,6 +66,8 @@ app.get('/', (req, res, next) => {
 // API main routes
 app.use('/auth', authRouter);
 app.use('/events', eventsRouter);
+app.use('/clubs', clubsRouter);
+app.use('/volunteering', volunteeringRouter);
 
 // Start express server
 app.listen(process.env.PORT | 5000, () => console.log(`Listening on port ${process.env.PORT | 5000}`));

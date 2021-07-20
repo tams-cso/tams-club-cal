@@ -37,7 +37,7 @@ async function getRequest(url, auth = false) {
  * @param {boolean} [auth] True if adding token
  * @returns {Promise<FetchResponse>} Will return the object or error object
  */
-async function postRequest(url, body, json = true, auth = false) {
+async function postRequest(url, body, json = true, auth = true) {
     try {
         const options = { method: 'POST', body: JSON.stringify(body), headers: createHeaders(auth, json) };
 
@@ -59,7 +59,7 @@ async function postRequest(url, body, json = true, auth = false) {
  * @param {boolean} [auth] True if adding token
  * @returns {Promise<FetchResponse>} Will return the object or error object
  */
-async function putRequest(url, body, json = true, auth = false) {
+async function putRequest(url, body, json = true, auth = true) {
     try {
         const options = { method: 'PUT', body: JSON.stringify(body), headers: createHeaders(auth, json) };
 
@@ -116,18 +116,18 @@ export async function getEvent(id) {
  * @returns {Promise<FetchResponse>} Will return the response or error object
  */
 export async function postEvent(event) {
-    return postRequest('/events', event, true, true);
+    return postRequest('/events', event);
 }
 
 /**
  * Updates an event
  *
- * @param {*} event Event object
- * @param {*} id ID of the event to update
+ * @param {Event} event Event object
+ * @param {string} id ID of the event to update
  * @returns {Promise<FetchResponse>} Will return the response or error object
  */
 export async function putEvent(event, id) {
-    return putRequest(`/events/${id}`, event, true, true);
+    return putRequest(`/events/${id}`, event);
 }
 
 /* ########## CLUBS API ########### */
@@ -162,7 +162,25 @@ export async function postClub(club, images) {
     images.profilePictures.forEach((p, i) => {
         data.append(`exec${i}`, p);
     });
-    return postRequest('/clubs', data, false, true);
+    return postRequest('/clubs', data, false);
+}
+
+/**
+ * Updates a club
+ *
+ * @param {Club} club Club object
+ * @param {ClubImageBlobs} images Club image blobs object
+ * @param {string} id ID of the club to update
+ * @returns {Promise<FetchResponse>} Will return the response or error object
+ */
+export async function putClub(club, images, id) {
+    const data = new FormData();
+    data.append('data', JSON.stringify(club));
+    data.append('cover', images.coverPhoto);
+    images.profilePictures.forEach((p, i) => {
+        data.append(`exec${i}`, p);
+    });
+    return putRequest(`/club/${id}`, data, false);
 }
 
 /* ########## VOLUNTEERING API ########### */
@@ -190,7 +208,18 @@ export async function getVolunteering(id) {
  * @returns {Promise<FetchResponse>} Will return the response or error object
  */
 export async function postVolunteering(volunteering) {
-    return postRequest(`/volunteering`, volunteering, true, true);
+    return postRequest(`/volunteering`, volunteering);
+}
+
+/**
+ * Updates a volunteering opportunity
+ *
+ * @param {Volunteering} volunteering Volunteering object
+ * @param {string} id ID of the volunteering opportunity to update
+ * @returns {Promise<FetchResponse>} Will return the response or error object
+ */
+export async function putVolunteering(volunteering, id) {
+    return putRequest(`/volunteering/${id}`, volunteering);
 }
 
 /* ########## MISC API ########### */
@@ -202,7 +231,7 @@ export async function postVolunteering(volunteering) {
  * @returns {Promise<FetchResponse>} Will return the response or error object
  */
 export async function postFeedback(feedback) {
-    return postRequest('/feedback', feedback);
+    return postRequest('/feedback', feedback, true, false);
 }
 
 /**
@@ -219,7 +248,7 @@ export async function getIp() {
  * @returns {Promise<FetchResponse>} Will return the object or error object
  */
 export async function getLoggedIn(token) {
-    return postRequest('/auth', { token });
+    return postRequest('/auth', { token }, true, false);
 }
 
 /**

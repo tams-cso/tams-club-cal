@@ -26,16 +26,16 @@ const useStyles = makeStyles((theme) => ({
         textAlign: 'center',
         fontSize: '3rem',
     },
-    subtitle: {
-        paddingTop: 24,
-        textAlign: 'center',
-        fontSize: '2rem',
-    },
     form: {
         padding: 24,
         [theme.breakpoints.down('sm')]: {
             padding: 12,
         },
+    },
+    subtitle: {
+        paddingTop: 24,
+        textAlign: 'center',
+        fontSize: '2rem',
     },
     boxWrapper: {
         marginBottom: 16,
@@ -47,22 +47,11 @@ const useStyles = makeStyles((theme) => ({
     type: {
         height: 56,
     },
-    check: {
-        alignSelf: 'flex-start',
-        [theme.breakpoints.up('md')]: {
-            marginLeft: 8,
-            marginTop: 6,
-        },
-    },
     spacer: {
         width: 20,
         [theme.breakpoints.down('sm')]: {
             height: 16,
         },
-    },
-    submit: {
-        margin: 'auto',
-        display: 'block',
     },
 }));
 

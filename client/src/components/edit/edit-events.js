@@ -30,6 +30,9 @@ const useStyles = makeStyles((theme) => ({
     },
     form: {
         padding: 24,
+        [theme.breakpoints.down('sm')]: {
+            padding: 12,
+        }
     },
     boxWrapper: {
         marginBottom: 16,
@@ -53,10 +56,6 @@ const useStyles = makeStyles((theme) => ({
         [theme.breakpoints.down('sm')]: {
             height: 16,
         },
-    },
-    submit: {
-        margin: 'auto',
-        display: 'block',
     },
 }));
 
@@ -143,12 +142,12 @@ const EditEvents = () => {
             const updatedEvent = new Event(
                 id,
                 event.eventId,
-                data.type || event.type,
-                data.name || event.name,
-                data.club || event.club,
-                data.description || event.description,
-                startTime || event.start,
-                endTime || event.end,
+                data.type,
+                data.name,
+                data.club,
+                data.description,
+                startTime,
+                endTime,
                 event.history
             );
 

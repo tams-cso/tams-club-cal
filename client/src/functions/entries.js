@@ -13,15 +13,15 @@
  */
 export class Event {
     constructor(id, eventId, type, name, club, description, start, end, history) {
-        this.id = id || '';
-        this.eventId = eventId || '';
+        this.id = id || null;
+        this.eventId = eventId || null;
         this.type = type || 'event';
-        this.name = name || '';
-        this.club = club || '';
+        this.name = name || null;
+        this.club = club || null;
         this.description = description || '';
-        this.start = start || null;
-        this.end = end || null;
-        this.history = history || [];
+        this.start = start || 0;
+        this.end = end || 0;
+        this.history = history || null;
     }
 }
 
@@ -50,7 +50,7 @@ export class Club {
         this.coverImg = coverImg || '';
         this.execs = execs || [];
         this.committees = committees || [];
-        this.history = history || [];
+        this.history = history || null;
     }
 }
 
@@ -113,12 +113,12 @@ export class ClubImageBlobs {
  */
 export class Volunteering {
     constructor(id, name, club, description, filters, history) {
-        this.id = id || '';
-        this.name = name || '';
-        this.club = club || '';
+        this.id = id || null;
+        this.name = name || null;
+        this.club = club || null;
         this.description = description || '';
         this.filters = filters || new Filters();
-        this.history = history || [];
+        this.history = history || null;
     }
 }
 
@@ -151,7 +151,7 @@ export class Filters {
  */
 export class Feedback {
     constructor(feedback, name, time) {
-        this.id = id || '';
+        this.id = id || null;
         this.feedback = feedback || '';
         this.name = name || '';
         this.time = time || new Date().valueOf();

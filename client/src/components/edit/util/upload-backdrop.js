@@ -26,7 +26,7 @@ const UploadBackdrop = (props) => {
     return (
         <Backdrop open={props.open} className={classes.root}>
             <Typography variant="h1" className={classes.uploading}>
-                Uploading club...
+                Uploading...
             </Typography>
             <CircularProgress color="inherit" />
         </Backdrop>
