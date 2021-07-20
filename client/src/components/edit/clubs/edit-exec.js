@@ -5,9 +5,9 @@ import { Committee } from '../../../functions/entries';
 import ListItem from '@material-ui/core/ListItem';
 import Box from '@material-ui/core/Box';
 import Card from '@material-ui/core/Card';
-import TrashCan from '../util/trash-can';
-import ControlledTextField from '../util/controlled-text-field';
 import ImageUpload from './image-upload';
+import TrashCan from './trash-can';
+import ControlledTextField from '../shared/controlled-text-field';
 
 const useStyles = makeStyles((theme) => ({
     root: {

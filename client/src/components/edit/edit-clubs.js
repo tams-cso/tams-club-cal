@@ -11,15 +11,15 @@ import { getClub, postClub } from '../../functions/api';
 import Typography from '@material-ui/core/Typography';
 import Box from '@material-ui/core/Box';
 import MenuItem from '@material-ui/core/MenuItem';
-import LinkInputList from './util/link-input-list';
-import EditCommitteeList from './club-utils/edit-committee-list';
-import ControlledTextField from './util/controlled-text-field';
-import ControlledSelect from './util/controlled-select';
+import LinkInputList from './clubs/link-input-list';
+import EditCommitteeList from './clubs/edit-committee-list';
+import ControlledTextField from './shared/controlled-text-field';
+import ControlledSelect from './shared/controlled-select';
 import Loading from '../shared/loading';
-import UploadBackdrop from './util/upload-backdrop';
-import ImageUpload from './club-utils/image-upload';
-import EditExecList from './club-utils/edit-exec-list';
-import TwoButtonBox from './util/two-button-box';
+import UploadBackdrop from './shared/upload-backdrop';
+import ImageUpload from './clubs/image-upload';
+import EditExecList from './clubs/edit-exec-list';
+import TwoButtonBox from './shared/two-button-box';
 
 const useStyles = makeStyles((theme) => ({
     title: {

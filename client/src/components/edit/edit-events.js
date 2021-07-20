@@ -11,17 +11,16 @@ import { getEvent, postEvent, putEvent } from '../../functions/api';
 
 import { Controller } from 'react-hook-form';
 import Typography from '@material-ui/core/Typography';
-import Button from '@material-ui/core/Button';
-import DateTimeInput from './util/date-time-input';
+import DateTimeInput from './events/date-time-input';
 import Box from '@material-ui/core/Box';
 import MenuItem from '@material-ui/core/MenuItem';
 import FormControlLabel from '@material-ui/core/FormControlLabel';
 import Checkbox from '@material-ui/core/Checkbox';
-import ControlledTextField from './util/controlled-text-field';
-import ControlledSelect from './util/controlled-select';
-import UploadBackdrop from './util/upload-backdrop';
+import ControlledTextField from './shared/controlled-text-field';
+import ControlledSelect from './shared/controlled-select';
+import UploadBackdrop from './shared/upload-backdrop';
 import Loading from '../shared/loading';
-import TwoButtonBox from './util/two-button-box';
+import TwoButtonBox from './shared/two-button-box';
 
 const useStyles = makeStyles((theme) => ({
     title: {

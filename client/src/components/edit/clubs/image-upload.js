@@ -10,7 +10,7 @@ import Typography from '@material-ui/core/Typography';
 import ReactCrop from 'react-image-crop';
 import 'react-image-crop/dist/ReactCrop.css';
 import Image from '../../shared/image';
-import TwoButtonBox from '../util/two-button-box';
+import TwoButtonBox from '../shared/two-button-box';
 
 const useStyles = makeStyles((theme) => ({
     root: {

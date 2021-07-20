@@ -2,9 +2,8 @@ import React, { useEffect, useState } from 'react';
 import { makeStyles } from '@material-ui/core';
 
 import ListItem from '@material-ui/core/ListItem';
-import TextField from '@material-ui/core/TextField';
 import TrashCan from './trash-can';
-import ControlledTextField from './controlled-text-field';
+import ControlledTextField from '../shared/controlled-text-field';
 
 const useStyles = makeStyles({
     root: {

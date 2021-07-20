@@ -14,11 +14,11 @@ import Hidden from '@material-ui/core/Hidden';
 import Box from '@material-ui/core/Box';
 import Switch from '@material-ui/core/Switch';
 import FormControlLabel from '@material-ui/core/FormControlLabel';
-import ControlledTextField from './util/controlled-text-field';
-import UploadBackdrop from './util/upload-backdrop';
+import ControlledTextField from './shared/controlled-text-field';
+import UploadBackdrop from './shared/upload-backdrop';
 import Loading from '../shared/loading';
-import TwoButtonBox from './util/two-button-box';
-import ControlledFilterCheckbox from './volunteering-utils/controlled-filter-checkbox';
+import TwoButtonBox from './shared/two-button-box';
+import ControlledFilterCheckbox from './volunteering/controlled-filter-checkbox';
 
 const useStyles = makeStyles((theme) => ({
     title: {
