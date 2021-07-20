@@ -24,10 +24,11 @@
     },
     "scripts": {
         "start": "react-scripts start",
+        "start:backend": "REACT_APP_BACKEND=localhost react-scripts start",
         "build": "react-scripts build",
+        "build:staging": "REACT_APP_BACKEND=staging react-scripts build",
         "test": "react-scripts test",
         "eject": "react-scripts eject",
-        "start-with-backend": "REACT_APP_BACKEND=localhost react-scripts start",
         "format": "prettier --config ../.prettierrc --write ."
     },
     "browserslist": {

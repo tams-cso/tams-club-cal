@@ -3,7 +3,9 @@ import Cookies from 'universal-cookie';
 
 const BACKEND_URL =
     process.env.NODE_ENV === 'production'
-        ? 'https://api.tams.club'
+        ? process.env.REACT_APP_BACKEND === 'staging'
+            ? 'https://dev.tams.club'
+            : 'https://api.tams.club'
         : process.env.REACT_APP_BACKEND === 'localhost'
         ? 'http://localhost:5000'
         : '';
@@ -57,7 +59,7 @@ async function postRequest(url, body, json = true, auth = false) {
  * @param {boolean} [auth] True if adding token
  * @returns {Promise<FetchResponse>} Will return the object or error object
  */
- async function putRequest(url, body, json = true, auth = false) {
+async function putRequest(url, body, json = true, auth = false) {
     try {
         const options = { method: 'PUT', body: JSON.stringify(body), headers: createHeaders(auth, json) };
 
@@ -119,7 +121,7 @@ export async function postEvent(event) {
 
 /**
  * Updates an event
- * 
+ *
  * @param {*} event Event object
  * @param {*} id ID of the event to update
  * @returns {Promise<FetchResponse>} Will return the response or error object
