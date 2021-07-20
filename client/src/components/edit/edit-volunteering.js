@@ -114,7 +114,7 @@ const EditVolunteering = () => {
     };
 
     return volunteering === null ? (
-        <Loading />
+        <Loading flat />
     ) : (
         <React.Fragment>
             <UploadBackdrop open={backdrop} />

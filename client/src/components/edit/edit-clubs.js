@@ -145,7 +145,7 @@ const EditClubs = () => {
     };
 
     return club === null ? (
-        <Loading />
+        <Loading flat />
     ) : (
         <React.Fragment>
             <UploadBackdrop open={backdrop} />

@@ -25,12 +25,13 @@ const useStyles = makeStyles((theme) => ({
  * @param {object} props React props object
  * @param {boolean} props.error If true, shows error message
  * @param {string} props.children The error message
+ * @param {boolean} [props.flat] True for no elevation
  */
 const Loading = (props) => {
     const classes = useStyles();
     return (
         <Container>
-            <Card elevation={2} className={classes.card}>
+            <Card elevation={props.flat ? 0 : 2} className={classes.card}>
                 {props.error ? (
                     <React.Fragment>
                         <Typography variant="h1" className={classes.text}>

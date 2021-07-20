@@ -166,7 +166,7 @@ const EditEvents = () => {
     };
 
     return event === null ? (
-        <Loading />
+        <Loading flat />
     ) : (
         <React.Fragment>
             <UploadBackdrop open={backdrop} />
