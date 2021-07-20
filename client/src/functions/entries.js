@@ -19,8 +19,8 @@ export class Event {
         this.name = name || '';
         this.club = club || '';
         this.description = description || '';
-        this.start = start || '';
-        this.end = end || '';
+        this.start = start || null;
+        this.end = end || null;
         this.history = history || [];
     }
 }

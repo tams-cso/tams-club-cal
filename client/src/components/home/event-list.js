@@ -36,7 +36,7 @@ const EventList = () => {
             );
             return;
         }
-        dispatch(setEventList(events.data));
+        dispatch(setEventList(events.data.sort((a, b) => a.start - b.start)));
     }, []);
 
     useEffect(() => {

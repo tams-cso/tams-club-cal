@@ -3,6 +3,7 @@ import { useDispatch } from 'react-redux';
 import { makeStyles } from '@material-ui/core';
 import { useForm } from 'react-hook-form';
 import Cookies from 'universal-cookie';
+import dayjs from 'dayjs';
 import { openPopup } from '../../redux/actions';
 import { dateToMillis, getParams, redirect } from '../../functions/util';
 import { Event } from '../../functions/entries';
@@ -63,9 +64,18 @@ const EditEvents = () => {
     const [id, setId] = useState(null);
     const [event, setEvent] = useState(null);
     const [backdrop, setBackdrop] = useState(false);
+    const [prevStart, setPrevStart] = useState(null);
     const dispatch = useDispatch();
     const classes = useStyles();
-    const { handleSubmit, setError, clearErrors, setValue, watch, control } = useForm();
+    const {
+        handleSubmit,
+        setError,
+        clearErrors,
+        setValue,
+        watch,
+        control,
+        formState: { errors },
+    } = useForm();
     const watchStart = watch('start');
     const watchEnd = watch('end');
     const watchNoEnd = watch('noEnd');
@@ -85,11 +95,24 @@ const EditEvents = () => {
     }, []);
 
     useEffect(() => {
-        // TODO: Keep interval the same when changing start time
+        // Set starting time
+        if (!event) return;
+        if (event.start) setPrevStart(event.start);
+        else setPrevStart(dayjs().startOf('hour').add(1, 'hour').valueOf());
+    }, [event]);
+
+    useEffect(() => {
+        if (watchEnd === undefined || errors.end) return;
+        const diff = watchEnd.valueOf() - prevStart;
+        setValue('end', dayjs(watchStart.valueOf() + diff));
+        setPrevStart(watchStart.valueOf());
+    }, [watchStart]);
+
+    useEffect(() => {
         if (watchEnd === undefined || watchNoEnd) return;
         if (watchEnd.isBefore(watchStart)) setError('end');
         else clearErrors('end');
-    }, [watchStart, watchEnd]);
+    }, [watchEnd]);
 
     const onSubmit = async (data) => {
         if (!('name' in data)) return;
@@ -192,15 +215,23 @@ const EditEvents = () => {
                     />
                     <div className={classes.spacer} />
                     <DateTimeInput
+                        control={control}
                         name="start"
                         label={watchNoEnd ? 'Date/time' : 'Start date/time'}
-                        control={control}
-                        required={true}
+                        value={event.start}
+                        required
                     />
                     {watchNoEnd ? null : (
                         <React.Fragment>
                             <div className={classes.spacer} />
-                            <DateTimeInput name="end" label="End date/time" control={control} required={true} end />
+                            <DateTimeInput
+                                name="end"
+                                label="End date/time"
+                                control={control}
+                                value={event.end}
+                                required
+                                end
+                            />
                         </React.Fragment>
                     )}
                     <Controller

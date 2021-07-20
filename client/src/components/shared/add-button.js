@@ -6,13 +6,14 @@ import AddIcon from '@material-ui/icons/Add';
 import EditIcon from '@material-ui/icons/Edit';
 import { makeStyles } from '@material-ui/core';
 
-const useStyles = makeStyles({
+const useStyles = makeStyles((theme) => ({
     root: {
         position: 'fixed',
         bottom: 36,
         right: 36,
+        zIndex: theme.zIndex.appBar + 1,
     },
-});
+}));
 
 /**
  * Shows a floating action button
