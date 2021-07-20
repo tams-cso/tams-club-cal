@@ -6,7 +6,7 @@ import DayjsUtils from '@date-io/dayjs';
 
 import { MuiPickersUtilsProvider } from '@material-ui/pickers';
 import CssBaseline from '@material-ui/core/CssBaseline';
-import Popup from './components/popup/popup';
+import Popup from './components/shared/popup';
 import Menu from './components/menu/menu';
 import Home from './components/home/home';
 import About from './components/about/about';
