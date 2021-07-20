@@ -22,6 +22,8 @@ const useStyles = makeStyles({
  */
 const GoogleLoginButton = (props) => {
     const classes = useStyles({ hidden: props.hidden });
+    const backend =
+        process.env.NODE_ENV !== 'production' ? 'http://localhost:5000/auth/login' : 'https://api.tams.club/auth/login';
     return (
         <React.Fragment>
             <div
@@ -29,7 +31,7 @@ const GoogleLoginButton = (props) => {
                 data-client_id="629507270355-bgs4cj26r91979g5of4ko4j8opd2jsvk.apps.googleusercontent.com"
                 data-context="signin"
                 data-ux_mode="redirect"
-                data-login_uri="http://localhost:5000/auth/login"
+                data-login_uri={backend}
             ></div>
             <Button
                 disabled={props.disabled || false}

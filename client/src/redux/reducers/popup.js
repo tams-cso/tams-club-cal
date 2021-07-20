@@ -1,4 +1,11 @@
-import { OPEN_POPUP, RESET_POPUP_STATE, SET_MESSAGE, SET_OPEN, SET_SEVERITY } from '../actionTypes';
+import {
+    OPEN_CONNECTION_POPUP,
+    OPEN_POPUP,
+    RESET_POPUP_STATE,
+    SET_MESSAGE,
+    SET_OPEN,
+    SET_SEVERITY,
+} from '../actionTypes';
 
 const initialState = {
     open: false,
@@ -39,6 +46,14 @@ export default function data(state = initialState, action) {
                 open: true,
                 message,
                 severity,
+            };
+        }
+        case OPEN_CONNECTION_POPUP: {
+            return {
+                ...state,
+                open: true,
+                message: 'Could not connect to the server. Please check your connection and refresh the page.',
+                severity: 4,
             };
         }
         default:

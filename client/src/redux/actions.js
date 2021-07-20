@@ -8,6 +8,7 @@ import {
     SET_MESSAGE,
     SET_SEVERITY,
     OPEN_POPUP,
+    OPEN_CONNECTION_POPUP,
 } from './actionTypes';
 
 export const resetDataState = () => ({
@@ -52,4 +53,8 @@ export const setPopupSeverity = (severity) => ({
 export const openPopup = (message, severity) => ({
     type: OPEN_POPUP,
     payload: { message, severity },
+});
+
+export const openConnectionErrorPopup = () => ({
+    type: OPEN_CONNECTION_POPUP,
 });

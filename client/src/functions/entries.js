@@ -9,9 +9,10 @@
  * @param {string} [description] The description of the event
  * @param {Number} [start] The time in UTC milliseconds that the event starts
  * @param {Number} [end] The time in UTC milliseconds that the event ends
+ * @param {string[]} [history] Edit history list
  */
 export class Event {
-    constructor(id, eventId, type, name, description, club, start, end) {
+    constructor(id, eventId, type, name, club, description, start, end, history) {
         this.id = id || '';
         this.eventId = eventId || '';
         this.type = type || 'event';
@@ -20,6 +21,7 @@ export class Event {
         this.description = description || '';
         this.start = start || '';
         this.end = end || '';
+        this.history = history || [];
     }
 }
 
@@ -35,9 +37,10 @@ export class Event {
  * @param {string} [coverImg] URL of the full-sized cover image
  * @param {Exec[]} [execs] Array of exec objects
  * @param {Committee[]} [committees] Array of committee objects
+ * @param {string[]} [history] Edit history list
  */
 export class Club {
-    constructor(id = null, name, advised, links, description, coverImgThumbnail, coverImg, execs, committees) {
+    constructor(id = null, name, advised, links, description, coverImgThumbnail, coverImg, execs, committees, history) {
         this.id = id || null;
         this.name = name || null;
         this.advised = advised || false;
@@ -47,6 +50,7 @@ export class Club {
         this.coverImg = coverImg || '';
         this.execs = execs || [];
         this.committees = committees || [];
+        this.history = history || [];
     }
 }
 
@@ -105,14 +109,16 @@ export class ClubImageBlobs {
  * @param {string} [club] The club name that is offering the volunteering opportunity
  * @param {string} [description] Description of the volunteering opportunity
  * @param {Filters} [filters] Object used for filtering volunteering opportunities
+ * @param {string[]} [history] Edit history list
  */
 export class Volunteering {
-    constructor(id, name, club, description, filters) {
+    constructor(id, name, club, description, filters, history) {
         this.id = id || '';
         this.name = name || '';
         this.club = club || '';
         this.description = description || '';
         this.filters = filters || new Filters();
+        this.history = history || [];
     }
 }
 
@@ -132,6 +138,23 @@ export class Filters {
         this.setTimes = setTimes || false;
         this.weekly = weekly || false;
         this.open = open || false;
+    }
+}
+
+/**
+ * An object containing a specific feedback object
+ * 
+ * @param {string} [id] The unique UUIDv4 for the feedback
+ * @param {string} [feedback] The actual feedback, as a string
+ * @param {String} [name] The name of the user who submitted the feedback (optional)
+ * @param {Number} [time] The time that the feedback was submitted
+ */
+export class Feedback {
+    constructor(feedback, name, time) {
+        this.id = id || '';
+        this.feedback = feedback || '';
+        this.name = name || '';
+        this.time = time || new Date().valueOf();
     }
 }
 

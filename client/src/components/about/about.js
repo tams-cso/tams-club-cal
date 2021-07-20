@@ -11,6 +11,7 @@ import SendIcon from '@material-ui/icons/Send';
 import Paragraph from '../shared/paragraph';
 import Image from '../shared/image';
 import data from '../../data.json';
+import { Feedback } from '../../functions/entries';
 
 const useStyles = makeStyles({
     root: {
@@ -64,11 +65,9 @@ const About = () => {
             return;
         }
 
-        const res = await postFeedback({
-            feedback: feedback.trim(),
-            name: name.trim(),
-        });
-        
+        const feedback = new Feedback(feedback.trim(), name.trim(), new Date().valueOf());
+        const res = await postFeedback(feedback);
+
         if (res.status == 200) {
             setFeedback('');
             setName('');
@@ -94,7 +93,7 @@ const About = () => {
                     onChange={handleChange}
                     className={classes.area}
                     error={error}
-                    helperText={error ? "Feedback cannot be empty" : ''}
+                    helperText={error ? 'Feedback cannot be empty' : ''}
                 ></TextField>
                 <Box className={classes.submitWrapper}>
                     <TextField

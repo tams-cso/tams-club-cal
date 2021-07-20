@@ -12,6 +12,7 @@ const { checkEnv, sendError } = require('./functions/util');
 
 // Import routers
 const authRouter = require('./routes/authRouter');
+const eventsRouter = require('./routes/eventsRouter');
 
 // Check for the correct environmental variables
 checkEnv();
@@ -38,7 +39,7 @@ app.use(function (req, res, next) {
     // Set this in the .env file as ORIGIN
     // This will return as an error if no origin in headers OR if the origin does not match the expected origin
     // The block will be skipped if no ORIGIN environmental variable is defined
-    if (process.env.ORIGIN !== undefined && req.path !== '/auth/login') {
+    if (process.env.NODE_ENV === 'production' && process.env.ORIGIN !== undefined && req.path !== '/auth/login') {
         if (req.headers.origin === undefined || req.headers.origin.indexOf(process.env.ORIGIN) === -1) {
             sendError(res, 403, 'Invalid request origin.');
             return;
@@ -62,6 +63,7 @@ app.get('/', (req, res, next) => {
 
 // API main routes
 app.use('/auth', authRouter);
+app.use('/events', eventsRouter);
 
 // Start express server
 app.listen(process.env.PORT | 5000, () => console.log(`Listening on port ${process.env.PORT | 5000}`));

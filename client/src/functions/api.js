@@ -1,4 +1,4 @@
-import { Club, ClubImageBlobs, Event, FetchResponse, Volunteering } from './entries';
+import { Club, ClubImageBlobs, Event, Feedback, FetchResponse, Volunteering } from './entries';
 import Cookies from 'universal-cookie';
 
 const BACKEND_URL =
@@ -37,7 +37,7 @@ async function getRequest(url, auth = false) {
  */
 async function postRequest(url, body, json = true, auth = false) {
     try {
-        const options = { method: 'POST', body, headers: createHeaders(auth, json) };
+        const options = { method: 'POST', body: JSON.stringify(body), headers: createHeaders(auth, json) };
 
         const res = await fetch(`${BACKEND_URL}${url}`, options);
         const data = await res.json();
@@ -163,13 +163,11 @@ export async function postVolunteering(volunteering) {
 /**
  * Submits a new feedback object.
  *
- * @param {object} feedbackObject Feedback object
- * @param {string} feedbackObject.feedback The feedback from the text area
- * @param {string} [feedbackObject.name] The name of the user who submitted the feedback
- * @returns {Promise<FetchResponse>} Will return the object or error object
+ * @param {Feedback} feedback Feedback object
+ * @returns {Promise<FetchResponse>} Will return the response or error object
  */
-export async function postFeedback(feedbackObject) {
-    return postRequest('/feedback', feedbackObject);
+export async function postFeedback(feedback) {
+    return postRequest('/feedback', feedback);
 }
 
 /**
@@ -195,7 +193,6 @@ export async function getLoggedIn(token) {
  * @returns {Promise<FetchResponse>} Will return the object or error object
  */
 export async function getUserInfo(token) {
-    // TODO: convert this token path to an Authorization Bearer header instead
     return getRequest(`/auth/user/${token}`);
 }
 

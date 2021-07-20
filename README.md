@@ -28,11 +28,9 @@ Create the environmental variable file at `server/.env`:
 MONGO_USER="[Username for cluster]"
 MONGO_PASS="[Password for cluster]"
 MONGO_URL="[Connection URL to the mongodb cluster (eg. "tams-cal-db-staging.7d0nz.mongodb.net")]"
-DROPBOX_TOKEN="[Token for dropbox app]"
 G_CLIENT_ID="[Google API OAuth 2.0 Client ID]"
 G_CLIENT_SECRET="[Google API OAuth 2.0 Client Secret]"
-CALENDAR_ID="[(optional) ID for Google Calendar if syncing]"
-API_KEY="[(optional) API key will be required for any calls if defined (see docs)]"
+CALENDAR_ID="[ID for Google Calendar for syncing]"
 ORIGIN="[(optional) Origin to allow requests from. This will *deny requests from other origins* (eg. "http://localhost:3000")]"
 PORT="[(optional) The port to start the server on]"
 ```

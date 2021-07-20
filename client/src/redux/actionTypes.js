@@ -9,3 +9,4 @@ export const SET_OPEN = '[Popup] Set open';
 export const SET_MESSAGE = '[Popup] Set message';
 export const SET_SEVERITY = '[Popup] Set severity';
 export const OPEN_POPUP = '[Popup] Open popup';
+export const OPEN_CONNECTION_POPUP = '[Popup] Open connection error popup';

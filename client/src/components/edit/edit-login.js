@@ -1,5 +1,6 @@
 import { Button, makeStyles } from '@material-ui/core';
 import React, { useEffect, useState } from 'react';
+import { useDispatch } from 'react-redux';
 import Cookies from 'universal-cookie';
 import { getIp, getLoggedIn, getUserInfo } from '../../functions/api';
 
@@ -7,6 +8,7 @@ import Box from '@material-ui/core/Box';
 import Typography from '@material-ui/core/Typography';
 import { darkSwitchGrey } from '../../functions/util';
 import GoogleLoginButton from './util/google-login-button';
+import { openConnectionErrorPopup } from '../../redux/actions';
 
 const useStyles = makeStyles((theme) => ({
     root: {
@@ -33,7 +35,7 @@ const useStyles = makeStyles((theme) => ({
         color: darkSwitchGrey(theme),
         [theme.breakpoints.down('sm')]: {
             paddingRight: 0,
-            textAlign: 'center'
+            textAlign: 'center',
         },
     },
     hidden: {
@@ -44,6 +46,7 @@ const useStyles = makeStyles((theme) => ({
 const EditLogin = () => {
     const [message, setMessage] = useState(null);
     const classes = useStyles();
+    const dispatch = useDispatch();
     const [showLogin, setShowLogin] = useState(false);
     const [showLogout, setShowLogout] = useState(false);
 
@@ -64,14 +67,22 @@ const EditLogin = () => {
             if (res.status === 200 && res.data.loggedIn) {
                 // If all is good, display the logged in prompt!
                 const userRes = await getUserInfo(token);
-                setShowLogout(true);
-                setMessage(`You are logged in as ${userRes.data.name}!`);
+                if (userRes.status === 200) {
+                    setShowLogout(true);
+                    setMessage(`You are logged in as ${userRes.data.name}!`);
+                } else {
+                    dispatch(openConnectionErrorPopup());
+                }
                 return;
             }
         }
         const ip = await getIp();
-        setMessage(`Edits will be made under your ip address [${ip.data.ip}].`);
-        setShowLogin(true);
+        if (ip.status === 200) {
+            setMessage(`Edits will be made under your ip address [${ip.data.ip}].`);
+            setShowLogin(true);
+        } else {
+            dispatch(openConnectionErrorPopup());
+        }
     }, []);
 
     return (

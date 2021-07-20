@@ -38,7 +38,6 @@ const TwoButtonBox = (props) => {
     return (
         <Box className={`${classes.root} ${props.className}`}>
             <Button
-                variant="standard"
                 color="inherit"
                 size="small"
                 onClick={props.onCancel}

@@ -1,7 +1,6 @@
-const fs = require('fs');
-const path = require('path');
 const formidable = require('formidable');
 const crypto = require('crypto');
+const uuid = require('uuid');
 
 const statusList = require('../files/status.json');
 const envList = require('../files/env.json');
@@ -39,18 +38,51 @@ function sendError(res, status, message) {
 }
 
 /**
- * Writes request to main log file
- *
- * @param {import("express").Request} req The express response object
+ * Creates and returns a new UUIDv4
+ * @returns {string} UUIDv4
  */
-function logRequest(req) {
-    var url = req.url;
-    const keyIndex = url.indexOf('?key=');
-    if (keyIndex !== -1) url = url.substring(0, keyIndex) + url.substring(keyIndex + 38, url.length);
-    const data = `${new Date().toISOString()} | ${getIp(req)} | ${req.method} ${url} | ${req.headers['user-agent']}\n`;
-    fs.appendFile(path.join(__dirname, 'logs', 'main.log'), data, (err) => {
-        if (err) console.dir(err);
-    });
+function newId() {
+    return uuid.v4();
+}
+
+/**
+ * Extracts the IP address from the header of the express request object
+ *
+ * @param {import('express').Request} req Express request object
+ * @returns {string} IP address of the user
+ */
+function getIp(req) {
+    return req.headers['x-real-ip'] || req.ip;
+}
+
+/**
+ * Creates the editor object, where it will first save the ID, and if not avaliable, then it
+ * will save the ip address of the client that edited the resource.
+ *
+ * @param {import('express').Request} req Express request object
+ * @returns {object} Returns { id, ip } with only one of them null, where id takes priority
+ */
+function getEditor(req) {
+    const authorization = req.headers['authorization'];
+    if (authorization) return { id: authorization.substring(7), ip: null };
+    else return { id: null, ip: getIp(req) };
+}
+
+/**
+ * Creates a history "fields" object from a created object.
+ * All fields that start with _ or is "id" will be omitted.
+ * This will simply map all key value pairs to "keys" and "newValue".
+ *
+ * @param {object} data Data object
+ * @returns {object} History object split into keys and "newValue". "oldValue" will simply be null
+ */
+function objectToHistoryObject(data) {
+    const parsedFields = Object.entries(data).map(([key, value]) => ({
+        key,
+        oldValue: null,
+        newValue: value,
+    }));
+    return parsedFields.filter((f) => !f.key.startsWith('_') && f.key !== 'id');
 }
 
 /**
@@ -100,16 +132,6 @@ async function hasOldPicture(oldId) {
 }
 
 /**
- * Extracts the IP address from the header of the express request object
- *
- * @param {import('express').Request} req Express request object
- * @returns {string} IP address of the user or
- */
-function getIp(req) {
-    return req.headers['x-real-ip'] || req.connection.remoteAddress;
-}
-
-/**
  * Generates a 16 byte hex state
  *
  * @returns {string} String representing the state
@@ -118,16 +140,4 @@ function genState() {
     return crypto.randomBytes(16).toString('hex');
 }
 
-/**
- * Will check to see if the email is a trusted email
- * Always returns true if TRUSTED environmental variable is not defined
- *
- * @param {string} email The email to check
- * @returns {boolean} True if the email is trusted
- */
-function isTrusted(email) {
-    if (process.env.TRUSTED === undefined) return true;
-    return process.env.TRUSTED.indexOf(email) !== -1;
-}
-
-module.exports = { checkEnv, sendError, logRequest, parseForm, getIp, genState, isTrusted };
+module.exports = { checkEnv, sendError, newId, objectToHistoryObject, parseForm, getIp, getEditor, genState };
