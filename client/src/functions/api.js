@@ -10,6 +10,11 @@ const BACKEND_URL =
         ? 'http://localhost:5000'
         : '';
 
+const CDN_URL =
+    process.env.REACT_APP_BACKEND === 'staging' || process.env.REACT_APP_BACKEND === 'localhost'
+        ? 'https://staging.cdn.tams.club'
+        : 'https://cdn.tams.club';
+
 /**
  * Performs a GET request to the given endpoint.
  *
@@ -39,7 +44,11 @@ async function getRequest(url, auth = false) {
  */
 async function postRequest(url, body, json = true, auth = true) {
     try {
-        const options = { method: 'POST', body: JSON.stringify(body), headers: createHeaders(auth, json) };
+        const options = {
+            method: 'POST',
+            body: json ? JSON.stringify(body) : body,
+            headers: createHeaders(auth, json),
+        };
 
         const res = await fetch(`${BACKEND_URL}${url}`, options);
         const data = await res.json();
@@ -61,7 +70,7 @@ async function postRequest(url, body, json = true, auth = true) {
  */
 async function putRequest(url, body, json = true, auth = true) {
     try {
-        const options = { method: 'PUT', body: JSON.stringify(body), headers: createHeaders(auth, json) };
+        const options = { method: 'PUT', body: json ? JSON.stringify(body) : body, headers: createHeaders(auth, json) };
 
         const res = await fetch(`${BACKEND_URL}${url}`, options);
         const data = await res.json();
@@ -153,14 +162,16 @@ export async function getClub(id) {
  *
  * @param {Club} club Club object
  * @param {ClubImageBlobs} images Club image blobs object
+ * @param {boolean[]} execPhotos True for the execs that have new images; should be same length as club.execs
  * @returns {Promise<FetchResponse>} Will return the response or error object
  */
 export async function postClub(club, images) {
     const data = new FormData();
     data.append('data', JSON.stringify(club));
     data.append('cover', images.coverPhoto);
-    images.profilePictures.forEach((p, i) => {
-        data.append(`exec${i}`, p);
+    data.append('execPhotos', JSON.stringify(execPhotos));
+    images.profilePictures.forEach((p) => {
+        data.append('exec', p);
     });
     return postRequest('/clubs', data, false);
 }
@@ -170,17 +181,19 @@ export async function postClub(club, images) {
  *
  * @param {Club} club Club object
  * @param {ClubImageBlobs} images Club image blobs object
+ * @param {boolean[]} execPhotos True for the execs that have new images; should be same length as club.execs
  * @param {string} id ID of the club to update
  * @returns {Promise<FetchResponse>} Will return the response or error object
  */
-export async function putClub(club, images, id) {
+export async function putClub(club, images, execPhotos, id) {
     const data = new FormData();
     data.append('data', JSON.stringify(club));
     data.append('cover', images.coverPhoto);
-    images.profilePictures.forEach((p, i) => {
-        data.append(`exec${i}`, p);
+    data.append('execPhotos', JSON.stringify(execPhotos));
+    images.profilePictures.forEach((p) => {
+        data.append('exec', p);
     });
-    return putRequest(`/club/${id}`, data, false);
+    return putRequest(`/clubs/${id}`, data, false);
 }
 
 /* ########## VOLUNTEERING API ########### */
@@ -260,32 +273,6 @@ export async function getUserInfo(token) {
     return getRequest(`/auth/user/${token}`);
 }
 
-/* ########## OLD API ########### */
-
-export async function postTrustedAuth(email) {
-    return postRequest('/auth/trusted', { email });
-}
-
-export async function getHistoryAll() {
-    return getRequest(`/history`);
-}
-
-export async function getHistoryList(resource, id) {
-    return getRequest(`/history/${resource}/${id}`);
-}
-
-export async function getHistoryData(resource, id, index) {
-    return getRequest(`/history/${resource}/${id}/${index}`);
-}
-
-export async function getDb(db, collection, email) {
-    return getRequest(`/admin/db/${db}/${collection}`, email);
-}
-
-export async function postDb(db, collection, data, email) {
-    return postRequest(`/admin/db/${db}/${collection}`, data, true, email);
-}
-
-export async function deleteClub(id) {
-    return postRequest('/delete-club', id);
+export function getCdnUrl() {
+    return CDN_URL;
 }

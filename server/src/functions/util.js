@@ -1,7 +1,5 @@
-const formidable = require('formidable');
 const { Document } = require('mongoose');
-const { Request, Response } = require('express');
-const crypto = require('crypto');
+const { Request } = require('express');
 const uuid = require('uuid');
 
 const statusList = require('../files/status.json');
@@ -83,16 +81,17 @@ function getEditor(req) {
  * @param {string} id UUIDv4 for the resource
  * @param {string} historyId UUIDv4 for the history object
  * @param {boolean} [isNew] True if a new resource (default: true)
+ * @param {object} [club] Will use club object instead of req.body to get diff if defined
  * @returns {Document} The history document
  */
-function createNewHistory(req, data, resource, id, historyId, isNew = true) {
+function createNewHistory(req, data, resource, id, historyId, isNew = true, club = null) {
     return new History({
         id: historyId,
         resource,
         editId: id,
         time: new Date().valueOf(),
         editor: getEditor(req),
-        fields: isNew ? objectToHistoryObject(data.toObject()) : getDiff(data.toObject(), req.body),
+        fields: isNew ? objectToHistoryObject(data.toObject()) : getDiff(data.toObject(), club || req.body),
     });
 }
 
@@ -136,59 +135,4 @@ function getDiff(prevData, data) {
     return output;
 }
 
-/**
- * Parses a multipart form club upload and returns the data in a callback function
- * @param {Request} req The Express request object
- * @param {Response} res The Express response object
- * @param {Function} callback Callback function to run after parsing the form, passes in the club object as a parameter
- */
-async function parseForm(req, res, callback) {
-    // Import this function here to avoid circular dependencies
-    const { uploadImage } = require('../images');
-
-    const form = new formidable.IncomingForm();
-    form.parse(req, async (err, fields, files) => {
-        if (err) {
-            next(err);
-            sendError(res, 400, 'Invalid form response');
-            return;
-        }
-
-        var club = JSON.parse(fields.data);
-
-        // Check for old pictures
-        var oldImages = [];
-        if (hasOldPicture(club.coverImgThumbnail)) oldImages.push(club.coverImgThumbnail);
-        if (hasOldPicture(club.coverImg)) oldImages.push(club.coverImg);
-
-        if (club.coverImgBlobs.img !== null) {
-            club.coverImgThumbnail = await uploadImage(files.thumb);
-            club.coverImg = await uploadImage(files.img);
-        }
-        for (var i = 0; i < club.execProfilePicBlobs.length; i++) {
-            if (club.execProfilePicBlobs[i] !== null) {
-                if (req.query.update) {
-                    if (hasOldPicture(club.oldExecs[i].img)) oldImages.push(club.oldExecs[i].img);
-                    club.execs[i].img = await uploadImage(files[`exec${i}`]);
-                } else club.execs[i].img = await uploadImage(files[`exec${i}`]);
-            }
-        }
-
-        callback(club, oldImages);
-    });
-}
-
-async function hasOldPicture(oldId) {
-    return oldId !== null && oldId !== undefined && oldId.startsWith('/') && typeof oldId === 'string';
-}
-
-/**
- * Generates a 16 byte hex state
- *
- * @returns {string} String representing the state
- */
-function genState() {
-    return crypto.randomBytes(16).toString('hex');
-}
-
-module.exports = { checkEnv, sendError, newId, createNewHistory, parseForm, getIp, getEditor, genState };
+module.exports = { checkEnv, sendError, newId, getIp, getEditor, createNewHistory };

@@ -6,7 +6,7 @@ import Cookies from 'universal-cookie';
 import { openPopup } from '../../redux/actions';
 import { getParams, processLinkObjectList, redirect } from '../../functions/util';
 import { Club, ClubImageBlobs } from '../../functions/entries';
-import { getClub, postClub } from '../../functions/api';
+import { getClub, postClub, putClub } from '../../functions/api';
 
 import Typography from '@material-ui/core/Typography';
 import Box from '@material-ui/core/Box';
@@ -98,49 +98,52 @@ const EditClubs = () => {
         if (!('name' in data)) return;
         const cookies = new Cookies();
 
-        if (id === null) {
-            const { execs, execProfilePics } = data.execs
-                ? processExecs(data.execs)
-                : { execs: [], execProfilePics: [] };
-            const filteredCommittees = data.committees ? data.committees.filter((c) => !c.deleted) : [];
-            const committees = filteredCommittees.map((c) => ({
-                ...c,
-                links: processLinkObjectList(c.links),
-            }));
-            const links = processLinkObjectList(data.links);
+        const { execs, execProfilePics, execPhotos } = data.execs
+            ? processExecs(data.execs)
+            : { execs: [], execProfilePics: [], execPhotos: [] };
+        const filteredCommittees = data.committees ? data.committees.filter((c) => !c.deleted) : [];
+        const committees = filteredCommittees.map((c) => ({
+            ...c,
+            heads: processLinkObjectList(c.heads),
+            links: processLinkObjectList(c.links),
+        }));
+        const links = processLinkObjectList(data.links);
 
-            const newClub = new Club(
-                null,
-                data.name,
-                data.advised === 'advised',
-                links,
-                data.description || '',
-                null,
-                null,
-                execs,
-                committees
-            );
-            const newImages = new ClubImageBlobs(cover, execProfilePics);
+        const newClub = new Club(
+            id,
+            data.name,
+            data.advised === 'advised',
+            links,
+            data.description,
+            club.coverImgThumbnail,
+            club.coverImg,
+            execs,
+            committees,
+            club.history
+        );
+        const newImages = new ClubImageBlobs(cover, execProfilePics);
 
-            setBackdrop(true);
-            const res = await postClub(newClub, newImages);
-            setBackdrop(false);
-
-            if (res.status === 200) {
-                redirect('/clubs');
-                cookies.set('success', 'add-club', { sameSite: 'strict', path: '/' });
-            } else dispatch(openPopup('Unable to upload data. Please refresh the page or try again.', 4));
-        }
+        setBackdrop(true);
+        const res =
+            id === null
+                ? await postClub(newClub, newImages, execPhotos)
+                : await putClub(newClub, newImages, execPhotos, id);
+        setBackdrop(false);
+        if (res.status === 200) {
+            cookies.set('success', id ? 'update-club' : 'add-club', { sameSite: 'strict', path: '/' });
+            back();
+        } else dispatch(openPopup('Unable to upload data. Please refresh the page or try again.', 4));
     };
 
     const processExecs = (execs) => {
         const cleanedExecs = execs.map((e) => (e.deleted ? null : e));
         const outProfilePics = profilePics.filter((p, i) => cleanedExecs[i] !== null);
         const outExecs = cleanedExecs.filter((e) => e !== null);
-        return { execs: outExecs, execProfilePics: outProfilePics };
+        const hasNewPicture = outProfilePics.map((p) => p !== null);
+        return { execs: outExecs, execProfilePics: outProfilePics, execPhotos: hasNewPicture };
     };
 
-    const onCancel = () => {
+    const back = () => {
         redirect(`/clubs${id ? `?id=${id}` : ''}`);
     };
 
@@ -226,7 +229,7 @@ const EditClubs = () => {
                     errors={errors}
                     committeeList={club.committees}
                 />
-                <TwoButtonBox success="Submit" onCancel={onCancel} onSuccess={onSubmit} submit right />
+                <TwoButtonBox success="Submit" onCancel={back} onSuccess={onSubmit} submit right />
             </form>
         </React.Fragment>
     );

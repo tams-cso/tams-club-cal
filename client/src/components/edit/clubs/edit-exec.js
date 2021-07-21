@@ -1,6 +1,6 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { makeStyles } from '@material-ui/core';
-import { Committee } from '../../../functions/entries';
+import { Exec } from '../../../functions/entries';
 
 import ListItem from '@material-ui/core/ListItem';
 import Box from '@material-ui/core/Box';
@@ -59,7 +59,7 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 /**
- * Displays a card with all fields to edit a committee
+ * Displays a card with all fields to edit an exec
  *
  * @param {object} props React props object
  * @param {*} props.control React hook form controller
@@ -69,7 +69,7 @@ const useStyles = makeStyles((theme) => ({
  * @param {Function} props.setProfilePics State function to set profile pics array
  * @param {object} props.errors React hook form error state
  * @param {number} props.index Index of the link in the array
- * @param {Committee} props.committee Default committee info
+ * @param {Exec} props.exec Default committee info
  */
 const EditExec = (props) => {
     const namePrefix = `execs.${props.index}.`;
@@ -77,6 +77,7 @@ const EditExec = (props) => {
     const classes = useStyles();
 
     props.register(`${namePrefix}deleted`);
+    props.register(`${namePrefix}img`);
 
     const deleteMe = () => {
         props.setValue(`${namePrefix}name`, 'deleted');
@@ -93,6 +94,12 @@ const EditExec = (props) => {
         ];
         props.setProfilePics(newProfilePics);
     };
+
+    useEffect(() => {
+        if (props.exec) {
+            props.setValue(`${namePrefix}img`, props.exec.img);
+        }
+    }, [props.exec]);
 
     return (
         <ListItem className={deleted ? classes.hidden : null}>
@@ -142,6 +149,7 @@ const EditExec = (props) => {
                     width={100}
                     height={100}
                     aspect={1}
+                    maxSize={5}
                 />
             </Card>
         </ListItem>

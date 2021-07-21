@@ -72,6 +72,7 @@ export function redirect(path) {
  * @returns {string[]} List of all links
  */
 export function processLinkObjectList(list) {
+    if (!list) return [];
     const filteredList = list.filter((l) => !l.deleted && l.value.trim() !== '');
     return filteredList.map((l) => l.value);
 }

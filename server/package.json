@@ -9,20 +9,22 @@
     ],
     "license": "MIT",
     "dependencies": {
+        "aws-sdk": "^2.950.0",
         "compression": "^1.7.4",
         "cookie-parser": "^1.4.5",
         "cors": "^2.8.5",
         "dotenv": "^8.2.0",
         "dropbox": "^8.2.0",
         "express": "^4.17.1",
-        "formidable": "^1.2.2",
         "google-auth-library": "^7.3.0",
         "googleapis": "^67.1.0",
         "helmet": "^4.6.0",
         "mongoose": "^5.13.2",
         "morgan": "^1.10.0",
+        "multer": "^1.4.2",
         "node-cron": "^2.0.3",
         "node-fetch": "^2.6.1",
+        "sharp": "^0.28.3",
         "uuid": "^8.3.2"
     },
     "scripts": {

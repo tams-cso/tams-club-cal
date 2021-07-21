@@ -75,6 +75,7 @@ const useStyles = makeStyles((theme) => ({
  * @param {string} props.defult The url of the fallback image to display if no previous image is avaliable
  * @param {string} props.alt Alt text to display for accessibility purposes (won't actually show)
  * @param {number} props.aspect Aspect ratio of the image; should be a fraction of width/height (eg. 16/9)
+ * @param {number}[props.maxSize] Maximum file size to upload in MB (default: 10 MB)
  */
 const ImageUpload = (props) => {
     const [error, setError] = useState(null);
@@ -109,7 +110,8 @@ const ImageUpload = (props) => {
         // Convert from MiB to MB and divide by 1000000 to get MB from bytes
         // Make sure file size is less than 10 MB
         const size = (file.size * 0.9536743) / 1000000;
-        if (size > 10) {
+        const max = props.maxSize || 10;
+        if (size > max) {
             setError('Image too large! Maximum file size is 10 MB.');
             return;
         } else setError(null);

@@ -6,6 +6,7 @@ import volunteeringList from './mirage/volunteering.json';
 // Cover photo:
 //   scale ratio -> 12:5
 //   actual size -> 1800 x 750
+//   thumbn size -> 600 x 250
 // Profile photo
 //   scale ratio -> 1:1
 //   actual size -> 300 x 300

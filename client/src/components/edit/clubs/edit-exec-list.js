@@ -5,6 +5,8 @@ import EditExec from './edit-exec';
 import List from '@material-ui/core/List';
 import Button from '@material-ui/core/Button';
 import { makeStyles } from '@material-ui/core';
+import { openPopup } from '../../../redux/actions';
+import { useDispatch } from 'react-redux';
 
 const useStyles = makeStyles({
     addButton: {
@@ -27,6 +29,7 @@ const useStyles = makeStyles({
 const EditExecList = (props) => {
     const [listItems, setListItems] = useState([]);
     const [addedList, setAddedList] = useState([]);
+    const dispatch = useDispatch();
     const classes = useStyles();
 
     useEffect(() => {
@@ -49,6 +52,15 @@ const EditExecList = (props) => {
     }, [props, addedList]);
 
     const addItem = () => {
+        if (props.profilePics.length >= 20) {
+            dispatch(
+                openPopup(
+                    'This program does not support adding more than 20 execs. Please remove execs or reload the page.',
+                    3
+                )
+            );
+            return;
+        }
         setAddedList([...addedList, new Exec()]);
         props.setProfilePics([...props.profilePics, null]);
     };

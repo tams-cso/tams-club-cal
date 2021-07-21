@@ -4,8 +4,9 @@ const clubSchema = new mongoose.Schema(
     {
         id: String,
         name: String,
-        links: [String],
+        advised: Boolean,
         description: String,
+        links: [String],
         coverImgThumbnail: String,
         coverImg: String,
         execs: [

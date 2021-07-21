@@ -69,6 +69,11 @@ app.use('/events', eventsRouter);
 app.use('/clubs', clubsRouter);
 app.use('/volunteering', volunteeringRouter);
 
+app.use(function (err, req, res, next) {
+    console.log('This is the invalid field ->', err.field)
+    next(err)
+  })
+  
 // Start express server
 app.listen(process.env.PORT | 5000, () => console.log(`Listening on port ${process.env.PORT | 5000}`));
 

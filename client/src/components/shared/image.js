@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { makeStyles } from '@material-ui/core';
 
 import Paper from '@material-ui/core/Paper';
+import { getCdnUrl } from '../../functions/api';
 
 const useStyles = makeStyles({
     root: {
@@ -12,6 +13,8 @@ const useStyles = makeStyles({
         fontSize: 0,
     },
 });
+
+const url = (src) => (!src ? '' : src.endsWith('.webp') ? `${getCdnUrl()}/${src}` : src);
 
 /**
  * Displays an image given a dynamic src.
@@ -26,26 +29,19 @@ const useStyles = makeStyles({
  * @param {boolean} props.raised True to add drop shadow to image
  */
 const Image = (props) => {
-    const [src, setSrc] = useState(props.src);
+    const [src, setSrc] = useState(url(props.src));
     const classes = useStyles({ width: props.width, height: props.height });
 
     const inavlidImage = () => {
         setSrc(props.default);
     };
-
     useEffect(() => {
-        setSrc(props.src);
+        setSrc(url(props.src));
     }, [props.src]);
 
     return (
         <Paper elevation={props.raised ? 2 : 0} className={props.className}>
-            <img
-                id={props.id}
-                className={classes.root}
-                src={src}
-                alt={props.alt}
-                onError={inavlidImage}
-            />
+            <img id={props.id} className={classes.root} src={src} alt={props.alt} onError={inavlidImage} />
         </Paper>
     );
 };
