@@ -25,6 +25,7 @@ const useStyles = makeStyles({
 
 const HomeDrawerList = () => {
     const classes = useStyles();
+    const calendarUrl = process.env.NODE_ENV !== 'production' ? data.addStagingCalendar : data.addCalendar;
     return (
         <React.Fragment>
             <Typography variant="h3" className={classes.externalLinksTitle}>
@@ -56,7 +57,7 @@ const HomeDrawerList = () => {
                     <ListItemText primary="TAMS Wiki" />
                 </ListItem>
                 {/* TODO: Check if staging and use data.addStagingCalendar */}
-                <ListItem button component="a" href={data.addCalendar}>
+                <ListItem button component="a" href={calendarUrl}>
                     <ListItemIcon className={classes.listIcon}>
                         <EventAvailableRoundedIcon />
                     </ListItemIcon>
