@@ -1,9 +1,6 @@
 # dependencies
 */node_modules
-
-# Accidental root dependency installation
 node_modules
-yarn.lock
 
 # production
 client/build
@@ -17,10 +14,6 @@ client/build
 */npm-debug.log*
 */yarn-debug.log*
 */yarn-error.log*
-
-# Image cache
-server/src/cache
-server/src/logs
-
-# Google API Credentials file
-server/creds.json
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
