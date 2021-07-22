@@ -28,18 +28,23 @@ Create the environmental variable file at `server/.env`:
 MONGO_USER="[Username for cluster]"
 MONGO_PASS="[Password for cluster]"
 MONGO_URL="[Connection URL to the mongodb cluster (eg. "tams-cal-db-staging.7d0nz.mongodb.net")]"
+
 G_CLIENT_ID="[Google API OAuth 2.0 Client ID]"
 G_CLIENT_SECRET="[Google API OAuth 2.0 Client Secret]"
+SERVICE_EMAIL="[Google Cloud service account email]"
+SERVICE_PRIVATE_KEY="[Google Cloud service account private key]"
 CALENDAR_ID="[ID for Google Calendar for syncing]"
 ORIGIN="[(optional) Origin to allow requests from. This will *deny requests from other origins* (eg. "http://localhost:3000")]"
 PORT="[(optional) The port to start the server on]"
 ```
 
-You will need to create a [Dropbox Developer Account](https://www.dropbox.com/developers/reference/getting-started?_tk=guides_lp&_ad=guides2&_camp=get_started#app%20console) and a project.
+The first thing you will need is a [Mongodb Atlas Cluster](https://www.mongodb.com/cloud/atlas). A free tier instance should be good enough. If you decide to opt for a local instance, make sure to use that username/password and url instead.
 
-Additionally, you need to make a [Google Cloud Developer Account](https://cloud.google.com/docs), create a project, and make both OAuth 2.0 Client credentials and a service account credentials, enabling the Google Calendar API. The Oauth2 credentials can be placed in the `.env` file, but you will need to download the service account credentials and move the JSON file to `server/creds.json`.
+Next, an AWS account will need to be used to set up a [S3 bucket](https://aws.amazon.com/s3/) and connect that to a [CloudFront CDN](https://aws.amazon.com/cloudfront/).
 
-Finally, if you would like to sync the events with a Google Calendar, then you will need to create a new calendar, share it with the service account email, and add the id and url to the `.env` file.
+Additionally, you need to make a [Google Cloud Developer Account](https://cloud.google.com/docs), create a project, and make both OAuth 2.0 Client credentials and a service account credentials, enabling the Google Calendar API. The Oauth2 credentials and the service account email/private key should be placed in the `.env` file.
+
+Finally, you will need to create a new [Google Calendar](https://calendar.google.com), share it with the service account email, and add the id and url to the `.env` file.
 
 ## Execution
 
