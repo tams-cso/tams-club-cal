@@ -18,6 +18,7 @@ const volunteeringRouter = require('./routes/volunteeringRouter');
 
 // Check for the correct environmental variables
 checkEnv();
+console.log(`Running with NODE_ENV set to ${process.env.NODE_ENV}`);
 
 // Use middleware to recieve calls and log
 app.use(cors());
@@ -41,7 +42,12 @@ app.use(function (req, res, next) {
     // Set this in the .env file as ORIGIN
     // This will return as an error if no origin in headers OR if the origin does not match the expected origin
     // The block will be skipped if no ORIGIN environmental variable is defined
-    if (process.env.NODE_ENV === 'production' && process.env.ORIGIN !== undefined && req.path !== '/auth/login') {
+    if (
+        process.env.NODE_ENV === 'production' &&
+        process.env.ORIGIN !== undefined &&
+        !process.env.NO_ORIGIN_CHECK &&
+        req.path !== '/auth/login'
+    ) {
         if (req.headers.origin === undefined || req.headers.origin.indexOf(process.env.ORIGIN) === -1) {
             sendError(res, 403, 'Invalid request origin.');
             return;
@@ -69,11 +75,6 @@ app.use('/events', eventsRouter);
 app.use('/clubs', clubsRouter);
 app.use('/volunteering', volunteeringRouter);
 
-app.use(function (err, req, res, next) {
-    console.log('This is the invalid field ->', err.field)
-    next(err)
-  })
-  
 // Start express server
 app.listen(process.env.PORT | 5000, () => console.log(`Listening on port ${process.env.PORT | 5000}`));
 

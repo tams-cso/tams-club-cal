@@ -1,12 +1,9 @@
 {
     "name": "server",
-    "version": "1.1.0",
+    "version": "2.0.0",
     "description": "Backend for the calendar app",
     "main": "index.js",
     "author": "Michael Zhao <michaelzhao314@gmail.com> (https://michaelzhao.xyz/)",
-    "contributors": [
-        "Dylan Li <dylanli.yitong@gmail.com> (https://github.com/The-Box-Lord/)"
-    ],
     "license": "MIT",
     "dependencies": {
         "aws-sdk": "^2.950.0",
@@ -30,11 +27,15 @@
     "scripts": {
         "start": "node src/app.js",
         "dev": "nodemon src/app.js",
-        "format": "prettier --config ../.prettierrc --write .",
-        "build": "echo 'No build script for server'"
+        "build": "webpack",
+        "format": "prettier --config ../.prettierrc --write ."
     },
     "devDependencies": {
+        "dotenv-webpack": "^7.0.3",
+        "mongodb-client-encryption": "^1.2.6",
         "nodemon": "^2.0.6",
-        "prettier": "^2.2.1"
+        "prettier": "^2.2.1",
+        "webpack": "4.x",
+        "webpack-cli": "^4.7.2"
     }
 }

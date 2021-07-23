@@ -6,8 +6,8 @@ AWS.config.update({ region: 'us-east-1' });
 
 const s3 = new AWS.S3({
     apiVersion: '2006-03-01',
-    accessKeyId: process.env.ACCESS_KEY_ID,
-    secretAccessKey: process.env.SECRET_ACCESS_KEY,
+    accessKeyId: process.env.AWS_ACCESS_ID,
+    secretAccessKey: process.env.AWS_SECRET_KEY,
 });
 const BUCKET = `${process.env.NODE_ENV === 'production' ? '' : 'staging-'}tams-club-calendar-images`;
 

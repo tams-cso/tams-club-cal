@@ -4,6 +4,7 @@ node_modules
 
 # production
 client/build
+server/dist
 
 # misc
 .DS_Store

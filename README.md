@@ -33,14 +33,17 @@ G_CLIENT_ID="[Google API OAuth 2.0 Client ID]"
 G_CLIENT_SECRET="[Google API OAuth 2.0 Client Secret]"
 SERVICE_EMAIL="[Google Cloud service account email]"
 SERVICE_PRIVATE_KEY="[Google Cloud service account private key]"
+AWS_ACCESS_ID="[AWS IAM User Access Key ID]"
+AWS_SECRET_KEY="[AWS IAM User Secret Key]"
 CALENDAR_ID="[ID for Google Calendar for syncing]"
-ORIGIN="[(optional) Origin to allow requests from. This will *deny requests from other origins* (eg. "http://localhost:3000")]"
+ORIGIN="[(optional) Origin requests are sent from. This is needed for google login -- thus, it will not work for local development]"
 PORT="[(optional) The port to start the server on]"
+NO_ORIGIN_CHECK="[(optional) If true, all requests not from ORIGIN will be *denied with a 403 error*]
 ```
 
 The first thing you will need is a [Mongodb Atlas Cluster](https://www.mongodb.com/cloud/atlas). A free tier instance should be good enough. If you decide to opt for a local instance, make sure to use that username/password and url instead.
 
-Next, an AWS account will need to be used to set up a [S3 bucket](https://aws.amazon.com/s3/) and connect that to a [CloudFront CDN](https://aws.amazon.com/cloudfront/).
+Next, an AWS account will need to be used to set up a [S3 bucket](https://aws.amazon.com/s3/) and connect that to a [CloudFront CDN](https://aws.amazon.com/cloudfront/). Then, create an IAM user and allow access to S3 management. Put that user's access key ID and secret in the `.env` file.
 
 Additionally, you need to make a [Google Cloud Developer Account](https://cloud.google.com/docs), create a project, and make both OAuth 2.0 Client credentials and a service account credentials, enabling the Google Calendar API. The Oauth2 credentials and the service account email/private key should be placed in the `.env` file.
 

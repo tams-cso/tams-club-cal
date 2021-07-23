@@ -1,11 +1,10 @@
 module.exports = {
     apps: [
         {
-            name: 'staging-tams-club-cal',
-            script: 'src/app.js',
+            name: 'staging-tcc-server',
+            script: 'app.js',
             watch: '.',
             watch_delay: 5000,
-            ignore_watch: ['node_modules', 'src/cache', 'src/logs'],
         },
     ],
     env: {
