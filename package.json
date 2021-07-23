@@ -10,12 +10,8 @@
             "server"
         ],
         "nohoist": [
-            "**/mongoose",
-            "**/mongoose/**",
-            "**/sharp",
-            "**/sharp/**",
-            "**/google-auth-library",
-            "**/google-auth-library/**"
+            "**/*",
+            "**/*/**"
         ]
     },
     "scripts": {

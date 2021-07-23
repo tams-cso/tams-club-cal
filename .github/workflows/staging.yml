@@ -17,64 +17,43 @@ jobs:
               with:
                   node-version: '14'
 
-            - name: Build client and archive server files
+            - name: Set env file
               env:
-                  MONGO_USER: ${{ secrets.STAGING_MONGO_USER }}
-                  MONGO_PASS: ${{ secrets.STAGING_MONGO_PASS }}
-                  MONGO_URL: ${{ secrets.STAGING_MONGO_URL }}
-                  G_CLIENT_ID: ${{ secrets.G_CLIENT_ID }}
-                  G_CLIENT_SECRET: ${{ secrets.G_CLIENT_SECRET }}
-                  SERVICE_EMAIL: ${{ secrets.SERVICE_EMAIL }}
-                  SERVICE_PRIVATE_KEY: ${{ secrets.SERVICE_PRIVATE_KEY }}
-                  AWS_ACCESS_ID: ${{ secrets.AWS_ACCESS_ID }}
-                  AWS_SECRET_KEY: ${{ secrets.AWS_SECRET_KEY }}
-                  CALENDAR_ID: ${{ secrets.STAGING_CALENDAR_ID }}
-              run: |
-                  npm install -g yarn
-                  cd $GITHUB_WORKSPACE && ls -la
-                  cd server
-                  echo "MONGO_USER=$MONGO_USER" >| .env
-                  echo "MONGO_PASS=$MONGO_PASS" >> .env
-                  echo "MONGO_URL=$MONGO_URL" >> .env
-                  echo "DROPBOX_TOKEN=$DROPBOX_TOKEN" >> .env
-                  echo "G_CLIENT_ID=$G_CLIENT_ID" >> .env
-                  echo "G_CLIENT_SECRET=$G_CLIENT_SECRET" >> .env
-                  echo "SERVICE_EMAIL=$SERVICE_EMAIL" >> .env
-                  echo "SERVICE_PRIVATE_KEY=$SERVICE_PRIVATE_KEY" >> .env
-                  echo "AWS_ACCESS_ID=$AWS_ACCESS_ID" >> .env
-                  echo "AWS_SECRET_KEY=$AWS_SECRET_KEY" >> .env
-                  echo "CALENDAR_ID=$CALENDAR_ID" >> .env
-                  echo "ORIGIN=https://staging.tams.club" >> .env
-                  echo "PORT=8083" >> .env
-                  cd .. && cp server/.env .env
-                  yarn install && yarn build
-                  cd client/build && tar -czvf ../../tcc-staging-client.tar.gz *
-                  cd ../../server && cp staging.ecosystem.config.js dist/ecosystem.config.js
-                  cp -r node_modules/ dist/
-                  cd dist && tar -czvf ../../tcc-staging-server.tar.gz *
-                  cd ..
+                  ENV: ${{ secrets.STAGING_ENV }}
+              run: cd $GITHUB_WORKSPACE/server && echo "$ENV" >| .env
 
-            - name: Deploy to Droplet with scp
-              uses: appleboy/scp-action@master
-              with:
-                  host: ${{ secrets.SSH_HOST }}
-                  username: ${{ secrets.SSH_USERNAME }}
-                  key: ${{ secrets.SSH_KEY }}
-                  source: 'tcc-staging-client.tar.gz,tcc-staging-server.tar.gz'
-                  target: '/var/www'
+            - name: Get the version
+                  id: get_version
+                  run: echo ::set-output name=VERSION::${GITHUB_REF/refs\/tags\//}
 
-            - name: Unarchive Files on Droplet
+            - name: Login to Docker Hub
+                  uses: docker/login-action@v1
+                  with:
+                      username: ${{ secrets.DOCKER_HUB_USERNAME }}
+                      password: ${{ secrets.DOCKER_HUB_ACCESS_TOKEN }}
+
+            - name: Set up Docker Buildx
+                  id: buildx
+                  uses: docker/setup-buildx-action@v1
+
+            - name: Build and push
+                  id: docker_build
+                  uses: docker/build-push-action@v2
+                  with:
+                      context: ./
+                      file: ./Dockerfile
+                      push: true
+                      tags: ${{ secrets.DOCKER_HUB_USERNAME }}/tcc-staging-server:${{ steps.get_version.outputs.VERSION }}
+
+            - name: Image digest
+                  run: echo ${{ steps.docker_build.outputs.digest }}
+
+            - name: Pull and run docker container on Droplet
               uses: appleboy/ssh-action@master
               with:
                   host: ${{ secrets.SSH_HOST }}
                   username: ${{ secrets.SSH_USERNAME }}
                   key: ${{ secrets.SSH_KEY }}
                   script: |
-                      cd /var/www
-                      rm -rf tcc-staging-client/{*,.*} && mkdir tcc-staging-client
-                      rm -rf tcc-staging-server/{*,.*} && mkdir tcc-staging-server
-                      tar -xzvf tcc-staging-client.tar.gz -C tcc-staging-client
-                      tar -xzvf tcc-staging-server.tar.gz -C tcc-staging-server
-                      rm tcc-staging-client.tar.gz
-                      rm tcc-staging-server.tar.gz
-                      cd tcc-staging-server
+                      docker pull michaelzhao21/tcc-staging-server:latest
+                      docker run -p 8083:80 tcc-staging-server

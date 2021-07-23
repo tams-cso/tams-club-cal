@@ -27,15 +27,12 @@
     "scripts": {
         "start": "node src/app.js",
         "dev": "nodemon src/app.js",
-        "build": "webpack",
+        "build": "echo 'No build for server'",
         "format": "prettier --config ../.prettierrc --write ."
     },
     "devDependencies": {
-        "dotenv-webpack": "^7.0.3",
         "mongodb-client-encryption": "^1.2.6",
         "nodemon": "^2.0.6",
-        "prettier": "^2.2.1",
-        "webpack": "4.x",
-        "webpack-cli": "^4.7.2"
+        "prettier": "^2.2.1"
     }
 }

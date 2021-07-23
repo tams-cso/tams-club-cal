@@ -10,6 +10,7 @@ server/dist
 .DS_Store
 */.env
 .env
+.env-*
 .vscode
 
 */npm-debug.log*
