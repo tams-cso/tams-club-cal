@@ -47,12 +47,10 @@ jobs:
                   echo "ORIGIN=https://staging.tams.club" >> .env
                   echo "PORT=8083" >> .env
                   cd .. && cp server/.env .env
-                  cd .. && mkdir server-support
-                  cd server-support && yarn add sharp mongoose
-                  cd $GITHUB_WORKSPACE && yarn install && yarn build
+                  yarn install && yarn build
                   cd client/build && tar -czvf ../../tcc-staging-client.tar.gz *
                   cd ../../server && cp staging.ecosystem.config.js dist/ecosystem.config.js
-                  cp -r ../../server-support/* dist/
+                  cp -r node_modules/ dist/
                   cd dist && tar -czvf ../../tcc-staging-server.tar.gz *
                   cd ..
 
