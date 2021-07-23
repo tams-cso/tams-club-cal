@@ -28,6 +28,7 @@
         "start": "node src/app.js",
         "dev": "nodemon src/app.js",
         "build": "echo 'No build for server'",
+        "build:staging": "echo 'No build for server'",
         "format": "prettier --config ../.prettierrc --write ."
     },
     "devDependencies": {
