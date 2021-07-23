@@ -15,6 +15,7 @@
         ]
     },
     "scripts": {
-        "build": "yarn workspaces run build"
+        "build": "yarn workspaces run build",
+        "build:staging": "yarn workspaces run build:staging"
     }
 }
