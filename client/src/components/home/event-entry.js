@@ -14,6 +14,7 @@ const useStyles = makeStyles((theme) => ({
         padding: 0,
     },
     wrapper: {
+        width: '100%',
         padding: 16,
         display: 'flex',
         flexDirection: 'row',

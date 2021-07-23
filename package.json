@@ -4,10 +4,16 @@
     "version": "1.0.0",
     "private": true,
     "author": "Michael Zhao <michaelzhao314@gmail.com> (https://michaelzhao.xyz/)",
-    "workspaces": [
-        "client",
-        "server"
-    ],
+    "workspaces": {
+        "packages": [
+            "client",
+            "server"
+        ],
+        "nohoist": [
+            "**/*",
+            "**/*/**"
+        ]
+    },
     "scripts": {
         "build": "yarn workspaces run build"
     }
