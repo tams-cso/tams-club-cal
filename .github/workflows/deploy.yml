@@ -1,12 +1,13 @@
-name: 'Build and Deploy Staging App'
+name: 'Build and Deploy App'
 
 on:
-    push:
-        branches: ['master', 'action-test']
+  push:
+    tags: 
+      - 'v-*'
 
 jobs:
     deploy:
-        name: Deploy Staging App
+        name: Deploy Production App
         runs-on: ubuntu-latest
         steps:
             - name: Checkout
