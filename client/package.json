@@ -1,19 +1,20 @@
 {
-    "name": "tams-club-cal-client",
-    "version": "0.1.0",
+    "name": "client",
+    "version": "2.0.0",
     "private": true,
     "author": "Michael Zhao <michaelzhao314@gmail.com> (https://michaelzhao.xyz/)",
-    "contributors": [
-        "Dylan Li <dylanli.yitong@gmail.com> (https://github.com/The-Box-Lord/)"
-    ],
     "dependencies": {
-        "browser-image-compression": "^1.0.14",
-        "dayjs": "^1.10.5",
-        "fuse.js": "^6.4.6",
-        "node-sass": "^6.0.0",
+        "@date-io/dayjs": "1.x",
+        "@material-ui/core": "^4.11.4",
+        "@material-ui/icons": "^4.11.2",
+        "@material-ui/lab": "^4.0.0-alpha.60",
+        "@material-ui/pickers": "^3.3.10",
+        "dayjs": "^1.10.6",
         "querystring": "^0.2.0",
         "react": "^17.0.1",
         "react-dom": "^17.0.1",
+        "react-hook-form": "^7.11.0",
+        "react-image-crop": "^8.6.12",
         "react-redux": "^7.2.2",
         "react-router": "^5.2.0",
         "react-router-dom": "^5.2.0",
@@ -23,7 +24,9 @@
     },
     "scripts": {
         "start": "react-scripts start",
+        "start:backend": "REACT_APP_BACKEND=localhost react-scripts start",
         "build": "react-scripts build",
+        "build:staging": "REACT_APP_BACKEND=staging react-scripts build",
         "test": "react-scripts test",
         "eject": "react-scripts eject",
         "format": "prettier --config ../.prettierrc --write ."
@@ -41,6 +44,7 @@
         ]
     },
     "devDependencies": {
+        "miragejs": "^0.1.41",
         "prettier": "^2.2.1"
     }
 }

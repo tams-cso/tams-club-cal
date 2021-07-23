@@ -1,81 +1,94 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { BrowserRouter, Route, Switch } from 'react-router-dom';
+import { createMuiTheme, ThemeProvider } from '@material-ui/core';
+import Cookies from 'universal-cookie';
+import DayjsUtils from '@date-io/dayjs';
 
+import { MuiPickersUtilsProvider } from '@material-ui/pickers';
+import CssBaseline from '@material-ui/core/CssBaseline';
+import Popup from './components/shared/popup';
 import Menu from './components/menu/menu';
+import Home from './components/home/home';
 import About from './components/about/about';
 import Clubs from './components/clubs/clubs';
-import Home from './components/home/home';
 import NotFound from './components/404/404';
 import Volunteering from './components/volunteering/volunteering';
-import Search from './components/menu/search';
-import RoutingRequests from './functions/routing-requests';
-import Edit from './components/edit/edit';
-import Admin from './components/admin/admin';
-
-import './app.scss';
-import Resources from './components/resources/resources';
+// import Admin from './components/admin/admin';
 import Auth from './components/edit/auth';
-import ActionButton from './components/shared/action-button';
-import Cookies from 'universal-cookie';
-import { isActive } from './functions/util';
+import Edit from './components/edit/edit';
 
-class App extends React.Component {
-    constructor(props) {
-        super(props);
-        this.state = { dark: false };
-    }
+const App = () => {
+    const cookies = new Cookies();
 
-    toggleDarkTheme = () => {
-        const cookies = new Cookies();
-        cookies.set('dark', !this.state.dark, { path: '/', sameSite: 'strict' });
-        this.setState({ dark: !this.state.dark });
-    };
+    const [darkTheme, setDarkTheme] = useState(cookies.get('dark') === 'true');
+    const theme = createMuiTheme({
+        palette: {
+            type: darkTheme ? 'dark' : 'light',
+            primary: {
+                main: '#00c853',
+                light: '#96ed98',
+                dark: '#31893d',
+            },
+            secondary: {
+                main: '#ffcc80',
+                light: '#ffffb0',
+                dark: '#ca9b52',
+            },
+        },
+        typography: {
+            h1: {
+                fontSize: '2rem',
+            },
+            h2: {
+                fontSize: '2.5rem',
+                lineHeight: 1.167,
+            },
+            h3: {
+                fontSize: '1.25rem',
+                fontWeight: '500',
+            },
+            h4: {
+                fontFamily: ['Roboto Mono', 'monospace'],
+                fontSize: '1.25rem',
+                fontWeight: '500',
+                color: darkTheme ? '#aaaaaa' : '#555555',
+            },
+            h5: {
+                fontFamily: ['Bubblegum Sans', 'Roboto', 'Helvetica', 'Arial', 'sans-serif'],
+                fontSize: '1.5rem',
+            },
+            h6: {
+                fontWeight: '600',
+            },
+        },
+    });
 
-    componentDidMount() {
-        const cookies = new Cookies();
-        const dark = cookies.get('dark');
-        const defaultDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
-        if (dark === undefined) {
-            if (defaultDark) {
-                cookies.set('dark', true, { path: '/', sameSite: 'strict' });
-                this.setState({ dark: true });
-            }
-        } else if (dark === 'true') this.setState({ dark: true });
-    }
+    useEffect(() => {
+        cookies.set('dark', darkTheme, { sameSite: 'strict', path: '/' });
+    }, [darkTheme]);
 
-    render() {
-        const isStaging = window.location.origin !== 'https://tams.club';
-        return (
-            <div className={`App ${this.state.dark ? 'dark' : ''}`}>
+    return (
+        <ThemeProvider theme={theme}>
+            <CssBaseline />
+            <MuiPickersUtilsProvider utils={DayjsUtils}>
                 <BrowserRouter>
-                    <ActionButton
-                        className="toggle-dark-theme"
-                        onClick={this.toggleDarkTheme}
-                        title="Toggle Dark Theme!"
-                    >
-                        !
-                    </ActionButton>
-                    <p className={isActive('staging-text', isStaging)}>STAGING</p>
-                    <RoutingRequests />
-                    <Menu />
-                    <div className="page">
-                        <Switch>
-                            <Route exact path={['/', '/events']} component={Home} />
-                            <Route exact path="/volunteering" component={Volunteering} />
-                            <Route exact path="/clubs" component={Clubs} />
-                            <Route exact path="/resources" component={Resources} />
-                            <Route exact path="/about" component={About} />
-                            <Route exact path="/search" component={Search} />
-                            <Route exact path="/auth" component={Auth} />
-                            <Route exact path="/admin" component={Admin} />
-                            <Route path="/edit" component={Edit} />
-                            <Route component={NotFound} />
-                        </Switch>
-                    </div>
+                    <Popup />
+                    <Menu setDarkTheme={setDarkTheme} darkTheme={darkTheme} />
+                    <Switch>
+                        <Route exact path="/" component={Home} />
+                        <Route exact path="/events" component={Home} />
+                        <Route exact path="/volunteering" component={Volunteering} />
+                        <Route exact path="/clubs" component={Clubs} />
+                        <Route exact path="/about" component={About} />
+                        <Route exact path="/auth" component={Auth} />
+                        {/* <Route exact path="/admin" component={Admin} /> */}
+                        <Route path="/edit" component={Edit} />
+                        <Route component={NotFound} />
+                    </Switch>
                 </BrowserRouter>
-            </div>
-        );
-    }
-}
+            </MuiPickersUtilsProvider>
+        </ThemeProvider>
+    );
+};
 
 export default App;

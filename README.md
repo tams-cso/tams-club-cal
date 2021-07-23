@@ -20,16 +20,6 @@ cd tams-club-cal/client && yarn install
 cd ../server && yarn install
 ```
 
-Create the config file at `client/src/files/config.json` (**For the `backend` field, don't put a `/` after**):
-
-```json
-{
-    "backend": "[address that the backend server is hosted on (eg. http://localhost:5000)]",
-    "apiKey": "[(optional) API key for backend. The https://dev.tams.club backend used for development does NOT need this]",
-    "calendarUrl": "[(optional) Public sharing URL for Google Calendar if syncing (should start with 'https://calendar.google.com/calendar')]"
-}
-```
-
 If you would like to help develop the backend, email or message [MichaelZhao21](https://github.com/MichaelZhao21) to get access to the database. If you are just developing frontend, you can simply use `https://dev.tams.club` as the backend address in the json file and only run the frontend (`client` folder). You will not need to do the following step if you are only developing frontend.
 
 Create the environmental variable file at `server/.env`:
@@ -38,20 +28,26 @@ Create the environmental variable file at `server/.env`:
 MONGO_USER="[Username for cluster]"
 MONGO_PASS="[Password for cluster]"
 MONGO_URL="[Connection URL to the mongodb cluster (eg. "tams-cal-db-staging.7d0nz.mongodb.net")]"
-DROPBOX_TOKEN="[Token for dropbox app]"
+
 G_CLIENT_ID="[Google API OAuth 2.0 Client ID]"
 G_CLIENT_SECRET="[Google API OAuth 2.0 Client Secret]"
-CALENDAR_ID="[(optional) ID for Google Calendar if syncing]"
-API_KEY="[(optional) API key will be required for any calls if defined (see docs)]"
-ORIGIN="[(optional) Origin to allow requests from. This will *deny requests from other origins* (eg. "http://localhost:3000")]"
+SERVICE_EMAIL="[Google Cloud service account email]"
+SERVICE_PRIVATE_KEY="[Google Cloud service account private key]"
+AWS_ACCESS_ID="[AWS IAM User Access Key ID]"
+AWS_SECRET_KEY="[AWS IAM User Secret Key]"
+CALENDAR_ID="[ID for Google Calendar for syncing]"
+ORIGIN="[(optional) Origin requests are sent from. This is needed for google login -- thus, it will not work for local development]"
 PORT="[(optional) The port to start the server on]"
+NO_ORIGIN_CHECK="[(optional) If true, all requests not from ORIGIN will be *denied with a 403 error*]
 ```
 
-You will need to create a [Dropbox Developer Account](https://www.dropbox.com/developers/reference/getting-started?_tk=guides_lp&_ad=guides2&_camp=get_started#app%20console) and a project.
+The first thing you will need is a [Mongodb Atlas Cluster](https://www.mongodb.com/cloud/atlas). A free tier instance should be good enough. If you decide to opt for a local instance, make sure to use that username/password and url instead.
 
-Additionally, you need to make a [Google Cloud Developer Account](https://cloud.google.com/docs), create a project, and make both OAuth 2.0 Client credentials and a service account credentials, enabling the Google Calendar API. The Oauth2 credentials can be placed in the `.env` file, but you will need to download the service account credentials and move the JSON file to `server/creds.json`.
+Next, an AWS account will need to be used to set up a [S3 bucket](https://aws.amazon.com/s3/) and connect that to a [CloudFront CDN](https://aws.amazon.com/cloudfront/). Then, create an IAM user and allow access to S3 management. Put that user's access key ID and secret in the `.env` file.
 
-Finally, if you would like to sync the events with a Google Calendar, then you will need to create a new calendar, share it with the service account email, and add the id and url to the `.env` file.
+Additionally, you need to make a [Google Cloud Developer Account](https://cloud.google.com/docs), create a project, and make both OAuth 2.0 Client credentials and a service account credentials, enabling the Google Calendar API. The Oauth2 credentials and the service account email/private key should be placed in the `.env` file.
+
+Finally, you will need to create a new [Google Calendar](https://calendar.google.com), share it with the service account email, and add the id and url to the `.env` file.
 
 ## Execution
 

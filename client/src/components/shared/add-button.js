@@ -1,36 +1,45 @@
 import React from 'react';
-import './add-button.scss';
+import { useHistory } from 'react-router';
 
-class AddButton extends React.Component {
-    constructor(props) {
-        super(props);
-        this.state = { text: '+' };
-    }
+import Fab from '@material-ui/core/Fab';
+import AddIcon from '@material-ui/icons/Add';
+import EditIcon from '@material-ui/icons/Edit';
+import { makeStyles } from '@material-ui/core';
 
-    openAdd = () => {
-        var path = window.location.pathname;
-        if (path === '/') path = '/events'
-        window.location.href = `${window.location.origin}/edit${path}`;
+const useStyles = makeStyles((theme) => ({
+    root: {
+        position: 'fixed',
+        bottom: 36,
+        right: 36,
+        zIndex: theme.zIndex.appBar + 1,
+    },
+}));
+
+/**
+ * Shows a floating action button
+ * @param {object} props React props object
+ * @param {Function} props.path Path to redirect to on click
+ * @param {"default" | "inherit" | "primary" | "secondary"} props.color Color for FAB
+ * @param {boolean} [props.edit] If true, will show edit button or else it'll show the add button
+ */
+const AddButton = (props) => {
+    const history = useHistory();
+    const classes = useStyles();
+
+    const redirect = () => {
+        history.push(props.path);
     };
 
-    hoverEvent = (enter) => {
-        var text = '+';
-        if (enter) text = `+ Add ${this.props.type}`;
-        this.setState({ text });
-    };
-
-    render() {
-        return (
-            <button
-                className={`add-button ${this.props.className} ${this.props.type.toLowerCase()}`}
-                onClick={this.openAdd}
-                onMouseEnter={this.hoverEvent.bind(this, true)}
-                onMouseLeave={this.hoverEvent.bind(this, false)}
-            >
-                <div className="add-button-text">{this.state.text}</div>
-            </button>
-        );
-    }
-}
+    return (
+        <Fab
+            color={props.color || 'default'}
+            aria-label={props.edit ? 'edit' : 'add'}
+            onClick={redirect}
+            className={classes.root}
+        >
+            {props.edit ? <EditIcon /> : <AddIcon />}
+        </Fab>
+    );
+};
 
 export default AddButton;

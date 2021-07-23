@@ -1,319 +1,238 @@
-import React from 'react';
-import { getClub, postClub } from '../../functions/api';
-import { Club, Committee, Exec } from '../../functions/entries';
-import { compressUploadedImage, getParams, imgUrl, isActive } from '../../functions/util';
-import ActionButton from '../shared/action-button';
+import React, { useEffect, useState } from 'react';
+import { useDispatch } from 'react-redux';
+import { makeStyles } from '@material-ui/core';
+import { useForm } from 'react-hook-form';
+import Cookies from 'universal-cookie';
+import { openPopup } from '../../redux/actions';
+import { getParams, processLinkObjectList, redirect } from '../../functions/util';
+import { Club, ClubImageBlobs } from '../../functions/entries';
+import { getClub, postClub, putClub } from '../../functions/api';
+
+import Typography from '@material-ui/core/Typography';
+import Box from '@material-ui/core/Box';
+import MenuItem from '@material-ui/core/MenuItem';
+import LinkInputList from './clubs/link-input-list';
+import EditCommitteeList from './clubs/edit-committee-list';
+import ControlledTextField from './shared/controlled-text-field';
+import ControlledSelect from './shared/controlled-select';
 import Loading from '../shared/loading';
-import SubmitGroup from '../shared/submit-group';
-import CommitteeEdit from './committee-edit';
-import './edit-clubs.scss';
-import ExecEdit from './exec-edit';
-import ImageUpload from './image-upload';
+import UploadBackdrop from './shared/upload-backdrop';
+import ImageUpload from './clubs/image-upload';
+import EditExecList from './clubs/edit-exec-list';
+import TwoButtonBox from './shared/two-button-box';
 
-class EditClubs extends React.Component {
-    constructor(props) {
-        super(props);
-        this.state = {
-            club: null,
-            new: false,
-            name: '',
-            advised: false,
-            fb: '',
-            website: '',
-            coverImg: '',
-            description: '',
-            execs: null,
-            committees: null,
-            compressed: null,
-            execBlobs: null,
-        };
-        this.handleInputChange = this.handleInputChange.bind(this);
-        this.handleImageUpload = this.handleImageUpload.bind(this);
-        this.handleProfPicUpload = this.handleProfPicUpload.bind(this);
-        this.handleExecChange = this.handleExecChange.bind(this);
-        this.handleCommitteeChange = this.handleCommitteeChange.bind(this);
-    }
+const useStyles = makeStyles((theme) => ({
+    title: {
+        textAlign: 'center',
+        fontSize: '3rem',
+    },
+    form: {
+        padding: 24,
+        [theme.breakpoints.down('sm')]: {
+            padding: 12,
+        },
+    },
+    subtitle: {
+        paddingTop: 24,
+        textAlign: 'center',
+        fontSize: '2rem',
+    },
+    boxWrapper: {
+        marginBottom: 16,
+        display: 'flex',
+        [theme.breakpoints.down('sm')]: {
+            flexDirection: 'column',
+        },
+    },
+    type: {
+        height: 56,
+    },
+    spacer: {
+        width: 20,
+        [theme.breakpoints.down('sm')]: {
+            height: 16,
+        },
+    },
+}));
 
-    changeAdvised = () => {
-        this.setState({ advised: !this.state.advised });
-    };
+const EditClubs = () => {
+    const [id, setId] = useState(null);
+    const [club, setClub] = useState(null);
+    const [backdrop, setBackdrop] = useState(false);
+    const [cover, setCover] = useState(false);
+    const [profilePics, setProfilePics] = useState(null);
+    const dispatch = useDispatch();
+    const classes = useStyles();
+    const {
+        register,
+        control,
+        handleSubmit,
+        setValue,
+        formState: { errors },
+    } = useForm();
 
-    handleInputChange = (event) => {
-        const target = event.target;
-        this.setState({ [target.name]: target.value });
-    };
-
-    handleImageUpload = async (event) => {
-        const compressed = await compressUploadedImage(event.target.files[0], 1728);
-        const url = URL.createObjectURL(compressed);
-        this.setState({ compressed, coverImg: url });
-    };
-
-    handleProfPicUpload = async (event) => {
-        const compressed = await compressUploadedImage(event.target.files[0], 256);
-        const url = URL.createObjectURL(compressed);
-        const count = Number(event.target.name.substring(21));
-        var execs = this.state.execs;
-        var execBlobs = this.state.execBlobs;
-        execs[count] = { ...this.state.execs[count], img: url };
-        execBlobs[count] = compressed;
-        this.setState({ execs, execBlobs });
-    };
-
-    handleExecChange = (event) => {
-        const target = event.target;
-        const count = Number(target.attributes.num.nodeValue);
-        var execs = this.state.execs;
-        execs[count] = { ...this.state.execs[count], [target.name]: target.value };
-        this.setState({ execs });
-    };
-
-    handleCommitteeChange = (event) => {
-        const target = event.target;
-        const count = Number(target.attributes.num.nodeValue);
-        var committees = this.state.committees;
-        committees[count] = { ...this.state.committees[count], [target.name]: target.value };
-        this.setState({ committees });
-    };
-
-    handleExecDelete = (num) => {
-        var execs = this.state.execs;
-        var execBlobs = this.state.execBlobs;
-        if (confirm(`Are you sure you want to delete Exec #${num + 1}?`)) {
-            execs.splice(num, 1);
-            execBlobs.splice(num, 1);
-            this.setState({ execs, execBlobs });
-        }
-    };
-
-    addExec = () => {
-        var execs = this.state.execs;
-        var execBlobs = this.state.execBlobs;
-        execs.push(new Exec());
-        execBlobs.push(null);
-        this.setState({ execs, execBlobs });
-    };
-
-    handleCommitteeDelete = (num) => {
-        var committees = this.state.committees;
-        if (confirm(`Are you sure you want to delete Committee #${num + 1}?`)) {
-            committees.splice(num, 1);
-            this.setState({ committees });
-        }
-    };
-
-    addCommittee = () => {
-        var committees = this.state.committees;
-        committees.push(new Committee());
-        this.setState({ committees });
-    };
-
-    submit = async () => {
-        var invalid = this.testValid();
-
-        // If there are invalid items
-        if (invalid.length !== 0) {
-            var invalidMessage = '';
-            invalid.forEach((i) => (invalidMessage += `${i} cannot be empty!\n`));
-            alert(invalidMessage);
-            return;
-        }
-
-        var coverThumb = null;
-        if (this.state.compressed) coverThumb = await compressUploadedImage(this.state.compressed, 432);
-
-        var fullClub = new Club(
-            this.state.name,
-            this.state.advised,
-            this.state.fb,
-            this.state.website,
-            this.state.club.coverImgThumbnail,
-            this.state.club.coverImg,
-            this.state.description,
-            this.state.execs,
-            this.state.committees,
-            { img: this.state.compressed, thumb: coverThumb },
-            this.state.execBlobs,
-        );
-
-        // POST Club
-        var res;
-        if (this.state.new) {
-            res = await postClub(fullClub);
-        } else {
-            // TODO: This is so we can delete the old exec images, but we should filter out only the image urls
-            fullClub.oldExecs = this.state.club.execs;
-            fullClub.oldCommittees = this.state.club.committees;
-            res = await postClub(fullClub, this.state.club.objId);
-        }
-
-        // Get response and send to user
-        if (res.status === 200) {
-            alert(`Successfully ${this.state.new ? 'added' : 'edited'} club!`);
-            window.location.href = `${window.location.origin}/clubs${window.location.search}`;
-        } else alert(`${this.state.new ? 'Adding' : 'Editing'} club failed :(`);
-    };
-
-    testValid = () => {
-        var invalid = [];
-        if (this.state.name === '') invalid.push('Club Name');
-        for (var i = 0; i < this.state.execs.length; i++) {
-            if (this.state.execs[i].name === '') invalid.push(`Exec ${i + 1}'s Name`);
-            if (this.state.execs[i].position === '') invalid.push(`Exec ${i + 1}'s Position`);
-        }
-        for (var i = 0; i < this.state.committees.length; i++) {
-            if (this.state.committees[i].name === '') invalid.push(`Committee ${i + 1}'s Name`);
-        }
-        return invalid;
-    };
-
-    resetState = (club, isNew = false) => {
-        this.setState({
-            club,
-            new: isNew,
-            name: club.name,
-            advised: club.advised,
-            fb: club.fb,
-            website: club.website,
-            coverImg: club.coverImg,
-            description: club.description,
-            execs: [...club.execs],
-            committees: [...club.committees],
-            execBlobs: Array(club.execs.length),
-            compressed: null,
-        });
-    };
-
-    async componentDidMount() {
-        // Get id from url params
+    useEffect(async () => {
+        // Extract ID from url search params
         const id = getParams('id');
 
-        // Empty form if new
-        if (id === null) {
-            this.resetState(new Club(), true);
-            return;
+        // Set the ID and club state variable
+        if (id !== null) {
+            const currClub = await getClub(id);
+            if (currClub.status === 200) {
+                setId(id);
+                setProfilePics(Array(currClub.data.execs.length).fill(null));
+                setClub(currClub.data);
+            } else openPopup('Error fetching club info. Please refresh the page or add a new club.', 4);
+        } else {
+            setProfilePics([]);
+            setClub(new Club());
         }
+    }, []);
 
-        // Fill form with event
-        const res = await getClub(id);
+    useEffect(() => {
+        if (club === null) return;
+        setValue('advised', club.advised ? 'advised' : 'independent');
+    }, [club]);
 
-        if (res.status === 200) this.resetState(res.data);
-        else {
-            alert(`Could not get event with the requested ID '${id}'. Redirecting to 'new event' page`);
-            window.location.href = `${window.location.origin}/edit/events`;
-        }
-    }
+    const onSubmit = async (data) => {
+        if (!('name' in data)) return;
+        const cookies = new Cookies();
 
-    render() {
-        // Return loading if event not got
-        if (this.state.club === null && !this.state.new) return <Loading></Loading>;
+        const { execs, execProfilePics, execPhotos } = data.execs
+            ? processExecs(data.execs)
+            : { execs: [], execProfilePics: [], execPhotos: [] };
+        const filteredCommittees = data.committees ? data.committees.filter((c) => !c.deleted) : [];
+        const committees = filteredCommittees.map((c) => ({
+            ...c,
+            heads: processLinkObjectList(c.heads),
+            links: processLinkObjectList(c.links),
+        }));
+        const links = processLinkObjectList(data.links);
 
-        var execEditList = [];
-        for (var i = 0; i < this.state.execs.length; i++) {
-            execEditList.push(
-                <ExecEdit
-                    num={i}
-                    key={i}
-                    exec={this.state.execs[i]}
-                    onImgChange={this.handleProfPicUpload}
-                    onChange={this.handleExecChange}
-                    onDelete={this.handleExecDelete.bind(this, i)}
-                ></ExecEdit>
-            );
-        }
-
-        var committeeEditList = [];
-        for (var i = 0; i < this.state.committees.length; i++) {
-            committeeEditList.push(
-                <CommitteeEdit
-                    num={i}
-                    key={i}
-                    committee={this.state.committees[i]}
-                    onChange={this.handleCommitteeChange}
-                    onDelete={this.handleCommitteeDelete.bind(this, i)}
-                ></CommitteeEdit>
-            );
-        }
-
-        return (
-            <div className="edit-clubs">
-                <div className="edit-clubs-image-container">
-                    <img className="edit-clubs-image" src={imgUrl(this.state.coverImg)} alt="cover image"></img>
-                    <ImageUpload
-                        name="coverImage"
-                        className="edit-clubs-cover-photo-upload"
-                        onChange={this.handleImageUpload}
-                    ></ImageUpload>
-                </div>
-                <div className="edit-clubs-edit-bottom">
-                    <div className="edit-clubs-name-advised-div">
-                        <ActionButton
-                            className={isActive('edit-clubs-advised', this.state.advised)}
-                            onClick={this.changeAdvised}
-                        >
-                            {this.state.advised ? 'Advised' : 'Independent'}
-                        </ActionButton>
-                        <input
-                            name="name"
-                            className="line-in edit-clubs-name-input"
-                            type="text"
-                            placeholder="Club name..."
-                            value={this.state.name}
-                            onChange={this.handleInputChange}
-                        ></input>
-                    </div>
-                    <label htmlFor="description">Description</label>
-                    <br />
-                    <textarea
-                        name="description"
-                        className="edit-clubs-description-input"
-                        type="text"
-                        placeholder="Enter a description for your club"
-                        value={this.state.description}
-                        onChange={this.handleInputChange}
-                    ></textarea>
-                    <label htmlFor="fb" className="edit-clubs-link-label">
-                        Facebook
-                    </label>
-                    <input
-                        name="fb"
-                        className="line-in edit-clubs-link-input"
-                        type="text"
-                        placeholder="Facebook link"
-                        value={this.state.fb}
-                        onChange={this.handleInputChange}
-                    ></input>
-                    <br />
-                    <label htmlFor="website" className="edit-clubs-link-label">
-                        Website
-                    </label>
-                    <input
-                        name="website"
-                        className="line-in edit-clubs-link-input"
-                        type="text"
-                        placeholder="Facebook link"
-                        value={this.state.website}
-                        onChange={this.handleInputChange}
-                    ></input>
-                    <p className="edit-clubs-card-edit-heading">Execs</p>
-                    <div className="edit-clubs-card-edit-list">{execEditList}</div>
-                    <div className="edit-clubs-add-container">
-                        <ActionButton className="edit-clubs-add" onClick={this.addExec}>
-                            Add Exec
-                        </ActionButton>
-                    </div>
-                    <p className="edit-clubs-card-edit-heading">Committees</p>
-                    <div className="edit-clubs-card-edit-list">{committeeEditList}</div>
-                    <div className="edit-clubs-add-container">
-                        <ActionButton className="edit-clubs-add" onClick={this.addCommittee}>
-                            Add Committee
-                        </ActionButton>
-                    </div>
-                    <SubmitGroup submit={this.submit}></SubmitGroup>
-                </div>
-            </div>
+        const newClub = new Club(
+            id,
+            data.name,
+            data.advised === 'advised',
+            links,
+            data.description,
+            club.coverImgThumbnail,
+            club.coverImg,
+            execs,
+            committees,
+            club.history
         );
-    }
-}
+        const newImages = new ClubImageBlobs(cover, execProfilePics);
+
+        setBackdrop(true);
+        const res =
+            id === null
+                ? await postClub(newClub, newImages, execPhotos)
+                : await putClub(newClub, newImages, execPhotos, id);
+        setBackdrop(false);
+        if (res.status === 200) {
+            cookies.set('success', id ? 'update-club' : 'add-club', { sameSite: 'strict', path: '/' });
+            back();
+        } else dispatch(openPopup('Unable to upload data. Please refresh the page or try again.', 4));
+    };
+
+    const processExecs = (execs) => {
+        const cleanedExecs = execs.map((e) => (e.deleted ? null : e));
+        const outProfilePics = profilePics.filter((p, i) => cleanedExecs[i] !== null);
+        const outExecs = cleanedExecs.filter((e) => e !== null);
+        const hasNewPicture = outProfilePics.map((p) => p !== null);
+        return { execs: outExecs, execProfilePics: outProfilePics, execPhotos: hasNewPicture };
+    };
+
+    const back = () => {
+        redirect(`/clubs${id ? `?id=${id}` : ''}`);
+    };
+
+    return club === null ? (
+        <Loading flat />
+    ) : (
+        <React.Fragment>
+            <UploadBackdrop open={backdrop} />
+            <Typography variant="h1" className={classes.title}>
+                {id ? 'Edit Club' : 'Add Club'}
+            </Typography>
+            <form onSubmit={handleSubmit(onSubmit)} className={classes.form}>
+                <Box className={classes.boxWrapper}>
+                    <ControlledSelect
+                        control={control}
+                        setValue={setValue}
+                        value={club.advised ? 'advised' : 'independent'}
+                        name="advised"
+                        variant="outlined"
+                        className={classes.type}
+                    >
+                        <MenuItem value="advised">Advised</MenuItem>
+                        <MenuItem value="independent">Independent</MenuItem>
+                    </ControlledSelect>
+                    <div className={classes.spacer} />
+                    <ControlledTextField
+                        control={control}
+                        setValue={setValue}
+                        value={club.name}
+                        label="Club Name"
+                        name="name"
+                        variant="outlined"
+                        grow
+                        required
+                        errorMessage="Please enter a name"
+                    />
+                </Box>
+                <ControlledTextField
+                    control={control}
+                    setValue={setValue}
+                    value={club.description}
+                    label="Description (optional)"
+                    name="description"
+                    variant="outlined"
+                    area
+                />
+                <ImageUpload
+                    setValue={setCover}
+                    src={club.coverImg}
+                    default="/default-cover.webp"
+                    alt="cover photo"
+                    width={300}
+                    height={125}
+                    aspect={12 / 5}
+                />
+                <LinkInputList
+                    control={control}
+                    register={register}
+                    setValue={setValue}
+                    name="links"
+                    label="Link (start with http/https)"
+                    links={club.links}
+                />
+                <Typography variant="h2" className={classes.subtitle}>
+                    Execs
+                </Typography>
+                <EditExecList
+                    control={control}
+                    register={register}
+                    setValue={setValue}
+                    errors={errors}
+                    profilePics={profilePics}
+                    setProfilePics={setProfilePics}
+                    execList={club.execs}
+                />
+                <Typography variant="h2" className={classes.subtitle}>
+                    Committees
+                </Typography>
+                <EditCommitteeList
+                    control={control}
+                    register={register}
+                    setValue={setValue}
+                    errors={errors}
+                    committeeList={club.committees}
+                />
+                <TwoButtonBox success="Submit" onCancel={back} onSuccess={onSubmit} submit right />
+            </form>
+        </React.Fragment>
+    );
+};
 
 export default EditClubs;

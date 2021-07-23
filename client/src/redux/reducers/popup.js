@@ -1,26 +1,19 @@
 import {
-    RESET_POPUP_STATE,
-    SET_EDIT,
-    SET_ID,
-    SET_NEW,
-    SET_OPEN,
-    SET_DELETED,
-    SET_TYPE,
-    SET_MOBILE_DROPDOWN,
+    OPEN_CONNECTION_POPUP,
     OPEN_POPUP,
+    RESET_POPUP_STATE,
+    SET_MESSAGE,
+    SET_OPEN,
+    SET_SEVERITY,
 } from '../actionTypes';
 
 const initialState = {
     open: false,
-    edit: false,
-    new: false,
-    id: '',
-    deleted: false,
-    type: '', // events | volunteering | clubs
-    mobileDropdown: false,
+    message: '',
+    severity: 0, // 0 - none, 1 - info, 2 - success, 3 - warning, 4 - error
 };
 
-export default function popup(state = initialState, action) {
+export default function data(state = initialState, action) {
     switch (action.type) {
         case RESET_POPUP_STATE: {
             return initialState;
@@ -32,55 +25,35 @@ export default function popup(state = initialState, action) {
                 open,
             };
         }
-        case SET_EDIT: {
-            const { edit } = action.payload;
+        case SET_MESSAGE: {
+            const { message } = action.payload;
             return {
                 ...state,
-                edit,
+                message,
             };
         }
-        case SET_NEW: {
-            const { newPopup } = action.payload;
+        case SET_SEVERITY: {
+            const { severity } = action.payload;
             return {
                 ...state,
-                new: newPopup,
-            };
-        }
-        case SET_ID: {
-            const { id } = action.payload;
-            return {
-                ...state,
-                id,
-            };
-        }
-        case SET_DELETED: {
-            const { deleted } = action.payload;
-            return {
-                ...state,
-                deleted,
-            };
-        }
-        case SET_TYPE: {
-            const { type } = action.payload;
-            return {
-                ...state,
-                type,
-            };
-        }
-        case SET_MOBILE_DROPDOWN: {
-            const { open } = action.payload;
-            return {
-                ...state,
-                mobileDropdown: open,
+                severity,
             };
         }
         case OPEN_POPUP: {
-            const { id, type } = action.payload;
+            const { message, severity } = action.payload;
             return {
                 ...state,
-                id,
-                type,
                 open: true,
+                message,
+                severity,
+            };
+        }
+        case OPEN_CONNECTION_POPUP: {
+            return {
+                ...state,
+                open: true,
+                message: 'Could not connect to the server. Please check your connection and refresh the page.',
+                severity: 4,
             };
         }
         default:

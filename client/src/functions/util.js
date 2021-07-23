@@ -1,11 +1,12 @@
-import dayjs from 'dayjs';
+import React from 'react';
+import dayjs, { Dayjs } from 'dayjs';
 import utc from 'dayjs/plugin/utc';
 import timezone from 'dayjs/plugin/timezone';
 import isLeapYear from 'dayjs/plugin/isLeapYear';
 import customParseFormat from 'dayjs/plugin/customParseFormat';
-import imageCompression from 'browser-image-compression';
-import { EventInfo, DateAndTime, CalendarDates, DateDivider } from './entries';
-import config from '../files/config.json';
+import Link from '@material-ui/core/Link';
+
+import { EventInfo, Event } from './entries';
 
 dayjs.extend(utc);
 dayjs.extend(timezone);
@@ -14,12 +15,173 @@ dayjs.extend(customParseFormat);
 
 /**
  * Gets query parameters
+ *
  * @param {string} query key value to get from the querystring
  * @returns {string | null} The value of the query parameter or null if missing
  */
 export function getParams(query) {
     return new URLSearchParams(window.location.search).get(query);
 }
+
+/**
+ * Takes in text and a classname, parses the links, and creates
+ * a Fragment with the links in Link elements
+ *
+ * @param {string} text The text to parse and display
+ * @returns {object} A React jsx fragment containing text and link components
+ */
+export function parseLinks(text) {
+    const re = /((?:http|https):\/\/.+?)(?:\.|\?|!)?(?:\s|$)/g;
+    let m;
+    let matches = [];
+    do {
+        m = re.exec(text);
+        if (m) matches.push(m);
+    } while (m);
+
+    let tempText = text;
+    let outText = [];
+    let prevIndex = 0;
+    matches.forEach((m) => {
+        outText.push(tempText.substring(prevIndex, tempText.indexOf(m[1])));
+        outText.push(
+            <Link key={m[1]} href={m[1]} alt={m[1]}>
+                {m[1]}
+            </Link>
+        );
+        tempText = tempText.substring(tempText.indexOf(m[1]) + m[1].length);
+    });
+    outText.push(tempText);
+
+    return <React.Fragment>{outText}</React.Fragment>;
+}
+
+/**
+ * Redirect user and reload the page to a specified path
+ * @param {string} path Path to redirect to (starts with /)
+ */
+export function redirect(path) {
+    window.location = `${window.location.origin}${path}`;
+}
+
+/**
+ * This function will remove all deleted links and return
+ * a string list of the values, with the empty ones removed
+ * 
+ * @param {object[]} list List of link objects with deleted and value attributes
+ * @returns {string[]} List of all links
+ */
+export function processLinkObjectList(list) {
+    if (!list) return [];
+    const filteredList = list.filter((l) => !l.deleted && l.value.trim() !== '');
+    return filteredList.map((l) => l.value);
+}
+
+// ================== CSS AND MUI FUNCTIONS =================== //
+
+/**
+ * Adds an extra 'active' classname to an element's classname if state is true.
+ *
+ * @param {boolean} state State variable, true would be active
+ * @param {string} defualtClassName Base name of the class
+ * @param {string} activeClassName Name of the active class
+ * @returns {string} Classname string
+ */
+export function isActive(state, defaultClassName, activeClassName) {
+    return `${defaultClassName} ${state ? activeClassName : ''}`;
+}
+
+/**
+ * Sets a style depending on whether or not the theme is light/dark
+ *
+ * @param {import('@material-ui/core').Theme} theme The Mui theme object
+ * @param {string} light Light theme style
+ * @param {string} dark Dark theme style
+ * @returns {string} Style string
+ */
+export function darkSwitch(theme, light, dark) {
+    return theme.palette.type === 'light' ? light : dark;
+}
+
+/**
+ * Sets a grey (400/600) depending on whether or not the theme is light/dark
+ *
+ * @param {import('@material-ui/core').Theme} theme The Mui theme object
+ * @returns {string} Style string
+ */
+export function darkSwitchGrey(theme) {
+    return darkSwitch(theme, theme.palette.grey[600], theme.palette.grey[400]);
+}
+
+// ================== DATE AND TIME FUNCTIONS =================== //
+
+/**
+ * Returns the dayjs object, corrected to the current time zone
+ *
+ * @param {Number} millis UTC millisecond time
+ * @returns {dayjs.Dayjs} The dayjs object in the correct time zone
+ */
+export function toTz(millis) {
+    return dayjs(Number(millis)).tz('America/Chicago');
+}
+
+/**
+ * Formats a UTC millisecond time while converting to America/Chicago timezone
+ *
+ * @param {Number} millis UTC millisecond time to format
+ * @param {string} format Dayjs format to format the time to
+ * @returns {string} The formatted time
+ */
+export function formatTime(millis, format) {
+    return toTz(millis).format(format);
+}
+
+/**
+ * Checks if the date is the same between two UTC millisecond times, in the current time zone.
+ *
+ * @param {Number} first The first UTC millisecond time
+ * @param {Number} second The second UTC millisecond time
+ * @returns {boolean} True if the two times fall on the same date (between 00:00:00.000 and 23:59:59.999)
+ */
+export function isSameDate(first, second) {
+    return formatTime(first, 'MM/DD/YYYY') === formatTime(second, 'MM/DD/YYYY');
+}
+
+/**
+ * Formats the full date of the event.
+ * Includes an end date if not the same as the start date.
+ *
+ * @param {Event} event The event object
+ * @returns
+ */
+export function formatEventDate(event) {
+    let formattedTime = formatTime(event.start, 'dddd, MMMM d, YYYY');
+    if (!isSameDate(event.start, event.end)) formattedTime += formatTime(event.end, ' - dddd, MMMM d, YYYY');
+    return formattedTime;
+}
+
+/**
+ * Formats the time of the event.
+ * Includes an end time if not the same as the start time.
+ *
+ * @param {Event} event The event object
+ * @returns
+ */
+export function formatEventTime(event) {
+    let formattedTime = formatTime(event.start, 'h:mma');
+    if (event.start !== event.end) formattedTime += formatTime(event.end, ' - h:mma');
+    return formattedTime;
+}
+
+/**
+ *
+ * @param {Dayjs} date Dayjs date object
+ */
+export function dateToMillis(date) {
+    return date.valueOf();
+}
+
+// ================== OLD FUNCTIONS =================== //
 
 /**
  * Parses a time using dayjs and returns the seconds in milliseconds.
@@ -29,7 +191,7 @@ export function getParams(query) {
  * @param {string} tz Tz database time zone (https://en.wikipedia.org/wiki/List_of_tz_database_time_zones)
  * @returns {number} Milliseconds since Jan 1, 1970 [UTC time]
  */
-export function parseTimeZone(input, tz) {
+export function parseToTimeZone(input, tz) {
     return dayjs.tz(input, 'YYYY-MM-DD HH:mm', tz).valueOf();
 }
 
@@ -46,39 +208,6 @@ export function convertToTimeZone(millis, tz) {
         var tz = dayjs.tz.guess();
     }
     return dayjs(Number(millis)).tz(tz);
-}
-
-/**
- * Takes a list of sorted events and injects DateDivider objects into it
- *
- * @param {EventInfo[]} eventList List of events, with an extra dayjs object defined
- */
-export function insertDateDividers(eventList) {
-    // Current date will store the latest date divider added, to prevent repeats
-    var currDate = '';
-
-    // Iterate through the list of sorted events
-    for (var i = 0; i < eventList.length; i++) {
-        // Create formatted date from the start datetime of the event
-        var date = eventList[i].startDayjs.format('YYYY-MM-DD');
-
-        // If the date doesn't have a divider, add it to the list
-        if (currDate != date) {
-            currDate = date;
-            eventList.splice(i, 0, new DateDivider(date));
-            i++;
-        }
-    }
-}
-
-/**
- * Converts a date to a readable date section label
- *
- * @param {string} date Date passed in formatted as YYYY-MM-DD
- * @returns {string} Readable date section label
- */
-export function createDateHeader(date) {
-    return dayjs(date).format('dddd M/D/YY');
 }
 
 /**
@@ -165,81 +294,12 @@ export function getMonthAndYear(offset = 0) {
 }
 
 /**
- * Creates the 3 numerical lists of calendar days, for the current, previous, and next months
- *
- * @param {number} [offset] Month offset (0 if undefined)
- * @param {string} [dateString] The calendar date (MMM D, YYYY)
- * @returns {CalendarDates} Object with lists of calendar dates
- */
-export function generateCalendarDays(offset = 0, dateString = '') {
-    // Creates a DayJS object from date or offset
-    var day = dayjs();
-    if (dateString !== '') day = dayjs(dateString, 'MMM D, YYYY');
-    day = day.add(offset, 'month').date(1);
-
-    // Creates the dates for the current, previous, and next calendar month
-    const current = [],
-        previous = [],
-        next = [];
-
-    // Iterate through the dates and push numbers into arrays
-    for (let i = 1; i <= day.daysInMonth(); i++) current.push(i);
-    for (let i = day.day(), j = day.subtract(1, 'month').daysInMonth(); i > 0; i--) previous.unshift(j--);
-    for (let i = day.date(day.daysInMonth()).day() + 1, j = 1; i < 7; i++) next.push(j++);
-
-    // Returns an object containing the data
-    return new CalendarDates(current, previous, next, day);
-}
-
-/**
- * Converts millisecond time to editing date and time
- *
- * @param {number} millis The UTC millisecond time
- * @returns {DateAndTime} The date and time objects
- */
-export function millisToDateAndTime(millis) {
-    var dayObj = convertToTimeZone(millis, getTimezone());
-    return {
-        date: dayObj.format('YYYY-MM-DD'),
-        time: dayObj.format('HH:mm'),
-    };
-}
-
-/**
- * Adds 'active' or 'inactive' to an element's classname.
- *
- * @param {string} className Base name of the class
- * @param {boolean} state State variable, true would be active
- */
-export function isActive(className, state) {
-    return `${className} ${state ? 'active' : 'inactive'}`;
-}
-
-/**
- * Compresses the image to a specific max width or height
- * Cover Photos: 1728x756
- * Cover Photo Thumbnails: 432x189
- * Exec Profile Pictures: 256x256
- *
- * @param {Blob} imageFile Image file object
- * @param {number} maxWidthOrHeight The max width/height to scale down, in pixels
- * @returns {Promise<Blob>} The compressed image blob
- */
-export async function compressUploadedImage(imageFile, maxWidthOrHeight) {
-    try {
-        return await imageCompression(imageFile, { maxWidthOrHeight });
-    } catch (error) {
-        console.dir(error);
-    }
-}
-
-/**
  * Converts a dropbox image path to the correct image url
  *
  * @param {string} path Path of file (eg. /7ad67e9c87f78de90d.png)
  */
 export function imgUrl(path) {
-    if (path.startsWith('/')) return `${config.backend}/static${path}`;
+    if (path.startsWith('/')) return `/static${path}`;
     return path;
 }
 
@@ -279,40 +339,6 @@ export function catchError(status, message = '') {
         return true;
     }
     return false;
-}
-
-/**
- * Takes in text and a classname, parses the links, and creates
- * a paragraph element with the links in <a> tags
- *
- * @param {string} className Classname prop to add to outer paragraph element
- * @param {string} text The text to parse and display
- * @returns {object} A React jsx <p> component with links wrapped in <a> tags
- */
-export function parseLinks(className, text) {
-    const re = /((?:http|https):\/\/.+?)(?:\.|\?|!)?(?:\s|$)/g;
-    var m;
-    var matches = [];
-    do {
-        m = re.exec(text);
-        if (m) matches.push(m);
-    } while (m);
-
-    var tempText = text;
-    var outText = [];
-    var prevIndex = 0;
-    matches.forEach((m) => {
-        outText.push(tempText.substring(prevIndex, tempText.indexOf(m[1])));
-        outText.push(
-            <a key={m[1]} href={m[1]} alt={m[1]}>
-                {m[1]}
-            </a>
-        );
-        tempText = tempText.substring(tempText.indexOf(m[1]) + m[1].length);
-    });
-    outText.push(tempText);
-
-    return <p className={className}>{outText}</p>;
 }
 
 /**
@@ -363,7 +389,7 @@ export function getDefaulEditDate() {
 export function getDefaulEditTime(endTime) {
     // Will take next whole hour
     var day = dayjs().second(0).minute(0).add(1, 'hour');
-    
+
     // Add 1 hour if end time
     if (endTime) day = day.add(1, 'hour');
     return day.format('HH:mm');

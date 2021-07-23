@@ -1,51 +1,25 @@
-import React from 'react';
-import { connect } from 'react-redux';
+import React, { useEffect, useState } from 'react';
+import { useLocation } from 'react-router';
+import { getParams } from '../../functions/util';
 
-import ClubCard from './club-card';
-import ClubPopup from './club-popup';
-import Popup from '../shared/popup';
+import PageWrapper from '../shared/page-wrapper';
+import ClubList from './club-list';
+import ClubDisplay from './club-display';
 
-import { getSavedClubList } from '../../redux/selectors';
-import { openPopup } from '../../redux/actions';
+const Clubs = () => {
+    const [display, setDisplay] = useState(null);
+    const location = useLocation();
 
-import './clubs.scss';
-import Loading from '../shared/loading';
-import AddButton from '../shared/add-button';
+    useEffect(() => {
+        // Extract ID from url search params
+        const id = getParams('id');
 
-class Clubs extends React.Component {
-    activatePopup = (id) => {
-        this.props.history.push(`/clubs?id=${id}`);
-        this.props.openPopup(id, 'clubs');
-    };
+        // Return the user to the home page if missing and ID
+        if (id === null) setDisplay(<ClubList />);
+        else setDisplay(<ClubDisplay id={id} />);
+    }, [location]);
 
-    createCards = () => {
-        return this.props.clubList.map((c) => {
-            return <ClubCard club={c} key={c.name} onClick={this.activatePopup.bind(this, c.objId)}></ClubCard>;
-        });
-    };
-
-    render() {
-        if (this.props.clubList === null) return <Loading className="clubs"></Loading>;
-
-        const cards = this.createCards();
-
-        return (
-            <div className="Clubs">
-                <Popup history={this.props.history}>
-                    <ClubPopup></ClubPopup>
-                </Popup>
-                <AddButton type="Club"></AddButton>
-                <div className="club-card-list">{cards}</div>
-            </div>
-        );
-    }
-}
-
-const mapStateToProps = (state) => {
-    return {
-        clubList: getSavedClubList(state),
-    };
+    return <PageWrapper>{display}</PageWrapper>;
 };
-const mapDispatchToProps = { openPopup };
 
-export default connect(mapStateToProps, mapDispatchToProps)(Clubs);
+export default Clubs;

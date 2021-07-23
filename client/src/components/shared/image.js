@@ -1,32 +1,49 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
+import { makeStyles } from '@material-ui/core';
 
-class Image extends React.Component {
-    constructor(props) {
-        super(props);
-        this.state = { src: this.props.src };
-    }
+import Paper from '@material-ui/core/Paper';
+import { getCdnUrl } from '../../functions/api';
 
-    error = () => {
-        this.setState({ src: this.props.default });
+const useStyles = makeStyles({
+    root: {
+        width: (props) => props.width || '100%',
+        height: (props) => props.height || 'inherit',
+        objectFit: 'cover',
+        display: 'block',
+        fontSize: 0,
+    },
+});
+
+const url = (src) => (!src ? '' : src.endsWith('.webp') ? `${getCdnUrl()}/${src}` : src);
+
+/**
+ * Displays an image given a dynamic src.
+ * The image will by default be objectFit: cover and try to fit 100% of the width if no width prop is specified.
+ *
+ * @param {object} props React props object
+ * @param {string} props.src Src of the image to display; will dynamically update image
+ * @param {string} props.default Src of the default fallback image to display
+ * @param {string} props.alt Alt text to display for accessibility purposes (won't actually show)
+ * @param {number} [props.width] Width of the image
+ * @param {number} [props.height] Height of the image
+ * @param {boolean} props.raised True to add drop shadow to image
+ */
+const Image = (props) => {
+    const [src, setSrc] = useState(url(props.src));
+    const classes = useStyles({ width: props.width, height: props.height });
+
+    const inavlidImage = () => {
+        setSrc(props.default);
     };
+    useEffect(() => {
+        setSrc(url(props.src));
+    }, [props.src]);
 
-    componentDidUpdate(prevProps) {
-        if (this.props.src !== prevProps.src) {
-            this.setState({ src: this.props.src });
-        }
-    }
-
-    render() {
-        return (
-            <img
-                id={this.props.id}
-                className={this.props.className}
-                src={this.state.src}
-                alt={this.props.alt}
-                onError={this.error}
-            ></img>
-        );
-    }
-}
+    return (
+        <Paper elevation={props.raised ? 2 : 0} className={props.className}>
+            <img id={props.id} className={classes.root} src={src} alt={props.alt} onError={inavlidImage} />
+        </Paper>
+    );
+};
 
 export default Image;

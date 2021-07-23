@@ -1,110 +1,25 @@
-import React from 'react';
-import { connect } from 'react-redux';
+import React, { useEffect, useState } from 'react';
+import { useLocation } from 'react-router';
+import { getParams } from '../../functions/util';
 
-import Popup from '../shared/popup';
-import VolunteeringCard from './volunteering-card';
-import VolunteeringPopup from './volunteering-popup';
-import Loading from '../shared/loading';
-import AddButton from '../shared/add-button';
+import PageWrapper from '../shared/page-wrapper';
+import VolunteeringList from './volunteering-list';
+import VolunteeringDisplay from './volunteering-display';
 
-import { getSavedVolunteeringList } from '../../redux/selectors';
-import { setVolunteeringList, openPopup } from '../../redux/actions';
+const Volunteering = () => {
+    const [display, setDisplay] = useState(null);
+    const location = useLocation();
 
-import './volunteering.scss';
+    useEffect(() => {
+        // Extract ID from url search params
+        const id = getParams('id');
 
-class Volunteering extends React.Component {
-    constructor(props) {
-        super(props);
-        this.state = { volCards: null, filter: null };
-    }
+        // Return the user to the home page if missing and ID
+        if (id === null) setDisplay(<VolunteeringList />);
+        else setDisplay(<VolunteeringDisplay id={id} />);
+    }, [location]);
 
-    activatePopup = (id) => {
-        this.props.history.push(`/volunteering?id=${id}`);
-        this.props.openPopup(id, 'volunteering');
-    };
-
-    updateFilter = (filter) => {
-        this.setState({ filter });
-    };
-
-    createCards = () => {
-        var volCards = [];
-        this.props.volunteeringList.forEach((vol) => {
-            if (this.state.filter === null || vol.filters[this.state.filter])
-                volCards.push(
-                    <VolunteeringCard
-                        vol={vol}
-                        key={vol._id}
-                        onClick={() => {
-                            this.activatePopup(vol._id);
-                        }}
-                    ></VolunteeringCard>
-                );
-        });
-        return volCards;
-    };
-
-    render() {
-        if (this.props.volunteeringList === null) return <Loading className="resources"></Loading>;
-
-        // Create volunteering cards
-        const volCards = this.createCards();
-
-        return (
-            <div className="Resources">
-                <Popup history={this.props.history}>
-                    <VolunteeringPopup></VolunteeringPopup>
-                </Popup>
-                <AddButton type="Volunteering"></AddButton>
-                <div className="volunteering-filters">
-                    <button
-                        onClick={this.updateFilter.bind(this, null)}
-                        className={'vol-filter all' + (this.state.filter === null ? ' active' : '')}
-                    >
-                        All
-                    </button>
-                    <button
-                        onClick={this.updateFilter.bind(this, 'limited')}
-                        className={'vol-filter limited' + (this.state.filter === 'limited' ? ' active' : '')}
-                    >
-                        Limited Slots
-                    </button>
-                    <button
-                        onClick={this.updateFilter.bind(this, 'semester')}
-                        className={'vol-filter semester' + (this.state.filter === 'semester' ? ' active' : '')}
-                    >
-                        Semester Long
-                    </button>
-                    <button
-                        onClick={this.updateFilter.bind(this, 'setTimes')}
-                        className={'vol-filter set-times' + (this.state.filter === 'setTimes' ? ' active' : '')}
-                    >
-                        Set Volunteering Times
-                    </button>
-                    <button
-                        onClick={this.updateFilter.bind(this, 'weekly')}
-                        className={'vol-filter weekly' + (this.state.filter === 'weekly' ? ' active' : '')}
-                    >
-                        Weekly Signups
-                    </button>
-                    <button
-                        onClick={this.updateFilter.bind(this, 'open')}
-                        className={'vol-filter open' + (this.state.filter === 'open' ? ' active' : '')}
-                    >
-                        Open
-                    </button>
-                </div>
-                <div className="volunteering-section">{volCards}</div>
-            </div>
-        );
-    }
-}
-
-const mapStateToProps = (state) => {
-    return {
-        volunteeringList: getSavedVolunteeringList(state),
-    };
+    return <PageWrapper>{display}</PageWrapper>;
 };
-const mapDispatchToProps = { setVolunteeringList, openPopup };
 
-export default connect(mapStateToProps, mapDispatchToProps)(Volunteering);
+export default Volunteering;

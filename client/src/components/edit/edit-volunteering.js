@@ -1,217 +1,219 @@
-import React from 'react';
-import { getVolunteering, postVolunteering } from '../../functions/api';
-import { Volunteering } from '../../functions/entries';
-import { getParams, returnToLastLocation } from '../../functions/util';
-import ActionButton from '../shared/action-button';
+import React, { useEffect, useState } from 'react';
+import { useDispatch } from 'react-redux';
+import { makeStyles } from '@material-ui/core';
+import { useForm } from 'react-hook-form';
+import Cookies from 'universal-cookie';
+import { openPopup } from '../../redux/actions';
+import { getParams, redirect } from '../../functions/util';
+import { Filters, Volunteering } from '../../functions/entries';
+import { getVolunteering, postVolunteering, putVolunteering } from '../../functions/api';
+
+import { Controller } from 'react-hook-form';
+import Typography from '@material-ui/core/Typography';
+import Hidden from '@material-ui/core/Hidden';
+import Box from '@material-ui/core/Box';
+import Switch from '@material-ui/core/Switch';
+import FormControlLabel from '@material-ui/core/FormControlLabel';
+import ControlledTextField from './shared/controlled-text-field';
+import UploadBackdrop from './shared/upload-backdrop';
 import Loading from '../shared/loading';
-import SubmitGroup from '../shared/submit-group';
-import './edit-volunteering.scss';
+import TwoButtonBox from './shared/two-button-box';
+import ControlledFilterCheckbox from './volunteering/controlled-filter-checkbox';
 
-class EditVolunteering extends React.Component {
-    constructor(props) {
-        super(props);
-        this.state = {
-            volunteering: null,
-            new: false,
-            open: true,
-            name: '',
-            club: '',
-            description: '',
-            filters: {},
-        };
-        this.handleInputChange = this.handleInputChange.bind(this);
-    }
+const useStyles = makeStyles((theme) => ({
+    title: {
+        textAlign: 'center',
+        fontSize: '3rem',
+    },
+    form: {
+        padding: 24,
+        [theme.breakpoints.down('sm')]: {
+            padding: 12,
+        },
+    },
+    boxWrapper: {
+        marginBottom: 16,
+        display: 'flex',
+        [theme.breakpoints.down('sm')]: {
+            flexDirection: 'column',
+        },
+    },
+    name: {
+        [theme.breakpoints.up('md')]: {
+            marginLeft: 12,
+        },
+    },
+    filtersTitle: {
+        display: 'inline',
+        [theme.breakpoints.up('md')]: {
+            marginRight: 16,
+        },
+    },
+    spacer: {
+        width: 20,
+        [theme.breakpoints.down('sm')]: {
+            height: 16,
+        },
+    },
+    area: {
+        marginTop: 12,
+    },
+}));
 
-    handleInputChange = (event) => {
-        const target = event.target;
-        this.setState({ [target.name]: target.value });
-    };
+const EditVolunteering = () => {
+    const [id, setId] = useState(null);
+    const [volunteering, setVolunteering] = useState(null);
+    const [backdrop, setBackdrop] = useState(false);
+    const dispatch = useDispatch();
+    const classes = useStyles();
+    const { handleSubmit, control, setValue } = useForm();
 
-    changeFilter = (filter) => {
-        var filterList = this.state.filters;
-        filterList[filter] = !filterList[filter];
-        this.setState({ filters: filterList });
-    };
-
-    changeOpen = () => {
-        this.setState({ open: !this.state.open });
-    };
-
-    submit = async () => {
-        var invalid = this.testValid();
-        if (invalid.length !== 0) {
-            var message = '';
-            invalid.forEach((i) => (message += `${i} cannot be empty!\n`));
-            alert(message);
-            return;
-        }
-
-        // Updated 'open' filter
-        var filters = this.state.filters;
-        filters['open'] = this.state.open;
-
-        // Create volunteering object
-        var volunteeringObj = new Volunteering(
-            this.state.name,
-            this.state.club,
-            this.state.description,
-            filters,
-            this.state.signupTime || null,
-        );
-
-        // POST volunteering
-        var res;
-        if (this.state.new) res = await postVolunteering(volunteeringObj);
-        else res = await postVolunteering(volunteeringObj, this.state.volunteering._id);
-
-        // Get response and send to user
-        if (res.status === 200) {
-            alert(`Successfully ${this.state.new ? 'added' : 'edited'} volunteering!`);
-            window.location.href = `${window.location.origin}/volunteering${window.location.search}`;
-        } else alert(`${this.state.new ? 'Adding' : 'Editing'} volunteering failed :(`);
-    };
-
-    testValid = () => {
-        var invalid = [];
-        if (this.state.name === '') invalid.push('Volunteering name');
-        if (this.state.club === '') invalid.push('Club name');
-        if (this.state.filters.weekly && this.state.signupTime === '') invalid.push('Signup time');
-        return invalid;
-    };
-
-    resetState = (volunteering, isNew = false) => {
-        if (volunteering === null) volunteering = this.state.vol;
-        this.setState({
-            new: isNew,
-            volunteering,
-            name: volunteering.name,
-            club: volunteering.club,
-            description: volunteering.description,
-            open: volunteering.filters.open,
-            signupTime: volunteering.signupTime,
-            filters: { ...volunteering.filters },
-        });
-    };
-
-    async componentDidMount() {
-        // Get id from url params
+    useEffect(async () => {
+        // Extract ID from url search params
         const id = getParams('id');
 
-        // Empty form if new
-        if (id === null) {
-            this.resetState(new Volunteering(), true);
-            return;
-        }
+        // Set the ID and volunteering state variable
+        if (id !== null) {
+            const currVolunteering = await getVolunteering(id);
+            if (currVolunteering.status === 200) {
+                setId(id);
+                setVolunteering(currVolunteering.data);
+            } else openPopup('Error fetching volunteering info. Please refresh the page or add a new event.', 4);
+        } else setVolunteering(new Volunteering());
+    }, []);
 
-        // Fill form with volunteering
-        const res = await getVolunteering(id);
+    useEffect(() => {
+        if (!volunteering) return;
+        setValue('open', volunteering.filters.open);
+    }, [volunteering]);
 
-        if (res.status === 200) this.resetState(res.data);
-        else {
-            alert(`Could not get volunteering with the requested ID '${id}'. Redirecting to 'new volunteering' page`);
-            window.location.href = `${window.location.origin}/edit/volunteering`;
-        }
-    }
+    const onSubmit = async (data) => {
+        if (!('name' in data)) return;
+        const cookies = new Cookies();
 
-    render() {
-        // Return loading if volunteering not got
-        if (this.state.volunteering === null && !this.state.new) return <Loading></Loading>;
-
-        // If the weekly filter is active, show edit field for signup time
-        var signupTime = null;
-        if (this.state.filters.weekly) {
-            signupTime = (
-                <>
-                    <label htmlFor="signupTime">Signup Time</label>
-                    <input
-                        name="signupTime"
-                        className="line-in signup-time-input"
-                        type="text"
-                        placeholder="eg. Sunday 11pm"
-                        value={this.state.signupTime}
-                        onChange={this.handleInputChange}
-                    ></input>
-                </>
-            );
-        }
-
-        return (
-            <div className="edit-volunteering">
-                <div className="edit-volunteering-title-and-open">
-                    <button
-                        className={'edit-volunteering-open-switch' + (this.state.open ? ' open' : ' closed')}
-                        onClick={this.changeOpen}
-                    >
-                        {this.state.open ? 'Open' : 'Closed'}
-                    </button>
-                    <input
-                        name="name"
-                        className="line-in edit-volunteering-name-input"
-                        type="text"
-                        placeholder="Volunteering name"
-                        value={this.state.name}
-                        onChange={this.handleInputChange}
-                    ></input>
-                </div>
-                <label htmlFor="club">Club Name</label>
-                <input
-                    name="club"
-                    className="line-in edit-volunteering-club-name-input"
-                    type="text"
-                    placeholder="Enter related club(s)"
-                    value={this.state.club}
-                    onChange={this.handleInputChange}
-                ></input>
-                <br />
-                <label>Description</label>
-                <br />
-                <textarea
-                    name="description"
-                    className="edit-volunteering-description-input"
-                    type="text"
-                    placeholder="Enter a description for your volunteering (use http/https to hyperlink urls automatically)"
-                    value={this.state.description}
-                    onChange={this.handleInputChange}
-                ></textarea>
-                <div className="filter-buttons">
-                    <button
-                        className={'vol-filter limited' + (this.state.filters.limited ? ' active' : '')}
-                        onClick={() => {
-                            this.changeFilter('limited');
-                        }}
-                    >
-                        Limited Slots
-                    </button>
-                    <button
-                        className={'vol-filter semester' + (this.state.filters.semester ? ' active' : '')}
-                        onClick={() => {
-                            this.changeFilter('semester');
-                        }}
-                    >
-                        Semester Long
-                    </button>
-                    <button
-                        className={'vol-filter set-times' + (this.state.filters.setTimes ? ' active' : '')}
-                        onClick={() => {
-                            this.changeFilter('setTimes');
-                        }}
-                    >
-                        Set Volunteering Times
-                    </button>
-                    <button
-                        className={'vol-filter weekly' + (this.state.filters.weekly ? ' active' : '')}
-                        onClick={() => {
-                            this.changeFilter('weekly');
-                        }}
-                    >
-                        Weekly Signups
-                    </button>
-                </div>
-                {signupTime}
-                <SubmitGroup submit={this.submit}></SubmitGroup>
-            </div>
+        const newVolunteering = new Volunteering(
+            id,
+            data.name,
+            data.club,
+            data.description,
+            new Filters(data.limited, data.semester, data.setTimes, data.weekly, data.open === 'open'),
+            volunteering.history
         );
-    }
-}
+
+        setBackdrop(true);
+        const res = id === null ? await postVolunteering(newVolunteering) : await putVolunteering(newVolunteering, id);
+        if (res.status === 200) {
+            cookies.set('success', id ? 'update-volunteering' : 'add-volunteering', { sameSite: 'strict', path: '/' });
+            back();
+        } else dispatch(openPopup('Unable to upload data. Please refresh the page or try again.', 4));
+        setBackdrop(false);
+    };
+
+    const back = () => {
+        redirect(`/volunteering${id ? `?id=${id}` : ''}`);
+    };
+
+    return volunteering === null ? (
+        <Loading flat />
+    ) : (
+        <React.Fragment>
+            <UploadBackdrop open={backdrop} />
+            <Typography variant="h1" className={classes.title}>
+                {id ? 'Edit Volunteering' : 'Add Volunteering'}
+            </Typography>
+            <form onSubmit={handleSubmit(onSubmit)} className={classes.form}>
+                <Box className={classes.boxWrapper}>
+                    <Controller
+                        control={control}
+                        name="open"
+                        render={({ field: { onChange, onBlur, value } }) => (
+                            <FormControlLabel
+                                label="Open"
+                                labelPlacement="start"
+                                control={
+                                    <Switch
+                                        color="primary"
+                                        value={value}
+                                        onChange={onChange}
+                                        onBlur={onBlur}
+                                        checked={value}
+                                        defaultChecked={volunteering.filters.open}
+                                    />
+                                }
+                            />
+                        )}
+                    />
+                    <div className={classes.spacer} />
+                    <ControlledTextField
+                        control={control}
+                        setValue={setValue}
+                        value={volunteering.name}
+                        label="Volunteering Name"
+                        name="name"
+                        variant="outlined"
+                        grow
+                        required
+                        errorMessage="Please enter a name"
+                        className={classes.name}
+                    />
+                    <div className={classes.spacer} />
+                    <ControlledTextField
+                        control={control}
+                        setValue={setValue}
+                        value={volunteering.club}
+                        label="Club"
+                        name="club"
+                        variant="outlined"
+                        grow
+                        required
+                        errorMessage="Please enter a club name"
+                    />
+                </Box>
+                <Hidden smDown>
+                    <Typography className={classes.filtersTitle}>Filters:</Typography>
+                </Hidden>
+                <ControlledFilterCheckbox
+                    control={control}
+                    setValue={setValue}
+                    name="limited"
+                    label="Limited Slots"
+                    value={volunteering.filters.limited}
+                />
+                <ControlledFilterCheckbox
+                    control={control}
+                    setValue={setValue}
+                    name="semester"
+                    label="Semester Long Committment"
+                    value={volunteering.filters.semester}
+                />
+                <ControlledFilterCheckbox
+                    control={control}
+                    setValue={setValue}
+                    name="setTimes"
+                    label="Set Time Slots"
+                    value={volunteering.filters.setTimes}
+                />
+                <ControlledFilterCheckbox
+                    control={control}
+                    setValue={setValue}
+                    name="weekly"
+                    label="Repeats Weekly"
+                    value={volunteering.filters.weekly}
+                />
+                <ControlledTextField
+                    control={control}
+                    setValue={setValue}
+                    value={volunteering.description}
+                    label="Description (optional)"
+                    name="description"
+                    variant="outlined"
+                    area
+                    className={classes.area}
+                />
+                <TwoButtonBox success="Submit" onCancel={back} onSuccess={onSubmit} submit right />
+            </form>
+        </React.Fragment>
+    );
+};
 
 export default EditVolunteering;

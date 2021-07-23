@@ -1,8 +1,14 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
-import App from './app';
 import { Provider } from 'react-redux';
 import store from './redux/store';
+
+import makeServer from './server';
+import App from './app';
+
+if (process.env.NODE_ENV !== 'production' && process.env.REACT_APP_BACKEND !== 'localhost') {
+    makeServer();
+}
 
 ReactDOM.render(
     <React.StrictMode>
