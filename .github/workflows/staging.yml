@@ -2,7 +2,7 @@ name: 'Build and Deploy Staging App'
 
 on:
     push:
-        branches: ['master']
+        branches: ['master', 'action-test']
 
 jobs:
     deploy:
@@ -76,4 +76,7 @@ jobs:
                       tar -xzvf tcc-staging-server.tar.gz -C tcc-staging-server
                       rm tcc-staging-client.tar.gz
                       rm tcc-staging-server.tar.gz
-                      cd tcc-staging-server && npm install --save sharp mongoose
+                      npm -v
+                      node -v
+                      yarn -v
+                      cd tcc-staging-server && yarn add sharp mongoose
