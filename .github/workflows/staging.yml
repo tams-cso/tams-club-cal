@@ -79,4 +79,7 @@ jobs:
                       npm -v
                       node -v
                       yarn -v
+                      nvm -v
+                      echo "WFGBNWIFGNIWUEJFGWEFG"
+                      nvm use lts/fermium
                       cd tcc-staging-server && yarn add sharp mongoose
