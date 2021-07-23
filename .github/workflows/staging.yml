@@ -52,4 +52,5 @@ jobs:
                   key: ${{ secrets.SSH_KEY }}
                   script: |
                       docker pull michaelzhao21/tcc-staging-server:latest
-                      docker run --rm -d -p 8082:80 michaelzhao21/tcc-staging-server
+                      docker stop staging
+                      docker run --rm -d --name staging -p 8083:8080 michaelzhao21/tcc-staging-server
