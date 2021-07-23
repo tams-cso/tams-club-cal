@@ -13,7 +13,9 @@
             "**/mongoose",
             "**/mongoose/**",
             "**/sharp",
-            "**/sharp/**"
+            "**/sharp/**",
+            "**/google-auth-library",
+            "**/google-auth-library/**"
         ]
     },
     "scripts": {
