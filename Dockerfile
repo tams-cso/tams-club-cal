@@ -1,6 +1,6 @@
 # syntax=docker/dockerfile:1
 
-FROM node:lts-fermium
+FROM node:14-alpine
 
 ENV NODE_ENV=production
 WORKDIR /app

@@ -57,4 +57,4 @@ jobs:
                   script: |
                       docker pull michaelzhao21/tcc-server:latest
                       docker stop production
-                      docker run --rm -d --name production -p 8082:8080 michaelzhao21/tcc-server
+                      docker run --rm -d --name production -p 8082:80 michaelzhao21/tcc-server
