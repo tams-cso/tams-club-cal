@@ -56,4 +56,4 @@ jobs:
                   key: ${{ secrets.SSH_KEY }}
                   script: |
                       docker pull michaelzhao21/tcc-server:latest
-                      docker run -p 8083:80 tcc-server
+                      docker run -p 8083:80 michaelzhao21/tcc-server
