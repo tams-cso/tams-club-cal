@@ -74,6 +74,6 @@ jobs:
                       rm -rf tcc-client/{*,.*} && mkdir tcc-client
                       rm -rf tcc-server/{*,.*} && mkdir tcc-server
                       tar -xzvf tcc-client.tar.gz -C tcc-client
-                      tar -xzvf tcc-server.tar.gz -C tcc-servcer
+                      tar -xzvf tcc-server.tar.gz -C tcc-server
                       rm tcc-client.tar.gz
                       rm tcc-server.tar.gz

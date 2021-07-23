@@ -17,7 +17,7 @@ const clubsRouter = require('./routes/clubsRouter');
 const volunteeringRouter = require('./routes/volunteeringRouter');
 
 // Check for the correct environmental variables
-checkEnv();
+if (process.env.NODE_ENV !== 'production') checkEnv();
 console.log(`Running with NODE_ENV set to ${process.env.NODE_ENV}`);
 
 // Use middleware to recieve calls and log

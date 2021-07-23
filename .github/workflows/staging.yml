@@ -46,11 +46,11 @@ jobs:
                   echo "CALENDAR_ID=$CALENDAR_ID" >> .env
                   echo "ORIGIN=https://staging.tams.club" >> .env
                   echo "PORT=8083" >> .env
-                  cd ..
+                  cd .. && cp server/.env .env
                   yarn install && yarn build
                   cd client/build && tar -czvf ../../tcc-staging-client.tar.gz *
                   cd ../../server && cp staging.ecosystem.config.js dist/ecosystem.config.js
-                  cd dist && tar -czvf ../tcc-staging-server.tar.gz *
+                  cd dist && tar -czvf ../../tcc-staging-server.tar.gz *
                   cd ..
 
             - name: Deploy to Droplet with scp
@@ -73,6 +73,7 @@ jobs:
                       rm -rf tcc-staging-client/{*,.*} && mkdir tcc-staging-client
                       rm -rf tcc-staging-server/{*,.*} && mkdir tcc-staging-server
                       tar -xzvf tcc-staging-client.tar.gz -C tcc-staging-client
-                      tar -xzvf tcc-staging-server.tar.gz -C tcc-staging-servcer
+                      tar -xzvf tcc-staging-server.tar.gz -C tcc-staging-server
                       rm tcc-staging-client.tar.gz
                       rm tcc-staging-server.tar.gz
+                      cd tcc-staging-server && npm install --save sharp mongoose
