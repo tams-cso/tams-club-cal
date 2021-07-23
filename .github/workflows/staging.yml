@@ -49,7 +49,7 @@ jobs:
                   cd .. && cp server/.env .env
                   cd .. && mkdir server-support
                   cd server-support && yarn add sharp mongoose
-                  cd $GITHUB_WORKSPACE yarn install && yarn build
+                  cd $GITHUB_WORKSPACE && yarn install && yarn build
                   cd client/build && tar -czvf ../../tcc-staging-client.tar.gz *
                   cd ../../server && cp staging.ecosystem.config.js dist/ecosystem.config.js
                   cp -r ../../server-support/* dist/
