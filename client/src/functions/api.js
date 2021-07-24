@@ -273,6 +273,10 @@ export async function getUserInfo(token) {
     return getRequest(`/auth/user/${token}`);
 }
 
+export function getBackendUrl() {
+    return BACKEND_URL;
+}
+
 export function getCdnUrl() {
     return CDN_URL;
 }
