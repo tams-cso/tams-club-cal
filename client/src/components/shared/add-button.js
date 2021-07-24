@@ -1,5 +1,5 @@
 import React from 'react';
-import { useHistory } from 'react-router';
+import { redirect } from '../../functions/util';
 
 import Fab from '@material-ui/core/Fab';
 import AddIcon from '@material-ui/icons/Add';
@@ -15,6 +15,7 @@ const useStyles = makeStyles((theme) => ({
     },
 }));
 
+// TODO: Add a tooltip to the floating action button
 /**
  * Shows a floating action button
  * @param {object} props React props object
@@ -23,18 +24,17 @@ const useStyles = makeStyles((theme) => ({
  * @param {boolean} [props.edit] If true, will show edit button or else it'll show the add button
  */
 const AddButton = (props) => {
-    const history = useHistory();
     const classes = useStyles();
 
-    const redirect = () => {
-        history.push(props.path);
+    const redirectTo = () => {
+        redirect(props.path);
     };
 
     return (
         <Fab
             color={props.color || 'default'}
             aria-label={props.edit ? 'edit' : 'add'}
-            onClick={redirect}
+            onClick={redirectTo}
             className={classes.root}
         >
             {props.edit ? <EditIcon /> : <AddIcon />}
