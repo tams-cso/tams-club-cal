@@ -52,23 +52,19 @@ router.post('/', async (req, res, next) => {
  * to either return an auth code or an error
  */
 router.post('/login', async (req, res, next) => {
-    const cookieToken = req.cookies['g_csrf_token'];
-    const bodyToken = req.body['g_csrf_token'];
     let error = '';
 
-    // Verify both csrf tokens and actual credentials
-    if (verifyCsrf(cookieToken, bodyToken)) {
-        const payload = await verifyToken(req.body['credential']);
-        if (payload !== null) {
-            // Add or check for user in database
-            const newToken = await upsertUser(payload);
-            if (newToken !== null) {
-                // Add token to redirect querystring and redirect user
-                res.redirect(`${process.env.ORIGIN}/auth?token=${newToken}`);
-                return;
-            } else error = 'newToken';
-        } else error = 'payload';
-    } else error = 'csrf';
+    // Verify credentials
+    const payload = await verifyToken(req.body['credential']);
+    if (payload !== null) {
+        // Add or check for user in database
+        const newToken = await upsertUser(payload);
+        if (newToken !== null) {
+            // Add token to redirect querystring and redirect user
+            res.redirect(`${process.env.ORIGIN}/auth?token=${newToken}`);
+            return;
+        } else error = 'newToken';
+    } else error = 'payload';
 
     // Redirect to error if failed verification
     res.redirect(`${process.env.ORIGIN}/auth?error=${error}`);
