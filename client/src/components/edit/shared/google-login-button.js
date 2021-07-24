@@ -2,6 +2,7 @@ import React from 'react';
 import { makeStyles } from '@material-ui/core';
 
 import Button from '@material-ui/core/Button';
+import { getBackendUrl } from '../../../functions/api';
 
 const useStyles = makeStyles({
     root: {
@@ -22,8 +23,7 @@ const useStyles = makeStyles({
  */
 const GoogleLoginButton = (props) => {
     const classes = useStyles({ hidden: props.hidden });
-    const backend =
-        process.env.NODE_ENV !== 'production' ? 'http://localhost:5000/auth/login' : 'https://api.tams.club/auth/login';
+    const backend = `${getBackendUrl()}/auth/login`;
     return (
         <React.Fragment>
             <div
