@@ -3,8 +3,12 @@
 node_modules
 
 # production
-client/build
-server/dist
+*/build
+*/dist
+
+# Generated files
+*/.docusaurus
+*/.cache-loader
 
 # misc
 .DS_Store
