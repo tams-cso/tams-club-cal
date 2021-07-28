@@ -7,8 +7,7 @@
     "workspaces": {
         "packages": [
             "client",
-            "server",
-            "docs"
+            "server"
         ],
         "nohoist": [
             "**/*",
