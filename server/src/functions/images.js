@@ -40,7 +40,6 @@ async function processClubUpload(req) {
     if (execs && execs.length > 0) {
         let count = 0;
         const rawExecList = execPhotos.map((e, i) => (!e ? null : execs[count++]));
-        console.log(rawExecList);
         const compressedExecs = await Promise.all(
             rawExecList.map(async (e) => {
                 return await compressImage(e);
@@ -51,7 +50,6 @@ async function processClubUpload(req) {
                 return await uploadImage('execs', e);
             })
         );
-        console.log(execsSrc);
         execsSrc.forEach((e, i) => {
             if (e && club.execs[i]) deletePrevious(club.execs[i].img);
         });

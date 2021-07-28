@@ -16,7 +16,6 @@ import Checkbox from '@material-ui/core/Checkbox';
  */
 const ControlledFilterCheckbox = (props) => {
     useEffect(() => {
-        console.log(props.value);
         props.setValue(props.name, props.value);
     }, []);
     return (

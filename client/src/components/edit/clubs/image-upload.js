@@ -159,7 +159,6 @@ const ImageUpload = (props) => {
     const saveCrop = async () => {
         const canvas = canvasRef.current;
         const crop = completedCrop;
-        console.log({ canvas, crop });
 
         if (!crop || !canvas) {
             return;
