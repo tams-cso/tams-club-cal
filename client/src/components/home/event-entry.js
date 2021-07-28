@@ -28,13 +28,13 @@ const useStyles = makeStyles((theme) => ({
         overflow: 'hidden',
     },
     time: {
-        width: 256,
+        width: 200,
         flexShrink: 0,
-        textAlign: 'center',
+        textAlign: 'left',
         [theme.breakpoints.down('sm')]: {
-            width: 90,
+            width: 80,
             fontSize: '0.9rem',
-            textAlign: 'left'
+            textAlign: 'left',
         },
     },
     name: {
@@ -44,6 +44,7 @@ const useStyles = makeStyles((theme) => ({
         },
     },
     description: {
+        marginTop: 4,
         overflow: 'hidden',
         textOverflow: 'ellipsis',
         whiteSpace: 'nowrap',
@@ -53,6 +54,9 @@ const useStyles = makeStyles((theme) => ({
             fontSize: '0.75rem',
         },
     },
+    club: {
+        color: darkSwitch(theme, theme.palette.common.black, theme.palette.grey[400]),
+    }
 }));
 
 /**
@@ -63,7 +67,7 @@ const useStyles = makeStyles((theme) => ({
  */
 const EventEntry = (props) => {
     // Replace all the newlines in the description with a pipe
-    const displayDescription = props.event.description.replace(/\n/g, ' | ');
+    const description = props.event.description.replace(/\n/g, ' | ');
 
     const classes = useStyles();
     return (
@@ -76,9 +80,10 @@ const EventEntry = (props) => {
                     <Typography variant="h3" component="p" className={classes.name}>
                         {props.event.name}
                     </Typography>
-                    <Typography
-                        className={classes.description}
-                    >{`${props.event.club} - ${displayDescription}`}</Typography>
+                    <Typography className={classes.description}>
+                        <span className={classes.club}>{props.event.club}</span>
+                        {props.event.description ? ` - ${description}` : ''}
+                    </Typography>
                 </Box>
             </NavLink>
         </ListItem>

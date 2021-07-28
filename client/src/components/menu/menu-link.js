@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { NavLink, useLocation } from 'react-router-dom';
-import { makeStyles, fade } from '@material-ui/core/styles';
+import { makeStyles, alpha } from '@material-ui/core/styles';
 import { darkSwitch, isActive } from '../../functions/util';
 
 import Typography from '@material-ui/core/Typography';
@@ -15,15 +15,15 @@ const useStyles = makeStyles((theme) => ({
         borderColor: 'transparent',
         backgroundColor: 'transparent',
         '&:hover': {
-            backgroundColor: fade(darkSwitch(theme, theme.palette.common.black, theme.palette.common.white), 0.1),
+            backgroundColor: alpha(darkSwitch(theme, theme.palette.common.black, theme.palette.common.white), 0.1),
         },
         transition: '0.2s',
     },
     rootActive: {
         borderBottom: `0.2rem solid ${theme.palette.primary.light}`,
-        backgroundColor: fade('#ffffff', 0.3),
+        backgroundColor: alpha('#ffffff', 0.3),
         '&:hover': {
-            backgroundColor: fade('#ffffff', 0.3),
+            backgroundColor: alpha('#ffffff', 0.3),
         },
     },
     text: {

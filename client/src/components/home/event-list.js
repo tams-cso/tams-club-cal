@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { makeStyles } from '@material-ui/core/styles';
+import dayjs from 'dayjs';
 import { setEventList } from '../../redux/actions';
 import { getSavedEventList } from '../../redux/selectors';
 import { getEventList } from '../../functions/api';
@@ -16,6 +17,9 @@ const useStyles = makeStyles({
     root: {
         overflowX: 'hidden',
         minHeight: '100vh',
+    },
+    center: {
+        textAlign: 'center',
     },
 });
 
@@ -36,7 +40,10 @@ const EventList = () => {
             );
             return;
         }
-        dispatch(setEventList(events.data.sort((a, b) => a.start - b.start)));
+        const filteredList = events.data
+            .sort((a, b) => a.start - b.start)
+            .filter((e) => e.start >= dayjs().startOf('day'));
+        dispatch(setEventList(filteredList));
     }, []);
 
     useEffect(() => {
@@ -45,7 +52,7 @@ const EventList = () => {
         else if (eventList.length === 0) {
             // Set text if the eventList is null
             setEventComponentList(
-                <Typography variant="h6" component="h2">
+                <Typography variant="h6" component="h2" className={classes.center}>
                     No events planned...
                 </Typography>
             );

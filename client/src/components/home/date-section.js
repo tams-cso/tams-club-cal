@@ -1,12 +1,12 @@
 import React from 'react';
-import { fade, makeStyles } from '@material-ui/core';
+import { alpha, makeStyles } from '@material-ui/core';
 import { darkSwitch, formatTime } from '../../functions/util';
 
 import Typography from '@material-ui/core/Typography';
 
 const useStyles = makeStyles((theme) => ({
     root: {
-        color: darkSwitch(theme, theme.palette.grey[800], fade(theme.palette.primary.light, 0.9)),
+        color: darkSwitch(theme, theme.palette.grey[800], alpha(theme.palette.primary.light, 0.9)),
     },
 }));
 
