@@ -92,7 +92,7 @@ const MobileMenu = (props) => {
                         {props.currentDarkThemeIcon}
                     </MenuIcon>
                     <MenuIcon title="GitHub repository" aria-label="github-repository">
-                        <a href={githubLink} className={classes.githubWrapper}>
+                        <a href={githubLink} className={classes.githubWrapper} target="_blank">
                             <SvgIcon viewBox="0 0 32.58 31.77" className={classes.githubIcon}>
                                 <path
                                     className={classes.githubPath}
