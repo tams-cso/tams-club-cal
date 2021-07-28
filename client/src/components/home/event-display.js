@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from 'react';
+import { useHistory } from 'react-router';
 import { useSelector } from 'react-redux';
 import { makeStyles } from '@material-ui/core/styles';
 import { capitalize } from '@material-ui/core';
@@ -9,6 +10,8 @@ import { getEvent } from '../../functions/api';
 import Container from '@material-ui/core/Container';
 import Card from '@material-ui/core/Card';
 import CardContent from '@material-ui/core/CardContent';
+import CardActions from '@material-ui/core/CardActions';
+import Button from '@material-ui/core/Button';
 import Box from '@material-ui/core/Box';
 import Divider from '@material-ui/core/Divider';
 import Hidden from '@material-ui/core/Hidden';
@@ -64,6 +67,9 @@ const useStyles = makeStyles((theme) => ({
     date: {
         fontWeight: 400,
     },
+    buttonCenter: {
+        margin: 'auto',
+    }
 }));
 
 /**
@@ -77,7 +83,10 @@ const EventDisplay = (props) => {
     const [event, setEvent] = useState(null);
     const [error, setError] = useState(null);
     const eventList = useSelector(getSavedEventList);
+    const history = useHistory();
     const classes = useStyles();
+
+    const back = () => history.push('/');
 
     useEffect(async () => {
         if (props.id === null) return;
@@ -138,6 +147,9 @@ const EventDisplay = (props) => {
                                 />
                             </Box>
                         </CardContent>
+                        <CardActions>
+                            <Button size="small" className={classes.buttonCenter} onClick={back}>Back</Button>
+                        </CardActions>
                     </Card>
                 </Container>
             )}

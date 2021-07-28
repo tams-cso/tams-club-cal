@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from 'react';
+import { useHistory } from 'react-router';
 import { useSelector } from 'react-redux';
 import { makeStyles } from '@material-ui/core';
 import { getSavedClubList } from '../../redux/selectors';
@@ -10,6 +11,8 @@ import Paper from '@material-ui/core/Paper';
 import Card from '@material-ui/core/Card';
 import CardMedia from '@material-ui/core/CardMedia';
 import CardContent from '@material-ui/core/CardContent';
+import CardActions from '@material-ui/core/CardActions';
+import Button from '@material-ui/core/Button';
 import Link from '@material-ui/core/Link';
 import Typography from '@material-ui/core/Typography';
 import Tabs from '@material-ui/core/Tabs';
@@ -70,6 +73,9 @@ const useStyles = makeStyles((theme) => ({
         marginBottom: 12,
         color: darkSwitchGrey(theme),
     },
+    buttonCenter: {
+        margin: 'auto',
+    }
 }));
 
 /**
@@ -85,7 +91,10 @@ const ClubDisplay = (props) => {
     const [links, setLinks] = useState(null);
     const [tabValue, setTabValue] = useState(0);
     const clubList = useSelector(getSavedClubList);
+    const history = useHistory();
     const classes = useStyles();
+
+    const back = () => history.push('/clubs');
 
     useEffect(async () => {
         if (props.id === null) return;
@@ -185,6 +194,9 @@ const ClubDisplay = (props) => {
                                 )}
                             </Paper>
                         </CardContent>
+                        <CardActions>
+                            <Button size="small" className={classes.buttonCenter} onClick={back}>Back</Button>
+                        </CardActions>
                     </Card>
                 </Container>
             )}
