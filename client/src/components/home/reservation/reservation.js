@@ -5,7 +5,9 @@ import Box from '@material-ui/core/Box';
 import ActionBar from '../action-bar';
 
 const useStyles = makeStyles((theme) => ({
-    root: {},
+    root: {
+        textAlign: 'center',
+    },
 }));
 
 const Reservation = () => {
@@ -13,7 +15,7 @@ const Reservation = () => {
     return (
         <React.Fragment>
             <ActionBar active="reservation" />
-            <Box className={classes.root}>RESERVATION VIEW</Box>
+            <Box className={classes.root}>Reservation Calendar WIP...</Box>
         </React.Fragment>
     );
 };
