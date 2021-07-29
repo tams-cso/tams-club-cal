@@ -23,6 +23,9 @@ import AddButton from '../shared/add-button';
 const useStyles = makeStyles((theme) => ({
     root: {
         maxWidth: '50%',
+        [theme.breakpoints.down(1500)]: {
+            maxWidth: '75%',
+        },
         [theme.breakpoints.down('md')]: {
             maxWidth: '100%',
         },

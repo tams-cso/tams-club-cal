@@ -23,6 +23,9 @@ import AddButton from '../shared/add-button';
 const useStyles = makeStyles((theme) => ({
     root: {
         maxWidth: '50%',
+        [theme.breakpoints.down(1500)]: {
+            maxWidth: '75%',
+        },
         [theme.breakpoints.down('md')]: {
             maxWidth: '100%',
         },
@@ -69,7 +72,7 @@ const useStyles = makeStyles((theme) => ({
     },
     buttonCenter: {
         margin: 'auto',
-    }
+    },
 }));
 
 /**
@@ -148,7 +151,9 @@ const EventDisplay = (props) => {
                             </Box>
                         </CardContent>
                         <CardActions>
-                            <Button size="small" className={classes.buttonCenter} onClick={back}>Back</Button>
+                            <Button size="small" className={classes.buttonCenter} onClick={back}>
+                                Back
+                            </Button>
                         </CardActions>
                     </Card>
                 </Container>
