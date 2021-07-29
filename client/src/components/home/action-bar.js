@@ -11,6 +11,7 @@ import Typography from '@material-ui/core/Typography';
 import FormatListBulletedRoundedIcon from '@material-ui/icons/FormatListBulletedRounded';
 import EventNoteRoundedIcon from '@material-ui/icons/EventNoteRounded';
 import MeetingRoomRoundedIcon from '@material-ui/icons/MeetingRoomRounded';
+import { useHistory, useLocation } from 'react-router';
 
 const useStyles = makeStyles((theme) => ({
     root: {
@@ -37,9 +38,15 @@ const useStyles = makeStyles((theme) => ({
  * @param {"schedule" | "calendar" | "reservation"} props.active Which view is active, shows the title for it as well.
  */
 const ActionBar = (props) => {
+    const location = useLocation();
+    const history = useHistory();
     const theme = useTheme();
     const matches = useMediaQuery(theme.breakpoints.up('md'));
     const classes = useStyles();
+
+    const changeView = (view) => {
+        history.push(`${location.pathname}?view=${view}`);
+    };
 
     return (
         <Paper className={classes.root}>
@@ -50,17 +57,20 @@ const ActionBar = (props) => {
                 <Box>{props.children}</Box>
                 <ButtonGroup className={classes.buttonGroup}>
                     <Tooltip title="Schedule View">
-                        <Button disabled={props.active === 'schedule'}>
+                        <Button disabled={props.active === 'schedule'} onClick={changeView.bind(this, 'schedule')}>
                             <FormatListBulletedRoundedIcon />
                         </Button>
                     </Tooltip>
                     <Tooltip title="Calendar View">
-                        <Button disabled={props.active === 'calendar'}>
+                        <Button disabled={props.active === 'calendar'} onClick={changeView.bind(this, 'calendar')}>
                             <EventNoteRoundedIcon />
                         </Button>
                     </Tooltip>
                     <Tooltip title="Room Reservation Chart">
-                        <Button disabled={props.active === 'reservation'}>
+                        <Button
+                            disabled={props.active === 'reservation'}
+                            onClick={changeView.bind(this, 'reservation')}
+                        >
                             <MeetingRoomRoundedIcon />
                         </Button>
                     </Tooltip>

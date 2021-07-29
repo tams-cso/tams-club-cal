@@ -10,7 +10,6 @@ import { darkSwitchGrey, isSameDate } from '../../../functions/util';
 import Container from '@material-ui/core/Container';
 import Typography from '@material-ui/core/Typography';
 import Button from '@material-ui/core/Button';
-import Box from '@material-ui/core/Box';
 import EventListSection from './event-list-section';
 import Loading from '../../shared/loading';
 import AddButton from '../../shared/add-button';
@@ -105,7 +104,9 @@ const EventList = () => {
             );
         else
             groupedComponents.push(
-                <Typography className={classes.noMore} key="nomore">No more events... Click the + to add one!</Typography>
+                <Typography className={classes.noMore} key="nomore">
+                    No more events... Click the + to add one!
+                </Typography>
             );
 
         // Display list
@@ -113,13 +114,13 @@ const EventList = () => {
     }, [eventList]);
 
     return (
-        <Box flexDirection="column" flexGrow={1} width={0}>
+        <React.Fragment>
             <ActionBar active="schedule" />
             <Container maxWidth="lg" className={classes.root}>
                 <AddButton color="primary" path="/edit/events" />
                 {eventComponentList}
             </Container>
-        </Box>
+        </React.Fragment>
     );
 };
 
