@@ -37,7 +37,7 @@ const AddButton = (props) => {
             onClick={redirectTo}
             className={classes.root}
         >
-            {props.edit ? <EditIcon /> : <AddIcon />}
+            {props.edit ? <EditIcon /> : <AddIcon htmlColor="white" />}
         </Fab>
     );
 };
