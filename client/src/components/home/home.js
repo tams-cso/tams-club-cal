@@ -16,6 +16,8 @@ import Reservation from './reservation/reservation';
 
 const drawerWidth = 280;
 const useStyles = makeStyles({
+    root: {
+    },
     drawer: {
         width: drawerWidth,
     },
@@ -48,14 +50,14 @@ const Home = () => {
     }, [location]);
 
     return (
-        <PageWrapper>
+        <PageWrapper noBottom>
             <Hidden smDown>
                 <Drawer variant="permanent" className={classes.drawer}>
                     <Toolbar className={classes.spacer} />
                     <HomeDrawerList />
                 </Drawer>
             </Hidden>
-            <Box flexDirection="column" flexGrow={1} width={0}>
+            <Box flexDirection="column" flexGrow={1} width={0} className={classes.root}>
                 {display}
             </Box>
         </PageWrapper>

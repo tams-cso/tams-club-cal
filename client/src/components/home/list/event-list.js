@@ -20,9 +20,6 @@ const useStyles = makeStyles((theme) => ({
         overflowX: 'hidden',
         minHeight: '100vh',
     },
-    center: {
-        textAlign: 'center',
-    },
     centerButton: {
         margin: 'auto',
         width: '100%',
@@ -70,8 +67,8 @@ const EventList = () => {
         else if (eventList.length === 0) {
             // Set text if the eventList is null
             setEventComponentList(
-                <Typography variant="h6" component="h2" className={classes.center}>
-                    No events planned...
+                <Typography variant="h6" component="h2" className={classes.noMore}>
+                    No events planned... Click the + to add one!
                 </Typography>
             );
             return;

@@ -3,8 +3,7 @@ import { useHistory } from 'react-router';
 import { useSelector } from 'react-redux';
 import { makeStyles } from '@material-ui/core/styles';
 import { capitalize } from '@material-ui/core';
-import { getSavedEventList } from '../../redux/selectors';
-import { darkSwitch, darkSwitchGrey, formatEventDate, formatEventTime } from '../../functions/util';
+import { darkSwitch, darkSwitchGrey, formatEventDate, formatEventTime, getParams } from '../../functions/util';
 import { getEvent } from '../../functions/api';
 
 import Container from '@material-ui/core/Container';
@@ -85,32 +84,26 @@ const useStyles = makeStyles((theme) => ({
 const EventDisplay = (props) => {
     const [event, setEvent] = useState(null);
     const [error, setError] = useState(null);
-    const eventList = useSelector(getSavedEventList);
     const history = useHistory();
     const classes = useStyles();
 
-    const back = () => history.push('/');
+    const back = () => {
+        const prevView = getParams('view');
+        history.push(`/${prevView ? `?view=${prevView}` : ''}`);
+    };
 
     useEffect(async () => {
         if (props.id === null) return;
 
-        // Check if the event list exists to pull from
-        // If not, then pull the event from the backend
-        let event = null;
-        if (eventList === null) {
-            const res = await getEvent(props.id);
-            if (res.status === 200) event = res.data;
-        } else {
-            const foundEvent = eventList.find((e) => e.id === props.id);
-            if (foundEvent !== undefined) event = foundEvent;
-        }
+        // Pull the event from the backend
+        const res = await getEvent(props.id);
 
         // Save the event or set an error if invalid ID
-        if (event === null) {
+        if (res.status !== 200) {
             setError(
                 <Loading error>Invalid event ID. Please return to the events list page to refresh the content</Loading>
             );
-        } else setEvent(event);
+        } else setEvent(res.data);
     }, [props.id]);
 
     return (

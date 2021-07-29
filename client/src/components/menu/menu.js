@@ -18,6 +18,7 @@ import MobileMenu from './mobile-menu';
 const useStyles = makeStyles((theme) => ({
     root: {
         backgroundColor: darkSwitch(theme, theme.palette.primary.main, theme.palette.grey[900]),
+        height: 64,
     },
     bar: {
         position: 'sticky',

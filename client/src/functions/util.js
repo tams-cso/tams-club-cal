@@ -165,11 +165,12 @@ export function formatEventDate(event) {
  * Includes an end time if not the same as the start time.
  *
  * @param {Event} event The event object
- * @returns
+ * @param {boolean} [noEnd] If true, will not show an end time
+ * @returns {string} The formatted time for the event in the format [h:mma - h:mma]
  */
-export function formatEventTime(event) {
+export function formatEventTime(event, noEnd = false) {
     let formattedTime = formatTime(event.start, 'h:mma');
-    if (event.start !== event.end) formattedTime += formatTime(event.end, ' - h:mma');
+    if (!noEnd && event.start !== event.end) formattedTime += formatTime(event.end, ' - h:mma');
     return formattedTime;
 }
 
