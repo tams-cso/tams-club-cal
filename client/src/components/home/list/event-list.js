@@ -99,13 +99,13 @@ const EventList = () => {
         // If event list is not full, add button to retrieve more events
         if (eventList.length !== 0 && eventList.length % 30 === 0)
             groupedComponents.push(
-                <Button className={classes.centerButton} onClick={loadMore}>
+                <Button className={classes.centerButton} onClick={loadMore} key="load">
                     Load more events
                 </Button>
             );
         else
             groupedComponents.push(
-                <Typography className={classes.noMore}>No more events... Click the + to add one!</Typography>
+                <Typography className={classes.noMore} key="nomore">No more events... Click the + to add one!</Typography>
             );
 
         // Display list
@@ -113,7 +113,7 @@ const EventList = () => {
     }, [eventList]);
 
     return (
-        <Box flex flexDirection="column" flexGrow={1} width={0}>
+        <Box flexDirection="column" flexGrow={1} width={0}>
             <ActionBar active="schedule" />
             <Container maxWidth="lg" className={classes.root}>
                 <AddButton color="primary" path="/edit/events" />
