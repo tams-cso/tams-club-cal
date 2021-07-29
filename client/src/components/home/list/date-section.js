@@ -1,6 +1,6 @@
 import React from 'react';
 import { alpha, makeStyles } from '@material-ui/core';
-import { darkSwitch, formatTime } from '../../functions/util';
+import { darkSwitch, formatTime } from '../../../functions/util';
 
 import Typography from '@material-ui/core/Typography';
 

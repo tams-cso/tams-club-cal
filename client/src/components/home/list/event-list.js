@@ -2,18 +2,21 @@ import React, { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { makeStyles } from '@material-ui/core/styles';
 import dayjs from 'dayjs';
-import { setEventList } from '../../redux/actions';
-import { getSavedEventList } from '../../redux/selectors';
-import { getEventList } from '../../functions/api';
-import { isSameDate } from '../../functions/util';
+import { setEventList } from '../../../redux/actions';
+import { getSavedEventList } from '../../../redux/selectors';
+import { getEventList, getMoreEvents } from '../../../functions/api';
+import { darkSwitchGrey, isSameDate } from '../../../functions/util';
 
 import Container from '@material-ui/core/Container';
 import Typography from '@material-ui/core/Typography';
+import Button from '@material-ui/core/Button';
+import Box from '@material-ui/core/Box';
 import EventListSection from './event-list-section';
-import Loading from '../shared/loading';
-import AddButton from '../shared/add-button';
+import Loading from '../../shared/loading';
+import AddButton from '../../shared/add-button';
+import ActionBar from '../action-bar';
 
-const useStyles = makeStyles({
+const useStyles = makeStyles((theme) => ({
     root: {
         overflowX: 'hidden',
         minHeight: '100vh',
@@ -21,12 +24,28 @@ const useStyles = makeStyles({
     center: {
         textAlign: 'center',
     },
-});
+    centerButton: {
+        margin: 'auto',
+        width: '100%',
+    },
+    noMore: {
+        textAlign: 'center',
+        color: darkSwitchGrey(theme),
+        marginTop: 12,
+    },
+}));
 
 const EventList = () => {
     const dispatch = useDispatch();
     const eventList = useSelector(getSavedEventList);
     const [eventComponentList, setEventComponentList] = useState(<Loading />);
+    const classes = useStyles();
+
+    const loadMore = async () => {
+        const lastId = eventList[eventList.length - 1].id;
+        const newEvents = await getMoreEvents(lastId);
+        dispatch(setEventList([...eventList, ...newEvents]));
+    };
 
     useEffect(async () => {
         // Fetch the events list on mount from database
@@ -73,15 +92,34 @@ const EventList = () => {
         eventGroupList.push(tempList);
 
         // Map each group item to an EventListSection object
-        setEventComponentList(eventGroupList.map((group, index) => <EventListSection eventList={group} key={index} />));
+        const groupedComponents = eventGroupList.map((group, index) => (
+            <EventListSection eventList={group} key={index} />
+        ));
+
+        // If event list is not full, add button to retrieve more events
+        if (eventList.length !== 0 && eventList.length % 30 === 0)
+            groupedComponents.push(
+                <Button className={classes.centerButton} onClick={loadMore}>
+                    Load more events
+                </Button>
+            );
+        else
+            groupedComponents.push(
+                <Typography className={classes.noMore}>No more events... Click the + to add one!</Typography>
+            );
+
+        // Display list
+        setEventComponentList(groupedComponents);
     }, [eventList]);
 
-    const classes = useStyles();
     return (
-        <Container maxWidth="lg" className={classes.root}>
-            <AddButton color="primary" path="/edit/events" />
-            {eventComponentList}
-        </Container>
+        <Box flex flexDirection="column" flexGrow={1} width={0}>
+            <ActionBar active="schedule" />
+            <Container maxWidth="lg" className={classes.root}>
+                <AddButton color="primary" path="/edit/events" />
+                {eventComponentList}
+            </Container>
+        </Box>
     );
 };
 

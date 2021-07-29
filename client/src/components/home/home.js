@@ -8,7 +8,7 @@ import Toolbar from '@material-ui/core/Toolbar';
 import Hidden from '@material-ui/core/Hidden';
 import PageWrapper from '../shared/page-wrapper';
 import HomeDrawerList from './home-drawer-list';
-import EventList from './event-list';
+import EventList from './list/event-list';
 import EventDisplay from './event-display';
 
 const drawerWidth = 280;

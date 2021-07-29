@@ -1,5 +1,5 @@
 import React from 'react';
-import { Event } from '../../functions/entries';
+import { Event } from '../../../functions/entries';
 
 import List from '@material-ui/core/List';
 import Divider from '@material-ui/core/Divider';

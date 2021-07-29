@@ -111,6 +111,17 @@ export async function getEventList() {
 }
 
 /**
+ * Gets the list of events.
+ * Default options will return ~20 events including the current day.
+ *
+ * @param {string} id The ID of the last event gotten
+ * @returns {Promise<FetchResponse>} Will return the object or error object
+ */
+ export async function getMoreEvents(id) {
+    return getRequest(`/events?lastEvent=${id}`);
+}
+
+/**
  * Gets a specific event by ID.
  * @returns {Promise<FetchResponse>} Will return the object or error object
  */
