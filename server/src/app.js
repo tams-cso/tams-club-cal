@@ -76,7 +76,7 @@ app.use('/clubs', clubsRouter);
 app.use('/volunteering', volunteeringRouter);
 
 // Start express server
-app.listen(process.env.PORT || 5000, () => console.log(`Listening on port ${process.env.PORT | 5000}`));
+app.listen(process.env.PORT || 5000, () => console.log(`Listening on port ${process.env.PORT || 5000}`));
 
 // Start mongoose
 const mongoUrl = `mongodb+srv://${process.env.MONGO_USER}:${process.env.MONGO_PASS}@${process.env.MONGO_URL}/data?retryWrites=true&w=majority`;
