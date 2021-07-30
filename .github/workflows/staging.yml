@@ -54,3 +54,4 @@ jobs:
                       docker pull michaelzhao21/tcc-staging-server:latest
                       docker stop staging
                       docker run --rm -d --name staging -p 8083:80 michaelzhao21/tcc-staging-server
+                      docker image prune -af
