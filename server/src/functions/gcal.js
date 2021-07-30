@@ -34,7 +34,6 @@ async function addToCalendar(data) {
 
 async function updateCalendar(data, id) {
     try {
-        console.log({ data, id });
         await google.calendar('v3').events.update({
             calendarId: process.env.CALENDAR_ID,
             eventId: id,

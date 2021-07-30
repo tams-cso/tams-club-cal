@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { BrowserRouter, Route, Switch } from 'react-router-dom';
-import { createMuiTheme, ThemeProvider } from '@material-ui/core';
+import { createTheme, ThemeProvider } from '@material-ui/core';
 import Cookies from 'universal-cookie';
 import DayjsUtils from '@date-io/dayjs';
 
@@ -21,7 +21,7 @@ const App = () => {
     const cookies = new Cookies();
 
     const [darkTheme, setDarkTheme] = useState(cookies.get('dark') === 'true');
-    const theme = createMuiTheme({
+    const theme = createTheme({
         palette: {
             type: darkTheme ? 'dark' : 'light',
             primary: {
@@ -48,8 +48,8 @@ const App = () => {
                 fontWeight: '500',
             },
             h4: {
-                fontFamily: ['Roboto Mono', 'monospace'],
-                fontSize: '1.25rem',
+                // fontFamily: ['Roboto Mono', 'monospace'],
+                fontSize: '1.2rem',
                 fontWeight: '500',
                 color: darkTheme ? '#aaaaaa' : '#555555',
             },

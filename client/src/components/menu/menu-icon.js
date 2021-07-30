@@ -1,4 +1,4 @@
-import { fade, makeStyles } from '@material-ui/core/styles';
+import { alpha, makeStyles } from '@material-ui/core/styles';
 import { darkSwitch } from '../../functions/util';
 
 import ButtonBase from '@material-ui/core/ButtonBase';
@@ -12,7 +12,7 @@ const useStyles = makeStyles((theme) => ({
         borderRadius: '10rem',
         backgroundColor: 'transparent',
         '&:hover': {
-            backgroundColor: fade(darkSwitch(theme, theme.palette.common.black, theme.palette.common.white), 0.1),
+            backgroundColor: alpha(darkSwitch(theme, theme.palette.common.black, theme.palette.common.white), 0.1),
         },
         cursor: 'pointer',
         transition: '0.2s',

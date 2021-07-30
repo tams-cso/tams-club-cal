@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from 'react';
+import { useHistory } from 'react-router';
 import { useSelector } from 'react-redux';
 import { makeStyles } from '@material-ui/core/styles';
 import { getSavedVolunteeringList } from '../../redux/selectors';
@@ -8,6 +9,8 @@ import { darkSwitchGrey } from '../../functions/util';
 import Container from '@material-ui/core/Container';
 import Card from '@material-ui/core/Card';
 import CardContent from '@material-ui/core/CardContent';
+import CardActions from '@material-ui/core/CardActions';
+import Button from '@material-ui/core/Button';
 import Box from '@material-ui/core/Box';
 import Typography from '@material-ui/core/Typography';
 import Divider from '@material-ui/core/Divider';
@@ -20,6 +23,9 @@ import AddButton from '../shared/add-button';
 const useStyles = makeStyles((theme) => ({
     root: {
         maxWidth: '50%',
+        [theme.breakpoints.down(1500)]: {
+            maxWidth: '75%',
+        },
         [theme.breakpoints.down('md')]: {
             maxWidth: '100%',
         },
@@ -49,6 +55,9 @@ const useStyles = makeStyles((theme) => ({
     club: {
         color: darkSwitchGrey(theme),
     },
+    buttonCenter: {
+        margin: 'auto',
+    }
 }));
 
 /**
@@ -62,7 +71,10 @@ const EventDisplay = (props) => {
     const [volunteering, setVolunteering] = useState(null);
     const [error, setError] = useState(null);
     const volunteeringList = useSelector(getSavedVolunteeringList);
+    const history = useHistory();
     const classes = useStyles();
+
+    const back = () => history.push('/volunteering');
 
     useEffect(async () => {
         if (props.id === null) return;
@@ -120,6 +132,9 @@ const EventDisplay = (props) => {
                                 <FilterList filters={volunteering.filters} className={classes.side} />
                             </Box>
                         </CardContent>
+                        <CardActions>
+                            <Button size="small" className={classes.buttonCenter} onClick={back}>Back</Button>
+                        </CardActions>
                     </Card>
                 </Container>
             )}

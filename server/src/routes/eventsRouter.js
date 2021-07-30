@@ -1,4 +1,5 @@
 const express = require('express');
+const dayjs = require('dayjs');
 const { addToCalendar, updateCalendar } = require('../functions/gcal');
 const { sendError, newId, createNewHistory } = require('../functions/util');
 const Event = require('../models/event');
@@ -8,21 +9,68 @@ const router = express.Router();
  * GET /events
  *
  * Sends a list of events
+ *
  * Query parameters:
- * - Count: Number of events to get (default: 20)
- * - Mode: Strict or round (default: round)
- *         Round will get the count of events and include all events from
- *         the last day, which might exceed count. Strict will not do this and only get count.
- *         This param is ignored if both start and end are defined
- * - Start: Starting time to get events from (default: Current Hour)
- * - End: Ending time to get events from (default: none)
- *        If both start and end are defined, the count will be ignored.
- *        Instead it will get all events between the start and end times
+ * - count:      Number of events to get (default: 30)
+ *
+ * - start:      Starting time to get events from (default: Current Day Start)
+ *               All times will be rounded to the start of the day before
+ *               For example, if start is 5:30pm on 1/15, then the events will
+ *               be returned from 00:00:00 UTC on 1/14
+ *
+ * - end:        Ending time to get events from (default: none)
+ *               If both start and end are defined, the count will be ignored.
+ *               Instead it will get all events between the start and end times
+ *               The same rules will apply to end time. It will round to exactly
+ *               23:59:59 the next UTC day.
+ *
+ * - lastEvent:  Get all elements later than the object with this ID to count.
+ *               If defined start/end will be ignored.
+ *
+ * - firstEvent: Get all elements earlier than the object with this ID to count.
+ *               If defined start/end will be ignored. This parameter will be ignored
+ *               if the firstEvent parameter is already defined
  */
 router.get('/', async (req, res, next) => {
-    // TODO: Apply the other filters lol
-    const events = await Event.find({});
-    res.send(events);
+    const count = Number(req.query.count) || 30;
+    const start = Number(req.query.start) || new Date().valueOf();
+    const end = Number(req.query.end) || null;
+    const firstEvent = req.query.firstEvent || null;
+    const lastEvent = req.query.lastEvent || null;
+
+    if (lastEvent) {
+        const lastStart = await Event.findOne({ id: lastEvent });
+        if (!lastStart) {
+            sendError(res, 400, 'Invalid last event ID');
+            return;
+        }
+        const events = await Event.find({ start: { $lte: lastStart.start } });
+        const lastIndex = events.findIndex((e) => e.id === lastStart.id);
+        const filteredEvents = events.slice(lastIndex + 1);
+        res.send(filteredEvents);
+    } else if (firstEvent) {
+        const firstStart = await Event.findOne({ id: firstEvent });
+        if (!firstStart) {
+            sendError(res, 400, 'Invalid first event ID');
+            return;
+        }
+        const events = await Event.find({ start: { $gte: firstStart.start } });
+        const firstIndex = events.findIndex((e) => e.id === firstStart.id);
+        const filteredEvents = events.slice(0, firstIndex);
+        res.send(filteredEvents);
+    } else if (start) {
+        const events = await Event.find({ start: { $gte: dayjs(start).startOf('day').subtract(1, 'day') } })
+            .sort({ start: 1, _id: 1 })
+            .limit(count)
+            .exec();
+        res.send(events);
+    } else if (!end) {
+        const events = await Event.find({ start: { $gte: dayjs(end).endOf('day').add(1, 'day') } })
+            .sort({ start: 1, _id: 1 })
+            .limit(count)
+            .exec();
+        res.send(events);
+    }
 });
 
 /**
@@ -73,7 +121,7 @@ router.put('/:id', async (req, res, next) => {
     const id = req.params.id;
     const prev = await Event.findOne({ id }).exec();
     if (!prev) {
-        sendError(res, 400, "Invalid event ID");
+        sendError(res, 400, 'Invalid event ID');
         return;
     }
 
@@ -95,9 +143,9 @@ router.put('/:id', async (req, res, next) => {
         }
     );
     const historyRes = await newHistory.save();
-    
+
     if (calendarRes === 1 && eventRes.n === 1 && historyRes === newHistory) res.send({ ok: 1 });
-    else sendError(res, 500, 'Unable to update event in database.')
+    else sendError(res, 500, 'Unable to update event in database.');
 });
 
 module.exports = router;

@@ -1,5 +1,0 @@
-# Admin
-
-## getDb
-
-## addToDb

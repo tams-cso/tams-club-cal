@@ -1,16 +1,33 @@
-![TAMS Club Calendar](_images/logo-banner.png)
+# Website
 
-This is an unofficial calendar for the [Texas Academy of Mathematics and Science (TAMS)](https://tams.unt.edu/) student organizations.
+This website is built using [Docusaurus 2](https://docusaurus.io/), a modern static website generator.
 
-# [Click HERE to find out how to contribute!](https://github.com/MichaelZhao21/tams-club-cal/blob/master/CONTRIBUTING.md)
+## Installation
 
-You can look through the issues, comment on the ones you like, and make a pull request to resolve them :) We also welcome any bug reports or feature requests. Create a new issue with one of our [issue templates](https://github.com/MichaelZhao21/tams-club-cal/issues/new/choose)!
+```console
+yarn install
+```
 
-| Frontend                        | Backend                                 | Database                                    |
-| ------------------------------- | --------------------------------------- | ------------------------------------------- |
-| [Overview](frontend/reactjs.md) | [Overview](backend/expressjs.md)        | [Overview](database/mongodb.md)             |
-|                                 | [Events](backend/events.md)             | [Events](database/events-db.md)             |
-|                                 | [Clubs](backend/clubs.md)               | [Clubs](database/clubs-db.md)               |
-|                                 | [Volunteering](backend/volunteering.md) | [Volunteering](database/volunteering-db.md) |
-|                                 | [Feedback](backend/feedback.md)         | [Feedback](database/feedback-db.md)         |
-|                                 |                                         | [History](database/history-db.md)           |
+## Local Development
+
+```console
+yarn start
+```
+
+This command starts a local development server and opens up a browser window. Most changes are reflected live without having to restart the server.
+
+## Build
+
+```console
+yarn build
+```
+
+This command generates static content into the `build` directory and can be served using any static contents hosting service.
+
+## Deployment
+
+```console
+GIT_USER=<Your GitHub username> USE_SSH=true yarn deploy
+```
+
+If you are using GitHub pages for hosting, this command is a convenient way to build the website and push to the `gh-pages` branch.

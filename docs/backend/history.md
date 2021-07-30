@@ -1,7 +1,0 @@
-# History
-
-## list
-
-## getInfo
-
-## getData

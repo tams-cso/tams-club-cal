@@ -111,6 +111,28 @@ export async function getEventList() {
 }
 
 /**
+ * Gets the list of events.
+ * Default options will return ~20 events including the current day.
+ *
+ * @param {string} id The ID of the last event gotten
+ * @returns {Promise<FetchResponse>} Will return the object or error object
+ */
+export async function getMoreEvents(id) {
+    return getRequest(`/events?lastEvent=${id}`);
+}
+
+/**
+ * Returns a list of events between two dates
+ * 
+ * @param {number} start Starting time to get events from
+ * @param {number} end Ending time to get events to
+ * @returns 
+ */
+export async function getEventListInRange(start, end) {
+    return getRequest(`/events?start=${start}&end=${end}`);
+}
+
+/**
  * Gets a specific event by ID.
  * @returns {Promise<FetchResponse>} Will return the object or error object
  */
