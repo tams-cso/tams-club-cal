@@ -48,7 +48,6 @@ const App = () => {
                 fontWeight: '500',
             },
             h4: {
-                // fontFamily: ['Roboto Mono', 'monospace'],
                 fontSize: '1.2rem',
                 fontWeight: '500',
                 color: darkTheme ? '#aaaaaa' : '#555555',
