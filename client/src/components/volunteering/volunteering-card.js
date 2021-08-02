@@ -85,7 +85,9 @@ const VolunteeringCard = (props) => {
                         <Typography variant="subtitle1" className={classes.club}>
                             {props.volunteering.club}
                         </Typography>
-                        <Typography className={classes.description}>{props.volunteering.description}</Typography>
+                        <Typography className={classes.description}>
+                            {props.volunteering.description.replace(/\n/g, ' | ')}
+                        </Typography>
                         <FilterList filters={props.volunteering.filters} />
                     </CardContent>
                 </NavLink>

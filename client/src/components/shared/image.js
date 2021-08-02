@@ -12,6 +12,9 @@ const useStyles = makeStyles({
         display: 'block',
         fontSize: 0,
     },
+    wrapper: {
+        backgroundColor: (props) => (props.transparent ? 'transparent' : null),
+    }
 });
 
 const url = (src) => (!src ? '' : src.endsWith('.webp') ? `${getCdnUrl()}/${src}` : src);
@@ -26,11 +29,12 @@ const url = (src) => (!src ? '' : src.endsWith('.webp') ? `${getCdnUrl()}/${src}
  * @param {string} props.alt Alt text to display for accessibility purposes (won't actually show)
  * @param {number} [props.width] Width of the image
  * @param {number} [props.height] Height of the image
- * @param {boolean} props.raised True to add drop shadow to image
+ * @param {boolean} [props.raised] True to add drop shadow to image
+ * @param {boolean} [props.transparent] True if no background color
  */
 const Image = (props) => {
     const [src, setSrc] = useState(url(props.src));
-    const classes = useStyles({ width: props.width, height: props.height });
+    const classes = useStyles({ width: props.width, height: props.height, transparent: props.transparent });
 
     const inavlidImage = () => {
         setSrc(props.default);
@@ -40,7 +44,7 @@ const Image = (props) => {
     }, [props.src]);
 
     return (
-        <Paper elevation={props.raised ? 2 : 0} className={props.className}>
+        <Paper elevation={props.raised ? 2 : 0} className={`${props.className} ${classes.wrapper}`}>
             <img id={props.id} className={classes.root} src={src} alt={props.alt} onError={inavlidImage} />
         </Paper>
     );

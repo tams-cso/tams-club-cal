@@ -11,7 +11,6 @@ import IconButton from '@material-ui/core/IconButton';
 import ArrowBackIosRoundedIcon from '@material-ui/icons/ArrowBackIosRounded';
 import ArrowForwardIosRoundedIcon from '@material-ui/icons/ArrowForwardIosRounded';
 import CalendarDay from './calendar-day';
-import ActionBar from '../action-bar';
 import Loading from '../../shared/loading';
 import AddButton from '../../shared/add-button';
 
@@ -105,7 +104,6 @@ const Calendar = () => {
         // Save components to state to display
         setCalendarDays(dayComponents);
         setRows(numRows);
-        console.log(totalDays);
         setMonth(now.format('MMMM YYYY'));
     }, [offset]);
 
@@ -120,7 +118,6 @@ const Calendar = () => {
     return (
         <Box display="flex" flexDirection="column" className={classes.wrapper}>
             <AddButton color="primary" path="/edit/events" />
-            <ActionBar active="calendar" />
             <Box width="100%" display="flex" justifyContent="center" alignItems="center">
                 <IconButton size="small" onClick={changeOffset.bind(this, -1)}>
                     <ArrowBackIosRoundedIcon />

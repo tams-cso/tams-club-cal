@@ -77,7 +77,7 @@ const About = () => {
 
     return (
         <Container className={classes.root}>
-            <Image src="/logo-banner.png" alt="TAMS Club Calendar" className={classes.image}></Image>
+            <Image src="/logo-banner.png" alt="TAMS Club Calendar" className={classes.image} transparent></Image>
             <Paragraph text={data.aboutText} fontSize="1.1rem" />
             <Typography variant="h2" className={classes.center}>
                 Feedback

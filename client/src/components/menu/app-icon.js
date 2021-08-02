@@ -22,6 +22,9 @@ const useStyles = makeStyles((theme) => ({
         flexDirection: 'row',
         alignItems: 'center',
     },
+    stagingText: {
+        color: darkSwitch(theme, theme.palette.common.black, theme.palette.error.main),
+    },
     a: {
         fill: '#7cc466',
         stroke: '#231f20',
@@ -65,6 +68,7 @@ const useStyles = makeStyles((theme) => ({
  */
 function AppIcon(props) {
     const classes = useStyles();
+    const isProd = process.env.NODE_ENV === 'production';
     return (
         <NavLink className={`${props.className} ${classes.root}`} to="/">
             <Box className={classes.centerBox}>
@@ -94,6 +98,7 @@ function AppIcon(props) {
                 {props.noText ? null : (
                     <Typography variant="h5" className={classes.title}>
                         TAMS Club Calendar
+                        {isProd ? null : <span className={classes.stagingText}>&nbsp;&nbsp;[STAGING]</span>}
                     </Typography>
                 )}
             </Box>

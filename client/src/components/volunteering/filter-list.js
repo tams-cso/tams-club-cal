@@ -21,7 +21,7 @@ const FilterList = (props) => {
                 color="#ffb258"
                 status={props.filters.limited}
             >
-                Limited Slots
+                Limited Spots
             </FilterItem>
             <FilterItem
                 icon={<EventNoteRoundedIcon htmlColor="#ff8b99" />}

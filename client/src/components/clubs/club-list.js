@@ -7,9 +7,12 @@ import { setClubList } from '../../redux/actions';
 
 import Grid from '@material-ui/core/Grid';
 import Container from '@material-ui/core/Container';
+import Box from '@material-ui/core/Box';
 import ClubCard from './club-card';
 import Loading from '../shared/loading';
 import AddButton from '../shared/add-button';
+import ViewSwitcher from '../shared/view-switcher';
+import ClubTable from './club-table';
 
 const useStyles = makeStyles((theme) => ({
     gridItem: {
@@ -17,12 +20,16 @@ const useStyles = makeStyles((theme) => ({
             flexGrow: 1,
         },
     },
+    viewSwitcher: {
+        float: 'right',
+    },
 }));
 
 const ClubList = () => {
     const dispatch = useDispatch();
     const clubList = useSelector(getSavedClubList);
     const [clubCardList, setClubCardList] = useState(<Loading />);
+    const [listView, setListView] = useState(false);
     const classes = useStyles();
 
     useEffect(async () => {
@@ -53,9 +60,15 @@ const ClubList = () => {
         );
     }, [clubList]);
 
-    return <Container>
-        <AddButton color="primary" path="/edit/clubs" />
-        {clubCardList}</Container>;
+    return (
+        <Container>
+            <Box width="100%" marginBottom={2} height={48}>
+                <ViewSwitcher listView={listView} setListView={setListView} className={classes.viewSwitcher} />
+            </Box>
+            <AddButton color="primary" path="/edit/clubs" />
+            {listView ? <ClubTable clubs={clubList} /> : clubCardList}
+        </Container>
+    );
 };
 
 export default ClubList;

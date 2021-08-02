@@ -13,11 +13,11 @@ import EventList from './list/event-list';
 import EventDisplay from './event-display';
 import Calendar from './calendar/calendar';
 import Reservation from './reservation/reservation';
+import ActionBar from './action-bar';
 
 const drawerWidth = 280;
 const useStyles = makeStyles({
-    root: {
-    },
+    root: {},
     drawer: {
         width: drawerWidth,
     },
@@ -29,25 +29,31 @@ const useStyles = makeStyles({
 
 const Home = () => {
     const [display, setDisplay] = useState(null);
+    const [view, setView] = useState('schedule');
+    const [id, setId] = useState(null);
     const location = useLocation();
     const classes = useStyles();
 
     useEffect(() => {
         // Extract ID from url search params
-        const id = getParams('id');
+        const newId = getParams('id');
+        setId(newId);
 
         // If user has ID, send them to the display page
-        if (id) {
-            setDisplay(<EventDisplay id={id} />);
+        if (newId) {
+            console.log('?')
+            setDisplay(<EventDisplay id={newId} />);
             return;
         }
+    }, [location]);
 
-        // Else figure out if there is a specific view to show
-        const view = getParams('view');
+    useEffect(() => {
+        if (id) return;
+
         if (view === 'calendar') setDisplay(<Calendar />);
         else if (view === 'reservation') setDisplay(<Reservation />);
         else setDisplay(<EventList />);
-    }, [location]);
+    }, [view, id]);
 
     return (
         <PageWrapper noBottom>
@@ -58,6 +64,7 @@ const Home = () => {
                 </Drawer>
             </Hidden>
             <Box flexDirection="column" flexGrow={1} width={0} className={classes.root}>
+                {id ? null : <ActionBar view={view} setView={setView} />}
                 {display}
             </Box>
         </PageWrapper>
