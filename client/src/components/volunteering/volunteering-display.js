@@ -4,7 +4,7 @@ import { useSelector } from 'react-redux';
 import { makeStyles } from '@material-ui/core/styles';
 import { getSavedVolunteeringList } from '../../redux/selectors';
 import { getVolunteering } from '../../functions/api';
-import { darkSwitchGrey } from '../../functions/util';
+import { darkSwitchGrey, getParams } from '../../functions/util';
 
 import Container from '@material-ui/core/Container';
 import Card from '@material-ui/core/Card';
@@ -57,7 +57,7 @@ const useStyles = makeStyles((theme) => ({
     },
     buttonCenter: {
         margin: 'auto',
-    }
+    },
 }));
 
 /**
@@ -74,7 +74,10 @@ const EventDisplay = (props) => {
     const history = useHistory();
     const classes = useStyles();
 
-    const back = () => history.push('/volunteering');
+    const back = () => {
+        const prevView = getParams('view');
+        history.push(`/volunteering${prevView ? `?view=${prevView}` : ''}`);
+    };
 
     useEffect(async () => {
         if (props.id === null) return;
@@ -133,7 +136,9 @@ const EventDisplay = (props) => {
                             </Box>
                         </CardContent>
                         <CardActions>
-                            <Button size="small" className={classes.buttonCenter} onClick={back}>Back</Button>
+                            <Button size="small" className={classes.buttonCenter} onClick={back}>
+                                Back
+                            </Button>
                         </CardActions>
                     </Card>
                 </Container>

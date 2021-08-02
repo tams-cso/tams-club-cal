@@ -4,7 +4,7 @@ import { useSelector } from 'react-redux';
 import { makeStyles } from '@material-ui/core';
 import { getSavedClubList } from '../../redux/selectors';
 import { getClub } from '../../functions/api';
-import { darkSwitchGrey } from '../../functions/util';
+import { darkSwitchGrey, getParams } from '../../functions/util';
 
 import Container from '@material-ui/core/Container';
 import Paper from '@material-ui/core/Paper';
@@ -78,7 +78,7 @@ const useStyles = makeStyles((theme) => ({
     },
     buttonCenter: {
         margin: 'auto',
-    }
+    },
 }));
 
 /**
@@ -97,7 +97,10 @@ const ClubDisplay = (props) => {
     const history = useHistory();
     const classes = useStyles();
 
-    const back = () => history.push('/clubs');
+    const back = () => {
+        const prevView = getParams('view');
+        history.push(`/clubs${prevView ? `?view=${prevView}` : ''}`);
+    };
 
     useEffect(async () => {
         if (props.id === null) return;
@@ -198,7 +201,9 @@ const ClubDisplay = (props) => {
                             </Paper>
                         </CardContent>
                         <CardActions>
-                            <Button size="small" className={classes.buttonCenter} onClick={back}>Back</Button>
+                            <Button size="small" className={classes.buttonCenter} onClick={back}>
+                                Back
+                            </Button>
                         </CardActions>
                     </Card>
                 </Container>

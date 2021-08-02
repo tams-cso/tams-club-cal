@@ -11,7 +11,6 @@ import Box from '@material-ui/core/Box';
 import IconButton from '@material-ui/core/IconButton';
 import Tooltip from '@material-ui/core/Tooltip';
 import Popover from '@material-ui/core/Popover';
-import Paper from '@material-ui/core/Paper';
 import FormControl from '@material-ui/core/FormControl';
 import FormLabel from '@material-ui/core/FormLabel';
 import FormControlLabel from '@material-ui/core/FormControlLabel';
@@ -21,6 +20,8 @@ import FilterListIcon from '@material-ui/icons/FilterList';
 import Loading from '../shared/loading';
 import VolunteeringCard from './volunteering-card';
 import AddButton from '../shared/add-button';
+import ViewSwitcher from '../shared/view-switcher';
+import VolunteeringTable from './volunteering-table';
 
 const useStyles = makeStyles((theme) => ({
     gridItem: {
@@ -28,14 +29,18 @@ const useStyles = makeStyles((theme) => ({
             flexGrow: 1,
         },
     },
+    viewSwitcher: {
+        float: 'right',
+    },
 }));
 
-const ClubList = () => {
+const VolunteeringList = () => {
     const dispatch = useDispatch();
     const fullVolunteeringList = useSelector(getSavedVolunteeringList);
     const [filteredList, setFilteredList] = useState(null);
     const [volunteeringCardList, setVolunteeringCardList] = useState(<Loading />);
     const [anchorEl, setAnchorEl] = useState(null);
+    const [listView, setListView] = useState(false);
     const [filters, setFilters] = useState({
         open: false,
         limited: false,
@@ -58,8 +63,9 @@ const ClubList = () => {
     };
 
     useEffect(async () => {
-        // Fetch the events list on mount from database
         if (fullVolunteeringList !== null) return;
+
+        // Fetch the events list on mount from database
         const clubs = await getVolunteeringList();
         if (clubs.status !== 200) {
             setVolunteeringCardList(
@@ -75,7 +81,28 @@ const ClubList = () => {
     }, []);
 
     useEffect(() => {
+        if (fullVolunteeringList === null) return;
+
+        setFilteredList(
+            fullVolunteeringList.filter((item) => {
+                // If no filters selected, show all results
+                if (!(filters.open || filters.limited || filters.semester || filters.setTimes || filters.weekly))
+                    return true;
+
+                // See if all true filters match and return false if not
+                if (filters.open && !item.filters.open) return false;
+                if (filters.limited && !item.filters.limited) return false;
+                if (filters.semester && !item.filters.semester) return false;
+                if (filters.setTimes && !item.filters.setTimes) return false;
+                if (filters.weekly && !item.filters.weekly) return false;
+                return true;
+            })
+        );
+    }, [filters]);
+
+    useEffect(() => {
         if (filteredList === null) return;
+
         setVolunteeringCardList(
             <Grid container spacing={4}>
                 {filteredList.map((v) => (
@@ -87,25 +114,6 @@ const ClubList = () => {
         );
     }, [filteredList]);
 
-    useEffect(() => {
-        setFilteredList(fullVolunteeringList.filter((item) => {
-            // If no filters selected, show all results
-            if (!(filters.open || 
-                filters.limited || 
-                filters.semester || 
-                filters.setTimes || 
-                filters.weekly)) return true;
-    
-            // See if all true filters match and return false if not
-            if (filters.open && !item.filters.open) return false;
-            if (filters.limited && !item.filters.limited) return false;
-            if (filters.semester && !item.filters.semester) return false;
-            if (filters.setTimes && !item.filters.setTimes) return false;
-            if (filters.weekly && !item.filters.weekly) return false;
-            return true;
-        }))
-    }, [filters])
-
     return (
         <Container>
             <AddButton color="primary" path="/edit/volunteering" />
@@ -115,8 +123,9 @@ const ClubList = () => {
                         <FilterListIcon />
                     </IconButton>
                 </Tooltip>
+                <ViewSwitcher listView={listView} setListView={setListView} className={classes.viewSwitcher} />
             </Box>
-            {volunteeringCardList}
+            {listView ? <VolunteeringTable volunteering={filteredList} /> : volunteeringCardList}
             <Popover
                 open={anchorEl !== null}
                 anchorEl={anchorEl}
@@ -162,4 +171,4 @@ const ClubList = () => {
     );
 };
 
-export default ClubList;
+export default VolunteeringList;
