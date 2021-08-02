@@ -63,7 +63,7 @@ const Home = () => {
                     <HomeDrawerList />
                 </Drawer>
             </Hidden>
-            <Box flexDirection="column" flexGrow={1} width={0} className={classes.root}>
+            <Box display="flex" flexDirection="column" flexGrow={1} width={0} className={classes.root}>
                 {id ? null : <ActionBar view={view} setView={setView} />}
                 {display}
             </Box>

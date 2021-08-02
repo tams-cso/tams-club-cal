@@ -32,7 +32,7 @@ const useStyles = makeStyles((theme) => ({
         gridTemplateRows: 'repeat(6, minmax(0, 1fr))',
     },
     wrapper: {
-        minHeight: '100%',
+        flexGrow: 1,
     },
     header: {
         flexGrow: 1,
@@ -91,7 +91,7 @@ const Calendar = () => {
             dayComponents.push(
                 <CalendarDay
                     events={currentDayEvents}
-                    date={currDay.date()}
+                    date={currDay}
                     key={i}
                     noRight={i % 7 === 6}
                     otherMonth={!thisMonth}

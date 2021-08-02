@@ -1,13 +1,16 @@
-import React from 'react';
+import React, { useState } from 'react';
+import dayjs from 'dayjs';
+import { darkSwitch, darkSwitchGrey } from '../../../functions/util';
+import { Event } from '../../../functions/entries';
 
 import Box from '@material-ui/core/Box';
 import List from '@material-ui/core/List';
 import ListItem from '@material-ui/core/ListItem';
 import Typography from '@material-ui/core/Typography';
+import Button from '@material-ui/core/Button';
 import { makeStyles } from '@material-ui/core';
-import { darkSwitch, darkSwitchGrey } from '../../../functions/util';
-import { Event } from '../../../functions/entries';
 import CalendarEvent from './calendar-event';
+import CalendarPopup from './calendar-popup';
 
 const useStyles = makeStyles((theme) => ({
     root: {
@@ -16,8 +19,11 @@ const useStyles = makeStyles((theme) => ({
             props.noRight ? 'none' : `1px solid ${darkSwitch(theme, theme.palette.grey[300], theme.palette.grey[700])}`,
     },
     date: {
-        paddingTop: 4,
-        paddingLeft: 4,
+        margin: 4,
+        padding: 4,
+        minWidth: 28,
+        height: 28,
+        fontSize: '1rem',
         color: (props) =>
             props.isToday
                 ? theme.palette.primary.main
@@ -36,6 +42,9 @@ const useStyles = makeStyles((theme) => ({
         fontSize: '0.8rem',
         textAlign: 'center',
         color: darkSwitchGrey(theme),
+        [theme.breakpoints.down('sm')]: {
+            fontSize: '0.5rem',
+        },
     },
 }));
 
@@ -44,14 +53,17 @@ const useStyles = makeStyles((theme) => ({
  *
  * @param {object} props React props object
  * @param {Event[]} props.events List of all events for the current day
- * @param {number} props.date Date to display
+ * @param {dayjs.Dayjs} props.date Date to display
  * @param {number} props.rows Number of rows in the current month
  * @param {boolean} [props.noRight] If true will not show right border
  * @param {boolean} [props.isToday] If true will color the box green!
  * @param {boolean} [props.otherMonth] If true will color the box grey
  */
 const CalendarDay = (props) => {
+    const [popupOpen, setPopupOpen] = useState(false);
     const classes = useStyles({ noRight: props.noRight, isToday: props.isToday, otherMonth: props.otherMonth });
+
+    const togglePopup = (open = true) => setPopupOpen(open);
 
     // Calculates how many extra events there are that can't fit
     // and slices the array accordingly
@@ -60,9 +72,9 @@ const CalendarDay = (props) => {
     const events = extraEvents > 0 ? props.events.slice(0, maxEvents) : props.events;
     return (
         <Box className={classes.root}>
-            <Typography variant="h4" className={classes.date}>
-                {props.date}
-            </Typography>
+            <Button className={classes.date} onClick={togglePopup}>
+                {props.date.date()}
+            </Button>
             <List className={classes.list}>
                 {events.map((e) => (
                     <CalendarEvent event={e} key={e.id} />
@@ -73,6 +85,7 @@ const CalendarDay = (props) => {
                     </ListItem>
                 )}
             </List>
+            <CalendarPopup events={props.events} date={props.date} open={popupOpen} close={togglePopup.bind(this, false)} />
         </Box>
     );
 };
