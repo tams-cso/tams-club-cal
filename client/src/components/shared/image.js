@@ -26,7 +26,7 @@ const url = (src) => (!src ? '' : src.endsWith('.webp') ? `${getCdnUrl()}/${src}
  * @param {string} props.alt Alt text to display for accessibility purposes (won't actually show)
  * @param {number} [props.width] Width of the image
  * @param {number} [props.height] Height of the image
- * @param {boolean} props.raised True to add drop shadow to image
+ * @param {boolean} [props.raised] True to add drop shadow to image
  */
 const Image = (props) => {
     const [src, setSrc] = useState(url(props.src));
