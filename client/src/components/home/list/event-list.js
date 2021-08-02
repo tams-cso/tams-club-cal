@@ -17,7 +17,6 @@ import AddButton from '../../shared/add-button';
 const useStyles = makeStyles((theme) => ({
     root: {
         overflowX: 'hidden',
-        minHeight: '100vh',
     },
     centerButton: {
         margin: 'auto',
