@@ -1,19 +1,20 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
+import { useHistory, useLocation } from 'react-router';
 import { capitalize, makeStyles, useMediaQuery, useTheme } from '@material-ui/core';
+import { getParams } from '../../functions/util';
 
 import Paper from '@material-ui/core/Paper';
 import Toolbar from '@material-ui/core/Toolbar';
-import ButtonGroup from '@material-ui/core/ButtonGroup';
-import Button from '@material-ui/core/Button';
+import ToggleButtonGroup from '@material-ui/lab/ToggleButtonGroup';
+import ToggleButton from '@material-ui/lab/ToggleButton';
 import Tooltip from '@material-ui/core/Tooltip';
 import Box from '@material-ui/core/Box';
 import Typography from '@material-ui/core/Typography';
 import FormatListBulletedRoundedIcon from '@material-ui/icons/FormatListBulletedRounded';
 import EventNoteRoundedIcon from '@material-ui/icons/EventNoteRounded';
 import MeetingRoomRoundedIcon from '@material-ui/icons/MeetingRoomRounded';
-import { useHistory, useLocation } from 'react-router';
 
-const useStyles = makeStyles((theme) => ({
+const useStyles = makeStyles({
     root: {
         marginBottom: 12,
         marginLeft: 16,
@@ -27,7 +28,7 @@ const useStyles = makeStyles((theme) => ({
     spacerRight: {
         marginRight: 16,
     },
-}));
+});
 
 /**
  * Displays an action bar for the home page for switching between views
@@ -35,7 +36,8 @@ const useStyles = makeStyles((theme) => ({
  *
  * @param {object} props React props object
  * @param {*} props.children React children
- * @param {"schedule" | "calendar" | "reservation"} props.active Which view is active, shows the title for it as well.
+ * @param {string} props.view View state variable
+ * @param {Function} props.setView View state setter function
  */
 const ActionBar = (props) => {
     const location = useLocation();
@@ -44,37 +46,49 @@ const ActionBar = (props) => {
     const matches = useMediaQuery(theme.breakpoints.up('md'));
     const classes = useStyles();
 
-    const changeView = (view) => {
-        history.push(`${location.pathname}?view=${view}`);
+    const handleView = (event, newView) => {
+        if (newView !== null) {
+            props.setView(newView);
+            history.push(`${location.pathname}?view=${newView}`);
+        }
     };
+
+    useEffect(() => {
+        const searchView = getParams('view');
+        if (searchView === 'calendar') props.setView('calendar');
+        else if (searchView === 'reservation') props.setView('reservation');
+    }, []);
 
     return (
         <Paper className={classes.root}>
             <Toolbar>
                 <Typography variant="h3" className={classes.spacerRight}>
-                    {`${capitalize(props.active)}${matches ? ' View' : ''}`}
+                    {`${capitalize(props.view || '')}${matches ? ' View' : ''}`}
                 </Typography>
                 <Box>{props.children}</Box>
-                <ButtonGroup className={classes.buttonGroup}>
-                    <Tooltip title="Schedule View">
-                        <Button disabled={props.active === 'schedule'} onClick={changeView.bind(this, 'schedule')}>
+                <ToggleButtonGroup
+                    value={props.view}
+                    exclusive
+                    onChange={handleView}
+                    aria-label="switch view"
+                    className={classes.buttonGroup}
+                >
+                    <ToggleButton value="schedule">
+                        <Tooltip title="Schedule View">
                             <FormatListBulletedRoundedIcon />
-                        </Button>
-                    </Tooltip>
-                    <Tooltip title="Calendar View">
-                        <Button disabled={props.active === 'calendar'} onClick={changeView.bind(this, 'calendar')}>
+                        </Tooltip>
+                    </ToggleButton>
+                    <ToggleButton value="calendar">
+                        <Tooltip title="Calendar View">
                             <EventNoteRoundedIcon />
-                        </Button>
-                    </Tooltip>
-                    <Tooltip title="Room Reservation Chart">
-                        <Button
-                            disabled={props.active === 'reservation'}
-                            onClick={changeView.bind(this, 'reservation')}
-                        >
+                        </Tooltip>
+                    </ToggleButton>
+                    <ToggleButton value="reservation">
+                        <Tooltip title="Room Reservation Chart">
                             <MeetingRoomRoundedIcon />
-                        </Button>
-                    </Tooltip>
-                </ButtonGroup>
+                        </Tooltip>
+                    </ToggleButton>
+                </ToggleButtonGroup>
             </Toolbar>
         </Paper>
     );

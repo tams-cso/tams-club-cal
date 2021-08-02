@@ -2,7 +2,6 @@ import React from 'react';
 import { makeStyles } from '@material-ui/core';
 
 import Box from '@material-ui/core/Box';
-import ActionBar from '../action-bar';
 
 const useStyles = makeStyles((theme) => ({
     root: {
@@ -12,12 +11,7 @@ const useStyles = makeStyles((theme) => ({
 
 const Reservation = () => {
     const classes = useStyles();
-    return (
-        <React.Fragment>
-            <ActionBar active="reservation" />
-            <Box className={classes.root}>Reservation Calendar WIP...</Box>
-        </React.Fragment>
-    );
+    return <Box className={classes.root}>Reservation Calendar WIP...</Box>;
 };
 
 export default Reservation;

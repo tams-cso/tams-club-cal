@@ -13,7 +13,6 @@ import Button from '@material-ui/core/Button';
 import EventListSection from './event-list-section';
 import Loading from '../../shared/loading';
 import AddButton from '../../shared/add-button';
-import ActionBar from '../action-bar';
 
 const useStyles = makeStyles((theme) => ({
     root: {
@@ -111,13 +110,10 @@ const EventList = () => {
     }, [eventList]);
 
     return (
-        <React.Fragment>
-            <ActionBar active="schedule" />
-            <Container maxWidth="lg" className={classes.root}>
-                <AddButton color="primary" path="/edit/events" />
-                {eventComponentList}
-            </Container>
-        </React.Fragment>
+        <Container maxWidth="lg" className={classes.root}>
+            <AddButton color="primary" path="/edit/events" />
+            {eventComponentList}
+        </Container>
     );
 };
 
