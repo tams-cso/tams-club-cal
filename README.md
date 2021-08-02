@@ -1,6 +1,5 @@
-![TAMS Club Calendar](docs/_images/logo-banner.png)
-
-An unofficial calendar for the [Texas Academy of Mathematics and Science (TAMS)](https://tams.unt.edu/) student organizations.
+![TAMS Club Calendar](client/public/logo-banner.png)
+The TAMS Club Calendar is a fully contained event tracker, club/volunteering database, and general resource center. This is the unofficial club event calendar for the [Texas Academy of Mathematics and Science (TAMS)](https://tams.unt.edu/) student organizations!
 
 ## Contribution
 
@@ -16,8 +15,7 @@ For now, here are the links to the [planning Google Doc](https://docs.google.com
 
 ```bash
 git clone https://github.com/MichaelZhao21/tams-club-cal.git
-cd tams-club-cal/client && yarn install
-cd ../server && yarn install
+cd tams-club-cal && yarn install
 ```
 
 If you would like to help develop the backend, email or message [MichaelZhao21](https://github.com/MichaelZhao21) to get access to the database. If you are just developing frontend, you can simply use `https://dev.tams.club` as the backend address in the json file and only run the frontend (`client` folder). You will not need to do the following step if you are only developing frontend.
@@ -33,12 +31,14 @@ G_CLIENT_ID="[Google API OAuth 2.0 Client ID]"
 G_CLIENT_SECRET="[Google API OAuth 2.0 Client Secret]"
 SERVICE_EMAIL="[Google Cloud service account email]"
 SERVICE_PRIVATE_KEY="[Google Cloud service account private key]"
+CALENDAR_ID="[ID for Google Calendar for syncing]"
+
 AWS_ACCESS_ID="[AWS IAM User Access Key ID]"
 AWS_SECRET_KEY="[AWS IAM User Secret Key]"
-CALENDAR_ID="[ID for Google Calendar for syncing]"
+
 ORIGIN="[(optional) Origin requests are sent from. This is needed for google login -- thus, it will not work for local development]"
-PORT="[(optional) The port to start the server on]"
 NO_ORIGIN_CHECK="[(optional) If true, all requests not from ORIGIN will be *denied with a 403 error*]
+PORT="[(optional) The port to start the server on]"
 ```
 
 The first thing you will need is a [Mongodb Atlas Cluster](https://www.mongodb.com/cloud/atlas). A free tier instance should be good enough. If you decide to opt for a local instance, make sure to use that username/password and url instead.
@@ -64,17 +64,3 @@ To run the server:
 cd server
 yarn start
 ```
-
-## Deployment Notes
-
-To run a deployment, go into the `server` folder and run `pm2 start ecosystem.config.js`.
-
-**PM2 will not ignore watches unless you increase the number of inotify watches:**
-
-```bash
-echo fs.inotify.max_user_watches=524288 | sudo tee -a /etc/sysctl.conf && sudo sysctl -p
-```
-
-To create a production version of the frontend, go into the `client` folder and run `yarn build`. This will create a production release of the site in the `/build` folder. Simply serve the static index.html and it should be up and running.
-
-Don't forget to set the correct backend environmental variables and frontend config variables!
