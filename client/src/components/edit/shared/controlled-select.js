@@ -2,6 +2,7 @@ import React, { useEffect } from 'react';
 
 import { Controller } from 'react-hook-form';
 import Select from '@material-ui/core/Select';
+import { FormControl, FormHelperText } from '@material-ui/core';
 
 /**
  * Displays a controlled select to edit.
@@ -17,6 +18,7 @@ import Select from '@material-ui/core/Select';
  * @param {'standard' | 'outlined' | 'filled'} [props.variant] Variant of the select field
  * @param {string} [props.value] Default value for the field
  * @param {Function} [props.setValue] React hook form setValue function; required if value is defined
+ * @param {string} [props.helperText] If defined, will show helper text
  * @param {string} [props.className] React classname
  * @param {*} [props.children] Children elements to display; should all be MenuItem components
  */
@@ -35,7 +37,8 @@ const ControlledSelect = (props) => {
             rules={{ required: props.required || false }}
             defaultValue={props.value}
             render={({ field: { onChange, onBlur, value } }) => (
-                <Select
+                <FormControl>
+                    <Select
                     variant={props.variant || 'standard'}
                     onChange={onChange}
                     onBlur={onBlur}
@@ -44,6 +47,8 @@ const ControlledSelect = (props) => {
                 >
                     {props.children}
                 </Select>
+                <FormHelperText>{props.helperText}</FormHelperText>
+                </FormControl>
             )}
         ></Controller>
     );

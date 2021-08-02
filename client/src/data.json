@@ -9,5 +9,75 @@
     "charsOfTheWeek": ["S", "M", "T", "W", "T", "F", "S"],
     "githubLink": "https://github.com/MichaelZhao21/tams-club-cal",
     "aboutText": "Welcome to the TAMS Club Calendar! This is a simple web app that displays all the student organization events at TAMS, along with a list of clubs and other resources. Our vision is a community-maintained resource that’s avaliable to anyone and can be updated by anyone as well.\nWe are an open-source project, meaning that anyone and everyone can help contribute to the development of the website! You can go to the Github repository where this project is being hosted, where there's more information on that page about how to contribute and help code. If you can't code and still want to help, there is a feedback form below where you can write whatever you would like! The way programs like these get better, after all, is through independent user feedback. Thank you once again for checking out tams.club, and we hope you enjoy the rest of your day! :D",
-    "aboutFeedback": "We would love to hear what you think and what ideas you would like to see! Here’s the form for any bugs, comments, suggestions, and anything else you would like us to know!"
+    "aboutFeedback": "We would love to hear what you think and what ideas you would like to see! Here’s the form for any bugs, comments, suggestions, and anything else you would like us to know!",
+    "rooms": [
+        {
+            "value": "room-mac",
+            "label": "[Room] Mac Cafe"
+        },
+        {
+            "value": "room-smitty",
+            "label": "[Room] Smitty"
+        },
+        {
+            "value": "room-conference",
+            "label": "[Room] Conference Room"
+        },
+        {
+            "value": "room-sac",
+            "label": "[Room] SAC"
+        },
+        {
+            "value": "room-tv",
+            "label": "[Room] TV Room"
+        },
+        {
+            "value": "room-bewley",
+            "label": "[Room] Bewley"
+        },
+        {
+            "value": "room-board",
+            "label": "[Room] Board Room"
+        },
+        {
+            "value": "room-kitchenette",
+            "label": "[Room] Kitchenette"
+        },
+        {
+            "value": "mac-park",
+            "label": "Mcconnell Park Area"
+        },
+        {
+            "value": "zoom",
+            "label": "Online Event"
+        },
+        {
+            "value": "van-382",
+            "label": "[Van] #382"
+        },
+        {
+            "value": "van-383",
+            "label": "[Van] #383"
+        },
+        {
+            "value": "van-384",
+            "label": "[Van] #384"
+        },
+        {
+            "value": "van-386",
+            "label": "[Van] #386"
+        },
+        {
+            "value": "van-387",
+            "label": "[Van] #387"
+        },
+        {
+            "value": "van-380",
+            "label": "[Van] #380 (mini)"
+        },
+        {
+            "value": "van-388",
+            "label": "[Van] #388 (truck)"
+        }
+    ]
 }

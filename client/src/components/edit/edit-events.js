@@ -9,18 +9,18 @@ import { dateToMillis, getParams, redirect } from '../../functions/util';
 import { Event } from '../../functions/entries';
 import { getEvent, postEvent, putEvent } from '../../functions/api';
 
-import { Controller } from 'react-hook-form';
 import Typography from '@material-ui/core/Typography';
-import DateTimeInput from './events/date-time-input';
 import Box from '@material-ui/core/Box';
 import MenuItem from '@material-ui/core/MenuItem';
-import FormControlLabel from '@material-ui/core/FormControlLabel';
-import Checkbox from '@material-ui/core/Checkbox';
+import DateTimeInput from './events/date-time-input';
+import ControlledCheckbox from './events/controlled-checkbox';
 import ControlledTextField from './shared/controlled-text-field';
 import ControlledSelect from './shared/controlled-select';
 import UploadBackdrop from './shared/upload-backdrop';
 import Loading from '../shared/loading';
 import TwoButtonBox from './shared/two-button-box';
+import LocationSelect from './shared/location-select';
+import DateInput from './events/date-input';
 
 const useStyles = makeStyles((theme) => ({
     title: {
@@ -40,15 +40,11 @@ const useStyles = makeStyles((theme) => ({
             flexDirection: 'column',
         },
     },
+    centerFlex: {
+        justifyContent: 'center',
+    },
     type: {
         height: 56,
-    },
-    check: {
-        alignSelf: 'flex-start',
-        [theme.breakpoints.up('md')]: {
-            marginLeft: 8,
-            marginTop: 6,
-        },
     },
     spacer: {
         width: 20,
@@ -77,6 +73,8 @@ const EditEvents = () => {
     const watchStart = watch('start');
     const watchEnd = watch('end');
     const watchNoEnd = watch('noEnd');
+    const watchAllDay = watch('allDay');
+    const watchRepeating = watch('repeating');
 
     useEffect(async () => {
         // Extract ID from url search params
@@ -95,6 +93,7 @@ const EditEvents = () => {
     useEffect(() => {
         // Set starting time
         if (!event) return;
+
         if (event.start) setPrevStart(event.start);
         else setPrevStart(dayjs().startOf('hour').add(1, 'hour').valueOf());
     }, [event]);
@@ -127,6 +126,9 @@ const EditEvents = () => {
             data.description,
             startTime,
             endTime,
+            data.location,
+            data.allDay,
+            data.repeating ? data.repeatUntil : 0,
             event.history
         );
 
@@ -190,40 +192,56 @@ const EditEvents = () => {
                         errorMessage="Please enter a club name"
                     />
                     <div className={classes.spacer} />
+                    <LocationSelect control={control} setValue={setValue} value={event.location} />
+                </Box>
+                <Box className={`${classes.boxWrapper} ${classes.centerFlex}`}>
                     <DateTimeInput
                         control={control}
                         name="start"
                         label={watchNoEnd ? 'Date/time' : 'Start date/time'}
                         value={event.start}
+                        disabled={watchAllDay}
                         required
                     />
-                    {watchNoEnd ? null : (
-                        <React.Fragment>
-                            <div className={classes.spacer} />
-                            <DateTimeInput
-                                name="end"
-                                label="End date/time"
-                                control={control}
-                                value={event.end}
-                                required
-                                end
-                            />
-                        </React.Fragment>
-                    )}
-                    <Controller
+                    <div className={classes.spacer} />
+                    <DateTimeInput
+                        name="end"
+                        label="End date/time"
+                        control={control}
+                        value={event.end}
+                        disabled={watchNoEnd || watchAllDay}
+                        required
+                        end
+                    />
+                </Box>
+                <Box className={`${classes.boxWrapper} ${classes.centerFlex}`}>
+                    <ControlledCheckbox
                         control={control}
                         name="noEnd"
-                        defaultValue={false}
-                        render={({ field: { onChange, onBlur, value } }) => (
-                            <FormControlLabel
-                                control={<Checkbox />}
-                                label="No end time"
-                                className={classes.check}
-                                onChange={onChange}
-                                onBlur={onBlur}
-                                value={value}
-                            />
-                        )}
+                        label="No end time"
+                        value={false}
+                        setValue={setValue}
+                    />
+                    <ControlledCheckbox
+                        control={control}
+                        name="allDay"
+                        label="All day event"
+                        value={event.allDay}
+                        setValue={setValue}
+                    />
+                    <ControlledCheckbox
+                        control={control}
+                        name="repeating"
+                        label="Repeats weekly"
+                        value={event.repeating !== 0}
+                        setValue={setValue}
+                    />
+                    <DateInput
+                        control={control}
+                        name="repeatUntil"
+                        label="Repeat Until"
+                        value={event.repeating}
+                        disabled={!watchRepeating}
                     />
                 </Box>
                 <ControlledTextField
