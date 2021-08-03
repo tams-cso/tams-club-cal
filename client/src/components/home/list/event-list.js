@@ -5,7 +5,7 @@ import dayjs from 'dayjs';
 import { setEventList } from '../../../redux/actions';
 import { getSavedEventList } from '../../../redux/selectors';
 import { getEventList, getMoreEvents } from '../../../functions/api';
-import { darkSwitchGrey, isSameDate } from '../../../functions/util';
+import { darkSwitchGrey, isSameDate, parseEventList } from '../../../functions/util';
 
 import Container from '@material-ui/core/Container';
 import Typography from '@material-ui/core/Typography';
@@ -71,6 +71,8 @@ const EventList = () => {
             );
             return;
         }
+
+        const parsedEventList = parseEventList(eventList);
 
         // Split the events into groups
         let eventGroupList = [];

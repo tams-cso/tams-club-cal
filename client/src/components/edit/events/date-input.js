@@ -25,11 +25,11 @@ const DateInput = (props) => {
             control={props.control}
             rules={{ required: props.required || false }}
             name={props.name}
-            defaultValue={props.value ? dayjs(Number(props.value)) : dayjs().add(1, 'month')}
+            defaultValue={props.value ? dayjs(Number(props.value)) : dayjs()}
             render={({ field: { onChange, onBlur, value }, fieldState: { error } }) => (
                 <DatePicker
                     className={props.className}
-                    inputVariant="standard"
+                    inputVariant="outlined"
                     format="MMM D, YYYY"
                     label={props.label}
                     value={value}

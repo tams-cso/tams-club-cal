@@ -10,6 +10,7 @@
     "githubLink": "https://github.com/MichaelZhao21/tams-club-cal",
     "aboutText": "Welcome to the TAMS Club Calendar! This is a simple web app that displays all the student organization events at TAMS, along with a list of clubs and other resources. Our vision is a community-maintained resource that’s avaliable to anyone and can be updated by anyone as well.\nWe are an open-source project, meaning that anyone and everyone can help contribute to the development of the website! You can go to the Github repository where this project is being hosted, where there's more information on that page about how to contribute and help code. If you can't code and still want to help, there is a feedback form below where you can write whatever you would like! The way programs like these get better, after all, is through independent user feedback. Thank you once again for checking out tams.club, and we hope you enjoy the rest of your day! :D",
     "aboutFeedback": "We would love to hear what you think and what ideas you would like to see! Here’s the form for any bugs, comments, suggestions, and anything else you would like us to know!",
+    "hours": ["12", "1a", "2a", "3a", "4a", "5a", "6a", "7a", "8a", "9a", "10a", "11a", "12", "1p", "2p", "3p", "4p", "5p", "6p", "7p", "8p", "9p", "10p", "11p"],
     "rooms": [
         {
             "value": "room-mac",
@@ -21,7 +22,7 @@
         },
         {
             "value": "room-conference",
-            "label": "[Room] Conference Room"
+            "label": "[Room] Conference"
         },
         {
             "value": "room-sac",

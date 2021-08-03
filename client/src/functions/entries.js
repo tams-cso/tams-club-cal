@@ -11,13 +11,13 @@
  * @param {number} [end] The time in UTC milliseconds that the event ends
  * @param {string} [location] The value of the location that the event takes place in
  * @param {boolean} [allDay] If true, the event will last the entire day, will ignore start/end datetime
- * @param {number} [repeating] The time in UTC milliseconds that the event will stop repeating, 0 if no repeat
  * @param {string[]} [history] Edit history list
  */
 export class Event {
-    constructor(id, eventId, type, name, club, description, start, end, location, allDay, repeating, history) {
+    constructor(id, eventId, reservationId, type, name, club, description, start, end, location, allDay, history) {
         this.id = id || null;
         this.eventId = eventId || null;
+        this.reservationId = reservationId || null;
         this.type = type || 'event';
         this.name = name || null;
         this.club = club || null;
@@ -26,7 +26,33 @@ export class Event {
         this.end = end || 0;
         this.location = location || 'none';
         this.allDay = allDay || false;
-        this.repeating = repeating || 0;
+        this.history = history || null;
+    }
+}
+
+/**
+ * An object containing the information for reservations
+ *
+ * @param {string} [id] The unique UUIDv4 for the reservation
+ * @param {string} [eventId] The ID of the related event; this will be null if not related to an event
+ * @param {string} [name] The name of the reservation
+ * @param {string} [club] The name of the club that made the reservation
+ * @param {string} [description] The description of the reservation
+ * @param {number} [start] The time in UTC milliseconds that the reservation starts (rounds to hours)
+ * @param {number} [end] The time in UTC milliseconds that the reservation ends (rounds to hours)
+ * @param {string} [location] The location that is reserved
+ * @param {string[]} [history] Edit history list; this will be null if related to an event
+ */
+export class Reservation {
+    constructor(id, eventId, name, club, description, start, end, location, history) {
+        this.id = id || null;
+        this.eventId = eventId || null;
+        this.name = name || null;
+        this.club = club || null;
+        this.description = description || '';
+        this.start = start || 0;
+        this.end = end || 0;
+        this.location = location || 'none';
         this.history = history || null;
     }
 }

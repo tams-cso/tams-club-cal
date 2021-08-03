@@ -5,7 +5,7 @@ import { useForm } from 'react-hook-form';
 import Cookies from 'universal-cookie';
 import dayjs from 'dayjs';
 import { openPopup } from '../../redux/actions';
-import { dateToMillis, getParams, redirect } from '../../functions/util';
+import { getParams, redirect } from '../../functions/util';
 import { Event } from '../../functions/entries';
 import { getEvent, postEvent, putEvent } from '../../functions/api';
 
@@ -38,6 +38,14 @@ const useStyles = makeStyles((theme) => ({
         display: 'flex',
         [theme.breakpoints.down('sm')]: {
             flexDirection: 'column',
+        },
+    },
+    leftCheckbox: {
+        [theme.breakpoints.up('md')]: {
+            marginLeft: 8,
+        },
+        [theme.breakpoints.down('sm')]: {
+            marginTop: 8,
         },
     },
     centerFlex: {
@@ -74,7 +82,6 @@ const EditEvents = () => {
     const watchEnd = watch('end');
     const watchNoEnd = watch('noEnd');
     const watchAllDay = watch('allDay');
-    const watchRepeating = watch('repeating');
 
     useEffect(async () => {
         // Extract ID from url search params
@@ -90,14 +97,14 @@ const EditEvents = () => {
         } else setEvent(new Event());
     }, []);
 
+    // Set "prevStart" variable to the starting time to use later
     useEffect(() => {
-        // Set starting time
         if (!event) return;
-
         if (event.start) setPrevStart(event.start);
         else setPrevStart(dayjs().startOf('hour').add(1, 'hour').valueOf());
     }, [event]);
 
+    // Offset the end time if startTime is changed to the same duration
     useEffect(() => {
         if (watchEnd === undefined || errors.end) return;
         const diff = watchEnd.valueOf() - prevStart;
@@ -105,21 +112,28 @@ const EditEvents = () => {
         setPrevStart(watchStart.valueOf());
     }, [watchStart]);
 
+    // Set an error if the end time is set before the start time
     useEffect(() => {
         if (watchEnd === undefined || watchNoEnd) return;
         if (watchEnd.isBefore(watchStart)) setError('end');
         else clearErrors('end');
     }, [watchEnd]);
 
+    // Set the date of the "all day" date input to the same as the start time
+    useEffect(() => {
+        if (watchAllDay) setValue('date', watchStart);
+    }, [watchAllDay]);
+
     const onSubmit = async (data) => {
         if (!('name' in data)) return;
         const cookies = new Cookies();
 
-        const startTime = dateToMillis(data.start);
-        const endTime = data.noEnd ? startTime : dateToMillis(data.end);
+        const startTime = data.allDay ? data.date.startOf('day').valueOf() : data.start.valueOf();
+        const endTime = data.allDay || data.noEnd ? startTime : data.end.valueOf();
         const newEvent = new Event(
             id,
             event.eventId,
+            event.reservationId,
             data.type,
             data.name,
             data.club,
@@ -128,7 +142,6 @@ const EditEvents = () => {
             endTime,
             data.location,
             data.allDay,
-            data.repeating ? data.repeatUntil : 0,
             event.history
         );
 
@@ -195,14 +208,17 @@ const EditEvents = () => {
                     <LocationSelect control={control} setValue={setValue} value={event.location} />
                 </Box>
                 <Box className={`${classes.boxWrapper} ${classes.centerFlex}`}>
-                    <DateTimeInput
-                        control={control}
-                        name="start"
-                        label={watchNoEnd ? 'Date/time' : 'Start date/time'}
-                        value={event.start}
-                        disabled={watchAllDay}
-                        required
-                    />
+                    {watchAllDay ? (
+                        <DateInput control={control} name="date" label="Date" value={event.start} />
+                    ) : (
+                        <DateTimeInput
+                            control={control}
+                            name="start"
+                            label={watchNoEnd ? 'Date/time' : 'Start date/time'}
+                            value={event.start}
+                            required
+                        />
+                    )}
                     <div className={classes.spacer} />
                     <DateTimeInput
                         name="end"
@@ -213,14 +229,13 @@ const EditEvents = () => {
                         required
                         end
                     />
-                </Box>
-                <Box className={`${classes.boxWrapper} ${classes.centerFlex}`}>
                     <ControlledCheckbox
                         control={control}
                         name="noEnd"
                         label="No end time"
                         value={false}
                         setValue={setValue}
+                        className={classes.leftCheckbox}
                     />
                     <ControlledCheckbox
                         control={control}
@@ -229,21 +244,8 @@ const EditEvents = () => {
                         value={event.allDay}
                         setValue={setValue}
                     />
-                    <ControlledCheckbox
-                        control={control}
-                        name="repeating"
-                        label="Repeats weekly"
-                        value={event.repeating !== 0}
-                        setValue={setValue}
-                    />
-                    <DateInput
-                        control={control}
-                        name="repeatUntil"
-                        label="Repeat Until"
-                        value={event.repeating}
-                        disabled={!watchRepeating}
-                    />
                 </Box>
+                <Box className={`${classes.boxWrapper} ${classes.centerFlex}`}></Box>
                 <ControlledTextField
                     control={control}
                     setValue={setValue}

@@ -2,6 +2,7 @@ const express = require('express');
 const dayjs = require('dayjs');
 const { addToCalendar, updateCalendar } = require('../functions/gcal');
 const { sendError, newId, createNewHistory } = require('../functions/util');
+const { addReservationFromEvent } = require('../functions/event-reservations');
 const Event = require('../models/event');
 const router = express.Router();
 
@@ -91,27 +92,36 @@ router.get('/:id', async (req, res, next) => {
  * Creates a new event
  */
 router.post('/', async (req, res, next) => {
-    const historyId = newId();
-    const id = newId();
-    const eventId = await addToCalendar(req.body);
+    try {
+        const historyId = newId();
+        const id = newId();
+        const eventId = await addToCalendar(req.body);
+        const reservationId = await addReservationFromEvent(id, req);
 
-    const newEvent = new Event({
-        id,
-        eventId,
-        type: req.body.type,
-        name: req.body.name,
-        club: req.body.club,
-        description: req.body.description,
-        start: Number(req.body.start),
-        end: Number(req.body.end),
-        history: [historyId],
-    });
-    const newHistory = createNewHistory(req, newEvent, 'events', id, historyId);
+        const newEvent = new Event({
+            id,
+            eventId,
+            reservationId,
+            type: req.body.type,
+            name: req.body.name,
+            club: req.body.club,
+            description: req.body.description,
+            start: Number(req.body.start),
+            end: Number(req.body.end),
+            location: req.body.location,
+            allDay: req.body.allDay,
+            history: [historyId],
+        });
+        const newHistory = createNewHistory(req, newEvent, 'events', id, historyId);
 
-    const eventRes = await newEvent.save();
-    const historyRes = await newHistory.save();
-    if (eventRes === newEvent && historyRes === newHistory) res.send({ ok: 1 });
-    else sendError(res, 500, 'Unable to add new event to database');
+        const eventRes = await newEvent.save();
+        const historyRes = await newHistory.save();
+        if (eventRes === newEvent && historyRes === newHistory) res.send({ ok: 1 });
+        else sendError(res, 500, 'Unable to add new event to database');
+    } catch (error) {
+        console.error(error);
+        sendError(res, 500, 'Unable to add new event to database');
+    }
 });
 
 /**
