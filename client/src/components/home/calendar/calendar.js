@@ -3,7 +3,7 @@ import { makeStyles, Typography } from '@material-ui/core';
 import { useDispatch, useSelector } from 'react-redux';
 import dayjs from 'dayjs';
 import { openPopup } from '../../../redux/actions';
-import { darkSwitch } from '../../../functions/util';
+import { darkSwitch, parseEventList } from '../../../functions/util';
 import { getEventListInRange } from '../../../functions/api';
 
 import Box from '@material-ui/core/Box';
@@ -78,7 +78,7 @@ const Calendar = () => {
         if (res.status !== 200) {
             dispatch(openPopup('Could not load calendar events. Please check your internet and refresh the page.', 4));
         }
-        const events = res.status === 200 ? res.data : [];
+        const events = res.status === 200 ? parseEventList(res.data) : [];
 
         // Create the actual list of calendar days by grouping
         // events into their days and adding it to the components list

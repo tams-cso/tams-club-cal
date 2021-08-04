@@ -13,6 +13,7 @@ const useStyles = makeStyles((theme) => ({
         padding: 0,
     },
     time: {
+        flexShrink: 0,
         color: darkSwitchGrey(theme),
         fontSize: '0.65rem',
         [theme.breakpoints.down('sm')]: {
