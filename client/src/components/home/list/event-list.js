@@ -114,7 +114,7 @@ const EventList = () => {
 
     return (
         <Container maxWidth="lg" className={classes.root}>
-            <AddButton color="primary" path="/edit/events" />
+            <AddButton color="primary" label="Event" path="/edit/events" />
             {eventComponentList}
         </Container>
     );

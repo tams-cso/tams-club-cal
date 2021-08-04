@@ -65,7 +65,7 @@ const ClubList = () => {
             <Box width="100%" marginBottom={2} height={48}>
                 <ViewSwitcher listView={listView} setListView={setListView} className={classes.viewSwitcher} />
             </Box>
-            <AddButton color="primary" path="/edit/clubs" />
+            <AddButton color="primary" label="Club" path="/edit/clubs" />
             {listView ? <ClubTable clubs={clubList} /> : clubCardList}
         </Container>
     );

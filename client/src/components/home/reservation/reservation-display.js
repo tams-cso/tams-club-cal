@@ -110,7 +110,7 @@ const ReservationDisplay = () => {
                 )
             ) : (
                 <Container className={classes.root}>
-                    <AddButton color="secondary" path={`/edit/events?id=${reservation.id}`} edit />
+                    <AddButton color="secondary" label="Event" path={`/edit/events?id=${reservation.id}`} edit />
                     <Card>
                         <CardContent>
                             <Box className={classes.gridRoot}>

@@ -116,7 +116,7 @@ const VolunteeringList = () => {
 
     return (
         <Container>
-            <AddButton color="primary" path="/edit/volunteering" />
+            <AddButton color="primary" label="Volunteering" path="/edit/volunteering" />
             <Box width="100%" marginBottom={2}>
                 <Tooltip title="Filters">
                     <IconButton onClick={openFilters}>

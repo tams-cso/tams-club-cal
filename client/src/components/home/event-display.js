@@ -115,7 +115,7 @@ const EventDisplay = (props) => {
                 )
             ) : (
                 <Container className={classes.root}>
-                    <AddButton color="secondary" path={`/edit/events?id=${event.id}`} edit />
+                    <AddButton color="secondary" label="Event" path={`/edit/events?id=${event.id}`} edit />
                     <Card>
                         <CardContent>
                             <Box className={classes.gridRoot}>

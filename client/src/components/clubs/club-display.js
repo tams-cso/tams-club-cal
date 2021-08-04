@@ -148,7 +148,7 @@ const ClubDisplay = (props) => {
                 )
             ) : (
                 <Container className={classes.root}>
-                    <AddButton color="secondary" path={`/edit/clubs?id=${club.id}`} edit />
+                    <AddButton color="secondary" label="Club" path={`/edit/clubs?id=${club.id}`} edit />
                     <Card>
                         <CardMedia className={classes.imageWrapper}>
                             <Image className={classes.image} src={club.coverImg} default="/default-cover.webp" />

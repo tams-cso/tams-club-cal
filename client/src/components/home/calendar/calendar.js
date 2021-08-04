@@ -117,7 +117,7 @@ const Calendar = () => {
     const rowClass = rows === 5 ? classes.row5 : rows === 6 ? classes.row6 : classes.row4;
     return (
         <Box display="flex" flexDirection="column" className={classes.wrapper}>
-            <AddButton color="primary" path="/edit/events" />
+            <AddButton color="primary" label="Event" path="/edit/events" />
             <Box width="100%" display="flex" justifyContent="center" alignItems="center">
                 <IconButton size="small" onClick={changeOffset.bind(this, -1)}>
                     <ArrowBackIosRoundedIcon />
