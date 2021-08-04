@@ -69,7 +69,7 @@ export function redirect(path) {
 /**
  * This function will remove all deleted links and return
  * a string list of the values, with the empty ones removed
- * 
+ *
  * @param {object[]} list List of link objects with deleted and value attributes
  * @returns {string[]} List of all links
  */
@@ -132,9 +132,15 @@ export function toTz(millis) {
  *
  * @param {Number} millis UTC millisecond time to format
  * @param {string} format Dayjs format to format the time to
+ * @param {boolean} [checkMidnight] If true, will check for midnight/noon and return those words if true
  * @returns {string} The formatted time
  */
-export function formatTime(millis, format) {
+export function formatTime(millis, format, checkMidnight) {
+    if (checkMidnight) {
+        const formattedTime = toTz(millis).format('H:m');
+        if (formattedTime === '0:0') return 'Midnight';
+        else if (formattedTime === '12:0') return 'Noon';
+    }
     return toTz(millis).format(format);
 }
 
@@ -157,6 +163,7 @@ export function isSameDate(first, second) {
  * @returns {string} The formatted full date
  */
 export function formatEventDate(event) {
+    if (!toTz(event.start).isSame(toTz(event.end), 'day')) return formatTime(event.start, 'dddd, MMMM D, YYYY h:mma');
     let formattedTime = formatTime(event.start, 'dddd, MMMM D, YYYY');
     if (!isSameDate(event.start, event.end)) formattedTime += formatTime(event.end, ' - dddd, MMMM D, YYYY');
     return formattedTime;
@@ -168,25 +175,61 @@ export function formatEventDate(event) {
  *
  * @param {Event} event The event object
  * @param {boolean} [noEnd] If true, will not show an end time
+ * @param {boolean} [checkSame] If true, will check to see if start !== end and return the end time. This is used for the EventDisplay component
  * @returns {string} The formatted time for the event in the format [h:mma - h:mma]
  */
-export function formatEventTime(event, noEnd = false) {
-    let formattedTime = formatTime(event.start, 'h:mma');
-    if (!noEnd && event.start !== event.end) formattedTime += formatTime(event.end, ' - h:mma');
+export function formatEventTime(event, noEnd = false, checkSame) {
+    if (event.allDay) return 'Full Day';
+    if (checkSame && !toTz(event.start).isSame(toTz(event.end), 'day'))
+        return formatTime(event.end, 'dddd, MMMM D, YYYY h:mma');
+
+    let formattedTime = formatTime(event.start, 'h:mma', true);
+    if (!noEnd && event.start !== event.end) formattedTime += ` - ${formatTime(event.end, 'h:mma', true)}`;
     return formattedTime;
 }
 
 // ================== DATA PARSING FUNCTIONS =================== //
 
 /**
- * Will set times for all day events as well as split up
- * multiple day events to be displayed correctly
- * 
+ * Will split up multiple day events to be displayed correctly
+ *
  * @param {Event[]} eventList The unparsed event list
  * @returns {Event[]} The parsed event list
  */
 export function parseEventList(eventList) {
-    return eventList.map(e => {
-        if (true) return e;
-    })
+    const outputList = [];
+    eventList.forEach((e) => {
+        if (dayjs(e.start).isSame(dayjs(e.end), 'day') || e.allDay) {
+            outputList.push(e);
+            return;
+        }
+
+        let currDate = dayjs(e.start);
+        const span = dayjs(e.end).diff(currDate, 'day') + 2;
+        let day = 1;
+        while (!currDate.isSame(dayjs(e.end), 'day')) {
+            if (
+                dayjs(e.end).hour() === 0 &&
+                dayjs(e.end).minute() === 0 &&
+                currDate.add(1, 'day').isSame(dayjs(e.end), 'day')
+            )
+                return;
+            const currEnd = currDate.add(1, 'day').startOf('day');
+            outputList.push({
+                ...e,
+                start: currDate.valueOf(),
+                end: currEnd.valueOf(),
+                name: `${e.name} (Day ${day++}/${span})`,
+                allDay: day !== 2,
+            });
+            currDate = currEnd;
+        }
+        outputList.push({
+            ...e,
+            start: currDate.valueOf(),
+            end: dayjs(e.end).valueOf(),
+            name: `${e.name} (Day ${day}/${span})`,
+        });
+    });
+    return outputList.sort((a, b) => a.start - b.start);
 }

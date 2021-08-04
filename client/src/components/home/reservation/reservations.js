@@ -24,9 +24,8 @@ const Reservations = () => {
         const brokenUpReservationList = [];
         reservations.data.forEach((r) => {
             let curr = dayjs(r.start);
-            let c = 0;
             while (!curr.isSame(dayjs(r.end), 'day')) {
-                if (curr.hour() === 23 && curr.add(1, 'hour').isSame(dayjs(r.end, 'hour'))) break;
+                if (curr.hour() === 23 && curr.add(1, 'hour').isSame(dayjs(r.end), 'hour')) break;
                 const currEnd = curr.add(1, 'day').startOf('day');
                 const currSpan = currEnd.diff(curr, 'hour');
                 brokenUpReservationList.push({ start: curr, end: currEnd, span: currSpan, data: r });

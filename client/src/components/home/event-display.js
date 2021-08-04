@@ -130,9 +130,9 @@ const EventDisplay = (props) => {
                                     <Typography variant="h3" gutterBottom className={classes.date}>
                                         {formatEventDate(event)}
                                     </Typography>
-                                    <Typography variant="h3" className={classes.date}>
-                                        {formatEventTime(event)}
-                                    </Typography>
+                                    {<Typography variant="h3" className={classes.date}>
+                                        {formatEventTime(event, event.noEnd, true)}
+                                    </Typography>}
                                 </Box>
                                 <Hidden smDown>
                                     <Divider orientation="vertical" flexItem />

@@ -77,7 +77,7 @@ const EventList = () => {
         // Split the events into groups
         let eventGroupList = [];
         let tempList = [];
-        eventList.forEach((event, index) => {
+        parsedEventList.forEach((event, index) => {
             if (tempList.length > 0 && isSameDate(tempList[tempList.length - 1].start, event.start)) {
                 tempList.push(event);
             } else {
