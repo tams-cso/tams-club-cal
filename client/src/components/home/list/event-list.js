@@ -16,6 +16,7 @@ import AddButton from '../../shared/add-button';
 
 const useStyles = makeStyles((theme) => ({
     root: {
+        height: 'max-content',
         overflowX: 'hidden',
     },
     centerButton: {
@@ -26,6 +27,7 @@ const useStyles = makeStyles((theme) => ({
         textAlign: 'center',
         color: darkSwitchGrey(theme),
         marginTop: 12,
+        marginBottom: 24,
     },
 }));
 

@@ -17,7 +17,12 @@ import ActionBar from './action-bar';
 
 const drawerWidth = 280;
 const useStyles = makeStyles({
-    root: {},
+    root: {
+        height: 'max-content',
+    },
+    calRoot: {
+        height: 'unset',
+    },
     drawer: {
         width: drawerWidth,
     },
@@ -65,7 +70,13 @@ const Home = () => {
                     </Drawer>
                 )}
             </Hidden>
-            <Box display="flex" flexDirection="column" flexGrow={1} width={0} className={classes.root}>
+            <Box
+                display="flex"
+                flexDirection="column"
+                flexGrow={1}
+                width={0}
+                className={view === 'calendar' ? classes.calRoot : classes.root}
+            >
                 {id ? null : <ActionBar view={view} setView={setView} />}
                 {display}
             </Box>
