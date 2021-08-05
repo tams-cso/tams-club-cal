@@ -97,7 +97,7 @@ router.post('/', async (req, res, next) => {
         const id = newId();
         const eventId = await addToCalendar(req.body);
         const reservationId =
-            body.location === 'none' || body.start === body.end ? null : await addReservation(id, req);
+            req.body.location === 'none' || req.body.start === req.body.end ? null : await addReservation(id, req);
 
         const newEvent = new Event({
             id,
