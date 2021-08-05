@@ -32,7 +32,11 @@ const ReservationEntry = (props) => {
     const classes = useStyles();
     return (
         <TableCell className={props.className} colSpan={props.span || 1}>
-            <Link component={NavLink} to={`/reservations?id=${props.reservation.id}`} className={classes.root}>
+            <Link
+                component={NavLink}
+                to={`/reservations?id=${props.reservation.id}${props.reservation.repeatEnd ? '&repeating=true' : ''}`}
+                className={classes.root}
+            >
                 {props.reservation.name}
             </Link>
         </TableCell>

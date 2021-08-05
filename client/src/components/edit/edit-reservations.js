@@ -8,7 +8,7 @@ import Cookies from 'universal-cookie';
 import { openPopup } from '../../redux/actions';
 import { darkSwitchGrey, getParams, redirect } from '../../functions/util';
 import { Reservation } from '../../functions/entries';
-import { getReservation, postReservation, putReservation } from '../../functions/api';
+import { getRepeatingReservation, getReservation, postReservation, putReservation } from '../../functions/api';
 
 import Typography from '@material-ui/core/Typography';
 import Box from '@material-ui/core/Box';
@@ -41,6 +41,7 @@ const useStyles = makeStyles((theme) => ({
     boxWrapper: {
         marginBottom: 16,
         display: 'flex',
+        alignItems: 'center',
         [theme.breakpoints.down('sm')]: {
             flexDirection: 'column',
         },
@@ -56,6 +57,11 @@ const useStyles = makeStyles((theme) => ({
             marginTop: 8,
         },
     },
+    rightCheckbox: {
+        [theme.breakpoints.down('sm')]: {
+            marginBottom: 8,
+        },
+    },
     name: {
         flexGrow: 3,
     },
@@ -68,10 +74,16 @@ const useStyles = makeStyles((theme) => ({
     area: {
         marginTop: 12,
     },
+    fullMobile: {
+        [theme.breakpoints.down('sm')]: {
+            width: '100%',
+        },
+    },
 }));
 
 const EditReservations = () => {
     const [id, setId] = useState(null);
+    const [repeating, setRepeating] = useState(false);
     const [reservation, setReservation] = useState(null);
     const [backdrop, setBackdrop] = useState(false);
     const [prevStart, setPrevStart] = useState(null);
@@ -91,6 +103,8 @@ const EditReservations = () => {
     const watchEnd = watch('end');
     const watchAllDay = watch('allDay');
     const watchLocation = watch('location');
+    const watchRepeating = watch('repeating');
+    const watchRepeatEnd = watch('repeatEnd');
 
     // Set "prevStart" variable to the starting time to use later
     useEffect(() => {
@@ -110,9 +124,24 @@ const EditReservations = () => {
     // Set an error if the end time is set before the start time
     useEffect(() => {
         if (watchEnd === undefined) return;
-        if (watchEnd.startOf('hour').isSameOrBefore(watchStart)) setError('end');
+        if (watchAllDay) {
+            clearErrors('end');
+            return;
+        }
+        if (watchEnd.isBefore(watchStart)) setError('end');
         else clearErrors('end');
-    }, [watchStart, watchEnd]);
+    }, [watchStart, watchEnd, watchAllDay]);
+
+    // Set an error if the repeat end time is set before the start time
+    useEffect(() => {
+        if (watchRepeatEnd === undefined) return;
+        if (!watchRepeating) {
+            clearErrors('repeatEnd');
+            return;
+        }
+        if (watchRepeatEnd.startOf('hour').isSameOrBefore(watchStart)) setError('repeatEnd');
+        else clearErrors('repeatEnd');
+    }, [watchStart, watchRepeatEnd, watchRepeating]);
 
     // Set the date of the "all day" date input to the same as the start time
     useEffect(() => {
@@ -125,14 +154,16 @@ const EditReservations = () => {
     }, [watchLocation]);
 
     useEffect(async () => {
-        // Extract ID from url search params
+        // Extract ID and repeating from url search params
         const id = getParams('id');
+        const repeating = getParams('repeating');
 
         // Set the ID and reservation state variable
         if (id !== null) {
-            const currReservation = await getReservation(id);
+            const currReservation = repeating ? await getRepeatingReservation(id) : await getReservation(id);
             if (currReservation.status === 200) {
                 setId(id);
+                setRepeating(repeating);
                 setReservation(currReservation.data);
             } else openPopup('Error fetching reservation info. Please refresh the page or add a new event.', 4);
         } else setReservation(new Reservation());
@@ -159,6 +190,7 @@ const EditReservations = () => {
             endTime,
             data.location,
             data.allDay,
+            data.repeating ? data.repeatEnd.valueOf() : null,
             reservation.history
         );
 
@@ -172,7 +204,7 @@ const EditReservations = () => {
     };
 
     const back = () => {
-        redirect(id ? `/reservations?id=${id}` : '/?view=reservation');
+        redirect(id ? `/reservations?id=${id}${repeating ? '&repeating=true' : ''}` : '/?view=reservation');
     };
 
     return reservation === null ? (
@@ -206,7 +238,7 @@ const EditReservations = () => {
                         grow
                         required
                         errorMessage="Please enter a name"
-                        className={classes.name}
+                        className={`${classes.name} ${classes.fullMobile}`}
                     />
                     <div className={classes.spacer} />
                     <ControlledTextField
@@ -219,6 +251,7 @@ const EditReservations = () => {
                         grow
                         required
                         errorMessage="Please enter a club name"
+                        className={classes.fullMobile}
                     />
                 </Box>
                 <Box className={`${classes.boxWrapper} ${classes.centerFlex}`}>
@@ -261,6 +294,27 @@ const EditReservations = () => {
                     variant="outlined"
                     area
                 />
+                <Box className={classes.boxWrapper}>
+                    <Typography>
+                        Note: Repeating reservations cannot be changed to non-repeating reservations
+                    </Typography>
+                    <ControlledCheckbox
+                        control={control}
+                        name="repeating"
+                        label="Repeats Weekly"
+                        value={reservation.repeatEnd !== null && reservation.repeatEnd !== undefined}
+                        disabled={reservation.repeatEnd !== null && reservation.repeatEnd !== undefined}
+                        setValue={setValue}
+                        className={`${classes.leftCheckbox} ${classes.rightCheckbox}`}
+                    />
+                    <DateInput
+                        control={control}
+                        name="repeatEnd"
+                        label="Repeat Until"
+                        value={reservation.repeatEnd}
+                        disabled={!watchRepeating}
+                    />
+                </Box>
                 <TwoButtonBox success="Submit" onCancel={back} onSuccess={onSubmit} submit right />
             </form>
         </React.Fragment>

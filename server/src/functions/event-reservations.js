@@ -1,6 +1,7 @@
 const dayjs = require('dayjs');
 const { Request, Response } = require('express');
 const Reservation = require('../models/reservation');
+const RepeatingReservation = require('../models/repeating-reservation');
 const { newId, createNewHistory, sendError } = require('./util');
 
 /**
@@ -17,18 +18,32 @@ async function addReservation(eventId, req) {
     const id = newId();
     const history = eventId ? null : [newId()];
 
-    const newReservation = new Reservation({
-        id,
-        eventId,
-        name: req.body.name,
-        club: req.body.club,
-        description: req.body.description,
-        start,
-        end,
-        location: req.body.location,
-        allDay: req.body.allDay,
-        history,
-    });
+    const newReservation = req.body.repeatEnd
+        ? new RepeatingReservation({
+              id,
+              eventId,
+              name: req.body.name,
+              club: req.body.club,
+              description: req.body.description,
+              start,
+              end,
+              location: req.body.location,
+              allDay: req.body.allDay,
+              repeatEnd: Number(req.body.repeatEnd),
+              history,
+          })
+        : new Reservation({
+              id,
+              eventId,
+              name: req.body.name,
+              club: req.body.club,
+              description: req.body.description,
+              start,
+              end,
+              location: req.body.location,
+              allDay: req.body.allDay,
+              history,
+          });
 
     const newHistory = history ? createNewHistory(req, newReservation, 'reservations', id, history[0]) : null;
     const reservationRes = await newReservation.save();
@@ -48,7 +63,9 @@ async function addReservation(eventId, req) {
  * @returns {Promise<string>} ID of the reservation
  */
 async function updateReservation(id, req, res) {
-    const prev = await Reservation.findOne({ id }).exec();
+    const prev = req.body.repeatEnd
+        ? await RepeatingReservation.findOne({ id }).exec()
+        : await Reservation.findOne({ id }).exec();
     if (!prev) {
         sendError(res, 400, 'Invalid reservation ID');
         return -1;
@@ -56,22 +73,39 @@ async function updateReservation(id, req, res) {
 
     const historyId = newId();
     const { start, end } = offsetTime(req);
-    
-    const reservationRes = await Reservation.updateOne(
-        { id },
-        {
-            $set: {
-                name: req.body.name,
-                club: req.body.club,
-                description: req.body.description,
-                start,
-                end,
-                location: req.body.location,
-                allDay: req.body.allDay,
-                history: prev.eventId ? null : [...req.body.history, historyId],
-            },
-        }
-    );
+
+    const reservationRes = prev.repeatEnd
+        ? await RepeatingReservation.updateOne(
+              { id },
+              {
+                  $set: {
+                      name: req.body.name,
+                      club: req.body.club,
+                      description: req.body.description,
+                      start,
+                      end,
+                      location: req.body.location,
+                      allDay: req.body.allDay,
+                      repeatEnd: Number(req.body.repeatEnd),
+                      history: prev.eventId ? null : [...req.body.history, historyId],
+                  },
+              }
+          )
+        : await Reservation.updateOne(
+              { id },
+              {
+                  $set: {
+                      name: req.body.name,
+                      club: req.body.club,
+                      description: req.body.description,
+                      start,
+                      end,
+                      location: req.body.location,
+                      allDay: req.body.allDay,
+                      history: prev.eventId ? null : [...req.body.history, historyId],
+                  },
+              }
+          );
 
     const newHistory = prev.eventId ? null : createNewHistory(req, prev, 'reservations', id, historyId, false);
     const historyRes = newHistory ? await newHistory.save() : null;

@@ -181,6 +181,25 @@ export async function getReservation(id) {
 }
 
 /**
+ * Gets the list of all repeating reservations for a week
+ * If week is not defined, will get all reservations that repeat up to and after the current week
+ * 
+ * @param {number} [week] UTC time for the current week to get; this can be any time within the week
+ * @returns {Promise<FetchResponse>} Will return the object or error object
+ */
+export async function getRepeatingReservationList(week = null) {
+    return getRequest(`/reservations/repeating${week ? `?week=${week}` : ''}`);
+}
+
+/**
+ * Gets a specific repeating reservation by ID.
+ * @returns {Promise<FetchResponse>} Will return the object or error object
+ */
+ export async function getRepeatingReservation(id) {
+    return getRequest(`/reservations/repeating/${id}`);
+}
+
+/**
  * Creates a new reservation
  *
  * @param {Reservation} reservation Reservation object

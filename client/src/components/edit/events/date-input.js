@@ -26,7 +26,7 @@ const DateInput = (props) => {
             control={props.control}
             rules={{ required: props.required || false }}
             name={props.name}
-            defaultValue={props.value ? dayjs(Number(props.value)) : dayjs()}
+            defaultValue={props.value ? dayjs(Number(props.value)) : dayjs().add(1, 'week')}
             render={({ field: { onChange, onBlur, value }, fieldState: { error } }) => (
                 <DatePicker
                     className={props.className}
@@ -37,7 +37,7 @@ const DateInput = (props) => {
                     onChange={onChange}
                     onBlur={onBlur}
                     error={error}
-                    helperText={error ? 'End date/time should be after start' : props.helperText}
+                    helperText={error ? 'End date should be after start' : props.helperText}
                     disabled={props.disabled}
                     InputProps={{
                         endAdornment: (

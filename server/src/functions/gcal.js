@@ -1,4 +1,5 @@
 const { google } = require('googleapis');
+const dayjs = require('dayjs');
 
 authorize();
 
@@ -16,11 +17,17 @@ async function authorize() {
 
 async function addToCalendar(data) {
     try {
+        const start = data.allDay
+            ? { date: dayjs(data.start).format('YYYY-MM-DD') }
+            : { dateTime: new Date(data.start).toISOString() };
+        const end = data.allDay
+            ? { date: dayjs(data.start).format('YYYY-MM-DD') }
+            : { dateTime: new Date(data.end).toISOString() };
         const res = await google.calendar('v3').events.insert({
             calendarId: process.env.CALENDAR_ID,
             requestBody: {
-                start: { dateTime: new Date(data.start).toISOString() },
-                end: { dateTime: new Date(data.end).toISOString() },
+                start,
+                end,
                 summary: `${data.name} (${data.club})`,
                 description: data.description,
             },
@@ -34,12 +41,18 @@ async function addToCalendar(data) {
 
 async function updateCalendar(data, id) {
     try {
+        const start = data.allDay
+            ? { date: dayjs(data.start).format('YYYY-MM-DD') }
+            : { dateTime: new Date(data.start).toISOString() };
+        const end = data.allDay
+            ? { date: dayjs(data.start).format('YYYY-MM-DD') }
+            : { dateTime: new Date(data.end).toISOString() };
         await google.calendar('v3').events.update({
             calendarId: process.env.CALENDAR_ID,
             eventId: id,
             requestBody: {
-                start: { dateTime: new Date(data.start).toISOString() },
-                end: { dateTime: new Date(data.end).toISOString() },
+                start,
+                end,
                 summary: `${data.name} (${data.club})`,
                 description: data.description,
             },
