@@ -59,16 +59,15 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 /**
- * Displays the app icon
+ * Displays the app icon and text
  *
  * @param {object} props React props object
  * @param {string} props.className React classname
  * @param {boolean} props.noText Won't display logo text if true
- * @returns
  */
 function AppIcon(props) {
     const classes = useStyles();
-    const isProd = process.env.NODE_ENV === 'production';
+    const isProd = process.env.NODE_ENV === 'production' && process.env.REACT_APP_BACKEND !== 'staging';
     return (
         <NavLink className={`${props.className} ${classes.root}`} to="/">
             <Box className={classes.centerBox}>

@@ -13,6 +13,8 @@ dayjs.extend(timezone);
 dayjs.extend(isLeapYear);
 dayjs.extend(customParseFormat);
 
+// ================== MISC UTIL FUNCTIONS =================== //
+
 /**
  * Gets query parameters
  *
@@ -67,7 +69,7 @@ export function redirect(path) {
 /**
  * This function will remove all deleted links and return
  * a string list of the values, with the empty ones removed
- * 
+ *
  * @param {object[]} list List of link objects with deleted and value attributes
  * @returns {string[]} List of all links
  */
@@ -130,9 +132,15 @@ export function toTz(millis) {
  *
  * @param {Number} millis UTC millisecond time to format
  * @param {string} format Dayjs format to format the time to
+ * @param {boolean} [checkMidnight] If true, will check for midnight/noon and return those words if true
  * @returns {string} The formatted time
  */
-export function formatTime(millis, format) {
+export function formatTime(millis, format, checkMidnight) {
+    if (checkMidnight) {
+        const formattedTime = toTz(millis).format('H:m');
+        if (formattedTime === '0:0') return 'Midnight';
+        else if (formattedTime === '12:0') return 'Noon';
+    }
     return toTz(millis).format(format);
 }
 
@@ -152,11 +160,12 @@ export function isSameDate(first, second) {
  * Includes an end date if not the same as the start date.
  *
  * @param {Event} event The event object
- * @returns
+ * @returns {string} The formatted full date
  */
 export function formatEventDate(event) {
-    let formattedTime = formatTime(event.start, 'dddd, MMMM d, YYYY');
-    if (!isSameDate(event.start, event.end)) formattedTime += formatTime(event.end, ' - dddd, MMMM d, YYYY');
+    if (!toTz(event.start).isSame(toTz(event.end), 'day')) return formatTime(event.start, 'dddd, MMMM D, YYYY h:mma');
+    let formattedTime = formatTime(event.start, 'dddd, MMMM D, YYYY');
+    if (!isSameDate(event.start, event.end)) formattedTime += formatTime(event.end, ' - dddd, MMMM D, YYYY');
     return formattedTime;
 }
 
@@ -166,232 +175,61 @@ export function formatEventDate(event) {
  *
  * @param {Event} event The event object
  * @param {boolean} [noEnd] If true, will not show an end time
+ * @param {boolean} [checkSame] If true, will check to see if start !== end and return the end time. This is used for the EventDisplay component
  * @returns {string} The formatted time for the event in the format [h:mma - h:mma]
  */
-export function formatEventTime(event, noEnd = false) {
-    let formattedTime = formatTime(event.start, 'h:mma');
-    if (!noEnd && event.start !== event.end) formattedTime += formatTime(event.end, ' - h:mma');
+export function formatEventTime(event, noEnd = false, checkSame) {
+    if (event.allDay) return 'Full Day';
+    if (checkSame && !toTz(event.start).isSame(toTz(event.end), 'day'))
+        return formatTime(event.end, 'dddd, MMMM D, YYYY h:mma');
+
+    let formattedTime = formatTime(event.start, 'h:mma', true);
+    if (!noEnd && event.start !== event.end) formattedTime += ` - ${formatTime(event.end, 'h:mma', true)}`;
     return formattedTime;
 }
 
+// ================== DATA PARSING FUNCTIONS =================== //
+
 /**
+ * Will split up multiple day events to be displayed correctly
  *
- * @param {Dayjs} date Dayjs date object
+ * @param {Event[]} eventList The unparsed event list
+ * @returns {Event[]} The parsed event list
  */
-export function dateToMillis(date) {
-    return date.valueOf();
-}
+export function parseEventList(eventList) {
+    const outputList = [];
+    eventList.forEach((e) => {
+        if (dayjs(e.start).isSame(dayjs(e.end), 'day') || e.allDay) {
+            outputList.push(e);
+            return;
+        }
 
-// ================== OLD FUNCTIONS =================== //
-
-/**
- * Parses a time using dayjs and returns the seconds in milliseconds.
- * See the docs for dayjs: https://day.js.org/docs/en/timezone/timezone
- *
- * @param {string} input String time input for dayjs to parse
- * @param {string} tz Tz database time zone (https://en.wikipedia.org/wiki/List_of_tz_database_time_zones)
- * @returns {number} Milliseconds since Jan 1, 1970 [UTC time]
- */
-export function parseToTimeZone(input, tz) {
-    return dayjs.tz(input, 'YYYY-MM-DD HH:mm', tz).valueOf();
-}
-
-/**
- * Offsets a millisecond UTC to a dayjs object in the correct timezone
- * See the docs for dayjs: https://day.js.org/docs/en/timezone/timezone
- *
- * @param {string} millis UTC millisecond time
- * @param {string} [tz] Tz database time zone; If left blank, the timezone will be guessed
- * @returns {dayjs.Dayjs} Dayjs object with the correct timezone
- */
-export function convertToTimeZone(millis, tz) {
-    if (tz == undefined) {
-        var tz = dayjs.tz.guess();
-    }
-    return dayjs(Number(millis)).tz(tz);
-}
-
-/**
- * Gets the starting and ending time display for an event
- *
- * @param {EventInfo} event The event object
- * @returns {string} The formatted starting and ending time
- */
-export function getFormattedTime(event, calendar = false) {
-    if (calendar) return event.startDayjs.format('h:mma');
-    var formattedDate = event.startDayjs.format('h:mma');
-    if (event.type === 'event') return formattedDate + event.endDayjs.format(' - h:mma');
-    return formattedDate;
-}
-
-/**
- * Returns a formatted starting date for an event
- *
- * @param {EventInfo} event The event object
- * @param {boolean} noName True will not print a weekday name (eg. Monday)
- * @returns {string} The formatted starting date
- */
-export function getFormattedDate(event, noName = false) {
-    if (noName) return event.startDayjs.format('MMMM D, YYYY');
-    return event.startDayjs.format('dddd · MMMM D, YYYY');
-}
-
-/**
- * Adds dayjs objects an event object
- * @param {EventInfo} event An event object
- */
-export function addDayjsElement(e) {
-    e.startDayjs = convertToTimeZone(e.start, getTimezone());
-    if (e.type === 'event') e.endDayjs = convertToTimeZone(e.end, getTimezone());
-}
-
-/**
- * Returns a jsx array of filters
- * @param {object} filters List of filters
- * @param {boolean} filters.limited Limited slots
- * @param {boolean} filters.semester Limited slots
- * @param {boolean} filters.setTimes Limited slots
- * @param {boolean} filters.weekly Weekly signups (with time)
- * @param {string} [signupTime] Time that signup will go up, only needed if weekly is true
- * @returns {JSX.IntrinsicElements[]} jsx array
- */
-export function formatVolunteeringFilters(filters, signupTime) {
-    var filterObjects = [];
-    if (filters.limited)
-        filterObjects.push(
-            <div key="0" className="filter f-limited">
-                Limited Slots
-            </div>
-        );
-    if (filters.semester)
-        filterObjects.push(
-            <div key="1" className="filter f-semester">
-                Semester Long Commitment
-            </div>
-        );
-    if (filters.setTimes)
-        filterObjects.push(
-            <div key="2" className="filter f-set-times">
-                Set Volunteering Times
-            </div>
-        );
-    if (filters.weekly)
-        filterObjects.push(
-            <div key="3" className="filter f-weekly">
-                Weekly Signups [{signupTime}]
-            </div>
-        );
-    return filterObjects;
-}
-
-/**
- * Returns the month spelled out and full year
- *
- * @param {number} [offset] Month offset, or 0 if undefined
- * @returns {string} Formated month and year
- */
-export function getMonthAndYear(offset = 0) {
-    return dayjs().add(offset, 'month').format('MMMM YYYY');
-}
-
-/**
- * Converts a dropbox image path to the correct image url
- *
- * @param {string} path Path of file (eg. /7ad67e9c87f78de90d.png)
- */
-export function imgUrl(path) {
-    if (path.startsWith('/')) return `/static${path}`;
-    return path;
-}
-
-/**
- * Gets the user timezone by guessing it
- *
- * @return {string} The timezone as a tz database name
- */
-export function getTimezone() {
-    // TODO: Allow user to manually change timezone
-    return 'America/Chicago';
-}
-
-/**
- * Pads a date to 2 digits (eg. 1 => '01')
- *
- * @param {number} num Input number
- * @returns {string} The padded number, converted to a string
- */
-export function pad(num) {
-    if (num < 10) return `0${num}`;
-    return `${num}`;
-}
-
-/**
- * Checks for error status codes and alerts the user
- * if an error is detected
- *
- * @param {number} status The http status
- * @param {string} [message] The error message to send to the user
- * @returns {boolean} True if there is an error
- */
-export function catchError(status, message = '') {
-    if (status !== 200) {
-        if (message !== '') message = `: ${message}`;
-        alert(`${status} Error${message}`);
-        return true;
-    }
-    return false;
-}
-
-/**
- * If on an edit page, will redirect the user to the resource that is being edited.
- *
- * @param {Location} location Location object
- */
-export function returnToLastLocation(location) {
-    location.href = `${location.origin}${location.pathname.substring(5)}${location.search}`;
-}
-
-/**
- * @param {number} editDate Milliseconds representing the edit date (UTC)
- * @returns {string} Edit date display string
- */
-export function calculateEditDate(editDate) {
-    var edit = dayjs(editDate);
-    var now = dayjs();
-    var diff = 0;
-    var unit = '';
-
-    const diffs = ['year', 'month', 'day', 'hour', 'minute'];
-    for (var i = 0; i < diffs.length; i++) {
-        diff = now.diff(edit, diffs[i]);
-        unit = diffs[i];
-        if (diff > 0) break;
-    }
-
-    return `${diff} ${unit}${diff !== 1 ? 's' : ''} ago`;
-}
-
-export function guessDateInput(input) {
-    return dayjs(input, ['MMM D, YYYY', 'MMMM D, YYYY', 'YYYY', 'MMMM']).format('MMM D, YYYY');
-}
-
-export function getEditMonthAndYear(input, offset = 0) {
-    return dayjs(input, 'MMM D, YYYY').add(offset, 'month').format('MMMM YYYY');
-}
-
-export function getEditDate(input) {
-    return dayjs(input, 'MMM D, YYYY').get('date');
-}
-
-export function getDefaulEditDate() {
-    return dayjs().format('YYYY-MM-DD');
-}
-
-export function getDefaulEditTime(endTime) {
-    // Will take next whole hour
-    var day = dayjs().second(0).minute(0).add(1, 'hour');
-
-    // Add 1 hour if end time
-    if (endTime) day = day.add(1, 'hour');
-    return day.format('HH:mm');
+        let currDate = dayjs(e.start);
+        const span = dayjs(e.end).diff(currDate, 'day') + 2;
+        let day = 1;
+        while (!currDate.isSame(dayjs(e.end), 'day')) {
+            if (
+                dayjs(e.end).hour() === 0 &&
+                dayjs(e.end).minute() === 0 &&
+                currDate.add(1, 'day').isSame(dayjs(e.end), 'day')
+            )
+                return;
+            const currEnd = currDate.add(1, 'day').startOf('day');
+            outputList.push({
+                ...e,
+                start: currDate.valueOf(),
+                end: currEnd.valueOf(),
+                name: `${e.name} (Day ${day++}/${span})`,
+                allDay: day !== 2,
+            });
+            currDate = currEnd;
+        }
+        outputList.push({
+            ...e,
+            start: currDate.valueOf(),
+            end: dayjs(e.end).valueOf(),
+            name: `${e.name} (Day ${day}/${span})`,
+        });
+    });
+    return outputList.sort((a, b) => a.start - b.start);
 }

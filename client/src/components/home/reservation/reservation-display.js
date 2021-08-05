@@ -1,10 +1,8 @@
 import React, { useEffect, useState } from 'react';
 import { useHistory } from 'react-router';
-import { useSelector } from 'react-redux';
 import { makeStyles } from '@material-ui/core/styles';
-import { capitalize } from '@material-ui/core';
-import { darkSwitch, darkSwitchGrey, formatEventDate, formatEventTime, getParams } from '../../functions/util';
-import { getEvent } from '../../functions/api';
+import { darkSwitch, darkSwitchGrey, formatEventDate, formatEventTime, getParams } from '../../../functions/util';
+import { getReservation } from '../../../functions/api';
 
 import Container from '@material-ui/core/Container';
 import Card from '@material-ui/core/Card';
@@ -15,11 +13,12 @@ import Box from '@material-ui/core/Box';
 import Divider from '@material-ui/core/Divider';
 import Hidden from '@material-ui/core/Hidden';
 import Typography from '@material-ui/core/Typography';
-import Paragraph from '../shared/paragraph';
-import Loading from '../shared/loading';
-import AddButton from '../shared/add-button';
+import Paragraph from '../../shared/paragraph';
+import Loading from '../../shared/loading';
+import AddButton from '../../shared/add-button';
+import PageWrapper from '../../shared/page-wrapper';
 
-import data from '../../data.json';
+import data from '../../../data.json';
 
 const useStyles = makeStyles((theme) => ({
     root: {
@@ -61,98 +60,95 @@ const useStyles = makeStyles((theme) => ({
             padding: 0,
         },
     },
-    eventClub: {
+    location: {
+        marginBottom: 12,
+        color: darkSwitchGrey(theme),
+        fontSize: '0.9rem',
+    },
+    club: {
         marginBottom: 16,
         color: darkSwitchGrey(theme),
     },
-    eventType: {
-        color: darkSwitch(theme, theme.palette.grey[600], theme.palette.secondary.main),
-    },
     date: {
         fontWeight: 400,
-    },
-    location: {
-        marginTop: 24,
-        color: darkSwitchGrey(theme),
-        fontSize: '0.9rem',
     },
     buttonCenter: {
         margin: 'auto',
     },
 }));
 
-/**
- * Displays a single event.
- * This component takes in the event ID as a parameter.
- *
- * @param {object} props React props object
- * @param {string} props.id ID of the event
- */
-const EventDisplay = (props) => {
-    const [event, setEvent] = useState(null);
+const ReservationDisplay = () => {
+    const [reservation, setReservation] = useState(null);
     const [error, setError] = useState(null);
     const history = useHistory();
     const classes = useStyles();
 
     const back = () => {
-        const prevView = getParams('view');
-        history.push(`/${prevView ? `?view=${prevView}` : ''}`);
+        history.push('/?view=reservation');
     };
 
     useEffect(async () => {
-        if (props.id === null) return;
+        const id = getParams('id');
+        if (!id) {
+            setError(<Loading error>No ID found. Please return to the home page.</Loading>);
+            return;
+        }
 
         // Pull the event from the backend
-        const res = await getEvent(props.id);
-
-        // Save the event or set an error if invalid ID
+        const res = await getReservation(id);
         if (res.status !== 200) {
             setError(
-                <Loading error>Invalid event ID. Please return to the events list page to refresh the content</Loading>
+                <Loading error>
+                    Invalid reservation ID. Please return to the reservations list page to refresh the content
+                </Loading>
             );
-        } else setEvent(res.data);
-    }, [props.id]);
+        } else setReservation(res.data);
+    }, []);
 
     return (
-        <React.Fragment>
+        <PageWrapper>
             {error}
-            {event === null ? (
+            {reservation === null ? (
                 error ? null : (
                     <Loading />
                 )
             ) : (
                 <Container className={classes.root}>
-                    <AddButton color="secondary" label="Event" path={`/edit/events?id=${event.id}`} edit />
+                    <AddButton
+                        color="secondary"
+                        label={reservation.eventId ? 'Event' : 'Reservation'}
+                        path={
+                            reservation.eventId
+                                ? `/edit/events?id=${reservation.eventId}`
+                                : `/edit/reservations?id=${reservation.id}`
+                        }
+                        edit
+                    />
                     <Card>
                         <CardContent>
                             <Box className={classes.gridRoot}>
                                 <Box className={`${classes.gridSide} ${classes.gridLeft}`}>
-                                    <Typography className={classes.eventType}>{capitalize(event.type)}</Typography>
-                                    <Typography variant="h2" component="h1">
-                                        {event.name}
+                                    <Typography variant="h3" className={classes.location}>
+                                        {'Location: ' + data.rooms.find((d) => d.value === reservation.location).label}
                                     </Typography>
-                                    <Typography variant="subtitle1" component="p" className={classes.eventClub}>
-                                        {event.club}
+                                    <Typography variant="h2" component="h1">
+                                        {reservation.name}
+                                    </Typography>
+                                    <Typography variant="subtitle1" component="p" className={classes.club}>
+                                        {reservation.club}
                                     </Typography>
                                     <Typography variant="h3" gutterBottom className={classes.date}>
-                                        {formatEventDate(event)}
+                                        {formatEventDate(reservation)}
                                     </Typography>
-                                    {
-                                        <Typography variant="h3" className={classes.date}>
-                                            {formatEventTime(event, event.noEnd, true)}
-                                        </Typography>
-                                    }
-                                    <Typography variant="h3" className={classes.location}>
-                                        {event.location === 'none'
-                                            ? null
-                                            : 'Location: ' + data.rooms.find((d) => d.value === event.location).label}
+                                    <Typography variant="h3" className={classes.date}>
+                                        {formatEventTime(reservation, false, true)}
                                     </Typography>
                                 </Box>
                                 <Hidden smDown>
                                     <Divider orientation="vertical" flexItem />
                                 </Hidden>
                                 <Paragraph
-                                    text={event.description}
+                                    text={reservation.description}
                                     className={`${classes.gridSide} ${classes.gridRight}`}
                                 />
                             </Box>
@@ -165,8 +161,8 @@ const EventDisplay = (props) => {
                     </Card>
                 </Container>
             )}
-        </React.Fragment>
+        </PageWrapper>
     );
 };
 
-export default EventDisplay;
+export default ReservationDisplay;

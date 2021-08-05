@@ -12,12 +12,17 @@ import HomeDrawerList from './home-drawer-list';
 import EventList from './list/event-list';
 import EventDisplay from './event-display';
 import Calendar from './calendar/calendar';
-import Reservation from './reservation/reservation';
+import Reservations from './reservation/reservations';
 import ActionBar from './action-bar';
 
 const drawerWidth = 280;
 const useStyles = makeStyles({
-    root: {},
+    root: {
+        height: 'max-content',
+    },
+    calRoot: {
+        height: 'unset',
+    },
     drawer: {
         width: drawerWidth,
     },
@@ -35,35 +40,39 @@ const Home = () => {
     const classes = useStyles();
 
     useEffect(() => {
+        if (id) return;
+
+        if (view === 'calendar') setDisplay(<Calendar />);
+        else if (view === 'reservation') setDisplay(<Reservations />);
+        else setDisplay(<EventList />);
+    }, [view, id]);
+
+    useEffect(() => {
         // Extract ID from url search params
         const newId = getParams('id');
         setId(newId);
 
         // If user has ID, send them to the display page
-        if (newId) {
-            console.log('?')
-            setDisplay(<EventDisplay id={newId} />);
-            return;
-        }
+        if (newId) setDisplay(<EventDisplay id={newId} />);
     }, [location]);
-
-    useEffect(() => {
-        if (id) return;
-
-        if (view === 'calendar') setDisplay(<Calendar />);
-        else if (view === 'reservation') setDisplay(<Reservation />);
-        else setDisplay(<EventList />);
-    }, [view, id]);
 
     return (
         <PageWrapper noBottom>
             <Hidden smDown>
-                <Drawer variant="permanent" className={classes.drawer}>
-                    <Toolbar className={classes.spacer} />
-                    <HomeDrawerList />
-                </Drawer>
+                {view === 'reservation' ? null : (
+                    <Drawer variant="permanent" className={classes.drawer}>
+                        <Toolbar className={classes.spacer} />
+                        <HomeDrawerList />
+                    </Drawer>
+                )}
             </Hidden>
-            <Box flexDirection="column" flexGrow={1} width={0} className={classes.root}>
+            <Box
+                display="flex"
+                flexDirection="column"
+                flexGrow={1}
+                width={0}
+                className={view === 'calendar' ? classes.calRoot : classes.root}
+            >
                 {id ? null : <ActionBar view={view} setView={setView} />}
                 {display}
             </Box>

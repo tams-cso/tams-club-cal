@@ -45,15 +45,9 @@ const Popup = () => {
     }, []);
 
     const getSuccessMessage = (success) => {
-        const messageMap = {
-            'add-event': 'Successfully added event!',
-            'update-event': 'Successfully updated event!',
-            'add-club': 'Successfully added club!',
-            'update-club': 'Successfully updated club!',
-            'add-volunteering': 'Successfully added volunteering!',
-            'update-volunteering': 'Successfully updated volunteering!',
-        };
-        return messageMap[success] || '';
+        const split = success.split('-');
+        if (split.length !== 2) return 'Something good happened!';
+        return `Successfully ${split[0] === 'add' ? 'added' : 'updated'} ${split[1]}!`;
     };
 
     return (

@@ -2,6 +2,7 @@ const express = require('express');
 const dayjs = require('dayjs');
 const { addToCalendar, updateCalendar } = require('../functions/gcal');
 const { sendError, newId, createNewHistory } = require('../functions/util');
+const { addReservationFromEvent, updateReservation, addReservation } = require('../functions/event-reservations');
 const Event = require('../models/event');
 const router = express.Router();
 
@@ -91,61 +92,87 @@ router.get('/:id', async (req, res, next) => {
  * Creates a new event
  */
 router.post('/', async (req, res, next) => {
-    const historyId = newId();
-    const id = newId();
-    const eventId = await addToCalendar(req.body);
+    try {
+        const historyId = newId();
+        const id = newId();
+        const eventId = await addToCalendar(req.body);
+        const reservationId =
+            body.location === 'none' || body.start === body.end ? null : await addReservation(id, req);
 
-    const newEvent = new Event({
-        id,
-        eventId,
-        type: req.body.type,
-        name: req.body.name,
-        club: req.body.club,
-        description: req.body.description,
-        start: Number(req.body.start),
-        end: Number(req.body.end),
-        history: [historyId],
-    });
-    const newHistory = createNewHistory(req, newEvent, 'events', id, historyId);
+        const newEvent = new Event({
+            id,
+            eventId,
+            reservationId,
+            type: req.body.type,
+            name: req.body.name,
+            club: req.body.club,
+            description: req.body.description,
+            start: Number(req.body.start),
+            end: Number(req.body.end),
+            location: req.body.location,
+            allDay: req.body.allDay,
+            history: [historyId],
+        });
+        const newHistory = createNewHistory(req, newEvent, 'events', id, historyId);
 
-    const eventRes = await newEvent.save();
-    const historyRes = await newHistory.save();
-    if (eventRes === newEvent && historyRes === newHistory) res.send({ ok: 1 });
-    else sendError(res, 500, 'Unable to add new event to database');
+        const eventRes = await newEvent.save();
+        const historyRes = await newHistory.save();
+        if (eventRes === newEvent && historyRes === newHistory) res.send({ ok: 1 });
+        else sendError(res, 500, 'Unable to add new event to database');
+    } catch (error) {
+        console.error(error);
+        sendError(res, 500, 'Unable to add new event to database');
+    }
 });
 
 /**
  * PUT /events/<id>
+ *
+ * Updates an event
  */
 router.put('/:id', async (req, res, next) => {
-    const id = req.params.id;
-    const prev = await Event.findOne({ id }).exec();
-    if (!prev) {
-        sendError(res, 400, 'Invalid event ID');
-        return;
-    }
-
-    const historyId = newId();
-    const newHistory = createNewHistory(req, prev, 'events', id, historyId, false);
-    const calendarRes = await updateCalendar(req.body, prev.eventId);
-    const eventRes = await Event.updateOne(
-        { id },
-        {
-            $set: {
-                type: req.body.type,
-                name: req.body.name,
-                club: req.body.club,
-                description: req.body.description,
-                start: Number(req.body.start),
-                end: Number(req.body.end),
-                history: [...req.body.history, historyId],
-            },
+    try {
+        const id = req.params.id;
+        const prev = await Event.findOne({ id }).exec();
+        if (!prev) {
+            sendError(res, 400, 'Invalid event ID');
+            return;
         }
-    );
-    const historyRes = await newHistory.save();
 
-    if (calendarRes === 1 && eventRes.n === 1 && historyRes === newHistory) res.send({ ok: 1 });
-    else sendError(res, 500, 'Unable to update event in database.');
+        const historyId = newId();
+        const newHistory = createNewHistory(req, prev, 'events', id, historyId, false);
+        const calendarRes = await updateCalendar(req.body, prev.eventId);
+        const reservationRes = prev.reservationId
+            ? await updateReservation(prev.reservationId, req, res)
+            : await addReservation(id, req);
+        if (reservationRes === -1) return;
+
+        const reservationId = prev.reservationId === null && reservationRes ? reservationRes : prev.reservationId;
+        const eventRes = await Event.updateOne(
+            { id },
+            {
+                $set: {
+                    reservationId,
+                    type: req.body.type,
+                    name: req.body.name,
+                    club: req.body.club,
+                    description: req.body.description,
+                    start: Number(req.body.start),
+                    end: Number(req.body.end),
+                    location: req.body.location,
+                    allDay: req.body.allDay,
+                    history: [...req.body.history, historyId],
+                },
+            }
+        );
+        const historyRes = await newHistory.save();
+
+        if (calendarRes === 1 && eventRes.n === 1 && historyRes === newHistory) res.send({ ok: 1 });
+        else sendError(res, 500, 'Unable to update event in database.');
+    } catch (error) {
+        console.error(error);
+        sendError(res, 500, 'Unable to update event to database');
+    }
 });
 
 module.exports = router;

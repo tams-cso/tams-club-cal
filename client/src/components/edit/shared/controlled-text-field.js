@@ -34,6 +34,7 @@ const useStyles = makeStyles({
  * @param {boolean} [props.gutterBottom] If true, adds a margin of 12px below box
  * @param {boolean} [props.required] True if field is required
  * @param {string} [props.errorMessage] Error message to display in the case of an error; required if 'required' defined
+ * @param {string} [props.helperText] If defined, will show helper text
  * @param {string} [props.className] React classname
  */
 const ControlledTextField = (props) => {
@@ -55,7 +56,7 @@ const ControlledTextField = (props) => {
                     variant={props.variant || 'standard'}
                     multiline={props.area}
                     error={error}
-                    helperText={error ? props.errorMessage : null}
+                    helperText={error ? props.errorMessage : props.helperText}
                     onChange={onChange}
                     onBlur={onBlur}
                     value={value}

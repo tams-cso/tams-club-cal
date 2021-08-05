@@ -1,4 +1,4 @@
-import { Club, ClubImageBlobs, Event, Feedback, FetchResponse, Volunteering } from './entries';
+import { Club, ClubImageBlobs, Event, Feedback, FetchResponse, Reservation, Volunteering } from './entries';
 import Cookies from 'universal-cookie';
 
 const BACKEND_URL =
@@ -98,7 +98,7 @@ function createHeaders(auth, json) {
     return headers;
 }
 
-/* ########## EVENTS API ########### */
+/* ########## EVENTS/RESERVATIONS API ########### */
 
 /**
  * Gets the list of events.
@@ -123,10 +123,10 @@ export async function getMoreEvents(id) {
 
 /**
  * Returns a list of events between two dates
- * 
+ *
  * @param {number} start Starting time to get events from
  * @param {number} end Ending time to get events to
- * @returns 
+ * @returns
  */
 export async function getEventListInRange(start, end) {
     return getRequest(`/events?start=${start}&end=${end}`);
@@ -159,6 +159,46 @@ export async function postEvent(event) {
  */
 export async function putEvent(event, id) {
     return putRequest(`/events/${id}`, event);
+}
+
+/**
+ * Gets the list of all reservations in a week
+ * If week is not defined, will get the current week's reservations by default
+ *
+ * @param {number} [week] UTC time for the current week to get; this can be any time within the week
+ * @returns {Promise<FetchResponse>} Will return the object or error object
+ */
+export async function getReservationList(week = null) {
+    return getRequest(`/reservations${week ? `?week=${week}` : ''}`);
+}
+
+/**
+ * Gets a specific reservation by ID.
+ * @returns {Promise<FetchResponse>} Will return the object or error object
+ */
+export async function getReservation(id) {
+    return getRequest(`/reservations/${id}`);
+}
+
+/**
+ * Creates a new reservation
+ *
+ * @param {Reservation} reservation Reservation object
+ * @returns {Promise<FetchResponse>} Will return the response or error object
+ */
+ export async function postReservation(reservation) {
+    return postRequest('/reservations', reservation);
+}
+
+/**
+ * Updates an reservation
+ *
+ * @param {Reservation} reservation Reservation object
+ * @param {string} id ID of the event to update
+ * @returns {Promise<FetchResponse>} Will return the response or error object
+ */
+export async function putReservation(reservation, id) {
+    return putRequest(`/reservations/${id}`, reservation);
 }
 
 /* ########## CLUBS API ########### */

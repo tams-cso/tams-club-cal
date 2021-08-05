@@ -5,7 +5,7 @@ import dayjs from 'dayjs';
 import { setEventList } from '../../../redux/actions';
 import { getSavedEventList } from '../../../redux/selectors';
 import { getEventList, getMoreEvents } from '../../../functions/api';
-import { darkSwitchGrey, isSameDate } from '../../../functions/util';
+import { darkSwitchGrey, isSameDate, parseEventList } from '../../../functions/util';
 
 import Container from '@material-ui/core/Container';
 import Typography from '@material-ui/core/Typography';
@@ -16,6 +16,7 @@ import AddButton from '../../shared/add-button';
 
 const useStyles = makeStyles((theme) => ({
     root: {
+        height: 'max-content',
         overflowX: 'hidden',
     },
     centerButton: {
@@ -26,6 +27,7 @@ const useStyles = makeStyles((theme) => ({
         textAlign: 'center',
         color: darkSwitchGrey(theme),
         marginTop: 12,
+        marginBottom: 24,
     },
 }));
 
@@ -72,10 +74,12 @@ const EventList = () => {
             return;
         }
 
+        const parsedEventList = parseEventList(eventList);
+
         // Split the events into groups
         let eventGroupList = [];
         let tempList = [];
-        eventList.forEach((event, index) => {
+        parsedEventList.forEach((event, index) => {
             if (tempList.length > 0 && isSameDate(tempList[tempList.length - 1].start, event.start)) {
                 tempList.push(event);
             } else {
@@ -110,7 +114,7 @@ const EventList = () => {
 
     return (
         <Container maxWidth="lg" className={classes.root}>
-            <AddButton color="primary" path="/edit/events" />
+            <AddButton color="primary" label="Event" path="/edit/events" />
             {eventComponentList}
         </Container>
     );

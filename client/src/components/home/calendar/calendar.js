@@ -3,7 +3,7 @@ import { makeStyles, Typography } from '@material-ui/core';
 import { useDispatch, useSelector } from 'react-redux';
 import dayjs from 'dayjs';
 import { openPopup } from '../../../redux/actions';
-import { darkSwitch } from '../../../functions/util';
+import { darkSwitch, parseEventList } from '../../../functions/util';
 import { getEventListInRange } from '../../../functions/api';
 
 import Box from '@material-ui/core/Box';
@@ -32,7 +32,7 @@ const useStyles = makeStyles((theme) => ({
         gridTemplateRows: 'repeat(6, minmax(0, 1fr))',
     },
     wrapper: {
-        minHeight: '100%',
+        flexGrow: 1,
     },
     header: {
         flexGrow: 1,
@@ -78,7 +78,7 @@ const Calendar = () => {
         if (res.status !== 200) {
             dispatch(openPopup('Could not load calendar events. Please check your internet and refresh the page.', 4));
         }
-        const events = res.status === 200 ? res.data : [];
+        const events = res.status === 200 ? parseEventList(res.data) : [];
 
         // Create the actual list of calendar days by grouping
         // events into their days and adding it to the components list
@@ -91,7 +91,7 @@ const Calendar = () => {
             dayComponents.push(
                 <CalendarDay
                     events={currentDayEvents}
-                    date={currDay.date()}
+                    date={currDay}
                     key={i}
                     noRight={i % 7 === 6}
                     otherMonth={!thisMonth}
@@ -117,7 +117,7 @@ const Calendar = () => {
     const rowClass = rows === 5 ? classes.row5 : rows === 6 ? classes.row6 : classes.row4;
     return (
         <Box display="flex" flexDirection="column" className={classes.wrapper}>
-            <AddButton color="primary" path="/edit/events" />
+            <AddButton color="primary" label="Event" path="/edit/events" />
             <Box width="100%" display="flex" justifyContent="center" alignItems="center">
                 <IconButton size="small" onClick={changeOffset.bind(this, -1)}>
                     <ArrowBackIosRoundedIcon />

@@ -2,13 +2,13 @@ import dayjs from 'dayjs';
 import React from 'react';
 
 import { Controller } from 'react-hook-form';
-import { DateTimePicker } from '@material-ui/pickers';
+import { DatePicker } from '@material-ui/pickers';
 import InputAdornment from '@material-ui/core/InputAdornment';
 import IconButton from '@material-ui/core/IconButton';
 import EventIcon from '@material-ui/icons/Event';
 
 /**
- * Displays a date time input
+ * Displays a date input
  * @param {object} props React props object
  * @param {*} props.control Form control object
  * @param {boolean} [props.required] Is this field required
@@ -20,24 +20,18 @@ import EventIcon from '@material-ui/icons/Event';
  * @param {number} [props.value] Default starting time value
  * @param {string} [props.helperText] Default helper text to display; will be replaced by error
  */
-const DateTimeInput = (props) => {
+const DateInput = (props) => {
     return (
         <Controller
             control={props.control}
             rules={{ required: props.required || false }}
             name={props.name}
-            defaultValue={
-                props.value
-                    ? dayjs(Number(props.value))
-                    : props.end
-                    ? dayjs().startOf('hour').add(2, 'hour')
-                    : dayjs().startOf('hour').add(1, 'hour')
-            }
+            defaultValue={props.value ? dayjs(Number(props.value)) : dayjs()}
             render={({ field: { onChange, onBlur, value }, fieldState: { error } }) => (
-                <DateTimePicker
+                <DatePicker
                     className={props.className}
                     inputVariant="outlined"
-                    format="MMM D, YYYY  h:mm a"
+                    format="MMM D, YYYY"
                     label={props.label}
                     value={value}
                     onChange={onChange}
@@ -60,4 +54,4 @@ const DateTimeInput = (props) => {
     );
 };
 
-export default DateTimeInput;
+export default DateInput;

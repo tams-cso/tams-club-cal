@@ -13,6 +13,7 @@ const useStyles = makeStyles((theme) => ({
         padding: 0,
     },
     time: {
+        flexShrink: 0,
         color: darkSwitchGrey(theme),
         fontSize: '0.65rem',
         [theme.breakpoints.down('sm')]: {
@@ -41,7 +42,10 @@ const useStyles = makeStyles((theme) => ({
         color: 'inherit',
         transition: '0.2s',
         '&:hover': {
-            backgroundColor: darkSwitch(theme, theme.palette.grey[200], theme.palette.grey[800]),
+            backgroundColor: (props) =>
+                props.lighter
+                    ? darkSwitch(theme, theme.palette.grey[300], theme.palette.grey[700])
+                    : darkSwitch(theme, theme.palette.grey[200], theme.palette.grey[800]),
         },
     },
 }));
@@ -51,9 +55,10 @@ const useStyles = makeStyles((theme) => ({
  *
  * @param {object} props React props object
  * @param {Event} props.event Current event object
+ * @param {boolean} [props.lighter] True if you want highlight color to be lighter
  */
 const CalendarEvent = (props) => {
-    const classes = useStyles();
+    const classes = useStyles({ lighter: props.lighter });
     return (
         <ListItem className={classes.root}>
             <Link to={`/events?id=${props.event.id}&view=calendar`} className={classes.linkWrapper}>

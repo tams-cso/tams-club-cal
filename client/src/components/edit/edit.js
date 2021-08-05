@@ -13,6 +13,7 @@ import EditLogin from './edit-login';
 import EditEvents from './edit-events';
 import EditClubs from './edit-clubs';
 import EditVolunteering from './edit-volunteering';
+import EditReservations from './edit-reservations';
 
 const useStyles = makeStyles((theme) => ({
     root: {
@@ -55,6 +56,7 @@ const Edit = () => {
                             <Route path="/edit/events" component={EditEvents} />
                             <Route path="/edit/clubs" component={EditClubs} />
                             <Route path="/edit/volunteering" component={EditVolunteering} />
+                            <Route path="/edit/reservations" component={EditReservations} />
                             {/* <Route path="/edit/history/:resource" component={EditHistory} /> */}
                             <Route>
                                 <Typography variant="h1" className={classes.error}>
