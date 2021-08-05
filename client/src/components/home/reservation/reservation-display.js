@@ -1,8 +1,9 @@
 import React, { useEffect, useState } from 'react';
 import { useHistory } from 'react-router';
 import { makeStyles } from '@material-ui/core/styles';
-import { darkSwitch, darkSwitchGrey, formatEventDate, formatEventTime, getParams } from '../../../functions/util';
-import { getReservation } from '../../../functions/api';
+import dayjs from 'dayjs';
+import { darkSwitchGrey, formatEventDate, formatEventTime, getParams } from '../../../functions/util';
+import { getRepeatingReservation, getReservation } from '../../../functions/api';
 
 import Container from '@material-ui/core/Container';
 import Card from '@material-ui/core/Card';
@@ -72,6 +73,10 @@ const useStyles = makeStyles((theme) => ({
     date: {
         fontWeight: 400,
     },
+    repeat: {
+        marginTop: 24,
+        fontSize: '1rem',
+    },
     buttonCenter: {
         margin: 'auto',
     },
@@ -93,9 +98,10 @@ const ReservationDisplay = () => {
             setError(<Loading error>No ID found. Please return to the home page.</Loading>);
             return;
         }
+        const repeating = getParams('repeating');
 
         // Pull the event from the backend
-        const res = await getReservation(id);
+        const res = repeating ? await getRepeatingReservation(id) : await getReservation(id);
         if (res.status !== 200) {
             setError(
                 <Loading error>
@@ -120,7 +126,9 @@ const ReservationDisplay = () => {
                         path={
                             reservation.eventId
                                 ? `/edit/events?id=${reservation.eventId}`
-                                : `/edit/reservations?id=${reservation.id}`
+                                : `/edit/reservations?id=${reservation.id}${
+                                      reservation.repeatEnd ? '&repeating=true' : ''
+                                  }`
                         }
                         edit
                     />
@@ -143,6 +151,11 @@ const ReservationDisplay = () => {
                                     <Typography variant="h3" className={classes.date}>
                                         {formatEventTime(reservation, false, true)}
                                     </Typography>
+                                    {reservation.repeatEnd ? (
+                                        <Typography variant="h3" className={classes.repeat}>
+                                            {'Repeats Until: ' + dayjs(reservation.repeatEnd).format('MMMM D, YYYY')}
+                                        </Typography>
+                                    ) : null}
                                 </Box>
                                 <Hidden smDown>
                                     <Divider orientation="vertical" flexItem />

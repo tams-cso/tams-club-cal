@@ -119,7 +119,6 @@ const EditEvents = () => {
             clearErrors('end');
             return;
         }
-
         if (watchEnd.isBefore(watchStart)) setError('end');
         else clearErrors('end');
     }, [watchStart, watchEnd, watchAllDay]);

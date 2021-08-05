@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import dayjs from 'dayjs';
-import { getReservationList } from '../../../functions/api';
+import { getRepeatingReservationList, getReservationList } from '../../../functions/api';
 
 import Box from '@material-ui/core/Box';
 import Loading from '../../shared/loading';
@@ -12,9 +12,10 @@ const Reservations = () => {
     const [reservationComponentList, setReservationComponentList] = useState(null);
     const [week, setWeek] = useState(dayjs());
 
-    useEffect(async () => {
-        const reservations = await getReservationList();
-        if (reservations.status !== 200) {
+    const getData = async (offset) => {
+        const reservations = await getReservationList(offset ? week : null);
+        const repeatingReservations = await getRepeatingReservationList(offset ? week : null);
+        if (reservations.status !== 200 || repeatingReservations.status !== 200) {
             setReservationComponentList(
                 <Loading error>
                     Could not get reservations data. Please reload the page or contact the site manager to fix this
@@ -22,9 +23,28 @@ const Reservations = () => {
                 </Loading>
             );
         }
+        setReservationList({ reservations: reservations.data, repeatingReservations: repeatingReservations.data });
+    };
 
+    useEffect(getData, []);
+
+    useEffect(() => {
+        if (reservationList === null) return;
+
+        // Add repeating events to the reservation list
+        const combinedReservationList = [
+            ...reservationList.reservations,
+            ...reservationList.repeatingReservations.map((r) => {
+                const start = week.day(dayjs(r.start).day()).hour(dayjs(r.start).hour()).valueOf();
+                const tempEnd = week.day(dayjs(r.end).day()).hour(dayjs(r.end).hour());
+                const end = tempEnd.isBefore(start) ? tempEnd.add(1, 'week').valueOf() : tempEnd.valueOf();
+                return { ...r, start, end };
+            }),
+        ];
+
+        // Break up reservations into days and sort the reservations
         const brokenUpReservationList = [];
-        reservations.data.forEach((r) => {
+        combinedReservationList.forEach((r) => {
             let curr = dayjs(r.start);
             while (!curr.isSame(dayjs(r.end), 'day')) {
                 if (curr.hour() === 23 && curr.add(1, 'hour').isSame(dayjs(r.end), 'hour')) break;
@@ -36,23 +56,19 @@ const Reservations = () => {
             const span = dayjs(r.end).diff(curr, 'hour');
             brokenUpReservationList.push({ start: curr, end: dayjs(r.end), span, data: r });
         });
-
         const sortedReservationList = brokenUpReservationList.sort((a, b) => a.start - b.start);
-        setReservationList(sortedReservationList);
-    }, []);
 
-    useEffect(() => {
-        if (reservationList === null) return;
-
+        // Calculate start/end dates for list
         const start = week.startOf('week');
         const end = start.add(7, 'day');
 
+        // Create the actual reservation components
         const components = [];
         let currTime = start;
         while (currTime.isBefore(end, 'day')) {
             components.push(
                 <ReservationDay
-                    reservationList={reservationList.filter((r) => currTime.isSame(dayjs(r.start), 'day'))}
+                    reservationList={sortedReservationList.filter((r) => currTime.isSame(dayjs(r.start), 'day'))}
                     date={currTime}
                     key={currTime.valueOf()}
                 />

@@ -14,6 +14,7 @@ import Checkbox from '@material-ui/core/Checkbox';
  * @param {string} [props.value] Default value for the field
  * @param {Function} [props.setValue] React hook form setValue function; required if value is defined
  * @param {string} [props.className] React classname
+ * @param {boolean} [props.disabled] If true, will disabled the checkbox
  */
 const ControlledCheckbox = (props) => {
     useEffect(() => {
@@ -30,10 +31,11 @@ const ControlledCheckbox = (props) => {
                 <FormControlLabel
                     control={<Checkbox />}
                     label={props.label}
+                    disabled={props.disabled}
                     className={props.className}
                     onChange={onChange}
                     onBlur={onBlur}
-                    value={value}
+                    checked={value}
                 />
             )}
         />
