@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { useHistory } from 'react-router';
-import { useSelector } from 'react-redux';
+import { Helmet } from 'react-helmet';
 import { makeStyles } from '@material-ui/core/styles';
 import { capitalize } from '@material-ui/core';
 import { darkSwitch, darkSwitchGrey, formatEventDate, formatEventTime, getParams } from '../../functions/util';
@@ -122,6 +122,10 @@ const EventDisplay = (props) => {
                 )
             ) : (
                 <Container className={classes.root}>
+                    <Helmet>
+                        <title>{`${event.name} | Events - TAMS Club Calendar`}</title>
+                        <meta name="description" content={event.description} />
+                    </Helmet>
                     <AddButton color="secondary" label="Event" path={`/edit/events?id=${event.id}`} edit />
                     <Card>
                         <CardContent>

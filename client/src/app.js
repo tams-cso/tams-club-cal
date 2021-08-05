@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { BrowserRouter, Route, Switch } from 'react-router-dom';
+import { Helmet } from 'react-helmet';
 import { createTheme, ThemeProvider } from '@material-ui/core';
 import Cookies from 'universal-cookie';
 import DayjsUtils from '@date-io/dayjs';
@@ -69,6 +70,25 @@ const App = () => {
 
     return (
         <ThemeProvider theme={theme}>
+            <Helmet>
+                <meta charset="utf-8" />
+                <link rel="icon" href="%PUBLIC_URL%/favicon.ico?v=3" />
+                <meta name="viewport" content="width=device-width, initial-scale=1" />
+                <meta name="theme-color" content="#00c853" />
+                <meta
+                    name="description"
+                    content="The TAMS Club Calendar is a fully contained event tracker, club/volunteering database, and general resource center. This is the unofficial club event calendar for the Texas Academy of Mathematics and Science!"
+                />
+                <meta property="og:title" content="TAMS Club Calendar" />
+                <meta property="og:type" content="website" />
+                <meta property="og:url" content="https://tams.club/" />
+                <meta property="og:image" content="%PUBLIC_URL%/social-cover.webp" />
+                <meta property="og:image:width" content="1200" />
+                <meta property="og:image:height" content="630" />
+                <link rel="apple-touch-icon" href="%PUBLIC_URL%/android-chrome-192x192.png" />
+                <link rel="manifest" href="%PUBLIC_URL%/manifest.json" />
+                <title>TAMS Club Calendar</title>
+            </Helmet>
             <CssBaseline />
             <MuiPickersUtilsProvider utils={DayjsUtils}>
                 <BrowserRouter>

@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { useDispatch } from 'react-redux';
 import { makeStyles } from '@material-ui/core';
+import { Helmet } from 'react-helmet';
 import { useForm } from 'react-hook-form';
 import Cookies from 'universal-cookie';
 import dayjs from 'dayjs';
@@ -166,6 +167,9 @@ const EditEvents = () => {
         <Loading flat />
     ) : (
         <React.Fragment>
+            <Helmet>
+                <title>{`${id ? 'Edit' : 'Add'} Event - TAMS Club Calendar`}</title>
+            </Helmet>
             <UploadBackdrop open={backdrop} />
             <Typography variant="h1" className={classes.title}>
                 {id ? 'Edit Event' : 'Add Event'}

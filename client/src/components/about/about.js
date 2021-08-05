@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { makeStyles } from '@material-ui/core';
+import { Helmet } from 'react-helmet';
 import { postFeedback } from '../../functions/api';
 
 import Container from '@material-ui/core/Container';
@@ -77,6 +78,9 @@ const About = () => {
 
     return (
         <Container className={classes.root}>
+            <Helmet>
+                <title>About - TAMS Club Calendar</title>
+            </Helmet>
             <Image src="/logo-banner.png" alt="TAMS Club Calendar" className={classes.image} transparent></Image>
             <Paragraph text={data.aboutText} fontSize="1.1rem" />
             <Typography variant="h2" className={classes.center}>
