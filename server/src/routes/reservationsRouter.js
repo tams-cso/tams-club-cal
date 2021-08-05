@@ -20,6 +20,7 @@ router.get('/repeating', async (req, res, next) => {
     try {
         const repeatingReservations = await RepeatingReservation.find({
             repeatEnd: { $gte: week.startOf('week').valueOf() },
+            start: { $lte: week.endOf('week').valueOf() },
         });
         res.send(repeatingReservations);
     } catch (error) {

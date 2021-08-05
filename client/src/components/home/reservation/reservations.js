@@ -3,14 +3,29 @@ import dayjs from 'dayjs';
 import { getRepeatingReservationList, getReservationList } from '../../../functions/api';
 
 import Box from '@material-ui/core/Box';
+import InputAdornment from '@material-ui/core/InputAdornment';
+import IconButton from '@material-ui/core/IconButton';
+import EventIcon from '@material-ui/icons/Event';
 import Loading from '../../shared/loading';
 import ReservationDay from './reservation-day';
 import AddButton from '../../shared/add-button';
+import { DatePicker } from '@material-ui/pickers';
+import { makeStyles } from '@material-ui/core';
+
+const useStyles = makeStyles((theme) => ({
+    date: {
+        marginLeft: 24,
+        [theme.breakpoints.down('sm')]: {
+            margin: 'auto',
+        }
+    }
+}))
 
 const Reservations = () => {
     const [reservationList, setReservationList] = useState(null);
     const [reservationComponentList, setReservationComponentList] = useState(null);
     const [week, setWeek] = useState(dayjs());
+    const classes = useStyles();
 
     const getData = async (offset) => {
         const reservations = await getReservationList(offset ? week : null);
@@ -27,6 +42,8 @@ const Reservations = () => {
     };
 
     useEffect(getData, []);
+
+    useEffect(getData.bind(this, true), [week]);
 
     useEffect(() => {
         if (reservationList === null) return;
@@ -84,7 +101,25 @@ const Reservations = () => {
 
     return (
         <React.Fragment>
-            <Box display="flex">Add date select to change date</Box>
+            <Box display="flex">
+                <DatePicker
+                    inputVariant="standard"
+                    format="[Week of] MMM Do, YYYY"
+                    label="Select week to show"
+                    value={week}
+                    onChange={setWeek}
+                    className={classes.date}
+                    InputProps={{
+                        endAdornment: (
+                            <InputAdornment position="end">
+                                <IconButton>
+                                    <EventIcon />
+                                </IconButton>
+                            </InputAdornment>
+                        ),
+                    }}
+                />
+            </Box>
             <AddButton color="primary" label="Reservation" path="/edit/reservations" />
             {reservationComponentList === null ? <Loading /> : reservationComponentList}
         </React.Fragment>
