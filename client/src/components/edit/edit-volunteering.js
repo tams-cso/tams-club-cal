@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { useDispatch } from 'react-redux';
 import { makeStyles } from '@material-ui/core';
+import { Helmet } from 'react-helmet';
 import { useForm } from 'react-hook-form';
 import Cookies from 'universal-cookie';
 import { openPopup } from '../../redux/actions';
@@ -117,6 +118,9 @@ const EditVolunteering = () => {
         <Loading flat />
     ) : (
         <React.Fragment>
+            <Helmet>
+                <title>{`${id ? 'Edit' : 'Add'} Volunteering - TAMS Club Calendar`}</title>
+            </Helmet>
             <UploadBackdrop open={backdrop} />
             <Typography variant="h1" className={classes.title}>
                 {id ? 'Edit Volunteering' : 'Add Volunteering'}
