@@ -72,7 +72,7 @@ const App = () => {
         <ThemeProvider theme={theme}>
             <Helmet>
                 <meta charset="utf-8" />
-                <link rel="icon" href="%PUBLIC_URL%/favicon.ico?v=3" />
+                <link rel="icon" href="/favicon.ico?v=4" />
                 <meta name="viewport" content="width=device-width, initial-scale=1" />
                 <meta name="theme-color" content="#00c853" />
                 <meta
@@ -82,11 +82,11 @@ const App = () => {
                 <meta property="og:title" content="TAMS Club Calendar" />
                 <meta property="og:type" content="website" />
                 <meta property="og:url" content="https://tams.club/" />
-                <meta property="og:image" content="%PUBLIC_URL%/social-cover.webp" />
+                <meta property="og:image" content="https://tams.club/social-cover.webp" />
                 <meta property="og:image:width" content="1200" />
                 <meta property="og:image:height" content="630" />
-                <link rel="apple-touch-icon" href="%PUBLIC_URL%/android-chrome-192x192.png" />
-                <link rel="manifest" href="%PUBLIC_URL%/manifest.json" />
+                <link rel="apple-touch-icon" href="/android-chrome-192x192.png" />
+                <link rel="manifest" href="/manifest.json" />
                 <title>TAMS Club Calendar</title>
             </Helmet>
             <CssBaseline />
