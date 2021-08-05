@@ -19,7 +19,7 @@ const useStyles = makeStyles((theme) => ({
 /**
  * Shows a floating action button
  * @param {object} props React props object
- * @param {Function} props.path Path to redirect to on click
+ * @param {string} props.path Path to redirect to on click
  * @param {"default" | "inherit" | "primary" | "secondary"} props.color Color for FAB
  * @param {string} [props.label] Label of the resource that is being acted on
  * @param {boolean} [props.edit] If true, will show edit button or else it'll show the add button

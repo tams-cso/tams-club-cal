@@ -1,22 +1,7 @@
 const dayjs = require('dayjs');
-const { Request } = require('express');
+const { Request, Response } = require('express');
 const Reservation = require('../models/reservation');
-const { newId } = require('./util');
-
-/**
- * Adds a reservation from an event with a set location
- *
- * @param {string} id ID of the relevent event
- * @param {Request} req Express request object
- * @returns {Promise<string>} ID of the reservation
- */
-async function addReservationFromEvent(id, req) {
-    const body = req.body;
-    if (body.location === 'none' || body.start === body.end) return null;
-    const startTime = body.allDay ? dayjs(body.start).startOf('day').valueOf() : body.start;
-    const endTime = body.allDay ? dayjs(body.start).endOf('day').valueOf() : body.end;
-    return addReservation(id, startTime, endTime, req);
-}
+const { newId, createNewHistory, sendError } = require('./util');
 
 /**
  * Creates a new reservation and adds it to the reservations db.
@@ -24,17 +9,11 @@ async function addReservationFromEvent(id, req) {
  * Therefore, if your event is from 1:30-2:30pm, the room will be reserved from 1pm to 3pm.
  *
  * @param {string} [eventId] ID of the event this reservation is attributed to
- * @param {number} start Start time of the reservation
- * @param {number} end End time of the reservation
  * @param {Request} req Express request object
  * @returns {Promise<string>} ID of the reservation
  */
-async function addReservation(eventId, start, end, req) {
-    const roundedStart = dayjs(start).startOf('hour').valueOf();
-    const roundedEnd = dayjs(end).startOf('hour');
-    const fixedEnd = roundedEnd.isSame(dayjs(end), 'minute')
-        ? roundedEnd.valueOf()
-        : roundedEnd.add(1, 'hour').valueOf();
+async function addReservation(eventId, req) {
+    const { start, end } = offsetTime(req);
     const id = newId();
     const history = eventId ? null : [newId()];
 
@@ -44,17 +23,73 @@ async function addReservation(eventId, start, end, req) {
         name: req.body.name,
         club: req.body.club,
         description: req.body.description,
-        start: roundedStart,
-        end: fixedEnd,
+        start,
+        end,
         location: req.body.location,
+        allDay: req.body.allDay,
         history,
     });
 
     const newHistory = history ? createNewHistory(req, newReservation, 'reservations', id, history[0]) : null;
     const reservationRes = await newReservation.save();
-    const historyRes = newHistory ? newHistory.save() : null;
-    if (reservationRes === newReservation && newHistory === historyRes) return eventId;
+    const historyRes = newHistory ? await newHistory.save() : null;
+    if (reservationRes === newReservation && newHistory === historyRes) return id;
     throw new Error('Could not add reservation to the database');
 }
 
-module.exports = { addReservationFromEvent };
+/**
+ * Updates a reservation from the reservations db.
+ * This only works in increments of hours!!! Minutes and seconds will be IGNORED.
+ * Therefore, if your event is from 1:30-2:30pm, the room will be reserved from 1pm to 3pm.
+ *
+ * @param {string} id ID of the reservation
+ * @param {Request} req Express request object
+ * @param {Response} res Express response object
+ * @returns {Promise<string>} ID of the reservation
+ */
+async function updateReservation(id, req, res) {
+    const prev = await Reservation.findOne({ id }).exec();
+    if (!prev) {
+        sendError(res, 400, 'Invalid reservation ID');
+        return -1;
+    }
+
+    const historyId = newId();
+    const { start, end } = offsetTime(req);
+    
+    const reservationRes = await Reservation.updateOne(
+        { id },
+        {
+            $set: {
+                name: req.body.name,
+                club: req.body.club,
+                description: req.body.description,
+                start,
+                end,
+                location: req.body.location,
+                allDay: req.body.allDay,
+                history: prev.eventId ? null : [...req.body.history, historyId],
+            },
+        }
+    );
+
+    const newHistory = prev.eventId ? null : createNewHistory(req, prev, 'reservations', id, historyId, false);
+    const historyRes = newHistory ? await newHistory.save() : null;
+    if (reservationRes.n === 1 && newHistory === historyRes) return 1;
+    throw new Error('Could not add reservation to the database');
+}
+
+/**
+ * Offsets time to start of hour/end of hour
+ * @param {Request} req Express request object
+ */
+function offsetTime(req) {
+    const roundedStart = dayjs(req.body.start).startOf('hour').valueOf();
+    const roundedEnd = dayjs(req.body.end).startOf('hour');
+    const fixedEnd = roundedEnd.isSame(dayjs(req.body.end), 'minute')
+        ? roundedEnd.valueOf()
+        : roundedEnd.add(1, 'hour').valueOf();
+    return { start: roundedStart, end: fixedEnd };
+}
+
+module.exports = { addReservation, updateReservation };

@@ -5,10 +5,12 @@ import { getReservationList } from '../../../functions/api';
 import Box from '@material-ui/core/Box';
 import Loading from '../../shared/loading';
 import ReservationDay from './reservation-day';
+import AddButton from '../../shared/add-button';
 
 const Reservations = () => {
     const [reservationList, setReservationList] = useState(null);
     const [reservationComponentList, setReservationComponentList] = useState(null);
+    const [week, setWeek] = useState(dayjs());
 
     useEffect(async () => {
         const reservations = await getReservationList();
@@ -42,7 +44,7 @@ const Reservations = () => {
     useEffect(() => {
         if (reservationList === null) return;
 
-        const start = reservationList[0].start.startOf('week');
+        const start = week.startOf('week');
         const end = start.add(7, 'day');
 
         const components = [];
@@ -66,7 +68,8 @@ const Reservations = () => {
 
     return (
         <React.Fragment>
-            <Box display="flex"></Box>
+            <Box display="flex">Add date select to change date</Box>
+            <AddButton color="primary" label="Reservation" path="/edit/reservations" />
             {reservationComponentList === null ? <Loading /> : reservationComponentList}
         </React.Fragment>
     );

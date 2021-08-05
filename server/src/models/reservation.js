@@ -10,6 +10,7 @@ const reservationSchema = new mongoose.Schema(
         start: Number,
         end: Number,
         location: String,
+        allDay: Boolean,
         history: [String],
     },
     { collection: 'reservations' },

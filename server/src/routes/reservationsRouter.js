@@ -2,6 +2,7 @@ const express = require('express');
 const dayjs = require('dayjs');
 const { sendError } = require('../functions/util');
 const Reservation = require('../models/reservation');
+const { addReservation, updateReservation } = require('../functions/event-reservations');
 const router = express.Router();
 
 /**
@@ -36,6 +37,42 @@ router.get('/:id', async (req, res, next) => {
     const reservation = await Reservation.findOne({ id }).exec();
     if (reservation) res.send(reservation);
     else sendError(res, 400, 'Invalid reservation id');
+});
+
+/**
+ * POST /reservations
+ *
+ * Creates a new reservation
+ */
+ router.post('/', async (req, res, next) => {
+    try {
+        await addReservation(null, req);
+        res.send({ ok: 1 });
+    } catch (error) {
+        console.error(error);
+        sendError(res, 500, 'Unable to update event to database');
+    }
+});
+
+/**
+ * PUT /reservations/<id>
+ * 
+ * Updates a reservation
+ */
+ router.put('/:id', async (req, res, next) => {
+    try {
+        if (req.body.eventId !== null) {
+            sendError(res, 400, "Cannot update a reservation connected to an event. Please edit the event instead.");
+            return;
+        }
+        
+        const updateRes = await updateReservation(req.params.id, req, res);
+        if (updateRes === -1) return;
+        res.send({ ok: 1 });
+    } catch (error) {
+        console.error(error);
+        sendError(res, 500, 'Unable to update event to database');
+    }
 });
 
 module.exports = router;

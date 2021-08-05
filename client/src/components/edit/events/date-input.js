@@ -8,7 +8,7 @@ import IconButton from '@material-ui/core/IconButton';
 import EventIcon from '@material-ui/icons/Event';
 
 /**
- * Displays a date time input
+ * Displays a date input
  * @param {object} props React props object
  * @param {*} props.control Form control object
  * @param {boolean} [props.required] Is this field required
@@ -18,6 +18,7 @@ import EventIcon from '@material-ui/icons/Event';
  * @param {boolean} [props.end] True if ending time, which means I will have to add 1 hour
  * @param {boolean} [props.disabled] True will disable the input
  * @param {number} [props.value] Default starting time value
+ * @param {string} [props.helperText] Default helper text to display; will be replaced by error
  */
 const DateInput = (props) => {
     return (
@@ -36,7 +37,7 @@ const DateInput = (props) => {
                     onChange={onChange}
                     onBlur={onBlur}
                     error={error}
-                    helperText={error ? 'End date/time should be after start' : ''}
+                    helperText={error ? 'End date/time should be after start' : props.helperText}
                     disabled={props.disabled}
                     InputProps={{
                         endAdornment: (

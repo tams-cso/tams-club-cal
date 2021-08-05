@@ -40,25 +40,21 @@ const Home = () => {
     const classes = useStyles();
 
     useEffect(() => {
-        // Extract ID from url search params
-        const newId = getParams('id');
-        setId(newId);
-
-        // If user has ID, send them to the display page
-        if (newId) {
-            console.log('?');
-            setDisplay(<EventDisplay id={newId} />);
-            return;
-        }
-    }, [location]);
-
-    useEffect(() => {
         if (id) return;
 
         if (view === 'calendar') setDisplay(<Calendar />);
         else if (view === 'reservation') setDisplay(<Reservations />);
         else setDisplay(<EventList />);
     }, [view, id]);
+
+    useEffect(() => {
+        // Extract ID from url search params
+        const newId = getParams('id');
+        setId(newId);
+
+        // If user has ID, send them to the display page
+        if (newId) setDisplay(<EventDisplay id={newId} />);
+    }, [location]);
 
     return (
         <PageWrapper noBottom>

@@ -18,6 +18,8 @@ import Loading from '../../shared/loading';
 import AddButton from '../../shared/add-button';
 import PageWrapper from '../../shared/page-wrapper';
 
+import data from '../../../data.json';
+
 const useStyles = makeStyles((theme) => ({
     root: {
         maxWidth: '50%',
@@ -58,12 +60,14 @@ const useStyles = makeStyles((theme) => ({
             padding: 0,
         },
     },
-    eventClub: {
+    location: {
+        marginBottom: 12,
+        color: darkSwitchGrey(theme),
+        fontSize: '0.9rem',
+    },
+    club: {
         marginBottom: 16,
         color: darkSwitchGrey(theme),
-    },
-    eventType: {
-        color: darkSwitch(theme, theme.palette.grey[600], theme.palette.secondary.main),
     },
     date: {
         fontWeight: 400,
@@ -110,22 +114,34 @@ const ReservationDisplay = () => {
                 )
             ) : (
                 <Container className={classes.root}>
-                    <AddButton color="secondary" label="Event" path={`/edit/events?id=${reservation.id}`} edit />
+                    <AddButton
+                        color="secondary"
+                        label={reservation.eventId ? 'Event' : 'Reservation'}
+                        path={
+                            reservation.eventId
+                                ? `/edit/events?id=${reservation.eventId}`
+                                : `/edit/reservations?id=${reservation.id}`
+                        }
+                        edit
+                    />
                     <Card>
                         <CardContent>
                             <Box className={classes.gridRoot}>
                                 <Box className={`${classes.gridSide} ${classes.gridLeft}`}>
+                                    <Typography variant="h3" className={classes.location}>
+                                        {'Location: ' + data.rooms.find((d) => d.value === reservation.location).label}
+                                    </Typography>
                                     <Typography variant="h2" component="h1">
                                         {reservation.name}
                                     </Typography>
-                                    <Typography variant="subtitle1" component="p" className={classes.eventClub}>
+                                    <Typography variant="subtitle1" component="p" className={classes.club}>
                                         {reservation.club}
                                     </Typography>
                                     <Typography variant="h3" gutterBottom className={classes.date}>
                                         {formatEventDate(reservation)}
                                     </Typography>
                                     <Typography variant="h3" className={classes.date}>
-                                        {formatEventTime(reservation)}
+                                        {formatEventTime(reservation, false, true)}
                                     </Typography>
                                 </Box>
                                 <Hidden smDown>

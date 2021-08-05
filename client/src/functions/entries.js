@@ -41,10 +41,11 @@ export class Event {
  * @param {number} [start] The time in UTC milliseconds that the reservation starts (rounds to hours)
  * @param {number} [end] The time in UTC milliseconds that the reservation ends (rounds to hours)
  * @param {string} [location] The location that is reserved
+ * @param {boolean} [allDay] If true, the event will last the entire day, will ignore start/end datetime
  * @param {string[]} [history] Edit history list; this will be null if related to an event
  */
 export class Reservation {
-    constructor(id, eventId, name, club, description, start, end, location, history) {
+    constructor(id, eventId, name, club, description, start, end, location, allDay, history) {
         this.id = id || null;
         this.eventId = eventId || null;
         this.name = name || null;
@@ -53,6 +54,7 @@ export class Reservation {
         this.start = start || 0;
         this.end = end || 0;
         this.location = location || 'none';
+        this.allDay = allDay || false;
         this.history = history || null;
     }
 }

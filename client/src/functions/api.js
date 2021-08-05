@@ -1,4 +1,4 @@
-import { Club, ClubImageBlobs, Event, Feedback, FetchResponse, Volunteering } from './entries';
+import { Club, ClubImageBlobs, Event, Feedback, FetchResponse, Reservation, Volunteering } from './entries';
 import Cookies from 'universal-cookie';
 
 const BACKEND_URL =
@@ -98,7 +98,7 @@ function createHeaders(auth, json) {
     return headers;
 }
 
-/* ########## EVENTS API ########### */
+/* ########## EVENTS/RESERVATIONS API ########### */
 
 /**
  * Gets the list of events.
@@ -178,6 +178,27 @@ export async function getReservationList(week = null) {
  */
 export async function getReservation(id) {
     return getRequest(`/reservations/${id}`);
+}
+
+/**
+ * Creates a new reservation
+ *
+ * @param {Reservation} reservation Reservation object
+ * @returns {Promise<FetchResponse>} Will return the response or error object
+ */
+ export async function postReservation(reservation) {
+    return postRequest('/reservations', reservation);
+}
+
+/**
+ * Updates an reservation
+ *
+ * @param {Reservation} reservation Reservation object
+ * @param {string} id ID of the event to update
+ * @returns {Promise<FetchResponse>} Will return the response or error object
+ */
+export async function putReservation(reservation, id) {
+    return putRequest(`/reservations/${id}`, reservation);
 }
 
 /* ########## CLUBS API ########### */

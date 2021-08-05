@@ -20,6 +20,7 @@ import { FormControl, FormHelperText } from '@material-ui/core';
  * @param {Function} [props.setValue] React hook form setValue function; required if value is defined
  * @param {string} [props.helperText] If defined, will show helper text
  * @param {string} [props.className] React classname
+ * @param {boolean} [props.error] If true, sets error state of the box to true
  * @param {*} [props.children] Children elements to display; should all be MenuItem components
  */
 const ControlledSelect = (props) => {
@@ -39,15 +40,16 @@ const ControlledSelect = (props) => {
             render={({ field: { onChange, onBlur, value } }) => (
                 <FormControl>
                     <Select
-                    variant={props.variant || 'standard'}
-                    onChange={onChange}
-                    onBlur={onBlur}
-                    value={value}
-                    className={props.className}
-                >
-                    {props.children}
-                </Select>
-                <FormHelperText>{props.helperText}</FormHelperText>
+                        variant={props.variant || 'standard'}
+                        error={props.error}
+                        onChange={onChange}
+                        onBlur={onBlur}
+                        value={value}
+                        className={props.className}
+                    >
+                        {props.children}
+                    </Select>
+                    <FormHelperText>{props.helperText}</FormHelperText>
                 </FormControl>
             )}
         ></Controller>

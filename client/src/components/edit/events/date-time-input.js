@@ -18,6 +18,7 @@ import EventIcon from '@material-ui/icons/Event';
  * @param {boolean} [props.end] True if ending time, which means I will have to add 1 hour
  * @param {boolean} [props.disabled] True will disable the input
  * @param {number} [props.value] Default starting time value
+ * @param {string} [props.helperText] Default helper text to display; will be replaced by error
  */
 const DateTimeInput = (props) => {
     return (
@@ -42,7 +43,7 @@ const DateTimeInput = (props) => {
                     onChange={onChange}
                     onBlur={onBlur}
                     error={error}
-                    helperText={error ? 'End date/time should be after start' : ''}
+                    helperText={error ? 'End date/time should be after start' : props.helperText}
                     disabled={props.disabled}
                     InputProps={{
                         endAdornment: (

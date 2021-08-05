@@ -19,6 +19,8 @@ import Paragraph from '../shared/paragraph';
 import Loading from '../shared/loading';
 import AddButton from '../shared/add-button';
 
+import data from '../../data.json';
+
 const useStyles = makeStyles((theme) => ({
     root: {
         maxWidth: '50%',
@@ -68,6 +70,11 @@ const useStyles = makeStyles((theme) => ({
     },
     date: {
         fontWeight: 400,
+    },
+    location: {
+        marginTop: 24,
+        color: darkSwitchGrey(theme),
+        fontSize: '0.9rem',
     },
     buttonCenter: {
         margin: 'auto',
@@ -130,9 +137,16 @@ const EventDisplay = (props) => {
                                     <Typography variant="h3" gutterBottom className={classes.date}>
                                         {formatEventDate(event)}
                                     </Typography>
-                                    {<Typography variant="h3" className={classes.date}>
-                                        {formatEventTime(event, event.noEnd, true)}
-                                    </Typography>}
+                                    {
+                                        <Typography variant="h3" className={classes.date}>
+                                            {formatEventTime(event, event.noEnd, true)}
+                                        </Typography>
+                                    }
+                                    <Typography variant="h3" className={classes.location}>
+                                        {event.location === 'none'
+                                            ? null
+                                            : 'Location: ' + data.rooms.find((d) => d.value === event.location).label}
+                                    </Typography>
                                 </Box>
                                 <Hidden smDown>
                                     <Divider orientation="vertical" flexItem />

@@ -6,12 +6,14 @@ import data from '../../../data.json';
 
 /**
  * Select a location from the list of predefined rooms
- * 
+ *
  * @param {object} props React props object
  * @param {*} props.control React hook form controller
  * @param {string} props.value Default value for the field
  * @param {Function} props.setValue React hook form setValue function
  * @param {string} [props.className] React classname
+ * @param {string} [props.hideHelper] If true will hide helper text
+ * @param {boolean} [props.error] If defined, helperText field will show the error if true
  */
 const LocationSelect = (props) => {
     return (
@@ -21,7 +23,14 @@ const LocationSelect = (props) => {
             value={props.value}
             name="location"
             variant="outlined"
-            helperText="If start and end times are defined, this will create a reservation"
+            error={props.error}
+            helperText={
+                props.error
+                    ? 'Please select a location'
+                    : props.hideHelper
+                    ? null
+                    : 'If start and end times are defined, this will create a reservation'
+            }
             className={props.className}
         >
             <MenuItem value="none">No Location Set</MenuItem>

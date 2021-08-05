@@ -2,30 +2,35 @@ import React, { useEffect, useState } from 'react';
 import { useDispatch } from 'react-redux';
 import { makeStyles } from '@material-ui/core';
 import { useForm } from 'react-hook-form';
-import Cookies from 'universal-cookie';
 import dayjs from 'dayjs';
+import isSameOrBefore from 'dayjs/plugin/isSameOrBefore';
+import Cookies from 'universal-cookie';
 import { openPopup } from '../../redux/actions';
-import { getParams, redirect } from '../../functions/util';
-import { Event } from '../../functions/entries';
-import { getEvent, postEvent, putEvent } from '../../functions/api';
+import { darkSwitchGrey, getParams, redirect } from '../../functions/util';
+import { Reservation } from '../../functions/entries';
+import { getReservation, postReservation, putReservation } from '../../functions/api';
 
 import Typography from '@material-ui/core/Typography';
 import Box from '@material-ui/core/Box';
-import MenuItem from '@material-ui/core/MenuItem';
 import DateTimeInput from './events/date-time-input';
+import DateInput from './events/date-input';
 import ControlledCheckbox from './events/controlled-checkbox';
 import ControlledTextField from './shared/controlled-text-field';
-import ControlledSelect from './shared/controlled-select';
 import UploadBackdrop from './shared/upload-backdrop';
 import Loading from '../shared/loading';
 import TwoButtonBox from './shared/two-button-box';
 import LocationSelect from './shared/location-select';
-import DateInput from './events/date-input';
+
+dayjs.extend(isSameOrBefore);
 
 const useStyles = makeStyles((theme) => ({
     title: {
         textAlign: 'center',
         fontSize: '3rem',
+    },
+    subtitle: {
+        textAlign: 'center',
+        color: darkSwitchGrey(theme),
     },
     form: {
         padding: 24,
@@ -40,6 +45,9 @@ const useStyles = makeStyles((theme) => ({
             flexDirection: 'column',
         },
     },
+    centerFlex: {
+        justifyContent: 'center',
+    },
     leftCheckbox: {
         [theme.breakpoints.up('md')]: {
             marginLeft: 8,
@@ -48,11 +56,8 @@ const useStyles = makeStyles((theme) => ({
             marginTop: 8,
         },
     },
-    centerFlex: {
-        justifyContent: 'center',
-    },
-    type: {
-        height: 56,
+    name: {
+        flexGrow: 3,
     },
     spacer: {
         width: 20,
@@ -60,49 +65,39 @@ const useStyles = makeStyles((theme) => ({
             height: 16,
         },
     },
+    area: {
+        marginTop: 12,
+    },
 }));
 
-const EditEvents = () => {
+const EditReservations = () => {
     const [id, setId] = useState(null);
-    const [event, setEvent] = useState(null);
+    const [reservation, setReservation] = useState(null);
     const [backdrop, setBackdrop] = useState(false);
     const [prevStart, setPrevStart] = useState(null);
+    const [locationError, setLocationError] = useState(false);
     const dispatch = useDispatch();
     const classes = useStyles();
     const {
         handleSubmit,
-        setError,
-        clearErrors,
+        control,
         setValue,
         watch,
-        control,
+        clearErrors,
+        setError,
         formState: { errors },
     } = useForm();
     const watchStart = watch('start');
     const watchEnd = watch('end');
-    const watchNoEnd = watch('noEnd');
     const watchAllDay = watch('allDay');
-
-    useEffect(async () => {
-        // Extract ID from url search params
-        const id = getParams('id');
-
-        // Set the ID and event state variable
-        if (id !== null) {
-            const currEvent = await getEvent(id);
-            if (currEvent.status === 200) {
-                setId(id);
-                setEvent(currEvent.data);
-            } else openPopup('Error fetching event info. Please refresh the page or add a new event.', 4);
-        } else setEvent(new Event());
-    }, []);
+    const watchLocation = watch('location');
 
     // Set "prevStart" variable to the starting time to use later
     useEffect(() => {
-        if (!event) return;
-        if (event.start) setPrevStart(event.start);
+        if (!reservation) return;
+        if (reservation.start) setPrevStart(reservation.start);
         else setPrevStart(dayjs().startOf('hour').add(1, 'hour').valueOf());
-    }, [event]);
+    }, [reservation]);
 
     // Offset the end time if startTime is changed to the same duration
     useEffect(() => {
@@ -114,32 +109,49 @@ const EditEvents = () => {
 
     // Set an error if the end time is set before the start time
     useEffect(() => {
-        if (watchEnd === undefined || watchNoEnd) return;
-        if (watchAllDay) {
-            clearErrors('end');
-            return;
-        }
-
-        if (watchEnd.isBefore(watchStart)) setError('end');
+        if (watchEnd === undefined) return;
+        if (watchEnd.startOf('hour').isSameOrBefore(watchStart)) setError('end');
         else clearErrors('end');
-    }, [watchStart, watchEnd, watchAllDay]);
+    }, [watchStart, watchEnd]);
 
     // Set the date of the "all day" date input to the same as the start time
     useEffect(() => {
         if (watchAllDay) setValue('date', watchStart);
     }, [watchAllDay]);
 
+    // Clear location error if not errored
+    useEffect(() => {
+        if (watchLocation !== 'none') setLocationError(false);
+    }, [watchLocation]);
+
+    useEffect(async () => {
+        // Extract ID from url search params
+        const id = getParams('id');
+
+        // Set the ID and reservation state variable
+        if (id !== null) {
+            const currReservation = await getReservation(id);
+            if (currReservation.status === 200) {
+                setId(id);
+                setReservation(currReservation.data);
+            } else openPopup('Error fetching reservation info. Please refresh the page or add a new event.', 4);
+        } else setReservation(new Reservation());
+    }, []);
+
     const onSubmit = async (data) => {
         if (!('name' in data)) return;
-        const cookies = new Cookies();
+        if (data.location === 'none') {
+            setLocationError(true);
+            return;
+        }
 
+        const cookies = new Cookies();
         const startTime = data.allDay ? data.date.startOf('day').valueOf() : data.start.valueOf();
         const endTime = data.allDay || data.noEnd ? startTime : data.end.valueOf();
-        const newEvent = new Event(
-            id,
-            event.eventId,
-            event.reservationId,
-            data.type,
+
+        const newReservation = new Reservation(
+            reservation.id,
+            reservation.eventId,
             data.name,
             data.club,
             data.description,
@@ -147,61 +159,60 @@ const EditEvents = () => {
             endTime,
             data.location,
             data.allDay,
-            event.history
+            reservation.history
         );
 
         setBackdrop(true);
-        const res = id === null ? await postEvent(newEvent) : await putEvent(newEvent, id);
-        setBackdrop(false);
+        const res = id === null ? await postReservation(newReservation) : await putReservation(newReservation, id);
         if (res.status === 200) {
-            cookies.set('success', id ? 'update-event' : 'add-event', { sameSite: 'strict', path: '/' });
+            cookies.set('success', id ? 'update-reservation' : 'add-reservation', { sameSite: 'strict', path: '/' });
             back();
         } else dispatch(openPopup('Unable to upload data. Please refresh the page or try again.', 4));
+        setBackdrop(false);
     };
 
     const back = () => {
-        redirect(`/events${id ? `?id=${id}` : ''}`);
+        redirect(id ? `/reservations?id=${id}` : '/?view=reservation');
     };
 
-    return event === null ? (
+    return reservation === null ? (
         <Loading flat />
     ) : (
         <React.Fragment>
             <UploadBackdrop open={backdrop} />
             <Typography variant="h1" className={classes.title}>
-                {id ? 'Edit Event' : 'Add Event'}
+                {id ? 'Edit Reservation' : 'Add Reservation'}
+            </Typography>
+            <Typography className={classes.subtitle}>
+                Start times will be rounded down and end times will be rounded up to the nearest hour.
             </Typography>
             <form onSubmit={handleSubmit(onSubmit)} className={classes.form}>
                 <Box className={classes.boxWrapper}>
-                    <ControlledSelect
+                    <LocationSelect
                         control={control}
                         setValue={setValue}
-                        value={event.type}
-                        name="type"
-                        variant="outlined"
-                        className={classes.type}
-                    >
-                        <MenuItem value="event">Event</MenuItem>
-                        <MenuItem value="signup">Signup/Deadline</MenuItem>
-                    </ControlledSelect>
+                        value={reservation.location}
+                        error={locationError}
+                        hideHelper
+                    />
                     <div className={classes.spacer} />
                     <ControlledTextField
                         control={control}
                         setValue={setValue}
-                        value={event.name}
-                        label="Event Name"
+                        value={reservation.name}
+                        label="Reservation Name"
                         name="name"
                         variant="outlined"
                         grow
                         required
                         errorMessage="Please enter a name"
+                        className={classes.name}
                     />
-                </Box>
-                <Box className={classes.boxWrapper}>
+                    <div className={classes.spacer} />
                     <ControlledTextField
                         control={control}
                         setValue={setValue}
-                        value={event.club}
+                        value={reservation.club}
                         label="Club"
                         name="club"
                         variant="outlined"
@@ -209,18 +220,16 @@ const EditEvents = () => {
                         required
                         errorMessage="Please enter a club name"
                     />
-                    <div className={classes.spacer} />
-                    <LocationSelect control={control} setValue={setValue} value={event.location} />
                 </Box>
                 <Box className={`${classes.boxWrapper} ${classes.centerFlex}`}>
                     {watchAllDay ? (
-                        <DateInput control={control} name="date" label="Date" value={event.start} />
+                        <DateInput control={control} name="date" label="Date" value={reservation.start} />
                     ) : (
                         <DateTimeInput
                             control={control}
                             name="start"
-                            label={watchNoEnd ? 'Date/time' : 'Start date/time'}
-                            value={event.start}
+                            label="Start date/time"
+                            value={reservation.start}
                             required
                         />
                     )}
@@ -229,31 +238,24 @@ const EditEvents = () => {
                         name="end"
                         label="End date/time"
                         control={control}
-                        value={event.end}
-                        disabled={watchNoEnd || watchAllDay}
+                        value={reservation.end}
+                        disabled={watchAllDay}
                         required
                         end
                     />
                     <ControlledCheckbox
                         control={control}
-                        name="noEnd"
-                        label="No end time"
-                        value={false}
+                        name="allDay"
+                        label="All day reservation"
+                        value={reservation.allDay}
                         setValue={setValue}
                         className={classes.leftCheckbox}
-                    />
-                    <ControlledCheckbox
-                        control={control}
-                        name="allDay"
-                        label="All day event"
-                        value={event.allDay}
-                        setValue={setValue}
                     />
                 </Box>
                 <ControlledTextField
                     control={control}
                     setValue={setValue}
-                    value={event.description}
+                    value={reservation.description}
                     label="Description (optional)"
                     name="description"
                     variant="outlined"
@@ -265,4 +267,4 @@ const EditEvents = () => {
     );
 };
 
-export default EditEvents;
+export default EditReservations;
