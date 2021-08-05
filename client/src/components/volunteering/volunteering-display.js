@@ -19,6 +19,7 @@ import Loading from '../shared/loading';
 import FilterList from './filter-list';
 import Paragraph from '../shared/paragraph';
 import AddButton from '../shared/add-button';
+import { Helmet } from 'react-helmet';
 
 const useStyles = makeStyles((theme) => ({
     root: {
@@ -112,7 +113,16 @@ const EventDisplay = (props) => {
                 )
             ) : (
                 <Container className={classes.root}>
-                    <AddButton color="secondary" label="Volunteering" path={`/edit/volunteering?id=${volunteering.id}`} edit />
+                    <Helmet>
+                        <title>{`${volunteering.name} | Volunteering - TAMS Club Calendar`}</title>
+                        <meta name="description" content={volunteering.description} />
+                    </Helmet>
+                    <AddButton
+                        color="secondary"
+                        label="Volunteering"
+                        path={`/edit/volunteering?id=${volunteering.id}`}
+                        edit
+                    />
                     <Card>
                         <CardContent>
                             <Box className={classes.container}>

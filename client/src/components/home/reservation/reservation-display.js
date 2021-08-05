@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { useHistory } from 'react-router';
+import { Helmet } from 'react-helmet';
 import { makeStyles } from '@material-ui/core/styles';
 import dayjs from 'dayjs';
 import { darkSwitchGrey, formatEventDate, formatEventTime, getParams } from '../../../functions/util';
@@ -120,6 +121,10 @@ const ReservationDisplay = () => {
                 )
             ) : (
                 <Container className={classes.root}>
+                    <Helmet>
+                        <title>{`${reservation.name} | Reservations - TAMS Club Calendar`}</title>
+                        <meta name="description" content={reservation.description} />
+                    </Helmet>
                     <AddButton
                         color="secondary"
                         label={reservation.eventId ? 'Event' : 'Reservation'}
