@@ -1,5 +1,6 @@
 import React from 'react';
-import { makeStyles } from '@material-ui/core';
+import { makeStyles, alpha } from '@material-ui/core';
+import { darkSwitch } from '../../../functions/util';
 import { Reservation } from '../../../functions/entries';
 
 import { Link as NavLink } from 'react-router-dom';
@@ -15,7 +16,7 @@ const useStyles = makeStyles((theme) => ({
         textAlign: 'center',
         textDecoration: 'none',
         color: 'inherit',
-        backgroundColor: theme.palette.secondary.dark,
+        backgroundColor: alpha(darkSwitch(theme, theme.palette.primary.light, theme.palette.primary.dark), 0.5),
     },
 }));
 
