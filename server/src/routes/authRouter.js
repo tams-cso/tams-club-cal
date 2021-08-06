@@ -30,6 +30,17 @@ router.get('/user/:token', async (req, res, next) => {
 });
 
 /**
+ * GET /auth/user/id/<id>
+ *
+ * Sends the user name given their ID
+ */
+router.get('/user/id/:id', async (req, res, next) => {
+    const user = await User.findOne({ id: req.params.id });
+    if (user) res.send({ name: user.name });
+    else sendError(res, 400, 'User not found in database with that ID');
+});
+
+/**
  * POST /auth
  *
  * Given a token in the body request, determine if that user is logged in.

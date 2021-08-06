@@ -22,6 +22,7 @@ import Loading from '../shared/loading';
 import TwoButtonBox from './shared/two-button-box';
 import LocationSelect from './shared/location-select';
 import DateInput from './events/date-input';
+import AddButton from '../shared/add-button';
 
 const useStyles = makeStyles((theme) => ({
     title: {
@@ -170,6 +171,7 @@ const EditEvents = () => {
             <Helmet>
                 <title>{`${id ? 'Edit' : 'Add'} Event - TAMS Club Calendar`}</title>
             </Helmet>
+            {id ? <AddButton editHistory path={`/edit/history/events?id=${id}`} /> : null}
             <UploadBackdrop open={backdrop} />
             <Typography variant="h1" className={classes.title}>
                 {id ? 'Edit Event' : 'Add Event'}

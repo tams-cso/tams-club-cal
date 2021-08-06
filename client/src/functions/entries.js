@@ -179,7 +179,7 @@ export class Filters {
 
 /**
  * An object containing a specific feedback object
- * 
+ *
  * @param {string} [id] The unique UUIDv4 for the feedback
  * @param {string} [feedback] The actual feedback, as a string
  * @param {String} [name] The name of the user who submitted the feedback (optional)
@@ -191,6 +191,56 @@ export class Feedback {
         this.feedback = feedback || '';
         this.name = name || '';
         this.time = time || new Date().valueOf();
+    }
+}
+
+/**
+ * An object containing the information for a single edit to a specific resource
+ *
+ * @param {string} id The unique UUIDv4 for the history object
+ * @param {"events" | "clubs" | "volunteering" | "reservations"} resource Resource name of the history
+ * @param {string} editId The ID of the original resource
+ * @param {number} time The time in UTC milliseconds that this edit was made
+ * @param {Editor} editor The editor of this specific resource
+ * @param {Field[]} fields List of fields that were edited
+ */
+export class History {
+    constructor(id, resource, editId, time, editor, fields) {
+        this.id = id;
+        this.resource = resource;
+        this.editId = editId;
+        this.time = time;
+        this.editor = editor || new Editor();
+        this.fields = fields || [];
+    }
+}
+
+/**
+ * An object containing the information for an editor
+ * Either the id or ip will contain data, but the id will take precedence.
+ * 
+ * @param {string} id The unique UUIDv4 for the user
+ * @param {string} ip The ip address of the editor
+ */
+export class Editor {
+    constructor(id, ip) {
+        this.id = id;
+        this.ip = ip;
+    }
+}
+
+/**
+ * An object containing a specific edited field
+ * 
+ * @param {string} key The key for the field (eg. 'name')
+ * @param {*} oldValue The old value of the field
+ * @param {*} newValue The new value of the field
+ */
+export class Field {
+    constructor(key, oldValue, newValue) {
+        this.key = key;
+        this.oldValue = oldValue;
+        this.newValue = newValue;
     }
 }
 

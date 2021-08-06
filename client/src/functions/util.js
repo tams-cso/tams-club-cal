@@ -1,12 +1,13 @@
 import React from 'react';
-import dayjs, { Dayjs } from 'dayjs';
+import dayjs from 'dayjs';
 import utc from 'dayjs/plugin/utc';
 import timezone from 'dayjs/plugin/timezone';
 import isLeapYear from 'dayjs/plugin/isLeapYear';
 import customParseFormat from 'dayjs/plugin/customParseFormat';
 import Link from '@material-ui/core/Link';
 
-import { EventInfo, Event } from './entries';
+import { Event, Editor } from './entries';
+import { getUserById } from './api';
 
 dayjs.extend(utc);
 dayjs.extend(timezone);
@@ -188,6 +189,29 @@ export function formatEventTime(event, noEnd = false, checkSame) {
     return formattedTime;
 }
 
+/**
+ * Calculates how long ago an edit was made, given the edit date,
+ * and displays it in the most reasonable time interval
+ * 
+ * @param {number} editDate Milliseconds representing the edit date (UTC)
+ * @returns {string} Edit date display string
+ */
+ export function calculateEditDate(editDate) {
+    var edit = dayjs(editDate);
+    var now = dayjs();
+    var diff = 0;
+    var unit = '';
+
+    const diffs = ['year', 'month', 'day', 'hour', 'minute'];
+    for (var i = 0; i < diffs.length; i++) {
+        diff = now.diff(edit, diffs[i]);
+        unit = diffs[i];
+        if (diff > 0) break;
+    }
+
+    return `${diff} ${unit}${diff !== 1 ? 's' : ''} ago`;
+}
+
 // ================== DATA PARSING FUNCTIONS =================== //
 
 /**
@@ -233,3 +257,19 @@ export function parseEventList(eventList) {
     });
     return outputList.sort((a, b) => a.start - b.start);
 }
+
+/**
+ * Will parse the editor object into a readable string depending
+ * on the stored values. Will also display "N/A" for invalid objects or values
+ * 
+ * @param {Editor} editor The editor object
+ * @returns {Promise<string>} The parsed editor to display
+ */
+export async function parseEditor(editor) {
+    if (!editor) return 'N/A';
+    if (editor.id === null) return editor.ip;
+
+    const editorRes = await getUserById(editor.id);
+    if (editorRes.status !== 200) return 'N/A';
+    return editorRes.data.name;
+};

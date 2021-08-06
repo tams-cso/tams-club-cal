@@ -15,6 +15,7 @@ import EditEvents from './edit-events';
 import EditClubs from './edit-clubs';
 import EditVolunteering from './edit-volunteering';
 import EditReservations from './edit-reservations';
+import EditHistory from './edit-history';
 
 const useStyles = makeStyles((theme) => ({
     root: {
@@ -22,6 +23,7 @@ const useStyles = makeStyles((theme) => ({
     },
     paper: {
         paddingBottom: 12,
+        marginBottom: 24,
     },
     error: {
         textAlign: 'center',
@@ -61,7 +63,8 @@ const Edit = () => {
                             <Route path="/edit/clubs" component={EditClubs} />
                             <Route path="/edit/volunteering" component={EditVolunteering} />
                             <Route path="/edit/reservations" component={EditReservations} />
-                            {/* <Route path="/edit/history/:resource" component={EditHistory} /> */}
+                            <Route path="/edit/history/:resource" component={EditHistory} />
+                            <Route path="/edit/history" component={EditHistory} />
                             <Route>
                                 <Typography variant="h1" className={classes.error}>
                                     ERROR: Invalid editing URL :(
