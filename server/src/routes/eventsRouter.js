@@ -2,7 +2,7 @@ const express = require('express');
 const dayjs = require('dayjs');
 const { addToCalendar, updateCalendar } = require('../functions/gcal');
 const { sendError, newId, createNewHistory } = require('../functions/util');
-const { addReservationFromEvent, updateReservation, addReservation } = require('../functions/event-reservations');
+const { updateReservation, addReservation } = require('../functions/event-reservations');
 const Event = require('../models/event');
 const router = express.Router();
 

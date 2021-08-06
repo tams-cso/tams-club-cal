@@ -16,6 +16,7 @@ const eventsRouter = require('./routes/eventsRouter');
 const clubsRouter = require('./routes/clubsRouter');
 const volunteeringRouter = require('./routes/volunteeringRouter');
 const reservationsRouter = require('./routes/reservationsRouter');
+const historyRouter = require('./routes/historyRouter');
 
 // Check for the correct environmental variables
 if (process.env.NODE_ENV !== 'production') checkEnv();
@@ -76,6 +77,7 @@ app.use('/events', eventsRouter);
 app.use('/clubs', clubsRouter);
 app.use('/volunteering', volunteeringRouter);
 app.use('/reservations', reservationsRouter);
+app.use('/history', historyRouter);
 
 // Start express server
 app.listen(process.env.PORT || 5000, () => console.log(`Listening on port ${process.env.PORT || 5000}`));

@@ -18,6 +18,7 @@ import HomeRoundedIcon from '@material-ui/icons/HomeRounded';
 import AppsRoundedIcon from '@material-ui/icons/AppsRounded';
 import EmojiPeopleRoundedIcon from '@material-ui/icons/EmojiPeopleRounded';
 import InfoRoundedIcon from '@material-ui/icons/InfoRounded';
+import CreateRoundedIcon from '@material-ui/icons/CreateRounded';
 import MenuIcon from './menu-icon';
 import AppIcon from './app-icon';
 import { Link } from 'react-router-dom';
@@ -131,6 +132,12 @@ const MobileMenu = (props) => {
                             <InfoRoundedIcon />
                         </ListItemIcon>
                         <ListItemText primary="About" />
+                    </ListItem>
+                    <ListItem button component={Link} to="/edit" onClick={toggleDrawer.bind(this, false)}>
+                        <ListItemIcon className={classes.listIcon}>
+                            <CreateRoundedIcon />
+                        </ListItemIcon>
+                        <ListItemText primary="Edit" />
                     </ListItem>
                 </List>
                 <HomeDrawerList />

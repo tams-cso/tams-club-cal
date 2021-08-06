@@ -6,6 +6,7 @@ import Cookies from 'universal-cookie';
 import { redirect } from '../../functions/util';
 
 import Container from '@material-ui/core/Container';
+import Box from '@material-ui/core/Box';
 import Paper from '@material-ui/core/Paper';
 import Typography from '@material-ui/core/Typography';
 import Button from '@material-ui/core/Button';
@@ -15,6 +16,8 @@ import EditEvents from './edit-events';
 import EditClubs from './edit-clubs';
 import EditVolunteering from './edit-volunteering';
 import EditReservations from './edit-reservations';
+import HistoryDisplay from './history/history-display';
+import HistoryList from './history/history-list';
 
 const useStyles = makeStyles((theme) => ({
     root: {
@@ -22,15 +25,18 @@ const useStyles = makeStyles((theme) => ({
     },
     paper: {
         paddingBottom: 12,
+        marginBottom: 24,
     },
-    error: {
-        textAlign: 'center',
-        paddingBottom: 12,
+    centerBox: {
+        display: 'flex',
+        justifyContent: 'center',
+        [theme.breakpoints.down('sm')]: {
+            flexDirection: 'column',
+        },
     },
     button: {
-        display: 'block',
-        margin: 'auto',
-    },
+        margin: 12,
+    }
 }));
 
 const Edit = () => {
@@ -43,9 +49,7 @@ const Edit = () => {
         cookies.set('prev', `${location.pathname}${location.search}`, { sameSite: 'strict', path: '/' });
     }, [location]);
 
-    const goHome = () => {
-        redirect('/');
-    };
+    const add = (resource) => redirect(`/edit/${resource}`);
 
     return (
         <PageWrapper className={classes.root}>
@@ -61,14 +65,39 @@ const Edit = () => {
                             <Route path="/edit/clubs" component={EditClubs} />
                             <Route path="/edit/volunteering" component={EditVolunteering} />
                             <Route path="/edit/reservations" component={EditReservations} />
-                            {/* <Route path="/edit/history/:resource" component={EditHistory} /> */}
+                            <Route path="/edit/history/:resource" component={HistoryDisplay} />
                             <Route>
-                                <Typography variant="h1" className={classes.error}>
-                                    ERROR: Invalid editing URL :(
-                                </Typography>
-                                <Button variant="outlined" color="primary" className={classes.button} onClick={goHome}>
-                                    Return to home page
-                                </Button>
+                                <Box className={classes.centerBox}>
+                                    <Button
+                                        variant="outlined"
+                                        onClick={add.bind(this, 'events')}
+                                        className={classes.button}
+                                    >
+                                        Add an Event
+                                    </Button>
+                                    <Button
+                                        variant="outlined"
+                                        onClick={add.bind(this, 'clubs')}
+                                        className={classes.button}
+                                    >
+                                        Add a Club
+                                    </Button>
+                                    <Button
+                                        variant="outlined"
+                                        onClick={add.bind(this, 'volunteering')}
+                                        className={classes.button}
+                                    >
+                                        Add a Volunteering Opportunity
+                                    </Button>
+                                    <Button
+                                        variant="outlined"
+                                        onClick={add.bind(this, 'reservations')}
+                                        className={classes.button}
+                                    >
+                                        Add a Reservation
+                                    </Button>
+                                </Box>
+                                <HistoryList />
                             </Route>
                         </Switch>
                     </BrowserRouter>

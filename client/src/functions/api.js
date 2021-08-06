@@ -183,7 +183,7 @@ export async function getReservation(id) {
 /**
  * Gets the list of all repeating reservations for a week
  * If week is not defined, will get all reservations that repeat up to and after the current week
- * 
+ *
  * @param {number} [week] UTC time for the current week to get; this can be any time within the week
  * @returns {Promise<FetchResponse>} Will return the object or error object
  */
@@ -195,7 +195,7 @@ export async function getRepeatingReservationList(week = null) {
  * Gets a specific repeating reservation by ID.
  * @returns {Promise<FetchResponse>} Will return the object or error object
  */
- export async function getRepeatingReservation(id) {
+export async function getRepeatingReservation(id) {
     return getRequest(`/reservations/repeating/${id}`);
 }
 
@@ -205,7 +205,7 @@ export async function getRepeatingReservationList(week = null) {
  * @param {Reservation} reservation Reservation object
  * @returns {Promise<FetchResponse>} Will return the response or error object
  */
- export async function postReservation(reservation) {
+export async function postReservation(reservation) {
     return postRequest('/reservations', reservation);
 }
 
@@ -316,6 +316,29 @@ export async function putVolunteering(volunteering, id) {
     return putRequest(`/volunteering/${id}`, volunteering);
 }
 
+/* ########## HISTORY API ########## */
+
+/**
+ * Gets the list of history objects starting from the start ID.
+ * If no ID is defined, this will return the last 50 edits.
+ *
+ * @param {string} start The ID of the oldest edit to start retrieving from
+ * @returns {Promise<FetchResponse>} Will return the object or error object
+ */
+export async function getHistoryList(start) {
+    return getRequest(`/history${start ? `?start=${start}` : ''}`);
+}
+
+/**
+ * Gets the list of edit histories for a specific resource with the given ID.
+ * @param {"events" | "clubs" | "volunteering" | "reservations"} resource The resource to get
+ * @param {string} id The ID to get the history of
+ * @returns {Promise<FetchResponse>} Will return the object or error object
+ */
+export async function getHistory(resource, id) {
+    return getRequest(`/history/${resource}/${id}`);
+}
+
 /* ########## MISC API ########### */
 
 /**
@@ -352,6 +375,15 @@ export async function getLoggedIn(token) {
  */
 export async function getUserInfo(token) {
     return getRequest(`/auth/user/${token}`);
+}
+
+/**
+ * Gets the name of the user with the provided ID
+ * @param {string} id User ID
+ * @returns {Promise<FetchResponse>} Will return the object or error object
+ */
+export async function getUserById(id) {
+    return getRequest(`/auth/user/id/${id}`);
 }
 
 export function getBackendUrl() {

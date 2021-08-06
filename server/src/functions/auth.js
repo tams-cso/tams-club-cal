@@ -2,6 +2,7 @@ const { OAuth2Client, TokenPayload } = require('google-auth-library');
 const crypto = require('crypto');
 const uuid = require('uuid');
 const User = require('../models/user');
+const { newId } = require('./util');
 
 const client = new OAuth2Client(process.env.G_CLIENT_ID);
 
@@ -52,15 +53,17 @@ async function verifyToken(token) {
  */
 async function upsertUser(payload) {
     const token = crypto.randomBytes(32).toString('hex');
+    const id = newId();
     const res = await User.updateOne(
-        { id: payload.sub },
+        { sub: payload.sub },
         {
             $set: {
-                id: payload.sub,
+                sub: payload.sub,
                 email: payload.email,
                 name: payload.name,
                 token,
             },
+            $setOnInsert: { id },
         },
         { upsert: true }
     );
