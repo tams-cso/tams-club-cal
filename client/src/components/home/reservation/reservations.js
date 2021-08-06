@@ -17,9 +17,9 @@ const useStyles = makeStyles((theme) => ({
         marginLeft: 24,
         [theme.breakpoints.down('sm')]: {
             margin: 'auto',
-        }
-    }
-}))
+        },
+    },
+}));
 
 const Reservations = () => {
     const [reservationList, setReservationList] = useState(null);
@@ -63,6 +63,15 @@ const Reservations = () => {
         const brokenUpReservationList = [];
         combinedReservationList.forEach((r) => {
             let curr = dayjs(r.start);
+            if (r.allDay) {
+                brokenUpReservationList.push({
+                    start: curr.startOf('day'),
+                    end: curr.startOf('day').add(1, 'day'),
+                    span: 24,
+                    data: r,
+                });
+            }
+
             while (!curr.isSame(dayjs(r.end), 'day')) {
                 if (curr.hour() === 23 && curr.add(1, 'hour').isSame(dayjs(r.end), 'hour')) break;
                 const currEnd = curr.add(1, 'day').startOf('day');
