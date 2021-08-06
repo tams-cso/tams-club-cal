@@ -1,5 +1,5 @@
 const express = require('express');
-const { sendError } = require('../functions/util');
+const { sendError, parseEditor } = require('../functions/util');
 const History = require('../models/history');
 const Event = require('../models/event');
 const Club = require('../models/club');
@@ -20,21 +20,36 @@ const router = express.Router();
  *          If null, will return the last 50 edits.
  */
 router.get('/', async (req, res, next) => {
+    let history = null;
     if (req.query.start) {
         const prev = await History.findOne({ id: req.query.start });
         if (!prev) {
             sendError(res, 400, 'Invalid start history ID');
             return;
         }
-        const history = await History.find({ time: { $lt: prev.time } })
+        history = await History.find({ time: { $lt: prev.time } })
             .sort({ time: -1, _id: 1 })
             .limit(50)
             .exec();
-        res.send(history);
     } else {
-        const history = await History.find({}).sort({ time: -1, _id: 1 }).limit(50).exec();
-        res.send(history);
+        history = await History.find({}).sort({ time: -1, _id: 1 }).limit(50).exec();
     }
+
+    const sortedHistory = history.sort((a, b) => b.time - a.time);
+    const dataList = await Promise.all(
+        sortedHistory.map(async (h) => {
+            let resourceObj = null;
+            if (h.resource === 'events') resourceObj = await Event.findOne({ id: h.editId });
+            else if (h.resource === 'clubs') resourceObj = await Club.findOne({ id: h.editId });
+            else if (h.resource === 'volunteering') resourceObj = await Volunteering.findOne({ id: h.editId });
+            else if (h.resource === 'reservations') resourceObj = await Reservation.findOne({ id: h.editId });
+            const name = !resourceObj ? 'N/A' : resourceObj.name;
+            const first = !resourceObj ? false : (resourceObj.history[0] === h.id);
+            const editor = await parseEditor(h.editor);
+            return { name, editor, first };
+        })
+    );
+    res.send({ historyList: sortedHistory, dataList });
 });
 
 /**

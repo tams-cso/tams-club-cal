@@ -5,6 +5,7 @@ const uuid = require('uuid');
 const statusList = require('../files/status.json');
 const envList = require('../files/env.json');
 const History = require('../models/history');
+const User = require('../models/user');
 
 /**
  * Checks that all the neccessary environmental variables
@@ -135,4 +136,20 @@ function getDiff(prevData, data) {
     return output;
 }
 
-module.exports = { checkEnv, sendError, newId, getIp, getEditor, createNewHistory };
+/**
+ * Will parse the editor object into a readable string depending
+ * on the stored values. Will also display "N/A" for invalid objects or values
+ * 
+ * @param {Editor} editor The editor object
+ * @returns {Promise<string>} The parsed editor to display
+ */
+async function parseEditor(editor) {
+    if (!editor) return 'N/A';
+    if (editor.id === null) return editor.ip;
+
+    const editorRes = await User.findOne({ id: editor.id });
+    if (!editorRes) return 'N/A';
+    return editorRes.name;
+};
+
+module.exports = { checkEnv, sendError, newId, getIp, getEditor, createNewHistory, parseEditor };

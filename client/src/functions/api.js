@@ -326,7 +326,7 @@ export async function putVolunteering(volunteering, id) {
  * @returns {Promise<FetchResponse>} Will return the object or error object
  */
 export async function getHistoryList(start) {
-    return getRequest(`/history${start}`);
+    return getRequest(`/history${start ? `?start=${start}` : ''}`);
 }
 
 /**

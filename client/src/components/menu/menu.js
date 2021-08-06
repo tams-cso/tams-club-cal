@@ -76,6 +76,7 @@ const Menu = (props) => {
                         <MenuLink to="/clubs">Clubs</MenuLink>
                         <MenuLink to="/volunteering">Volunteering</MenuLink>
                         <MenuLink to="/about">About</MenuLink>
+                        <MenuLink to="/edit">Edit</MenuLink>
                         <MenuIcon
                             title={`Switch to ${props.darkTheme ? 'light' : 'dark'} theme`}
                             aria-label="toggle-theme"

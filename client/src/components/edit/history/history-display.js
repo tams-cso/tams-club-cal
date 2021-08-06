@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { useLocation } from 'react-router';
 import { makeStyles } from '@material-ui/core';
+import { Helmet } from 'react-helmet';
 import { calculateEditDate, darkSwitch, getParams, parseEditor, redirect } from '../../../functions/util';
 import { getHistory } from '../../../functions/api';
 
@@ -26,7 +27,6 @@ const useStyles = makeStyles((theme) => ({
         '&:hover': {
             backgroundColor: darkSwitch(theme, theme.palette.grey[200], theme.palette.grey[700]),
         },
-        width: '100%',
     },
     centerButton: {
         margin: 'auto',
@@ -47,6 +47,7 @@ const HistoryDisplay = (props) => {
     const [components, setComponents] = useState(null);
     const [currHistory, setCurrHistory] = useState(null);
     const [popupOpen, setPopupOpen] = useState(false);
+    const resource = props.match.params.resource;
     const location = useLocation();
     const classes = useStyles();
 
@@ -55,7 +56,11 @@ const HistoryDisplay = (props) => {
         setPopupOpen(true);
     };
 
-    const back = () => redirect('/edit' + location.pathname.split('/edit/history')[1] + location.search);
+    const back = () => {
+        const view = getParams('view');
+        if (view) redirect('/edit');
+        else redirect('/edit' + location.pathname.split('/edit/history')[1] + location.search);
+    };
 
     useEffect(async () => {
         const queryId = getParams('id');
@@ -64,10 +69,10 @@ const HistoryDisplay = (props) => {
             return;
         }
 
-        const history = await getHistory(props.resource, queryId);
+        const history = await getHistory(resource, queryId);
         if (history.status !== 200) {
             setComponents(
-                <Loading error>Invalid {props.resource} ID. Please return to the home page and check the ID.</Loading>
+                <Loading error>Invalid {resource} ID. Please return to the home page and check the ID.</Loading>
             );
             return;
         }
@@ -97,6 +102,9 @@ const HistoryDisplay = (props) => {
                 <Loading />
             ) : (
                 <React.Fragment>
+                    <Helmet>
+                        <title>{name} | Edit History - TAMS Club Calendar</title>
+                    </Helmet>
                     <Typography variant="h1" className={classes.centerTitle}>{`Edit History for ${name}`}</Typography>
                     <Table>
                         <TableHead>
