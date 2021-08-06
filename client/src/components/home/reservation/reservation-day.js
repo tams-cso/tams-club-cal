@@ -21,6 +21,9 @@ const useStyles = makeStyles((theme) => ({
     table: {
         tableLayout: 'fixed',
         width: '100%',
+        [theme.breakpoints.down('sm')]: {
+            width: '300%',
+        }
     },
     label: {
         width: 150,
