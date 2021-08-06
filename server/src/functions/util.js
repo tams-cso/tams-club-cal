@@ -62,11 +62,12 @@ function getIp(req) {
  * will save the ip address of the client that edited the resource.
  *
  * @param {Request} req Express request object
- * @returns {object} Returns { id, ip } with only one of them null, where id takes priority
+ * @returns {Promise<object>} Returns { id, ip } with only one of them null, where id takes priority
  */
 function getEditor(req) {
     const authorization = req.headers['authorization'];
-    if (authorization) return { id: authorization.substring(7), ip: null };
+    const token = authorization ? User.findOne({ token: authorization.substring(7) }) : null;
+    if (token) return { id: token, ip: null };
     else return { id: null, ip: getIp(req) };
 }
 
@@ -83,15 +84,15 @@ function getEditor(req) {
  * @param {string} historyId UUIDv4 for the history object
  * @param {boolean} [isNew] True if a new resource (default: true)
  * @param {object} [club] Will use club object instead of req.body to get diff if defined
- * @returns {Document} The history document
+ * @returns {Promise<Document>} The history document
  */
-function createNewHistory(req, data, resource, id, historyId, isNew = true, club = null) {
+async function createNewHistory(req, data, resource, id, historyId, isNew = true, club = null) {
     return new History({
         id: historyId,
         resource,
         editId: id,
         time: new Date().valueOf(),
-        editor: getEditor(req),
+        editor: await getEditor(req),
         fields: isNew ? objectToHistoryObject(data.toObject()) : getDiff(data.toObject(), club || req.body),
     });
 }

@@ -113,7 +113,7 @@ router.post('/', async (req, res, next) => {
             allDay: req.body.allDay,
             history: [historyId],
         });
-        const newHistory = createNewHistory(req, newEvent, 'events', id, historyId);
+        const newHistory = await createNewHistory(req, newEvent, 'events', id, historyId);
 
         const eventRes = await newEvent.save();
         const historyRes = await newHistory.save();
@@ -140,7 +140,7 @@ router.put('/:id', async (req, res, next) => {
         }
 
         const historyId = newId();
-        const newHistory = createNewHistory(req, prev, 'events', id, historyId, false);
+        const newHistory = await createNewHistory(req, prev, 'events', id, historyId, false);
         const calendarRes = await updateCalendar(req.body, prev.eventId);
         const reservationRes = prev.reservationId
             ? await updateReservation(prev.reservationId, req, res)

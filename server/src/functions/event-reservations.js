@@ -45,7 +45,7 @@ async function addReservation(eventId, req) {
               history,
           });
 
-    const newHistory = history ? createNewHistory(req, newReservation, 'reservations', id, history[0]) : null;
+    const newHistory = history ? await createNewHistory(req, newReservation, 'reservations', id, history[0]) : null;
     const reservationRes = await newReservation.save();
     const historyRes = newHistory ? await newHistory.save() : null;
     if (reservationRes === newReservation && newHistory === historyRes) return id;

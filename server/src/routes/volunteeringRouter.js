@@ -42,7 +42,7 @@ router.post('/', async (req, res, next) => {
         filters: req.body.filters,
         history: [historyId],
     });
-    const newHistory = createNewHistory(req, newVolunteering, 'volunteering', id, historyId);
+    const newHistory = await createNewHistory(req, newVolunteering, 'volunteering', id, historyId);
 
     const volunteeringRes = await newVolunteering.save();
     const historyRes = await newHistory.save();
@@ -62,7 +62,7 @@ router.put('/:id', async (req, res, next) => {
     }
 
     const historyId = newId();
-    const newHistory = createNewHistory(req, prev, 'events', id, historyId, false);
+    const newHistory = await createNewHistory(req, prev, 'events', id, historyId, false);
     const volunteeringRes = await Volunteering.updateOne(
         { id },
         {
