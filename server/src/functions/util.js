@@ -126,10 +126,10 @@ function getDiff(prevData, data) {
     let output = [];
     Object.entries(data).forEach(([key, value]) => {
         if (prevData[key] === value) return;
-        if (key.startsWith('_' || key === 'id' || key === 'history')) return;
+        if (key.startsWith('_') || key === 'id' || key === 'history') return;
         output.push({
             key,
-            oldValue: prevData[key],
+            oldValue: prevData[key] || null,
             newValue: value,
         });
     });

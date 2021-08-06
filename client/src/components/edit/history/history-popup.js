@@ -21,7 +21,14 @@ import TableRow from '@material-ui/core/TableRow';
  * @param {Function} props.close Function to run when closing dialog
  */
 const HistoryPopup = (props) => {
-    const showValue = (value) => (typeof value !== 'string' ? JSON.stringify(value) : value);
+    const showValue = (value) =>
+        typeof value === 'boolean'
+            ? value
+                ? 'True'
+                : 'False'
+            : typeof value !== 'string'
+            ? JSON.stringify(value)
+            : value;
     return (
         <Dialog aria-labelledby="history-popup-title" open={props.open} onClose={props.close} fullWidth>
             {!props.history ? null : (

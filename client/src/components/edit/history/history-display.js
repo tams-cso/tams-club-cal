@@ -88,7 +88,11 @@ const HistoryDisplay = (props) => {
                 historyList.map(async (h, i) => (
                     <TableRow onClick={openPopup.bind(this, i)} className={classes.tableLink} key={i}>
                         <TableCell>{calculateEditDate(h.time)}</TableCell>
-                        <TableCell>{`${h.fields.length} fields were updated`}</TableCell>
+                        <TableCell>
+                            {i === historyList.length - 1
+                                ? 'Resource created'
+                                : `${h.fields.length} fields were updated`}
+                        </TableCell>
                         <TableCell>{await parseEditor(h.editor)}</TableCell>
                     </TableRow>
                 ))
