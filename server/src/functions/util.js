@@ -66,8 +66,8 @@ function getIp(req) {
  */
 function getEditor(req) {
     const authorization = req.headers['authorization'];
-    const token = authorization ? User.findOne({ token: authorization.substring(7) }) : null;
-    if (token) return { id: token, ip: null };
+    const token = authorization ? await User.findOne({ token: authorization.substring(7) }) : null;
+    if (token) return { id: token.id, ip: null };
     else return { id: null, ip: getIp(req) };
 }
 
