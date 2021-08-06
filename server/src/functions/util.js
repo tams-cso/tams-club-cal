@@ -64,7 +64,7 @@ function getIp(req) {
  * @param {Request} req Express request object
  * @returns {Promise<object>} Returns { id, ip } with only one of them null, where id takes priority
  */
-function getEditor(req) {
+async function getEditor(req) {
     const authorization = req.headers['authorization'];
     const token = authorization ? await User.findOne({ token: authorization.substring(7) }) : null;
     if (token) return { id: token.id, ip: null };
