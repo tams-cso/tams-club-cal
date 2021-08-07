@@ -19,6 +19,10 @@ const useStyles = makeStyles((theme) => ({
             right: 12,
         },
     },
+    rootEditHistory: {
+        display: 'flex',
+        margin: '12px auto',
+    },
     timeIcon: {
         marginRight: 8,
     },
@@ -55,7 +59,7 @@ const AddButton = (props) => {
                 color={props.editHistory ? 'primary' : props.color || 'default'}
                 aria-label={props.editHistory ? 'edit history' : props.edit ? 'edit' : 'add'}
                 onClick={redirectTo}
-                className={classes.root}
+                className={props.editHistory ? classes.rootEditHistory : classes.root}
             >
                 {props.editHistory ? (
                     <AccessTimeRoundedIcon className={classes.timeIcon} />

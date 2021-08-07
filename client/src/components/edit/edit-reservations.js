@@ -21,6 +21,7 @@ import UploadBackdrop from './shared/upload-backdrop';
 import Loading from '../shared/loading';
 import TwoButtonBox from './shared/two-button-box';
 import LocationSelect from './shared/location-select';
+import AddButton from '../shared/add-button';
 
 dayjs.extend(isSameOrBefore);
 
@@ -219,6 +220,7 @@ const EditReservations = () => {
             <Typography variant="h1" className={classes.title}>
                 {id ? 'Edit Reservation' : 'Add Reservation'}
             </Typography>
+            {id ? <AddButton editHistory path={`/edit/history/reservations?id=${id}`} /> : null}
             <Typography className={classes.subtitle}>
                 Start times will be rounded down and end times will be rounded up to the nearest hour.
             </Typography>

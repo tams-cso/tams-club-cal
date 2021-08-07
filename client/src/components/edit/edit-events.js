@@ -171,11 +171,11 @@ const EditEvents = () => {
             <Helmet>
                 <title>{`${id ? 'Edit' : 'Add'} Event - TAMS Club Calendar`}</title>
             </Helmet>
-            {id ? <AddButton editHistory path={`/edit/history/events?id=${id}`} /> : null}
             <UploadBackdrop open={backdrop} />
             <Typography variant="h1" className={classes.title}>
                 {id ? 'Edit Event' : 'Add Event'}
             </Typography>
+            {id ? <AddButton editHistory path={`/edit/history/events?id=${id}`} /> : null}
             <form onSubmit={handleSubmit(onSubmit)} className={classes.form}>
                 <Box className={classes.boxWrapper}>
                     <ControlledSelect

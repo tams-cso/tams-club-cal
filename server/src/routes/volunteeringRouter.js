@@ -62,7 +62,7 @@ router.put('/:id', async (req, res, next) => {
     }
 
     const historyId = newId();
-    const newHistory = await createNewHistory(req, prev, 'events', id, historyId, false);
+    const newHistory = await createNewHistory(req, prev, 'volunteering', id, historyId, false);
     const volunteeringRes = await Volunteering.updateOne(
         { id },
         {

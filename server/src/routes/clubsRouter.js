@@ -99,7 +99,7 @@ router.put('/:id', imageUpload, async (req, res, next) => {
         }));
 
         const historyId = newId();
-        const newHistory = await createNewHistory(req, prev, 'events', id, historyId, false);
+        const newHistory = await createNewHistory(req, prev, 'clubs', id, historyId, false, club);
         const clubRes = await Club.updateOne(
             { id },
             {

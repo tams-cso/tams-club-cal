@@ -86,7 +86,7 @@ async function getEditor(req) {
  * @param {object} [club] Will use club object instead of req.body to get diff if defined
  * @returns {Promise<Document>} The history document
  */
-async function createNewHistory(req, data, resource, id, historyId, isNew = true, club = null) {
+async function createNewHistory(req, data, resource, id, historyId, isNew = true, club) {
     return new History({
         id: historyId,
         resource,
@@ -116,8 +116,10 @@ function objectToHistoryObject(data) {
 
 /**
  * Creates a history "fields" object from a created object.
- * All fields that start with _ or is "id" will be omitted.
+ * All fields that start with _ or is "id" or "history" will be omitted.
  * This will compare the previous data with the current data and save all changes.
+ * If you look closely, this forms a recursive function with getDiffArray and will
+ * loop through all fields in the object.
  *
  * @param {object} prevData Previous data object
  * @param {object} data Data object
@@ -128,6 +130,15 @@ function getDiff(prevData, data) {
     Object.entries(data).forEach(([key, value]) => {
         if (prevData[key] === value) return;
         if (key.startsWith('_') || key === 'id' || key === 'history') return;
+        if (Array.isArray(value)) {
+            output.push(...getDiffArray(prevData[key], value, key));
+            return;
+        }
+        if (typeof value === 'object') {
+            const obj = getDiff(prevData[key], value);
+            output.push(...obj.map((o) => ({ ...o, key: `${key}.${o.key}` })));
+            return;
+        }
         output.push({
             key,
             oldValue: prevData[key] || null,
@@ -138,9 +149,45 @@ function getDiff(prevData, data) {
 }
 
 /**
+ * Creates a history "fields" object from a created object.
+ * This function parses two arrays and checks the diff of each object.
+ * If the prevData is longer, then the output will simply display [deleted]
+ * If the data is longer, then the extra data objects will be treated as new objects
+ * This will compare the previous data with the current data and save all changes.
+ *
+ * @param {object[]} prevData Previous data object
+ * @param {object[]} data Data object
+ * @param {string} key The name of the key of this array
+ * @returns {object} History fields object
+ */
+function getDiffArray(prevData, data, key) {
+    const output = [];
+    for (let i = 0; i < prevData.length && i < data.length; i++) {
+        if (i < prevData.length && i >= data.length)
+            output.push({ key: `${key}[${i}]`, oldValue: prevData[i], newValue: '[deleted]' });
+        else if (i < data.length && i >= prevData.length)
+            output.push({ key: `${key}[${i}]`, oldValue: null, newValue: data[i] });
+        else {
+            if (prevData[i] === data[i]) continue;
+            if (Array.isArray(data[i])) output.push(...getDiffArray(prevData[i], data[i], `${key}[${i}]`));
+            else if (typeof data[i] === 'object') {
+                const obj = getDiff(prevData[i], data[i]);
+                output.push(...obj.map((o) => ({ ...o, key: `${key}[${i}].${o.key}` })));
+            } else
+                output.push({
+                    key: `${key}[${i}]`,
+                    oldValue: prevData[i] || null,
+                    newValue: data[i],
+                });
+        }
+    }
+    return output;
+}
+
+/**
  * Will parse the editor object into a readable string depending
  * on the stored values. Will also display "N/A" for invalid objects or values
- * 
+ *
  * @param {Editor} editor The editor object
  * @returns {Promise<string>} The parsed editor to display
  */
@@ -151,6 +198,6 @@ async function parseEditor(editor) {
     const editorRes = await User.findOne({ id: editor.id });
     if (!editorRes) return 'N/A';
     return editorRes.name;
-};
+}
 
 module.exports = { checkEnv, sendError, newId, getIp, getEditor, createNewHistory, parseEditor };

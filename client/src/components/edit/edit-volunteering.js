@@ -20,6 +20,7 @@ import UploadBackdrop from './shared/upload-backdrop';
 import Loading from '../shared/loading';
 import TwoButtonBox from './shared/two-button-box';
 import ControlledFilterCheckbox from './volunteering/controlled-filter-checkbox';
+import AddButton from '../shared/add-button';
 
 const useStyles = makeStyles((theme) => ({
     title: {
@@ -125,6 +126,7 @@ const EditVolunteering = () => {
             <Typography variant="h1" className={classes.title}>
                 {id ? 'Edit Volunteering' : 'Add Volunteering'}
             </Typography>
+            {id ? <AddButton editHistory path={`/edit/history/volunteering?id=${id}`} /> : null}
             <form onSubmit={handleSubmit(onSubmit)} className={classes.form}>
                 <Box className={classes.boxWrapper}>
                     <Controller

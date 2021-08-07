@@ -21,6 +21,7 @@ import UploadBackdrop from './shared/upload-backdrop';
 import ImageUpload from './clubs/image-upload';
 import EditExecList from './clubs/edit-exec-list';
 import TwoButtonBox from './shared/two-button-box';
+import AddButton from '../shared/add-button';
 
 const useStyles = makeStyles((theme) => ({
     title: {
@@ -159,6 +160,7 @@ const EditClubs = () => {
             <Typography variant="h1" className={classes.title}>
                 {id ? 'Edit Club' : 'Add Club'}
             </Typography>
+            {id ? <AddButton editHistory path={`/edit/history/clubs?id=${id}`} /> : null}
             <form onSubmit={handleSubmit(onSubmit)} className={classes.form}>
                 <Box className={classes.boxWrapper}>
                     <ControlledSelect
