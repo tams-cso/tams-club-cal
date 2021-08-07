@@ -129,7 +129,7 @@ const ClubDisplay = (props) => {
         if (club === null) return;
         setLinks(
             club.links.map((c) => (
-                <Link href={c} variant="body1" className={classes.links} key={c}>
+                <Link href={c} variant="body1" className={classes.links} key={c} target="_blank">
                     {c}
                 </Link>
             ))
