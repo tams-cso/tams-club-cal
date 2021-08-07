@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from 'react';
 import { useHistory } from 'react-router';
-import { Helmet } from 'react-helmet';
 import { makeStyles } from '@material-ui/core/styles';
 import { capitalize } from '@material-ui/core';
 import { darkSwitch, darkSwitchGrey, formatEventDate, formatEventTime, getParams } from '../../functions/util';
@@ -20,6 +19,7 @@ import Loading from '../shared/loading';
 import AddButton from '../shared/add-button';
 
 import data from '../../data.json';
+import DisplayMeta from '../shared/display-meta';
 
 const useStyles = makeStyles((theme) => ({
     root: {
@@ -122,10 +122,12 @@ const EventDisplay = (props) => {
                 )
             ) : (
                 <Container className={classes.root}>
-                    <Helmet>
-                        <title>{`${event.name} | Events - TAMS Club Calendar`}</title>
-                        <meta name="description" content={event.description} />
-                    </Helmet>
+                    <DisplayMeta
+                        resource="events"
+                        name={event.name}
+                        path={`/events?id=${event.id}`}
+                        description={event.description}
+                    />
                     <AddButton color="secondary" label="Event" path={`/edit/events?id=${event.id}`} edit />
                     <Card>
                         <CardContent>

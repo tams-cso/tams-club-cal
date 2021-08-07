@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { useDispatch } from 'react-redux';
 import { makeStyles } from '@material-ui/core';
-import { Helmet } from 'react-helmet';
 import { useForm } from 'react-hook-form';
 import Cookies from 'universal-cookie';
 import dayjs from 'dayjs';
@@ -23,6 +22,7 @@ import TwoButtonBox from './shared/two-button-box';
 import LocationSelect from './shared/location-select';
 import DateInput from './events/date-input';
 import AddButton from '../shared/add-button';
+import ListMeta from '../shared/list-meta';
 
 const useStyles = makeStyles((theme) => ({
     title: {
@@ -168,9 +168,7 @@ const EditEvents = () => {
         <Loading flat />
     ) : (
         <React.Fragment>
-            <Helmet>
-                <title>{`${id ? 'Edit' : 'Add'} Event - TAMS Club Calendar`}</title>
-            </Helmet>
+            <ListMeta title={`${id ? 'Edit' : 'Add'} Event`} path={`/edit/events${id ? `?id=${id}` : ''}`} />
             <UploadBackdrop open={backdrop} />
             <Typography variant="h1" className={classes.title}>
                 {id ? 'Edit Event' : 'Add Event'}

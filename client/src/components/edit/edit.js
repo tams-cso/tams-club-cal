@@ -1,6 +1,5 @@
 import React, { useEffect } from 'react';
 import { BrowserRouter, Route, Switch, useLocation } from 'react-router-dom';
-import { Helmet } from 'react-helmet';
 import { makeStyles } from '@material-ui/core';
 import Cookies from 'universal-cookie';
 import { redirect } from '../../functions/util';
@@ -18,6 +17,7 @@ import EditVolunteering from './edit-volunteering';
 import EditReservations from './edit-reservations';
 import HistoryDisplay from './history/history-display';
 import HistoryList from './history/history-list';
+import ListMeta from '../shared/list-meta';
 
 const useStyles = makeStyles((theme) => ({
     root: {
@@ -55,9 +55,7 @@ const Edit = () => {
         <PageWrapper className={classes.root}>
             <Container>
                 <Paper className={classes.paper}>
-                    <Helmet>
-                        <title>Edit Resources - TAMS Club Calendar</title>
-                    </Helmet>
+                    <ListMeta title="Edit Resources" path="/edit" />
                     <EditLogin />
                     <BrowserRouter>
                         <Switch>

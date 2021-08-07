@@ -19,7 +19,7 @@ import Loading from '../shared/loading';
 import FilterList from './filter-list';
 import Paragraph from '../shared/paragraph';
 import AddButton from '../shared/add-button';
-import { Helmet } from 'react-helmet';
+import DisplayMeta from '../shared/display-meta';
 
 const useStyles = makeStyles((theme) => ({
     root: {
@@ -113,10 +113,12 @@ const EventDisplay = (props) => {
                 )
             ) : (
                 <Container className={classes.root}>
-                    <Helmet>
-                        <title>{`${volunteering.name} | Volunteering - TAMS Club Calendar`}</title>
-                        <meta name="description" content={volunteering.description} />
-                    </Helmet>
+                    <DisplayMeta
+                        resource="volunteering"
+                        name={volunteering.name}
+                        path={`/volunteering?id=${volunteering.id}`}
+                        description={volunteering.description}
+                    />
                     <AddButton
                         color="secondary"
                         label="Volunteering"

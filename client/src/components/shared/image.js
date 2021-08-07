@@ -40,7 +40,8 @@ const Image = (props) => {
         setSrc(props.default);
     };
     useEffect(() => {
-        setSrc(url(props.src));
+        if (props.src === '') setSrc(props.default);
+        else setSrc(url(props.src));
     }, [props.src]);
 
     return (

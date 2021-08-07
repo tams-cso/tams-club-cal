@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { useHistory } from 'react-router';
 import { useSelector } from 'react-redux';
-import { Helmet } from 'react-helmet';
 import { makeStyles } from '@material-ui/core';
 import { getSavedClubList } from '../../redux/selectors';
 import { getClub } from '../../functions/api';
@@ -24,6 +23,7 @@ import Paragraph from '../shared/paragraph';
 import ExecCard from './exec-card';
 import CommitteeCard from './committee-card';
 import AddButton from '../shared/add-button';
+import DisplayMeta from '../shared/display-meta';
 
 const useStyles = makeStyles((theme) => ({
     root: {
@@ -149,10 +149,13 @@ const ClubDisplay = (props) => {
                 )
             ) : (
                 <Container className={classes.root}>
-                    <Helmet>
-                        <title>{`${club.name} | Clubs - TAMS Club Calendar`}</title>
-                        <meta name="description" content={club.description} />
-                    </Helmet>
+                    <DisplayMeta
+                        resource="clubs"
+                        name={club.name}
+                        path={`/clubs?id=${club.id}`}
+                        description={club.description === '' ? null : club.description}
+                        image={club.coverImg === '' ? null : club.coverImg}
+                    />
                     <AddButton color="secondary" label="Club" path={`/edit/clubs?id=${club.id}`} edit />
                     <Card>
                         <CardMedia className={classes.imageWrapper}>

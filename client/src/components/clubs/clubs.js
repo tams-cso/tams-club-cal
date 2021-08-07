@@ -1,11 +1,11 @@
 import React, { useEffect, useState } from 'react';
 import { useLocation } from 'react-router';
-import { Helmet } from 'react-helmet';
 import { getParams } from '../../functions/util';
 
 import PageWrapper from '../shared/page-wrapper';
 import ClubList from './club-list';
 import ClubDisplay from './club-display';
+import ListMeta from '../shared/list-meta';
 
 const Clubs = () => {
     const [display, setDisplay] = useState(null);
@@ -22,9 +22,7 @@ const Clubs = () => {
 
     return (
         <PageWrapper>
-            <Helmet>
-                <title>Clubs - TAMS Club Calendar</title>
-            </Helmet>
+            <ListMeta title="Clubs" path="/clubs" />
             {display}
         </PageWrapper>
     );
