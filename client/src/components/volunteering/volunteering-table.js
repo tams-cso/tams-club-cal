@@ -17,6 +17,9 @@ import ScheduleRoundedIcon from '@material-ui/icons/ScheduleRounded';
 import EventRoundedIcon from '@material-ui/icons/EventRounded';
 
 const useStyles = makeStyles((theme) => ({
+    root: {
+        marginBottom: 24,
+    },
     centerIcon: {
         textAlign: 'center',
     },
@@ -39,7 +42,7 @@ const useStyles = makeStyles((theme) => ({
 const VolunteeringTable = (props) => {
     const classes = useStyles();
     return (
-        <TableContainer component={Paper}>
+        <TableContainer component={Paper} className={classes.root}>
             <Table aria-label="volunteering table">
                 <TableHead>
                     <TableRow>
