@@ -7,7 +7,8 @@
     "workspaces": {
         "packages": [
             "client",
-            "server"
+            "server",
+            "docs"
         ],
         "nohoist": [
             "**/*",
@@ -17,5 +18,10 @@
     "scripts": {
         "build": "yarn workspaces run build",
         "build:staging": "yarn workspaces run build:staging"
+    },
+    "dependencies": {
+        "@docusaurus/core": "2.0.0-beta.4",
+        "@docusaurus/preset-classic": "2.0.0-beta.4",
+        "docusaurus": "^1.14.7"
     }
 }

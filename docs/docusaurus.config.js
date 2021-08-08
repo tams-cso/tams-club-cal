@@ -3,7 +3,7 @@ const darkCodeTheme = require('prism-react-renderer/themes/dracula');
 
 /** @type {import('@docusaurus/types').DocusaurusConfig} */
 module.exports = {
-    title: 'Documentation | TAMS Club Calendar',
+    title: 'Documentation - TAMS Club Calendar',
     tagline: 'Documentation site for development of the TAMS Club Calendar.',
     url: 'https://docs.tams.club',
     baseUrl: '/',
@@ -24,7 +24,7 @@ module.exports = {
                     type: 'doc',
                     docId: 'intro',
                     position: 'left',
-                    label: 'Go to Info',
+                    label: 'Go to Docs',
                 },
                 {
                     href: 'https://github.com/MichaelZhao21/tams-club-cal',
@@ -90,7 +90,7 @@ module.exports = {
                 docs: {
                     sidebarPath: require.resolve('./sidebars.js'),
                     // Please change this to your repo.
-                    editUrl: 'https://github.com/facebook/docusaurus/edit/master/website/',
+                    editUrl: 'https://github.com/MichaelZhao21/tams-club-cal',
                 },
                 theme: {
                     customCss: require.resolve('./src/css/custom.css'),
