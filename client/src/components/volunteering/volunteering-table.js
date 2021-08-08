@@ -31,6 +31,12 @@ const useStyles = makeStyles((theme) => ({
             backgroundColor: darkSwitch(theme, theme.palette.grey[200], theme.palette.grey[700]),
         },
     },
+    open: {
+        color: theme.palette.primary.main,
+    },
+    closed: {
+        color: theme.palette.error.main,
+    },
 }));
 
 /**
@@ -66,7 +72,9 @@ const VolunteeringTable = (props) => {
                                 {v.name}
                             </TableCell>
                             <TableCell>{v.club}</TableCell>
-                            <TableCell>{v.filters.open ? 'Open' : 'Closed'}</TableCell>
+                            <TableCell className={v.filters.open ? classes.open : classes.closed}>
+                                {v.filters.open ? 'Open' : 'Closed'}
+                            </TableCell>
                             <TableCell className={classes.centerIcon}>
                                 {v.filters.limited ? <DashboardRoundedIcon htmlColor="#ffb258" /> : ''}
                             </TableCell>

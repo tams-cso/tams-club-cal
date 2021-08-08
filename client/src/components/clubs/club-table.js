@@ -2,7 +2,7 @@ import React from 'react';
 import { Link } from 'react-router-dom';
 import { makeStyles } from '@material-ui/core';
 import { darkSwitch } from '../../functions/util';
-import { Club, Volunteering } from '../../functions/entries';
+import { Club } from '../../functions/entries';
 
 import Table from '@material-ui/core/Table';
 import TableBody from '@material-ui/core/TableBody';
@@ -21,6 +21,12 @@ const useStyles = makeStyles((theme) => ({
         '&:hover': {
             backgroundColor: darkSwitch(theme, theme.palette.grey[200], theme.palette.grey[700]),
         },
+    },
+    advised: {
+        color: theme.palette.primary.main,
+    },
+    independent: {
+        color: theme.palette.secondary.main,
     },
 }));
 
@@ -45,18 +51,21 @@ const ClubTable = (props) => {
                 </TableHead>
                 <TableBody>
                     {props.clubs.map((v) => (
-                        <TableRow
-                            component={Link}
-                            to={`/clubs?id=${v.id}&view=list`}
-                            className={classes.tableLink}
-                        >
+                        <TableRow component={Link} to={`/clubs?id=${v.id}&view=list`} className={classes.tableLink}>
                             <TableCell>
-                                <Image src={v.coverImgThumbnail} default="/default-cover.webp" alt="cover image" raised />
+                                <Image
+                                    src={v.coverImgThumbnail}
+                                    default="/default-cover.webp"
+                                    alt="cover image"
+                                    raised
+                                />
                             </TableCell>
                             <TableCell component="th" scope="row">
                                 {v.name}
                             </TableCell>
-                            <TableCell>{v.advised ? 'Advised' : 'Independent'}</TableCell>
+                            <TableCell className={v.advised ? classes.advised : classes.independent}>
+                                {v.advised ? 'Advised' : 'Independent'}
+                            </TableCell>
                             <TableCell>{v.description.replace(/\n/g, ' | ')}</TableCell>
                         </TableRow>
                     ))}
