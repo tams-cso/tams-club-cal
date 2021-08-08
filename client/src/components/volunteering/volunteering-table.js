@@ -17,6 +17,9 @@ import ScheduleRoundedIcon from '@material-ui/icons/ScheduleRounded';
 import EventRoundedIcon from '@material-ui/icons/EventRounded';
 
 const useStyles = makeStyles((theme) => ({
+    root: {
+        marginBottom: 24,
+    },
     centerIcon: {
         textAlign: 'center',
     },
@@ -27,6 +30,12 @@ const useStyles = makeStyles((theme) => ({
         '&:hover': {
             backgroundColor: darkSwitch(theme, theme.palette.grey[200], theme.palette.grey[700]),
         },
+    },
+    open: {
+        color: theme.palette.primary.main,
+    },
+    closed: {
+        color: theme.palette.error.main,
     },
 }));
 
@@ -39,7 +48,7 @@ const useStyles = makeStyles((theme) => ({
 const VolunteeringTable = (props) => {
     const classes = useStyles();
     return (
-        <TableContainer component={Paper}>
+        <TableContainer component={Paper} className={classes.root}>
             <Table aria-label="volunteering table">
                 <TableHead>
                     <TableRow>
@@ -63,7 +72,9 @@ const VolunteeringTable = (props) => {
                                 {v.name}
                             </TableCell>
                             <TableCell>{v.club}</TableCell>
-                            <TableCell>{v.filters.open ? 'Open' : 'Closed'}</TableCell>
+                            <TableCell className={v.filters.open ? classes.open : classes.closed}>
+                                {v.filters.open ? 'Open' : 'Closed'}
+                            </TableCell>
                             <TableCell className={classes.centerIcon}>
                                 {v.filters.limited ? <DashboardRoundedIcon htmlColor="#ffb258" /> : ''}
                             </TableCell>

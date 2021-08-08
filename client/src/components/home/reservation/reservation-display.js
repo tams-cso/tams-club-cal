@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from 'react';
 import { useHistory } from 'react-router';
-import { Helmet } from 'react-helmet';
 import { makeStyles } from '@material-ui/core/styles';
 import dayjs from 'dayjs';
 import { darkSwitchGrey, formatEventDate, formatEventTime, getParams } from '../../../functions/util';
@@ -21,6 +20,7 @@ import AddButton from '../../shared/add-button';
 import PageWrapper from '../../shared/page-wrapper';
 
 import data from '../../../data.json';
+import DisplayMeta from '../../shared/display-meta';
 
 const useStyles = makeStyles((theme) => ({
     root: {
@@ -121,10 +121,12 @@ const ReservationDisplay = () => {
                 )
             ) : (
                 <Container className={classes.root}>
-                    <Helmet>
-                        <title>{`${reservation.name} | Reservations - TAMS Club Calendar`}</title>
-                        <meta name="description" content={reservation.description} />
-                    </Helmet>
+                <DisplayMeta
+                    resource="reservations"
+                    name={reservation.name}
+                    path={`/reservations?id=${reservation.id}`}
+                    description={reservation.description}
+                />
                     <AddButton
                         color="secondary"
                         label={reservation.eventId ? 'Event' : 'Reservation'}

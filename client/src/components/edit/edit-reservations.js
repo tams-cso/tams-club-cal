@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { useDispatch } from 'react-redux';
 import { makeStyles } from '@material-ui/core';
-import { Helmet } from 'react-helmet';
 import { useForm } from 'react-hook-form';
 import dayjs from 'dayjs';
 import isSameOrBefore from 'dayjs/plugin/isSameOrBefore';
@@ -22,6 +21,7 @@ import Loading from '../shared/loading';
 import TwoButtonBox from './shared/two-button-box';
 import LocationSelect from './shared/location-select';
 import AddButton from '../shared/add-button';
+import ListMeta from '../shared/list-meta';
 
 dayjs.extend(isSameOrBefore);
 
@@ -213,9 +213,10 @@ const EditReservations = () => {
         <Loading flat />
     ) : (
         <React.Fragment>
-            <Helmet>
-                <title>{`${id ? 'Edit' : 'Add'} Reservation - TAMS Club Calendar`}</title>
-            </Helmet>
+            <ListMeta
+                title={`${id ? 'Edit' : 'Add'} Reservation`}
+                path={`/edit/reservations${id ? `?id=${id}` : ''}`}
+            />
             <UploadBackdrop open={backdrop} />
             <Typography variant="h1" className={classes.title}>
                 {id ? 'Edit Reservation' : 'Add Reservation'}

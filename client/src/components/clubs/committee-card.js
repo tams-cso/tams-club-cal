@@ -43,7 +43,7 @@ const CommitteeCard = (props) => {
             </Typography>
             <Paragraph text={props.committee.description} className={classes.description} />
             {props.committee.links.map((l) => (
-                <Link href={l} className={classes.link} key={l}>
+                <Link href={l} className={classes.link} key={l} target="_blank">
                     {l}
                 </Link>
             ))}

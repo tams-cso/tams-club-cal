@@ -1,11 +1,11 @@
 import React, { useEffect, useState } from 'react';
 import { useLocation } from 'react-router';
-import { Helmet } from 'react-helmet';
 import { getParams } from '../../functions/util';
 
 import PageWrapper from '../shared/page-wrapper';
 import VolunteeringList from './volunteering-list';
 import VolunteeringDisplay from './volunteering-display';
+import ListMeta from '../shared/list-meta';
 
 const Volunteering = () => {
     const [display, setDisplay] = useState(null);
@@ -22,9 +22,7 @@ const Volunteering = () => {
 
     return (
         <PageWrapper>
-            <Helmet>
-                <title>Volunteering - TAMS Club Calendar</title>
-            </Helmet>
+            <ListMeta title="Volunteering" path="/volunteering" />
             {display}
         </PageWrapper>
     );

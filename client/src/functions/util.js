@@ -48,7 +48,7 @@ export function parseLinks(text) {
     matches.forEach((m) => {
         outText.push(tempText.substring(prevIndex, tempText.indexOf(m[1])));
         outText.push(
-            <Link key={m[1]} href={m[1]} alt={m[1]}>
+            <Link key={m[1]} href={m[1]} alt={m[1]} target="_blank">
                 {m[1]}
             </Link>
         );
@@ -192,11 +192,11 @@ export function formatEventTime(event, noEnd = false, checkSame) {
 /**
  * Calculates how long ago an edit was made, given the edit date,
  * and displays it in the most reasonable time interval
- * 
+ *
  * @param {number} editDate Milliseconds representing the edit date (UTC)
  * @returns {string} Edit date display string
  */
- export function calculateEditDate(editDate) {
+export function calculateEditDate(editDate) {
     var edit = dayjs(editDate);
     var now = dayjs();
     var diff = 0;
@@ -261,7 +261,7 @@ export function parseEventList(eventList) {
 /**
  * Will parse the editor object into a readable string depending
  * on the stored values. Will also display "N/A" for invalid objects or values
- * 
+ *
  * @param {Editor} editor The editor object
  * @returns {Promise<string>} The parsed editor to display
  */
@@ -272,4 +272,4 @@ export async function parseEditor(editor) {
     const editorRes = await getUserById(editor.id);
     if (editorRes.status !== 200) return 'N/A';
     return editorRes.data.name;
-};
+}

@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { useDispatch } from 'react-redux';
 import { makeStyles } from '@material-ui/core';
-import { Helmet } from 'react-helmet';
 import { useForm } from 'react-hook-form';
 import Cookies from 'universal-cookie';
 import { openPopup } from '../../redux/actions';
@@ -22,6 +21,7 @@ import ImageUpload from './clubs/image-upload';
 import EditExecList from './clubs/edit-exec-list';
 import TwoButtonBox from './shared/two-button-box';
 import AddButton from '../shared/add-button';
+import ListMeta from '../shared/list-meta';
 
 const useStyles = makeStyles((theme) => ({
     title: {
@@ -153,9 +153,7 @@ const EditClubs = () => {
         <Loading flat />
     ) : (
         <React.Fragment>
-            <Helmet>
-                <title>{`${id ? 'Edit' : 'Add'} Club - TAMS Club Calendar`}</title>
-            </Helmet>
+            <ListMeta title={`${id ? 'Edit' : 'Add'} Club`} path={`/edit/clubs${id ? `?id=${id}` : ''}`} />
             <UploadBackdrop open={backdrop} />
             <Typography variant="h1" className={classes.title}>
                 {id ? 'Edit Club' : 'Add Club'}

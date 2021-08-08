@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { useLocation } from 'react-router';
 import { makeStyles } from '@material-ui/core';
-import { Helmet } from 'react-helmet';
 import { calculateEditDate, darkSwitch, getParams, parseEditor, redirect } from '../../../functions/util';
 import { getHistory } from '../../../functions/api';
 
@@ -15,6 +14,7 @@ import Typography from '@material-ui/core/Typography';
 import Button from '@material-ui/core/Button';
 import Loading from '../../shared/loading';
 import HistoryPopup from './history-popup';
+import DisplayMeta from '../../shared/display-meta';
 
 const useStyles = makeStyles((theme) => ({
     centerTitle: {
@@ -106,9 +106,12 @@ const HistoryDisplay = (props) => {
                 <Loading />
             ) : (
                 <React.Fragment>
-                    <Helmet>
-                        <title>{name} | Edit History - TAMS Club Calendar</title>
-                    </Helmet>
+                    <DisplayMeta
+                        editHistory
+                        resource={resource}
+                        name={name}
+                        path={`/edit/history/${resource}${location.search}`}
+                    />
                     <Typography variant="h1" className={classes.centerTitle}>{`Edit History for ${name}`}</Typography>
                     <Table>
                         <TableHead>

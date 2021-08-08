@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { makeStyles } from '@material-ui/core';
-import { Helmet } from 'react-helmet';
 import { postFeedback } from '../../functions/api';
+import { Feedback } from '../../functions/entries';
 
 import Container from '@material-ui/core/Container';
 import Box from '@material-ui/core/Box';
@@ -11,8 +11,9 @@ import Button from '@material-ui/core/Button';
 import SendIcon from '@material-ui/icons/Send';
 import Paragraph from '../shared/paragraph';
 import Image from '../shared/image';
+import ListMeta from '../shared/list-meta';
+
 import data from '../../data.json';
-import { Feedback } from '../../functions/entries';
 
 const useStyles = makeStyles({
     root: {
@@ -78,9 +79,7 @@ const About = () => {
 
     return (
         <Container className={classes.root}>
-            <Helmet>
-                <title>About - TAMS Club Calendar</title>
-            </Helmet>
+            <ListMeta title="About" path="/about" />
             <Image src="/logo-banner.png" alt="TAMS Club Calendar" className={classes.image} transparent></Image>
             <Paragraph text={data.aboutText} fontSize="1.1rem" />
             <Typography variant="h2" className={classes.center}>
