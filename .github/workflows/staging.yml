@@ -1,57 +1,75 @@
 name: 'Build and Deploy Staging App'
 
 on:
-    push:
-        branches: ['master', 'action-test']
+  push:
+    branches: ['master', 'action-test']
 
 jobs:
-    deploy:
-        name: Deploy Staging App
-        runs-on: ubuntu-latest
-        steps:
-            - name: Checkout
-              uses: actions/checkout@v2
+  deploy:
+    name: Deploy Staging App
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
 
-            - name: Use NodeJS 14
-              uses: actions/setup-node@v2
-              with:
-                  node-version: '14'
+      - name: Use NodeJS 14
+        uses: actions/setup-node@v2
+        with:
+            node-version: '14'
 
-            - name: Set env file
-              env:
-                  ENV: ${{ secrets.STAGING_ENV }}
-              run: cd $GITHUB_WORKSPACE/server && echo "$ENV" >| .env
+      - name: Set env file
+        env:
+            ENV: ${{ secrets.STAGING_ENV }}
+        run: cd $GITHUB_WORKSPACE/server && echo "$ENV" >| .env
+      
+      - name: Get SSH agent
+        uses: webfactory/ssh-agent@v0.5.0
+        with:
+          ssh-private-key: ${{ secrets.GH_PAGES_DEPLOY }}
 
-            - name: Login to Docker Hub
-              uses: docker/login-action@v1
-              with:
-                  username: ${{ secrets.DOCKER_HUB_USERNAME }}
-                  password: ${{ secrets.DOCKER_HUB_ACCESS_TOKEN }}
+      - name: Release to GitHub Pages
+          env:
+            USE_SSH: true
+            GIT_USER: git
+            GH_EMAIL: ${{ secrets.GH_EMAIL }}
+            GH_NAME: ${{ secrets.GH_NAME }}
+          run: |
+            git config --global user.email "$GH_EMAIL"
+            git config --global user.name "$GH_NAME"
+            npm install -g yarn
+            cd $GITHUB_WORKSPACE/docs
+            yarn install --frozen-lockfile && yarn deploy
 
-            - name: Set up Docker Buildx
-              id: buildx
-              uses: docker/setup-buildx-action@v1
+      - name: Login to Docker Hub
+        uses: docker/login-action@v1
+        with:
+          username: ${{ secrets.DOCKER_HUB_USERNAME }}
+          password: ${{ secrets.DOCKER_HUB_ACCESS_TOKEN }}
 
-            - name: Build and push
-              id: docker_build
-              uses: docker/build-push-action@v2
-              with:
-                  context: ./
-                  file: ./Dockerfile
-                  push: true
-                  tags: ${{ secrets.DOCKER_HUB_USERNAME }}/tcc-staging-server:latest
+      - name: Set up Docker Buildx
+        id: buildx
+        uses: docker/setup-buildx-action@v1
 
-            - name: Image digest
-              run: echo ${{ steps.docker_build.outputs.digest }}
+      - name: Build and push
+        id: docker_build
+        uses: docker/build-push-action@v2
+        with:
+          context: ./
+          file: ./Dockerfile
+          push: true
+          tags: ${{ secrets.DOCKER_HUB_USERNAME }}/tcc-staging-server:latest
 
-            - name: Pull and run docker container on Droplet
-              uses: appleboy/ssh-action@master
-              with:
-                  host: ${{ secrets.SSH_HOST }}
-                  username: ${{ secrets.SSH_USERNAME }}
-                  key: ${{ secrets.SSH_KEY }}
-                  script: |
-                      docker pull michaelzhao21/tcc-staging-server:latest
-                      docker stop staging
-                      docker run --rm -d --name staging -p 8083:80 michaelzhao21/tcc-staging-server
-                      docker image prune -af
+      - name: Image digest
+        run: echo ${{ steps.docker_build.outputs.digest }}
+
+      - name: Pull and run docker container on Droplet
+        uses: appleboy/ssh-action@master
+        with:
+          host: ${{ secrets.SSH_HOST }}
+          username: ${{ secrets.SSH_USERNAME }}
+          key: ${{ secrets.SSH_KEY }}
+          script: |
+            docker pull michaelzhao21/tcc-staging-server:latest
+            docker stop staging
+            docker run --rm -d --name staging -p 8083:80 michaelzhao21/tcc-staging-server
+            docker image prune -af
