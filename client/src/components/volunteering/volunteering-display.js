@@ -19,7 +19,7 @@ import Loading from '../shared/loading';
 import FilterList from './filter-list';
 import Paragraph from '../shared/paragraph';
 import AddButton from '../shared/add-button';
-import DisplayMeta from '../shared/display-meta';
+import Title from '../shared/title';
 
 const useStyles = makeStyles((theme) => ({
     root: {
@@ -113,12 +113,7 @@ const EventDisplay = (props) => {
                 )
             ) : (
                 <Container className={classes.root}>
-                    <DisplayMeta
-                        resource="volunteering"
-                        name={volunteering.name}
-                        path={`/volunteering?id=${volunteering.id}`}
-                        description={volunteering.description}
-                    />
+                    <Title resource="volunteering" name={volunteering.name} />
                     <AddButton
                         color="secondary"
                         label="Volunteering"

@@ -23,7 +23,7 @@ import Paragraph from '../shared/paragraph';
 import ExecCard from './exec-card';
 import CommitteeCard from './committee-card';
 import AddButton from '../shared/add-button';
-import DisplayMeta from '../shared/display-meta';
+import Title from '../shared/title';
 
 const useStyles = makeStyles((theme) => ({
     root: {
@@ -149,13 +149,7 @@ const ClubDisplay = (props) => {
                 )
             ) : (
                 <Container className={classes.root}>
-                    <DisplayMeta
-                        resource="clubs"
-                        name={club.name}
-                        path={`/clubs?id=${club.id}`}
-                        description={club.description === '' ? null : club.description}
-                        image={club.coverImg === '' ? null : club.coverImg}
-                    />
+                    <Title resource="clubs" name={club.name} />
                     <AddButton color="secondary" label="Club" path={`/edit/clubs?id=${club.id}`} edit />
                     <Card>
                         <CardMedia className={classes.imageWrapper}>

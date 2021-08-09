@@ -17,9 +17,9 @@ import Typography from '@material-ui/core/Typography';
 import Paragraph from '../shared/paragraph';
 import Loading from '../shared/loading';
 import AddButton from '../shared/add-button';
+import Title from '../shared/title';
 
 import data from '../../data.json';
-import DisplayMeta from '../shared/display-meta';
 
 const useStyles = makeStyles((theme) => ({
     root: {
@@ -122,12 +122,7 @@ const EventDisplay = (props) => {
                 )
             ) : (
                 <Container className={classes.root}>
-                    <DisplayMeta
-                        resource="events"
-                        name={event.name}
-                        path={`/events?id=${event.id}`}
-                        description={event.description}
-                    />
+                    <Title resource="events" name={event.name} />
                     <AddButton color="secondary" label="Event" path={`/edit/events?id=${event.id}`} edit />
                     <Card>
                         <CardContent>

@@ -22,7 +22,7 @@ import TwoButtonBox from './shared/two-button-box';
 import LocationSelect from './shared/location-select';
 import DateInput from './events/date-input';
 import AddButton from '../shared/add-button';
-import ListMeta from '../shared/list-meta';
+import Title from '../shared/title';
 
 const useStyles = makeStyles((theme) => ({
     title: {
@@ -168,7 +168,7 @@ const EditEvents = () => {
         <Loading flat />
     ) : (
         <React.Fragment>
-            <ListMeta title={`${id ? 'Edit' : 'Add'} Event`} path={`/edit/events${id ? `?id=${id}` : ''}`} />
+            <Title title={`${id ? 'Edit' : 'Add'} Event`} />
             <UploadBackdrop open={backdrop} />
             <Typography variant="h1" className={classes.title}>
                 {id ? 'Edit Event' : 'Add Event'}

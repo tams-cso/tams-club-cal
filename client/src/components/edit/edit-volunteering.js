@@ -20,6 +20,7 @@ import Loading from '../shared/loading';
 import TwoButtonBox from './shared/two-button-box';
 import ControlledFilterCheckbox from './volunteering/controlled-filter-checkbox';
 import AddButton from '../shared/add-button';
+import Title from '../shared/title';
 
 const useStyles = makeStyles((theme) => ({
     title: {
@@ -118,10 +119,7 @@ const EditVolunteering = () => {
         <Loading flat />
     ) : (
         <React.Fragment>
-            <ListMeta
-                title={`${id ? 'Edit' : 'Add'} Volunteering`}
-                path={`/edit/volunteering${id ? `?id=${id}` : ''}`}
-            />
+            <Title title={`${id ? 'Edit' : 'Add'} Volunteering`} />
             <UploadBackdrop open={backdrop} />
             <Typography variant="h1" className={classes.title}>
                 {id ? 'Edit Volunteering' : 'Add Volunteering'}

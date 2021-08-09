@@ -20,7 +20,7 @@ import AddButton from '../../shared/add-button';
 import PageWrapper from '../../shared/page-wrapper';
 
 import data from '../../../data.json';
-import DisplayMeta from '../../shared/display-meta';
+import Title from '../../shared/title';
 
 const useStyles = makeStyles((theme) => ({
     root: {
@@ -121,12 +121,7 @@ const ReservationDisplay = () => {
                 )
             ) : (
                 <Container className={classes.root}>
-                <DisplayMeta
-                    resource="reservations"
-                    name={reservation.name}
-                    path={`/reservations?id=${reservation.id}`}
-                    description={reservation.description}
-                />
+                    <Title resource="reservations" name={reservation.name} />
                     <AddButton
                         color="secondary"
                         label={reservation.eventId ? 'Event' : 'Reservation'}
