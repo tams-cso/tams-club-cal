@@ -9,6 +9,7 @@ module.exports = {
     baseUrl: '/',
     onBrokenLinks: 'throw',
     onBrokenMarkdownLinks: 'warn',
+    trailingSlash: true,
     favicon: 'img/favicon.ico',
     organizationName: 'MichaelZhao21', // Usually your GitHub org/user name.
     projectName: 'tams-club-cal', // Usually your repo name.

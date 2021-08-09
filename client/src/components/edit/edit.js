@@ -7,7 +7,6 @@ import { redirect } from '../../functions/util';
 import Container from '@material-ui/core/Container';
 import Box from '@material-ui/core/Box';
 import Paper from '@material-ui/core/Paper';
-import Typography from '@material-ui/core/Typography';
 import Button from '@material-ui/core/Button';
 import PageWrapper from '../shared/page-wrapper';
 import EditLogin from './edit-login';
@@ -17,7 +16,6 @@ import EditVolunteering from './edit-volunteering';
 import EditReservations from './edit-reservations';
 import HistoryDisplay from './history/history-display';
 import HistoryList from './history/history-list';
-import ListMeta from '../shared/list-meta';
 
 const useStyles = makeStyles((theme) => ({
     root: {
@@ -36,7 +34,7 @@ const useStyles = makeStyles((theme) => ({
     },
     button: {
         margin: 12,
-    }
+    },
 }));
 
 const Edit = () => {
@@ -52,10 +50,9 @@ const Edit = () => {
     const add = (resource) => redirect(`/edit/${resource}`);
 
     return (
-        <PageWrapper className={classes.root}>
+        <PageWrapper title="Edit Resources" className={classes.root}>
             <Container>
                 <Paper className={classes.paper}>
-                    <ListMeta title="Edit Resources" path="/edit" />
                     <EditLogin />
                     <BrowserRouter>
                         <Switch>

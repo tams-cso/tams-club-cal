@@ -5,7 +5,6 @@ import { getParams } from '../../functions/util';
 import PageWrapper from '../shared/page-wrapper';
 import VolunteeringList from './volunteering-list';
 import VolunteeringDisplay from './volunteering-display';
-import ListMeta from '../shared/list-meta';
 
 const Volunteering = () => {
     const [display, setDisplay] = useState(null);
@@ -21,8 +20,7 @@ const Volunteering = () => {
     }, [location]);
 
     return (
-        <PageWrapper>
-            <ListMeta title="Volunteering" path="/volunteering" />
+        <PageWrapper title="Volunteering">
             {display}
         </PageWrapper>
     );

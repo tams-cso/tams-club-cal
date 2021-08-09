@@ -5,7 +5,6 @@ import { getParams } from '../../functions/util';
 import PageWrapper from '../shared/page-wrapper';
 import ClubList from './club-list';
 import ClubDisplay from './club-display';
-import ListMeta from '../shared/list-meta';
 
 const Clubs = () => {
     const [display, setDisplay] = useState(null);
@@ -20,12 +19,7 @@ const Clubs = () => {
         else setDisplay(<ClubDisplay id={id} />);
     }, [location]);
 
-    return (
-        <PageWrapper>
-            <ListMeta title="Clubs" path="/clubs" />
-            {display}
-        </PageWrapper>
-    );
+    return <PageWrapper title="Clubs">{display}</PageWrapper>;
 };
 
 export default Clubs;

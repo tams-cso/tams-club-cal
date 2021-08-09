@@ -11,14 +11,11 @@ import Button from '@material-ui/core/Button';
 import SendIcon from '@material-ui/icons/Send';
 import Paragraph from '../shared/paragraph';
 import Image from '../shared/image';
-import ListMeta from '../shared/list-meta';
 
 import data from '../../data.json';
+import PageWrapper from '../shared/page-wrapper';
 
 const useStyles = makeStyles({
-    root: {
-        paddingTop: 16,
-    },
     image: {
         margin: 'auto',
         marginBottom: 16,
@@ -78,46 +75,47 @@ const About = () => {
     };
 
     return (
-        <Container className={classes.root}>
-            <ListMeta title="About" path="/about" />
-            <Image src="/logo-banner.png" alt="TAMS Club Calendar" className={classes.image} transparent></Image>
-            <Paragraph text={data.aboutText} fontSize="1.1rem" />
-            <Typography variant="h2" className={classes.center}>
-                Feedback
-            </Typography>
-            <Paragraph text={data.aboutFeedback} fontSize="1.1rem" />
-            <form className={classes.form} noValidate autoComplete="off">
-                <TextField
-                    id="feedback"
-                    label="Feedback"
-                    multiline
-                    variant="outlined"
-                    value={feedback}
-                    onChange={handleChange}
-                    className={classes.area}
-                    error={error}
-                    helperText={error ? 'Feedback cannot be empty' : ''}
-                ></TextField>
-                <Box className={classes.submitWrapper}>
+        <PageWrapper title="About">
+            <Container>
+                <Image src="/logo-banner.png" alt="TAMS Club Calendar" className={classes.image} transparent></Image>
+                <Paragraph text={data.aboutText} fontSize="1.1rem" />
+                <Typography variant="h2" className={classes.center}>
+                    Feedback
+                </Typography>
+                <Paragraph text={data.aboutFeedback} fontSize="1.1rem" />
+                <form className={classes.form} noValidate autoComplete="off">
                     <TextField
-                        id="name"
-                        label="Name (optional)"
-                        value={name}
+                        id="feedback"
+                        label="Feedback"
+                        multiline
+                        variant="outlined"
+                        value={feedback}
                         onChange={handleChange}
-                        className={classes.field}
+                        className={classes.area}
+                        error={error}
+                        helperText={error ? 'Feedback cannot be empty' : ''}
                     ></TextField>
-                    <Button
-                        variant="contained"
-                        color="primary"
-                        className={classes.submit}
-                        endIcon={<SendIcon />}
-                        onClick={handleSubmit}
-                    >
-                        Submit
-                    </Button>
-                </Box>
-            </form>
-        </Container>
+                    <Box className={classes.submitWrapper}>
+                        <TextField
+                            id="name"
+                            label="Name (optional)"
+                            value={name}
+                            onChange={handleChange}
+                            className={classes.field}
+                        ></TextField>
+                        <Button
+                            variant="contained"
+                            color="primary"
+                            className={classes.submit}
+                            endIcon={<SendIcon />}
+                            onClick={handleSubmit}
+                        >
+                            Submit
+                        </Button>
+                    </Box>
+                </form>
+            </Container>
+        </PageWrapper>
     );
 };
 

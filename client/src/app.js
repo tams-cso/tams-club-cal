@@ -71,30 +71,6 @@ const App = () => {
     return (
         <ThemeProvider theme={theme}>
             <Helmet>
-                <meta charset="utf-8" />
-                <link rel="icon" href="/favicon.ico?v=4" />
-                <meta name="viewport" content="width=device-width, initial-scale=1" />
-                <meta name="theme-color" content="#00c853" />
-                <meta
-                    name="description"
-                    content="The TAMS Club Calendar is a fully contained event tracker, club/volunteering database, and general resource center. This is the unofficial club event calendar for the Texas Academy of Mathematics and Science!"
-                />
-                <meta property="og:title" content="TAMS Club Calendar" />
-                <meta property="og:type" content="website" />
-                <meta property="og:url" content="https://tams.club/" />
-                <meta property="og:image" content="https://cdn.tams.club/social-cover.webp" />
-                <meta property="og:image:width" content="1200" />
-                <meta property="og:image:height" content="630" />
-                <meta property="og:site_name" content="TAMS Club Calendar" />
-                <meta name="twitter:card" content="summary" />
-                <meta name="twitter:title" content="TAMS Club Calendar" />
-                <meta
-                    name="twitter:description"
-                    content="The TAMS Club Calendar is a fully contained event tracker, club/volunteering database, and general resource center. This is the unofficial club event calendar for the Texas Academy of Mathematics and Science!"
-                />
-                <meta name="twitter:image" content="https://cdn.tams.club/social-cover.webp" />
-                <link rel="apple-touch-icon" href="/android-chrome-192x192.png" />
-                <link rel="manifest" href="/manifest.json" />
                 <title>TAMS Club Calendar</title>
             </Helmet>
             <CssBaseline />

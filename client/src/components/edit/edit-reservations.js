@@ -21,7 +21,7 @@ import Loading from '../shared/loading';
 import TwoButtonBox from './shared/two-button-box';
 import LocationSelect from './shared/location-select';
 import AddButton from '../shared/add-button';
-import ListMeta from '../shared/list-meta';
+import Title from '../shared/title';
 
 dayjs.extend(isSameOrBefore);
 
@@ -213,10 +213,7 @@ const EditReservations = () => {
         <Loading flat />
     ) : (
         <React.Fragment>
-            <ListMeta
-                title={`${id ? 'Edit' : 'Add'} Reservation`}
-                path={`/edit/reservations${id ? `?id=${id}` : ''}`}
-            />
+            <Title title={`${id ? 'Edit' : 'Add'} Reservation`} />
             <UploadBackdrop open={backdrop} />
             <Typography variant="h1" className={classes.title}>
                 {id ? 'Edit Reservation' : 'Add Reservation'}

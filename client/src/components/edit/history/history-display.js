@@ -14,7 +14,7 @@ import Typography from '@material-ui/core/Typography';
 import Button from '@material-ui/core/Button';
 import Loading from '../../shared/loading';
 import HistoryPopup from './history-popup';
-import DisplayMeta from '../../shared/display-meta';
+import Title from '../../shared/title';
 
 const useStyles = makeStyles((theme) => ({
     centerTitle: {
@@ -106,12 +106,7 @@ const HistoryDisplay = (props) => {
                 <Loading />
             ) : (
                 <React.Fragment>
-                    <DisplayMeta
-                        editHistory
-                        resource={resource}
-                        name={name}
-                        path={`/edit/history/${resource}${location.search}`}
-                    />
+                    <Title editHistory resource={resource} name={name} />
                     <Typography variant="h1" className={classes.centerTitle}>{`Edit History for ${name}`}</Typography>
                     <Table>
                         <TableHead>
