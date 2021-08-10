@@ -18,6 +18,11 @@
     }
 }
 
+.cover {
+    width: 50%;
+    margin-bottom: 24px;
+}
+
 .buttons {
     display: flex;
     align-items: center;

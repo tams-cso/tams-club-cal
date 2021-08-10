@@ -9,6 +9,7 @@ export default function Home() {
     return (
         <Layout description="The TAMS Club Calendar is a fully contained event tracker, club/volunteering database, and general resource center. This is the unofficial club event calendar for the Texas Academy of Mathematics and Science!">
             <div className={styles.container}>
+                <img src="https://cdn.tams.club/social-cover.webp" alt="cover-photo" className={styles.cover} />
                 <h1 className="hero__title">{siteConfig.title}</h1>
                 <p className="hero__subtitle">{siteConfig.tagline}</p>
                 <div className={styles.buttons}>

@@ -1,5 +1,6 @@
 ---
 sidebar_position: 1
+sidebar_label: Deployment overview
 ---
 
-# Deployment: Github Actions + Docker + Github Pages
+# Deployment CI/CD Pipeline

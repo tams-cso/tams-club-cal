@@ -1,0 +1,3 @@
+# ControlledCheckbox
+
+**Category**: Component

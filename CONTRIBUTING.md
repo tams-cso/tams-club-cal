@@ -12,15 +12,17 @@ This project is completely written in [Javascript](https://www.javascript.com/),
 
 The frontend uses these main libraries:
 
--   [React.js](https://reactjs.org/) for the main framework of the entire site
--   [Redux](https://redux.js.org/) for the global state management (because React is a little lacking in that department)
+-   [React.js](https://reactjs.org/) - main framework for the site
+-   [Redux](https://redux.js.org/) - global state management (because React is a little lacking in that department)
+-   [Material UI](https://material-ui.com) - component library and styling library all wrapped in one; replaces traditional CSS and provides lots of useful components
+-   [React Hook Form](https://react-hook-form.com/) - library for managing forms such as the add/edit forms, as well as other inputs used throughout the site
 
 The backend uses these main libraries:
 
--   [Express.js](https://expressjs.com/) as the framework for managing API calls and routes
--   [MongoDB Node.js API](https://docs.mongodb.com/drivers/node/) to store information in a secure database
+-   [Express.js](https://expressjs.com/) - framework for managing API calls and routes
+-   [Mongoose ODM](https://mongoosejs.com/) - library used to access MongoDB documents and manage their schemas
 
-## :beetle: Bug Reports
+## :ant: Bug Reports
 
 Bugs are common in programs that are constantly being developed! Once you have identified a bug, please fill out an issue for the relavent bug. Try to describe the bug in as much detail as possible, so that other people have an easier time resolving it. If you would like to resolve the bug report you have just created, see [Resolving Bugs or Tackling Issues](#resolving-bugs-or-tackling-issues).
 
@@ -52,181 +54,38 @@ information on file structure.
 Most of the standard JS formatting will be taken care of by the extension (such as spaces around operators, bracket style, and whitespace). However, there are a few rules that cannot be detected by a formatter:
 
 - There should be a space around each function/method definition
-- In the React classes, keep all lifecycle methods at the bottom, in the order that they happen (ie. `componentDidMount` will go before `componentWillUpdate`); the `render` method should be at the end
+- In components, try to keep all const definitions (such as state variables) at the top. All `useEffect` and similar hooks should be placed right before the return statement.
 - If code is used multiple times across components or js files, place it in the `util.js` file in its own function
 - All functions outside of React components **must** have JSDoc written, describing in detail what the function does, its parameters, and the return methods. For standard functions, see the [basic JSDoc instructions](https://jsdoc.app/about-getting-started.html). If you are returning an object, please define a [typedef](https://jsdoc.app/tags-typedef.html)
 
 ### CSS Formatting
 
-CSS is generally extremely difficult to format, and it can be extremely hard to read your own written css, let alone someone else's! That's why I am going to outline the css convention that will be used in _this project_. Remember that a lot of these standards are my personal preference, and there are many ways that people will format css. My main inspiration for this styling comes from [css-tricks.com](https://css-tricks.com/poll-results-how-do-you-order-your-css-properties/) and [cssguidelin.es](https://cssguidelin.es/):
+CSS is generally extremely difficult to format, and it can be extremely hard to read your own written css, let alone someone else's! That's why I am going to outline the css convention that will be used in _this project_. Remember that a lot of these standards are my personal preference, and there are many ways that people will format css.
 
-**Standard selector**
+This project uses Material UI's CSS-in-JS to style components. Material UI's components already come with a lot of styles, such as `import Button from '@material-ui/core/Button'`. However, we extend this styling using their [themeing system](https://material-ui.com/customization/theming/), as well as applying styles to each component individually using the [makeStyles function](https://material-ui.com/styles/api/#makestyles-styles-options-hook). An example is shown below from `/client/src/components/clubs/club-table.js`:
 
-```scss
-// Comment describing the selector's quirks
-.selector {
-    /* Positioning */
-    position: absolute;
-    z-index: 10;
-    top: 0;
-    bottom: 0;
-    left: 0;
-    right: 0;
-
-    /* Display and Box Model */
-    display: flex;
-    overflow: hidden;
-    box-sizing: border-box;
-    width: 8rem;
-    height: 8rem;
-    padding: 0.5rem;
-    border: 0.1rem solid $background;
-    margin: 0;
-    flex-direction: row; // And other flexbox/grid props
-
-    /* Text */
-    font-family: $block-font;
-    font-size: 1.5rem;
-    line-height: 1.2rem;
-    text-align: center;
-
-    /* Color */
-    background: $background;
-    color: $text-primary;
-
-    /* Other */
-    cursor: pointer;
-    transition: 0.3s;
-}
+```js
+const useStyles = makeStyles((theme) => ({
+    tableLink: {
+        textDecoration: 'none',
+        color: 'inherit',
+        transition: '0.3s',
+        '&:hover': {
+            backgroundColor: darkSwitch(theme, theme.palette.grey[200], theme.palette.grey[700]),
+        },
+    },
+    advised: {
+        color: theme.palette.primary.main,
+    },
+    independent: {
+        color: theme.palette.secondary.main,
+    },
+}));
 ```
 
--   Comments like "positioning" or "color" _don't_ need to be included in the code, but you may add them before the selector if needed
--   You can opt to _not add spaces_ between groups of properties if it looks better, but please group properties if there are too many in a row; we want to avoid blocks of properties with no relation
--   If no spaces are added, still try to keep the properties in the order given above
+**CSS Tip!**
 
-All selector blocks need to have a space betwwen its adjacent selectors. The only exception to this rule is section headings:
-
-**Section headings**
-
-```scss
-.prev-selector {
-    //...
-}
-
-/*
- * ###################################
- * ##### IMAGE DISPLAY COMPONENT #####
- * ################################### 
- */
-
-.next-selector {
-    // ...
-}
-```
-
--   There also needs to be a line of whitespace around the section headings
--   Each section heading should look like the one above, with the comment block defined as I have above and 5 pound signs (`#`) around the name of the section, as well as a line above and below filled with pound signs to the same width
-
-**Top-level Description**
-
-At the top of each scss file, you should include a top-level description of the components and general formatting for the page. This will be formatted like the following example:
-
-```scss
-/**
- * The Club Card displays the basic club info.
- * 
- * 1) The component has a box-shadow that will darken on hover.
- * 2) The width and height are set so the containing grid can auto-align.
- * 3) A cover photo thumbnail is displayed at the top in its own div.
- *    This cover photo has a default placeholder if it does not exist.
- */
-
-@import '../../custom.scss';
-
-// Other components
-```
-
-This should be at the top of your file and have one space before the import statement.
-
-**Importing scss**
-
-The custom stylesheet should _always_ be imported to use the variables. In most cases, that should be the only import you need.
-
-**Section Organization**
-
-If we were given html code that looked like the following:
-
-```html
-<div className="club-card">
-    <div className="club-card-image-container">
-        <img className="club-card-image" src="https://www.example.com" />
-    </div>
-    <p className="club-card-title">Card Title</p>
-</div>
-```
-
-Then we should group the css by relevant contents:
-
-```scss
-/**
- * The club card component does this.
- *
- * 1) Here is specific descriptions
- * 2) This is a list!
- *
- * Any final tidbits can go here
- */
-@import '../../custom.scss';
-
-.club-card {
-    // The main component goes here
-}
-
-/*
- * #########################
- * ##### IMAGE DISPLAY #####
- * ######################### 
- */
-
-// Extra notes about this component go here
-// This can overflow to subsequent lines
-.club-card-image-container {
-    display: flex;
-    // ... (see styling selectors above)
-}
-
-// This is the child of the selector above,
-// so it goes here because it's the most relavent
-// Also, since there are only 3 props,
-// we don't have to put spaces
-.club-card-image {
-    width: 100%;
-    height: 100%;
-    align-self: center;
-}
-
-/*
- * #########################
- * ##### TEXT ELEMENTS #####
- * #########################
- */
-
-// This is a new section for the text elements
-// Note once again the spaces around the section header
-.club-card-title {
-    font-size: 1rem;
-}
-```
-
-This should be how all of the stylesheets are formatted, except maybe the general stylesheet.
-
-**CSS Tips**
-
-Here is a list of suggestions or style things that you should keep in mind:
-
--   Use dashes instead of camelcase for class names
--   Extra Sass variables and mixin definitions can go at the top of the stylesheet
--   Again, a lot of the formatting still comes down to coder discretion but just keep in mind that you won't be the only person reading the code!
+Again, a lot of the formatting still comes down to coder discretion but just keep in mind that you won't be the only person reading the code! As long as it makes sense and another programmer can figure out what your CSS does, it shouldn't be too much of a concern.
 
 ### Final Coding Tips
 
