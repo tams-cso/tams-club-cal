@@ -11,7 +11,7 @@ import { capitalize } from '@material-ui/core';
  * @param {string} props.title Title of the page; if defined will ignore name/resource/editHistory fields
  */
 const Title = (props) => {
-    const alt = (props.editHistoy ? '[Edit History]' : '') + `${props.name} | ${capitalize(props.resource)}`;
+    const alt = (props.editHistoy ? '[Edit History]' : '') + `${props.name} | ${capitalize(props.resource || '')}`;
     const title = (props.title || alt) + ' - TAMS Club Calendar';
 
     return (
