@@ -1,0 +1,3 @@
+# TrashCan
+
+**Category**: Component

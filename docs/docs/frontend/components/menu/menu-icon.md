@@ -1,0 +1,3 @@
+# MenuIcon
+
+**Category**: Component
