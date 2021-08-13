@@ -28,8 +28,8 @@ const Reservations = () => {
     const classes = useStyles();
 
     const getData = async (offset) => {
-        const reservations = await getReservationList(offset ? week : null);
-        const repeatingReservations = await getRepeatingReservationList(offset ? week : null);
+        const reservations = await getReservationList(offset ? week.valueOf() : null);
+        const repeatingReservations = await getRepeatingReservationList(offset ? week.valueOf() : null);
         if (reservations.status !== 200 || repeatingReservations.status !== 200) {
             setReservationComponentList(
                 <Loading error>

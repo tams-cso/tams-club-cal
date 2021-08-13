@@ -223,39 +223,42 @@ export function calculateEditDate(editDate) {
 export function parseEventList(eventList) {
     const outputList = [];
     eventList.forEach((e) => {
+        // Simply return the event if it does not span across multiple days
         if (dayjs(e.start).isSame(dayjs(e.end), 'day') || e.allDay) {
             outputList.push(e);
             return;
         }
 
+        // Calculate how many days the events span
         let currDate = dayjs(e.start);
-        const span = dayjs(e.end).diff(currDate, 'day') + 2;
-        let day = 1;
-        while (!currDate.isSame(dayjs(e.end), 'day')) {
-            if (
-                dayjs(e.end).hour() === 0 &&
-                dayjs(e.end).minute() === 0 &&
-                currDate.add(1, 'day').isSame(dayjs(e.end), 'day')
-            )
-                return;
-            const currEnd = currDate.add(1, 'day').startOf('day');
+        const span = dayjs(e.end).diff(currDate, 'day') + isNotMidnight(e.start) + isNotMidnight(e.end);
+
+        // Iterate through the days and set the display start/end times
+        for (let day = 1; day <= span; day++) {
+            const currEnd = day === span ? dayjs(e.end) : currDate.add(1, 'day').startOf('day');
             outputList.push({
                 ...e,
                 start: currDate.valueOf(),
                 end: currEnd.valueOf(),
-                name: `${e.name} (Day ${day++}/${span})`,
-                allDay: !currEnd.isSame(dayjs(e.end), 'day'),
+                name: `${e.name} (Day ${day}/${span})`,
+                allDay:
+                    (day !== 1 && day !== span) ||
+                    (day === 1 && isNotMidnight(e.start) === 0) ||
+                    (day === span && isNotMidnight(e.end) === 0),
             });
             currDate = currEnd;
         }
-        outputList.push({
-            ...e,
-            start: currDate.valueOf(),
-            end: dayjs(e.end).valueOf(),
-            name: `${e.name} (Day ${day}/${span})`,
-        });
     });
     return outputList.sort((a, b) => a.start - b.start);
+}
+
+/**
+ * Checks if time is not midnight
+ * @param {number} time UTC time
+ * @returns {0 | 1} Returns 1 if true
+ */
+function isNotMidnight(time) {
+    return dayjs(time).hour() === 0 && dayjs(time).minute() === 0 ? 0 : 1;
 }
 
 /**
