@@ -53,7 +53,7 @@ const TwoButtonBox = (props) => {
                 onClick={props.onSuccess}
                 className={classes.button}
             >
-                {props.success}
+                {props.success || 'Submit'}
             </Button>
         </Box>
     );

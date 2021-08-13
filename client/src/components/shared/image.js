@@ -27,8 +27,8 @@ const url = (src) => (!src ? '' : src.endsWith('.webp') ? `${getCdnUrl()}/${src}
  * @param {string} props.src Src of the image to display; will dynamically update image
  * @param {string} props.default Src of the default fallback image to display
  * @param {string} props.alt Alt text to display for accessibility purposes (won't actually show)
- * @param {number} [props.width] Width of the image
- * @param {number} [props.height] Height of the image
+ * @param {number | string} [props.width] Width of the image
+ * @param {number | string} [props.height] Height of the image
  * @param {boolean} [props.raised] True to add drop shadow to image
  * @param {boolean} [props.transparent] True if no background color
  */

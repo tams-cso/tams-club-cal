@@ -37,15 +37,17 @@ const SortSelect = (props) => {
         <React.Fragment>
             <FormControl>
                 <Select value={props.value} onChange={handleChange} className={classes.select}>
-                    {props.options.map((o) => (
-                        <MenuItem value={o} key={o}>
-                            {capitalize(o)}
-                        </MenuItem>
-                    ))}
+                    {props.options
+                        ? props.options.map((o) => (
+                              <MenuItem value={o} key={o}>
+                                  {capitalize(o)}
+                              </MenuItem>
+                          ))
+                        : null}
                 </Select>
             </FormControl>
             <Tooltip
-                title={props.reverse ? 'Sorted backwards' : 'Sorted forwards'}
+                title={props.reverse ? 'Sorted descending' : 'Sorted ascending'}
                 onClick={props.setReverse.bind(this, !props.reverse)}
                 className={classes.tooltip}
             >
