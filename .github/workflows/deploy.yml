@@ -54,11 +54,11 @@ jobs:
         - name: Pull and run docker container on Droplet
           uses: appleboy/ssh-action@master
           with:
-          host: ${{ secrets.SSH_HOST }}
-          username: ${{ secrets.SSH_USERNAME }}
-          key: ${{ secrets.SSH_KEY }}
-          script: |
-            docker pull michaelzhao21/tcc-server:latest
-            docker stop production
-            docker run --rm -d --name production -p 8082:80 michaelzhao21/tcc-server
-            docker image prune -af
+            host: ${{ secrets.SSH_HOST }}
+            username: ${{ secrets.SSH_USERNAME }}
+            key: ${{ secrets.SSH_KEY }}
+            script: |
+              docker pull michaelzhao21/tcc-server:latest
+              docker stop production
+              docker run --rm -d --name production -p 8082:80 michaelzhao21/tcc-server
+              docker image prune -af
