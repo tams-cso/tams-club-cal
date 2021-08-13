@@ -21,16 +21,16 @@ If a file is marked as `TODO` below, that means the documentation for the page i
 
 ## Folder Hierarchy
 
-- Shared | TODO
-  - [AddButton](shared/add-button.md) | TODO
-  - [Image](shared/image.md) | TODO
-  - [Loading](shared/loading.md) | TODO
-  - [PageWrapper](shared/page-wrapper.md) | TODO
-  - [Paragraph](shared/paragraph.md) | TODO
-  - [Popup](shared/popup.md) | TODO
-  - [SortSelect](shared/sort-select.md) | TODO
-  - [Title](shared/title.md) | TODO
-  - [ViewSwitcher](shared/view-switcher.md) | TODO
+- Shared
+  - [AddButton](shared/add-button.md)
+  - [Image](shared/image.md)
+  - [Loading](shared/loading.md)
+  - [PageWrapper](shared/page-wrapper.md)
+  - [Paragraph](shared/paragraph.md)
+  - [Popup](shared/popup.md)
+  - [SortSelect](shared/sort-select.md)
+  - [Title](shared/title.md)
+  - [ViewSwitcher](shared/view-switcher.md)
 - Menu | TODO
   - [Menu](menu/index.md) | TODO
   - [AppIcon](menu/app-icon.md) | TODO
@@ -84,12 +84,12 @@ If a file is marked as `TODO` below, that means the documentation for the page i
   - [EditReservations](edit/edit-reservations.md) | TODO
   - [EditVolunteering](edit/edit-volunteering.md) | TODO
   - Shared | TODO
-    - [ControlledSelect](edit/shared/controlled-select.md)  | TODO
-    - [ControlledTextField](edit/shared/controlled-text-field.md)  | TODO
-    - [GoogleLoginButton](edit/shared/google-login-button.md)  | TODO
-    - [LocationSelect](edit/shared/location-select.md)  | TODO
-    - [TwoButtonBox](edit/shared/two-button-box.md)  | TODO
-    - [UploadBackdrop](edit/shared/upload-backdrop.md)  | TODO
+    - [ControlledSelect](edit/shared/controlled-select.md) | TODO
+    - [ControlledTextField](edit/shared/controlled-text-field.md) | TODO
+    - [GoogleLoginButton](edit/shared/google-login-button.md) | TODO
+    - [LocationSelect](edit/shared/location-select.md) | TODO
+    - [TwoButtonBox](edit/shared/two-button-box.md)
+    - [UploadBackdrop](edit/shared/upload-backdrop.md) | TODO
   - Events | TODO
     - [ControlledCheckbox](edit/events/controlled-checkbox.md) | TODO
     - [DateInput](edit/events/date-input.md) | TODO

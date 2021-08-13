@@ -77,7 +77,7 @@ const About = () => {
     return (
         <PageWrapper title="About">
             <Container>
-                <Image src="/logo-banner.png" alt="TAMS Club Calendar" className={classes.image} transparent></Image>
+                <Image src="/logo-banner.png" alt="TAMS Club Calendar" className={classes.image} transparent />
                 <Paragraph text={data.aboutText} fontSize="1.1rem" />
                 <Typography variant="h2" className={classes.center}>
                     Feedback

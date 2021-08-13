@@ -28,7 +28,6 @@ const useStyles = makeStyles((theme) => ({
     },
 }));
 
-// TODO: Add a tooltip to the floating action button
 /**
  * Shows a floating action button
  * @param {object} props React props object
@@ -44,7 +43,7 @@ const AddButton = (props) => {
     const matches = useMediaQuery(theme.breakpoints.down('sm'));
 
     const redirectTo = () => {
-        redirect(props.path);
+        redirect(props.path || '#');
     };
 
     return (
