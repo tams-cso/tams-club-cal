@@ -244,7 +244,7 @@ export function parseEventList(eventList) {
                 start: currDate.valueOf(),
                 end: currEnd.valueOf(),
                 name: `${e.name} (Day ${day++}/${span})`,
-                allDay: day !== 2,
+                allDay: !currEnd.isSame(dayjs(e.end), 'day'),
             });
             currDate = currEnd;
         }

@@ -2,10 +2,10 @@ import { Club, ClubImageBlobs, Event, Feedback, FetchResponse, Reservation, Volu
 import Cookies from 'universal-cookie';
 
 const BACKEND_URL =
-    process.env.NODE_ENV === 'production'
-        ? process.env.REACT_APP_BACKEND === 'staging'
-            ? 'https://dev.tams.club'
-            : 'https://api.tams.club'
+    process.env.REACT_APP_BACKEND === 'staging'
+        ? 'https://dev.tams.club'
+        : process.env.NODE_ENV === 'production'
+        ? 'https://api.tams.club'
         : process.env.REACT_APP_BACKEND === 'localhost'
         ? 'http://localhost:5000'
         : '';
