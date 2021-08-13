@@ -16,7 +16,7 @@ const router = express.Router();
  *         This can be any time within the week
  */
 router.get('/repeating', async (req, res, next) => {
-    const week = dayjs(req.query.week) || dayjs();
+    const week = req.query.week ? dayjs(Number(req.query.week)) : dayjs();
     try {
         const repeatingReservations = await RepeatingReservation.find({
             repeatEnd: { $gte: week.startOf('week').valueOf() },
@@ -51,7 +51,7 @@ router.get('/repeating/:id', async (req, res, next) => {
  *         This can be any time within the week
  */
 router.get('/', async (req, res, next) => {
-    const week = dayjs(req.query.week) || dayjs();
+    const week = req.query.week ? dayjs(Number(req.query.week)) : dayjs();
     try {
         const reservations = await Reservation.find({
             start: { $gte: week.startOf('week').valueOf(), $lte: week.endOf('week').valueOf() },

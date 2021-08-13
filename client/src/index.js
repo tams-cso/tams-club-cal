@@ -6,7 +6,11 @@ import store from './redux/store';
 import makeServer from './server';
 import App from './app';
 
-if (process.env.NODE_ENV !== 'production' && process.env.REACT_APP_BACKEND !== 'localhost') {
+if (
+    process.env.NODE_ENV !== 'production' &&
+    process.env.REACT_APP_BACKEND !== 'localhost' &&
+    process.env.REACT_APP_BACKEND !== 'staging'
+) {
     makeServer();
 }
 
