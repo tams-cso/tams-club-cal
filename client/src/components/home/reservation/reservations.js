@@ -37,6 +37,7 @@ const Reservations = () => {
                     issue.
                 </Loading>
             );
+            return;
         }
         setReservationList({ reservations: reservations.data, repeatingReservations: repeatingReservations.data });
     };
