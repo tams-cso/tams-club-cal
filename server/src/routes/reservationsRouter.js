@@ -54,7 +54,7 @@ router.get('/', async (req, res, next) => {
     const week = req.query.week ? dayjs(Number(req.query.week)) : dayjs();
     try {
         const reservations = await Reservation.find({
-            start: { $gte: week.startOf('week').valueOf(), $lte: week.endOf('week').valueOf() },
+            start: { $gte: week.startOf('week').subtract(1, 'week').valueOf(), $lte: week.endOf('week').add(1, 'week').valueOf() },
         });
         res.send(reservations);
     } catch (error) {

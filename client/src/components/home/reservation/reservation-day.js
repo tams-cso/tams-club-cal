@@ -60,13 +60,14 @@ const ReservationDay = (props) => {
         data.rooms.forEach((room) => {
             let currTime = props.date.startOf('day');
             const row = [<TableCell className={classes.cell} key={room.value}>{room.label}</TableCell>];
+            var a = 0;
             for (let i = 0; i < 24; i++) {
                 const curr = props.reservationList.find(
                     (r) => r.start.isSame(currTime, 'hour') && r.data.location === room.value
                 );
 
                 let increment = 1;
-                if (!curr) row.push(<TableCell className={classes.cell} key={`${room.value}-${i}`} />);
+                if (!curr || curr.start.isSame(curr.end)) row.push(<TableCell className={classes.cell} key={`${room.value}-${i}`} />);
                 else {
                     row.push(
                         <ReservationEntry
@@ -81,6 +82,8 @@ const ReservationDay = (props) => {
                 }
 
                 currTime = currTime.add(increment, 'hour');
+                if (a > 200) console.log({ curr, i });
+                if (a++ > 300) break;
             }
             list.push(<TableRow key={room.value}>{row}</TableRow>);
         });
