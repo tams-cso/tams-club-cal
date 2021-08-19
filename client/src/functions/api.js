@@ -246,7 +246,7 @@ export async function getClub(id) {
  * @param {boolean[]} execPhotos True for the execs that have new images; should be same length as club.execs
  * @returns {Promise<FetchResponse>} Will return the response or error object
  */
-export async function postClub(club, images) {
+export async function postClub(club, images, execPhotos) {
     const data = new FormData();
     data.append('data', JSON.stringify(club));
     data.append('cover', images.coverPhoto);
