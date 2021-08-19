@@ -17,13 +17,16 @@ import data from '../../../data.json';
 const useStyles = makeStyles((theme) => ({
     root: {
         marginTop: 12,
+        [theme.breakpoints.up('md')]: {
+            overflowX: 'hidden',
+        },
     },
     table: {
         tableLayout: 'fixed',
         width: '100%',
         [theme.breakpoints.down('sm')]: {
             width: '300%',
-        }
+        },
     },
     label: {
         width: 150,
@@ -59,7 +62,11 @@ const ReservationDay = (props) => {
         const list = [];
         data.rooms.forEach((room) => {
             let currTime = props.date.startOf('day');
-            const row = [<TableCell className={classes.cell} key={room.value}>{room.label}</TableCell>];
+            const row = [
+                <TableCell className={classes.cell} key={room.value}>
+                    {room.label}
+                </TableCell>,
+            ];
             var a = 0;
             for (let i = 0; i < 24; i++) {
                 const curr = props.reservationList.find(
@@ -67,7 +74,8 @@ const ReservationDay = (props) => {
                 );
 
                 let increment = 1;
-                if (!curr || curr.start.isSame(curr.end)) row.push(<TableCell className={classes.cell} key={`${room.value}-${i}`} />);
+                if (!curr || curr.start.isSame(curr.end))
+                    row.push(<TableCell className={classes.cell} key={`${room.value}-${i}`} />);
                 else {
                     row.push(
                         <ReservationEntry
