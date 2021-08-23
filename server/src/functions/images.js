@@ -9,7 +9,7 @@ const s3 = new AWS.S3({
     accessKeyId: process.env.AWS_ACCESS_ID,
     secretAccessKey: process.env.AWS_SECRET_KEY,
 });
-const BUCKET = `${process.env.NODE_ENV === 'production' ? '' : 'staging-'}tams-club-calendar-images`;
+const BUCKET = `${process.env.NODE_ENV === 'production' && !process.env.STAGING ? '' : 'staging-'}tams-club-calendar-images`;
 
 /**
  * Will compress, resize, and upload all images passed to a club upload.
