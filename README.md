@@ -37,7 +37,8 @@ AWS_ACCESS_ID="[AWS IAM User Access Key ID]"
 AWS_SECRET_KEY="[AWS IAM User Secret Key]"
 
 ORIGIN="[(optional) Origin requests are sent from. This is needed for google login -- thus, it will not work for local development]"
-NO_ORIGIN_CHECK="[(optional) If true, all requests not from ORIGIN will be *denied with a 403 error*]
+NO_ORIGIN_CHECK="[(optional) If true, all requests not from ORIGIN will be *denied with a 403 error*]"
+STAGING="[(optional) On dev.tams.club, this value needs to be true to upload files to the correct bucket due to docker running in production]"
 PORT="[(optional) The port to start the server on]"
 ```
 
