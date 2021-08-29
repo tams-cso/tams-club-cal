@@ -39,7 +39,7 @@ AWS_SECRET_KEY="[AWS IAM User Secret Key]"
 ORIGIN="[(optional) Origin requests are sent from. This is needed for google login -- thus, it will not work for local development]"
 NO_ORIGIN_CHECK="[(optional) If true, all requests not from ORIGIN will be *denied with a 403 error*]"
 STAGING="[(optional) On dev.tams.club, this value needs to be true to upload files to the correct bucket due to docker running in production]"
-PORT="[(optional) The port to start the server on]"
+PORT="[(optional) The port to start the server on - DEPLOYMENTS SHOULD BE PORT 80 due to docker port mapping]"
 ```
 
 The first thing you will need is a [Mongodb Atlas Cluster](https://www.mongodb.com/cloud/atlas). A free tier instance should be good enough. If you decide to opt for a local instance, make sure to use that username/password and url instead.
