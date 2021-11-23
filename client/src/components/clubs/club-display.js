@@ -1,8 +1,5 @@
 import React, { useEffect, useState } from 'react';
 import { useHistory } from 'react-router';
-import { useSelector } from 'react-redux';
-import makeStyles from '@mui/styles/makeStyles';
-import { getSavedClubList } from '../../redux/selectors';
 import { getClub } from '../../functions/api';
 import { darkSwitchGrey, getParams } from '../../functions/util';
 
@@ -25,62 +22,12 @@ import CommitteeCard from './committee-card';
 import AddButton from '../shared/add-button';
 import Title from '../shared/title';
 
-const useStyles = makeStyles((theme) => ({
-    root: {
-        maxWidth: '50%',
-        [theme.breakpoints.down(undefined)]: {
-            maxWidth: '75%',
-        },
-        [theme.breakpoints.down('lg')]: {
-            maxWidth: '100%',
-        },
-    },
-    imageWrapper: {
-        width: '100%',
-        height: 'auto',
-        display: 'block',
-    },
-    image: {
-        width: '100%',
-        height: 'auto',
-    },
-    textWrapper: {
-        padding: 20,
-    },
-    clubType: {
-        color: theme.palette.primary.main,
-    },
-    independent: {
-        color: theme.palette.secondary.main,
-    },
-    description: {
-        marginTop: 12,
-        color: darkSwitchGrey(theme),
-    },
-    links: {
-        display: 'block',
-        overflow: 'hidden',
-        textOverflow: 'ellipsis',
-        whiteSpace: 'nowrap',
-    },
-    tabs: {
-        marginTop: 12,
-    },
-    tabPage: {
-        paddingTop: 12,
-    },
-    hidden: {
-        display: 'none',
-    },
-    empty: {
-        textAlign: 'center',
-        marginBottom: 12,
-        color: darkSwitchGrey(theme),
-    },
-    buttonCenter: {
-        margin: 'auto',
-    },
-}));
+// Style for "No resource" text
+const emptyTextStyle = {
+    textAlign: 'center',
+    marginBottom: 12,
+    color: (theme) => darkSwitchGrey(theme),
+};
 
 /**
  * Displays a single club.
@@ -94,30 +41,20 @@ const ClubDisplay = (props) => {
     const [error, setError] = useState(null);
     const [links, setLinks] = useState(null);
     const [tabValue, setTabValue] = useState(0);
-    const clubList = useSelector(getSavedClubList);
     const history = useHistory();
-    const classes = useStyles();
 
-    const back = () => {
-        const prevView = getParams('view');
-        history.push(`/clubs${prevView ? `?view=${prevView}` : ''}`);
-    };
-
+    // Get the club data from the API and set the state variable or error
     useEffect(async () => {
+        // If the club ID is not in the URL, do nothing
         if (props.id === null) return;
 
-        // Check if the event list exists to pull from
-        // If not, then pull the event from the backend
+        // GET the event from the backend by ID
         let club = null;
-        if (clubList === null) {
-            const res = await getClub(props.id);
-            if (res.status === 200) club = res.data;
-        } else {
-            const foundEvent = clubList.find((e) => e.id === props.id);
-            if (foundEvent !== undefined) club = foundEvent;
-        }
+        const res = await getClub(props.id);
+        if (res.status === 200) club = res.data;
 
         // Save the event or set an error if invalid ID
+        // or the get request did not succeed
         if (club === null) {
             setError(
                 <Loading error>Invalid event ID. Please return to the clubs list page to refresh the content</Loading>
@@ -125,42 +62,80 @@ const ClubDisplay = (props) => {
         } else setClub(club);
     }, [props.id]);
 
+    // When the club data is loaded, create the list of links
     useEffect(() => {
+        // If the club is not loaded, do nothing.
         if (club === null) return;
+
+        // Map the links in a club to a link object.
         setLinks(
-            club.links.map((c) => (
-                <Link href={c} variant="body1" className={classes.links} key={c} target="_blank">
-                    {c}
+            club.links.map((link) => (
+                <Link
+                    href={link}
+                    variant="body1"
+                    key={link}
+                    target="_blank"
+                    sx={{
+                        display: 'block',
+                        overflow: 'hidden',
+                        textOverflow: 'ellipsis',
+                        whiteSpace: 'nowrap',
+                    }}
+                >
+                    {link}
                 </Link>
             ))
         );
     }, [club]);
 
+    // If the user changes to the committees or execs tab,
+    // update the state value to match.
     const handleTabChange = (event, newValue) => {
         setTabValue(newValue);
     };
 
+    // Return to the previous page, but preserve the view
+    // that was paassed in the URL (ie. keep table view)
+    const back = () => {
+        const prevView = getParams('view');
+        history.push(`/clubs${prevView ? `?view=${prevView}` : ''}`);
+    };
+
     return (
         <React.Fragment>
+            {/* TODO: Make this "error" and "club === null" fragment more elegant somehow */}
             {error}
             {club === null ? (
                 error ? null : (
                     <Loading />
                 )
             ) : (
-                <Container className={classes.root}>
+                <Container sx={{ maxWidth: { xl: '50%', md: '75%', xs: '100%' } }}>
                     <Title resource="clubs" name={club.name} />
                     <AddButton color="secondary" label="Club" path={`/edit/clubs?id=${club.id}`} edit />
                     <Card>
-                        <CardMedia className={classes.imageWrapper}>
-                            <Image className={classes.image} src={club.coverImg} default="/default-cover.webp" />
+                        <CardMedia
+                            sx={{
+                                width: '100%',
+                                height: 'auto',
+                                display: 'block',
+                            }}
+                        >
+                            <Image
+                                src={club.coverImg}
+                                default="/default-cover.webp"
+                                sx={{ width: '100%', height: 'auto' }}
+                            />
                         </CardMedia>
-                        <CardContent className={classes.textWrapper}>
-                            <Typography className={`${classes.clubType} ${club.advised ? '' : classes.independent}`}>
+                        <CardContent sx={{ padding: 3 }}>
+                            <Typography sx={{ color: club.advised ? 'primary.main' : 'secondary.main' }}>
                                 {club.advised ? 'Advised' : 'Independent'}
                             </Typography>
                             <Typography variant="h1">{club.name}</Typography>
-                            <Paragraph text={club.description} className={classes.description} />
+                            <Paragraph
+                                text={club.description}
+                                sx={{ marginTop: 2, color: (theme) => darkSwitchGrey(theme) }}
+                            />
                             <Typography variant="h6">Links</Typography>
                             {links}
                             <Tabs
@@ -170,7 +145,7 @@ const ClubDisplay = (props) => {
                                 indicatorColor="secondary"
                                 textColor="secondary"
                                 aria-label="execs and committees tab"
-                                className={classes.tabs}
+                                sx={{ marginTop: 3 }}
                             >
                                 <Tab label="Execs"></Tab>
                                 <Tab label="Committees"></Tab>
@@ -179,10 +154,10 @@ const ClubDisplay = (props) => {
                                 elevation={0}
                                 variant="outlined"
                                 square
-                                className={`${classes.tabPage} ${tabValue === 0 ? '' : classes.hidden}`}
+                                sx={{ paddingTop: 2, display: tabValue === 0 ? 'block' : 'none' }}
                             >
                                 {club.execs.length === 0 ? (
-                                    <Typography className={classes.empty}>No execs...</Typography>
+                                    <Typography sx={emptyTextStyle}>No execs...</Typography>
                                 ) : (
                                     club.execs.map((e) => <ExecCard exec={e} key={e.name}></ExecCard>)
                                 )}
@@ -191,10 +166,10 @@ const ClubDisplay = (props) => {
                                 elevation={0}
                                 variant="outlined"
                                 square
-                                className={`${classes.tabPage} ${tabValue === 1 ? '' : classes.hidden}`}
+                                sx={{ paddingTop: 2, display: tabValue === 1 ? 'block' : 'none' }}
                             >
                                 {club.committees.length === 0 ? (
-                                    <Typography className={classes.empty}>No committees...</Typography>
+                                    <Typography sx={emptyTextStyle}>No committees...</Typography>
                                 ) : (
                                     club.committees.map((c) => (
                                         <CommitteeCard committee={c} key={c.name}></CommitteeCard>
@@ -203,7 +178,7 @@ const ClubDisplay = (props) => {
                             </Paper>
                         </CardContent>
                         <CardActions>
-                            <Button size="small" className={classes.buttonCenter} onClick={back}>
+                            <Button size="small" onClick={back} sx={{ margin: 'auto' }}>
                                 Back
                             </Button>
                         </CardActions>

@@ -11,13 +11,6 @@ import Tooltip from '@mui/material/Tooltip';
 import ArrowDownwardRoundedIcon from '@mui/icons-material/ArrowDownwardRounded';
 import ArrowUpwardRoundedIcon from '@mui/icons-material/ArrowUpwardRounded';
 
-const useStyles = makeStyles({
-    tooltip: {
-        marginLeft: 12,
-        marginRight: 8,
-    },
-});
-
 /**
  * Simple component to display a select menu and icon button to select
  * the sorting method and order based on a supplied string array.
@@ -30,7 +23,7 @@ const useStyles = makeStyles({
  * @param {Function} props.setReverse State variable function that sets whether or not sort order is reversed
  */
 const SortSelect = (props) => {
-    const classes = useStyles();
+    // Set state value when user changes selection
     const handleChange = (event) => {
         props.setValue(event.target.value);
     };
@@ -38,7 +31,7 @@ const SortSelect = (props) => {
     return (
         <React.Fragment>
             <FormControl>
-                <Select value={props.value} onChange={handleChange} className={classes.select}>
+                <Select value={props.value} onChange={handleChange} variant="standard">
                     {props.options
                         ? props.options.map((o) => (
                               <MenuItem value={o} key={o}>
@@ -51,9 +44,14 @@ const SortSelect = (props) => {
             <Tooltip
                 title={props.reverse ? 'Sorted descending' : 'Sorted ascending'}
                 onClick={props.setReverse.bind(this, !props.reverse)}
-                className={classes.tooltip}
+                sx={{
+                    marginLeft: 3,
+                    marginRight: 2,
+                }}
             >
-                <IconButton size="large">{props.reverse ? <ArrowUpwardRoundedIcon /> : <ArrowDownwardRoundedIcon />}</IconButton>
+                <IconButton size="large">
+                    {props.reverse ? <ArrowUpwardRoundedIcon /> : <ArrowDownwardRoundedIcon />}
+                </IconButton>
             </Tooltip>
         </React.Fragment>
     );

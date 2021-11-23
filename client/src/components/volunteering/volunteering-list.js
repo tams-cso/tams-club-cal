@@ -149,7 +149,7 @@ const VolunteeringList = () => {
                     setReverse={setReverse}
                     options={['name', 'club']}
                 />
-                <ViewSwitcher listView={listView} setListView={setListView} className={classes.viewSwitcher} />
+                <ViewSwitcher tableView={listView} setTableView={setListView} className={classes.viewSwitcher} />
             </Box>
             {listView ? <VolunteeringTable volunteering={filteredList} /> : volunteeringCardList}
             <Popover

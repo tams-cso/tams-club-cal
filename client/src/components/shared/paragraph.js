@@ -1,17 +1,8 @@
 import React from 'react';
-import makeStyles from '@mui/styles/makeStyles';
 import { parseLinks } from '../../functions/util';
 
+import Box from '@mui/material/Box';
 import Typography from '@mui/material/Typography';
-
-const useStyles = makeStyles({
-    root: {
-        marginBottom: 8,
-        whiteSpace: 'pre-line',
-        overflowX: 'hidden',
-        fontSize: (props) => props.fontSize || '1rem',
-    },
-});
 
 /**
  * Formats a paragraph of text.
@@ -21,22 +12,35 @@ const useStyles = makeStyles({
  * correctly as a link element.
  *
  * @param {object} props React props object
- * @param {string} props.className React class name
  * @param {string} props.text Text to display
  * @param {string} [props.fontSize] Font size for the text
+ * @param {boolean} [props.smallMargin] True if the paragraph should have a smaller margin
+ * @param {object} [props.sx] Style the entire element using the sx prop, this is a Box if there is text else it is an empty Typography element
  */
 const Paragraph = (props) => {
-    if (props.text === undefined) return <Typography className={props.className}></Typography>;
+    // If there is no text, return an empty Typography element
+    if (props.text === undefined) return <Typography sx={props.sx}></Typography>;
 
-    const classes = useStyles({ fontSize: props.fontSize });
-
+    // Split the pararaphs by the newline character
     const paragraphs = props.text.split('\n');
+
+    // Create a list of Typography elements
     const paragraphElements = paragraphs.map((p, i) => (
-        <Typography className={classes.root} key={i}>
+        <Typography
+            key={i}
+            sx={{
+                marginBottom: props.smallMargin ? 0.5 : 2,
+                whiteSpace: 'pre-line',
+                overflowX: 'hidden',
+                fontSize: props.fontSize || '1rem',
+            }}
+        >
             {parseLinks(p)}
         </Typography>
     ));
-    return <div className={props.className}>{paragraphElements}</div>;
+
+    // Return the list of Typography elements, wrapped in a Box
+    return <Box sx={props.sx}>{paragraphElements}</Box>;
 };
 
 export default Paragraph;

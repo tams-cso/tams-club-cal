@@ -1,6 +1,5 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
-import makeStyles from '@mui/styles/makeStyles';
 import { darkSwitch } from '../../functions/util';
 import { Club } from '../../functions/entries';
 
@@ -13,33 +12,16 @@ import TableRow from '@mui/material/TableRow';
 import Paper from '@mui/material/Paper';
 import Image from '../shared/image';
 
-const useStyles = makeStyles((theme) => ({
-    tableLink: {
-        textDecoration: 'none',
-        color: 'inherit',
-        transition: '0.3s',
-        '&:hover': {
-            backgroundColor: darkSwitch(theme, theme.palette.grey[200], theme.palette.grey[700]),
-        },
-    },
-    advised: {
-        color: theme.palette.primary.main,
-    },
-    independent: {
-        color: theme.palette.secondary.main,
-    },
-}));
-
 /**
- * Displays the clubs in a table
+ * Displays the clubs in a table. The clubs prop will be mapped to table rows.
+ * For descriptions, the newline character will be replaced with a pipe character.
  *
  * @param {object} props React props object
  * @param {Club[]} props.clubs Club list
  */
 const ClubTable = (props) => {
-    const classes = useStyles();
     return (
-        <TableContainer component={Paper}>
+        <TableContainer component={Paper} sx={{ marginBottom: 4 }}>
             <Table aria-label="club table">
                 <TableHead>
                     <TableRow>
@@ -51,7 +33,22 @@ const ClubTable = (props) => {
                 </TableHead>
                 <TableBody>
                     {props.clubs.map((v) => (
-                        <TableRow component={Link} to={`/clubs?id=${v.id}&view=list`} className={classes.tableLink}>
+                        <TableRow
+                            component={Link}
+                            to={`/clubs?id=${v.id}&view=table`}
+                            sx={{
+                                textDecoration: 'none',
+                                color: 'inherit',
+                                transition: '0.3s',
+                                '&:hover': (theme) => ({
+                                    backgroundColor: darkSwitch(
+                                        theme,
+                                        theme.palette.grey[200],
+                                        theme.palette.grey[700]
+                                    ),
+                                }),
+                            }}
+                        >
                             <TableCell>
                                 <Image
                                     src={v.coverImgThumbnail}
@@ -63,7 +60,7 @@ const ClubTable = (props) => {
                             <TableCell component="th" scope="row">
                                 {v.name}
                             </TableCell>
-                            <TableCell className={v.advised ? classes.advised : classes.independent}>
+                            <TableCell sx={{ color: v.advised ? 'primary.main' : 'secondary.main' }}>
                                 {v.advised ? 'Advised' : 'Independent'}
                             </TableCell>
                             <TableCell>{v.description.replace(/\n/g, ' | ')}</TableCell>
