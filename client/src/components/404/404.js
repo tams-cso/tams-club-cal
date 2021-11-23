@@ -1,6 +1,5 @@
 import React, { useEffect } from 'react';
 import { Link, useHistory } from 'react-router-dom';
-import makeStyles from '@mui/styles/makeStyles';
 import { darkSwitchGrey } from '../../functions/util';
 
 import Container from '@mui/material/Container';
@@ -15,52 +14,46 @@ import AppsRoundedIcon from '@mui/icons-material/AppsRounded';
 import EmojiPeopleRoundedIcon from '@mui/icons-material/EmojiPeopleRounded';
 import InfoRoundedIcon from '@mui/icons-material/InfoRounded';
 
-const useStyles = makeStyles((theme) => ({
-    root: {
-        paddingTop: 24,
-    },
-    title: {
-        fontSize: '10rem',
-        fontWeight: 100,
-        color: darkSwitchGrey(theme),
-        textAlign: 'center',
-    },
-    text: {
-        textAlign: 'center',
-        fontSize: '1.5rem',
-    },
-    listWrapper: {
-        width: '50%',
-        [theme.breakpoints.down('lg')]: {
-            width: '100%',
-        },
-    },
-}));
+// Style the subtitle text
+const textStyle = { textAlign: 'center', fontSize: '1.5rem' };
 
+/**
+ * 404 page for when the user tries to access a page that doesn't exist
+ */
 const PageNotFound = () => {
-    const classes = useStyles();
     const history = useHistory();
 
+    // If the page is not the correct path, set the path to /pagenotfound
+    // This will trigger when the page loads due to the fact that the path that
+    // the user enters is normally not /pagenotfound and the router
+    // will automatically redirect here but not change the path
     useEffect(() => {
         if (window.location.pathname !== '/pagenotfound') history.push('/pagenotfound');
     }, []);
 
     return (
-        <Container className={classes.root}>
+        <Container sx={{ paddingTop: { md: 12, xs: 2 } }}>
             <Paper>
-                <Typography variant="h1" className={classes.title}>
+                <Typography
+                    variant="h1"
+                    sx={{
+                        fontSize: '10rem',
+                        fontWeight: 100,
+                        color: (theme) => darkSwitchGrey(theme),
+                        textAlign: 'center',
+                    }}
+                >
                     404
                 </Typography>
-                <Typography className={classes.text}>
-                    The page you are trying to access could not be found :(
-                </Typography>
-                <Typography className={classes.text}>But here are some cool pages that you could go to!</Typography>
-                <Container className={classes.listWrapper}>
+                <Typography sx={textStyle}>The page you are trying to access could not be found :(</Typography>
+                <Typography sx={textStyle}>But here are some cool pages that you could go to!</Typography>
+                <Container sx={{ width: { md: '50%', xs: '100%' } }}>
                     <List>
                         <ListItem button component={Link} to="/">
                             <ListItemIcon>
                                 <HomeRoundedIcon />
                             </ListItemIcon>
+                            {/* TODO: set the list text to light grey theme.palette.grey[100] or smth close to black */}
                             <ListItemText>Home - See upcoming events and helpful external resources</ListItemText>
                         </ListItem>
                         <ListItem button component={Link} to="/clubs">
