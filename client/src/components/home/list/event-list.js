@@ -1,15 +1,15 @@
 import React, { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { makeStyles } from '@material-ui/core/styles';
+import makeStyles from '@mui/styles/makeStyles';
 import dayjs from 'dayjs';
 import { setEventList } from '../../../redux/actions';
 import { getSavedEventList } from '../../../redux/selectors';
 import { getEventList, getMoreEvents } from '../../../functions/api';
 import { darkSwitchGrey, isSameDate, parseEventList } from '../../../functions/util';
 
-import Container from '@material-ui/core/Container';
-import Typography from '@material-ui/core/Typography';
-import Button from '@material-ui/core/Button';
+import Container from '@mui/material/Container';
+import Typography from '@mui/material/Typography';
+import Button from '@mui/material/Button';
 import EventListSection from './event-list-section';
 import Loading from '../../shared/loading';
 import AddButton from '../../shared/add-button';

@@ -1,11 +1,12 @@
-import { Button, makeStyles } from '@material-ui/core';
+import { Button } from '@mui/material';
+import makeStyles from '@mui/styles/makeStyles';
 import React, { useEffect, useState } from 'react';
 import { useDispatch } from 'react-redux';
 import Cookies from 'universal-cookie';
 import { getIp, getLoggedIn, getUserInfo } from '../../functions/api';
 
-import Box from '@material-ui/core/Box';
-import Typography from '@material-ui/core/Typography';
+import Box from '@mui/material/Box';
+import Typography from '@mui/material/Typography';
 import { darkSwitchGrey } from '../../functions/util';
 import GoogleLoginButton from './shared/google-login-button';
 import { openConnectionErrorPopup } from '../../redux/actions';
@@ -16,14 +17,14 @@ const useStyles = makeStyles((theme) => ({
         display: 'flex',
         justifyContent: 'space-between',
         alignItems: 'center',
-        [theme.breakpoints.down('sm')]: {
+        [theme.breakpoints.down('md')]: {
             padding: 16,
             flexDirection: 'column',
         },
     },
     editText: {
         color: theme.palette.secondary.main,
-        [theme.breakpoints.down('sm')]: {
+        [theme.breakpoints.down('md')]: {
             marginBottom: 12,
             alignSelf: 'flex-start',
         },
@@ -33,7 +34,7 @@ const useStyles = makeStyles((theme) => ({
         paddingRight: 24,
         textAlign: 'right',
         color: darkSwitchGrey(theme),
-        [theme.breakpoints.down('sm')]: {
+        [theme.breakpoints.down('md')]: {
             paddingRight: 0,
             textAlign: 'center',
         },

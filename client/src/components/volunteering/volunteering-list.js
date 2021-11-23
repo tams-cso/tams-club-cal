@@ -1,23 +1,23 @@
 import React, { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { makeStyles } from '@material-ui/core';
+import makeStyles from '@mui/styles/makeStyles';
 import { getVolunteeringList } from '../../functions/api';
 import { getSavedVolunteeringList } from '../../redux/selectors';
 import { setVolunteeringList } from '../../redux/actions';
 
-import Grid from '@material-ui/core/Grid';
-import Container from '@material-ui/core/Container';
-import Box from '@material-ui/core/Box';
-import IconButton from '@material-ui/core/IconButton';
-import Tooltip from '@material-ui/core/Tooltip';
-import Popover from '@material-ui/core/Popover';
-import FormControl from '@material-ui/core/FormControl';
-import FormLabel from '@material-ui/core/FormLabel';
-import FormControlLabel from '@material-ui/core/FormControlLabel';
-import FormGroup from '@material-ui/core/FormGroup';
-import Checkbox from '@material-ui/core/Checkbox';
-import FilterListIcon from '@material-ui/icons/FilterList';
-import Typography from '@material-ui/core/Typography';
+import Grid from '@mui/material/Grid';
+import Container from '@mui/material/Container';
+import Box from '@mui/material/Box';
+import IconButton from '@mui/material/IconButton';
+import Tooltip from '@mui/material/Tooltip';
+import Popover from '@mui/material/Popover';
+import FormControl from '@mui/material/FormControl';
+import FormLabel from '@mui/material/FormLabel';
+import FormControlLabel from '@mui/material/FormControlLabel';
+import FormGroup from '@mui/material/FormGroup';
+import Checkbox from '@mui/material/Checkbox';
+import FilterListIcon from '@mui/icons-material/FilterList';
+import Typography from '@mui/material/Typography';
 import Loading from '../shared/loading';
 import VolunteeringCard from './volunteering-card';
 import AddButton from '../shared/add-button';
@@ -28,7 +28,7 @@ import SortSelect from '../shared/sort-select';
 
 const useStyles = makeStyles((theme) => ({
     gridItem: {
-        [theme.breakpoints.down('md')]: {
+        [theme.breakpoints.down('lg')]: {
             flexGrow: 1,
         },
     },
@@ -137,7 +137,7 @@ const VolunteeringList = () => {
             <AddButton color="primary" label="Volunteering" path="/edit/volunteering" />
             <Box width="100%" marginBottom={2} display="flex" alignItems="center">
                 <Tooltip title="Filters">
-                    <IconButton onClick={openFilters}>
+                    <IconButton onClick={openFilters} size="large">
                         <FilterListIcon />
                     </IconButton>
                 </Tooltip>

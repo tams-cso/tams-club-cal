@@ -1,10 +1,10 @@
 import React, { useEffect, useState } from 'react';
-import { makeStyles } from '@material-ui/core';
+import makeStyles from '@mui/styles/makeStyles';
 import { getClubList } from '../../functions/api';
 
-import Grid from '@material-ui/core/Grid';
-import Container from '@material-ui/core/Container';
-import Box from '@material-ui/core/Box';
+import Grid from '@mui/material/Grid';
+import Container from '@mui/material/Container';
+import Box from '@mui/material/Box';
 import ClubCard from './club-card';
 import Loading from '../shared/loading';
 import AddButton from '../shared/add-button';
@@ -14,7 +14,7 @@ import SortSelect from '../shared/sort-select';
 
 const useStyles = makeStyles((theme) => ({
     gridItem: {
-        [theme.breakpoints.down('md')]: {
+        [theme.breakpoints.down('lg')]: {
             flexGrow: 1,
         },
     },

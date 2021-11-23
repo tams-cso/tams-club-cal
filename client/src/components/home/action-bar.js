@@ -1,18 +1,19 @@
 import React, { useEffect, useState } from 'react';
 import { useHistory, useLocation } from 'react-router';
-import { capitalize, makeStyles, useMediaQuery, useTheme } from '@material-ui/core';
+import { capitalize, useMediaQuery, useTheme } from '@mui/material';
+import makeStyles from '@mui/styles/makeStyles';
 import { getParams } from '../../functions/util';
 
-import Paper from '@material-ui/core/Paper';
-import Toolbar from '@material-ui/core/Toolbar';
-import ToggleButtonGroup from '@material-ui/lab/ToggleButtonGroup';
-import ToggleButton from '@material-ui/lab/ToggleButton';
-import Tooltip from '@material-ui/core/Tooltip';
-import Box from '@material-ui/core/Box';
-import Typography from '@material-ui/core/Typography';
-import FormatListBulletedRoundedIcon from '@material-ui/icons/FormatListBulletedRounded';
-import EventNoteRoundedIcon from '@material-ui/icons/EventNoteRounded';
-import MeetingRoomRoundedIcon from '@material-ui/icons/MeetingRoomRounded';
+import Paper from '@mui/material/Paper';
+import Toolbar from '@mui/material/Toolbar';
+import ToggleButtonGroup from '@mui/material/ToggleButtonGroup';
+import ToggleButton from '@mui/material/ToggleButton';
+import Tooltip from '@mui/material/Tooltip';
+import Box from '@mui/material/Box';
+import Typography from '@mui/material/Typography';
+import FormatListBulletedRoundedIcon from '@mui/icons-material/FormatListBulletedRounded';
+import EventNoteRoundedIcon from '@mui/icons-material/EventNoteRounded';
+import MeetingRoomRoundedIcon from '@mui/icons-material/MeetingRoomRounded';
 
 const useStyles = makeStyles({
     root: {

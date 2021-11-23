@@ -1,11 +1,11 @@
 import React from 'react';
-import { makeStyles } from '@material-ui/styles';
+import { makeStyles } from '@mui/styles';
 import { darkSwitchGrey } from '../../functions/util';
 import { Exec } from '../../functions/entries';
 
-import Box from '@material-ui/core/Box';
-import Hidden from '@material-ui/core/Hidden';
-import Typography from '@material-ui/core/Typography';
+import Box from '@mui/material/Box';
+import Hidden from '@mui/material/Hidden';
+import Typography from '@mui/material/Typography';
 import Image from '../shared/image';
 import Paragraph from '../shared/paragraph';
 
@@ -26,18 +26,18 @@ const useStyles = makeStyles((theme) => ({
     name: {
         fontSize: '1.75rem',
         lineHeight: 1.1,
-        [theme.breakpoints.down('sm')]: {
+        [theme.breakpoints.down('md')]: {
             fontSize: '1.1rem',
         },
     },
     position: {
-        [theme.breakpoints.down('sm')]: {
+        [theme.breakpoints.down('md')]: {
             fontSize: '0.85rem',
         },
     },
     description: {
         color: darkSwitchGrey(theme),
-        [theme.breakpoints.down('sm')]: {
+        [theme.breakpoints.down('md')]: {
             fontSize: '0.75rem',
         },
     },
@@ -72,7 +72,7 @@ const ExecCard = (props) => {
                     <Typography variant="subtitle1" className={classes.position}>
                         {props.exec.position}
                     </Typography>
-                    <Hidden smDown>
+                    <Hidden mdDown>
                         <Paragraph text={props.exec.description} className={classes.description} />
                     </Hidden>
                 </Box>

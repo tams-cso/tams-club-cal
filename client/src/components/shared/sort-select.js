@@ -1,13 +1,15 @@
 import React from 'react';
-import { capitalize, makeStyles } from '@material-ui/core';
+import { capitalize } from '@mui/material';
 
-import Select from '@material-ui/core/Select';
-import MenuItem from '@material-ui/core/MenuItem';
-import FormControl from '@material-ui/core/FormControl';
-import IconButton from '@material-ui/core/IconButton';
-import Tooltip from '@material-ui/core/Tooltip';
-import ArrowDownwardRoundedIcon from '@material-ui/icons/ArrowDownwardRounded';
-import ArrowUpwardRoundedIcon from '@material-ui/icons/ArrowUpwardRounded';
+import makeStyles from '@mui/styles/makeStyles';
+
+import Select from '@mui/material/Select';
+import MenuItem from '@mui/material/MenuItem';
+import FormControl from '@mui/material/FormControl';
+import IconButton from '@mui/material/IconButton';
+import Tooltip from '@mui/material/Tooltip';
+import ArrowDownwardRoundedIcon from '@mui/icons-material/ArrowDownwardRounded';
+import ArrowUpwardRoundedIcon from '@mui/icons-material/ArrowUpwardRounded';
 
 const useStyles = makeStyles({
     tooltip: {
@@ -51,7 +53,7 @@ const SortSelect = (props) => {
                 onClick={props.setReverse.bind(this, !props.reverse)}
                 className={classes.tooltip}
             >
-                <IconButton>{props.reverse ? <ArrowUpwardRoundedIcon /> : <ArrowDownwardRoundedIcon />}</IconButton>
+                <IconButton size="large">{props.reverse ? <ArrowUpwardRoundedIcon /> : <ArrowDownwardRoundedIcon />}</IconButton>
             </Tooltip>
         </React.Fragment>
     );

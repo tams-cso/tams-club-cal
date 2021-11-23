@@ -1,12 +1,12 @@
 import React, { useEffect, useState } from 'react';
 import { useLocation } from 'react-router';
-import { makeStyles } from '@material-ui/core';
+import makeStyles from '@mui/styles/makeStyles';
 import { getParams } from '../../functions/util';
 
-import Box from '@material-ui/core/Box';
-import Drawer from '@material-ui/core/Drawer';
-import Toolbar from '@material-ui/core/Toolbar';
-import Hidden from '@material-ui/core/Hidden';
+import Box from '@mui/material/Box';
+import Drawer from '@mui/material/Drawer';
+import Toolbar from '@mui/material/Toolbar';
+import Hidden from '@mui/material/Hidden';
 import PageWrapper from '../shared/page-wrapper';
 import HomeDrawerList from './home-drawer-list';
 import EventList from './list/event-list';
@@ -58,7 +58,7 @@ const Home = () => {
 
     return (
         <PageWrapper noBottom>
-            <Hidden smDown>
+            <Hidden mdDown>
                 {view === 'reservation' ? null : (
                     <Drawer variant="permanent" className={classes.drawer}>
                         <Toolbar className={classes.spacer} />

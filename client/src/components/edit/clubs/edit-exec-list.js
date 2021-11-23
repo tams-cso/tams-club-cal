@@ -2,9 +2,9 @@ import React, { useEffect, useState } from 'react';
 import { Exec } from '../../../functions/entries';
 import EditExec from './edit-exec';
 
-import List from '@material-ui/core/List';
-import Button from '@material-ui/core/Button';
-import { makeStyles } from '@material-ui/core';
+import List from '@mui/material/List';
+import Button from '@mui/material/Button';
+import makeStyles from '@mui/styles/makeStyles';
 import { openPopup } from '../../../redux/actions';
 import { useDispatch } from 'react-redux';
 

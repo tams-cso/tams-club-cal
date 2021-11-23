@@ -1,10 +1,11 @@
 import React from 'react';
-import { Link, makeStyles } from '@material-ui/core';
+import { Link } from '@mui/material';
+import makeStyles from '@mui/styles/makeStyles';
 import { darkSwitchGrey } from '../../functions/util';
 import { Committee } from '../../functions/entries';
 
-import Card from '@material-ui/core/Card';
-import Typography from '@material-ui/core/Typography';
+import Card from '@mui/material/Card';
+import Typography from '@mui/material/Typography';
 import Paragraph from '../shared/paragraph';
 
 const useStyles = makeStyles((theme) => ({

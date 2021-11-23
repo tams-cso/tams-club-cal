@@ -1,13 +1,13 @@
 import React, { useEffect } from 'react';
 import { BrowserRouter, Route, Switch, useLocation } from 'react-router-dom';
-import { makeStyles } from '@material-ui/core';
+import makeStyles from '@mui/styles/makeStyles';
 import Cookies from 'universal-cookie';
 import { redirect } from '../../functions/util';
 
-import Container from '@material-ui/core/Container';
-import Box from '@material-ui/core/Box';
-import Paper from '@material-ui/core/Paper';
-import Button from '@material-ui/core/Button';
+import Container from '@mui/material/Container';
+import Box from '@mui/material/Box';
+import Paper from '@mui/material/Paper';
+import Button from '@mui/material/Button';
 import PageWrapper from '../shared/page-wrapper';
 import EditLogin from './edit-login';
 import EditEvents from './edit-events';
@@ -28,7 +28,7 @@ const useStyles = makeStyles((theme) => ({
     centerBox: {
         display: 'flex',
         justifyContent: 'center',
-        [theme.breakpoints.down('sm')]: {
+        [theme.breakpoints.down('md')]: {
             flexDirection: 'column',
         },
     },

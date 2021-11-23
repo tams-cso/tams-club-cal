@@ -2,9 +2,9 @@ import React from 'react';
 import { darkSwitch, darkSwitchGrey, formatEventTime } from '../../../functions/util';
 import { Event } from '../../../functions/entries';
 
-import ListItem from '@material-ui/core/ListItem';
-import Typography from '@material-ui/core/Typography';
-import { makeStyles } from '@material-ui/core';
+import ListItem from '@mui/material/ListItem';
+import Typography from '@mui/material/Typography';
+import makeStyles from '@mui/styles/makeStyles';
 import { Link } from 'react-router-dom';
 
 const useStyles = makeStyles((theme) => ({
@@ -16,7 +16,7 @@ const useStyles = makeStyles((theme) => ({
         flexShrink: 0,
         color: darkSwitchGrey(theme),
         fontSize: '0.65rem',
-        [theme.breakpoints.down('sm')]: {
+        [theme.breakpoints.down('md')]: {
             display: 'none',
         },
     },
@@ -27,7 +27,7 @@ const useStyles = makeStyles((theme) => ({
         whiteSpace: 'nowrap',
         flexShrink: 1,
         fontSize: '0.85rem',
-        [theme.breakpoints.down('sm')]: {
+        [theme.breakpoints.down('md')]: {
             marginLeft: 0,
             fontSize: '0.65rem',
             textOverflow: 'clip',

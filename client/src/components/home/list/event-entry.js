@@ -1,12 +1,12 @@
 import React from 'react';
 import { NavLink } from 'react-router-dom';
-import { makeStyles } from '@material-ui/core/styles';
+import makeStyles from '@mui/styles/makeStyles';
 import { darkSwitch, formatEventTime } from '../../../functions/util';
 import { Event } from '../../../functions/entries';
 
-import Box from '@material-ui/core/Box';
-import ListItem from '@material-ui/core/ListItem';
-import Typography from '@material-ui/core/Typography';
+import Box from '@mui/material/Box';
+import ListItem from '@mui/material/ListItem';
+import Typography from '@mui/material/Typography';
 
 const useStyles = makeStyles((theme) => ({
     root: {
@@ -20,7 +20,7 @@ const useStyles = makeStyles((theme) => ({
         flexDirection: 'row',
         justifyContent: 'flex-start',
         textDecoration: 'none',
-        [theme.breakpoints.down('sm')]: {
+        [theme.breakpoints.down('md')]: {
             padding: '8px 0',
         },
     },
@@ -31,7 +31,7 @@ const useStyles = makeStyles((theme) => ({
         width: 200,
         flexShrink: 0,
         textAlign: 'left',
-        [theme.breakpoints.down('sm')]: {
+        [theme.breakpoints.down('md')]: {
             width: 80,
             fontSize: '0.9rem',
             textAlign: 'left',
@@ -39,7 +39,7 @@ const useStyles = makeStyles((theme) => ({
     },
     name: {
         color: darkSwitch(theme, theme.palette.common.black, theme.palette.grey[200]),
-        [theme.breakpoints.down('sm')]: {
+        [theme.breakpoints.down('md')]: {
             fontSize: '1rem',
         },
     },
@@ -50,7 +50,7 @@ const useStyles = makeStyles((theme) => ({
         whiteSpace: 'nowrap',
         fontSize: '0.85rem',
         color: theme.palette.grey[600],
-        [theme.breakpoints.down('sm')]: {
+        [theme.breakpoints.down('md')]: {
             fontSize: '0.75rem',
         },
     },

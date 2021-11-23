@@ -1,6 +1,6 @@
 import React from 'react';
 
-import MenuItem from '@material-ui/core/MenuItem';
+import MenuItem from '@mui/material/MenuItem';
 import ControlledSelect from './controlled-select';
 import data from '../../../data.json';
 

@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { useDispatch } from 'react-redux';
-import { makeStyles } from '@material-ui/core';
+import makeStyles from '@mui/styles/makeStyles';
 import { useForm } from 'react-hook-form';
 import dayjs from 'dayjs';
 import isSameOrBefore from 'dayjs/plugin/isSameOrBefore';
@@ -10,8 +10,8 @@ import { darkSwitchGrey, getParams, redirect } from '../../functions/util';
 import { Reservation } from '../../functions/entries';
 import { getRepeatingReservation, getReservation, postReservation, putReservation } from '../../functions/api';
 
-import Typography from '@material-ui/core/Typography';
-import Box from '@material-ui/core/Box';
+import Typography from '@mui/material/Typography';
+import Box from '@mui/material/Box';
 import DateTimeInput from './events/date-time-input';
 import DateInput from './events/date-input';
 import ControlledCheckbox from './events/controlled-checkbox';
@@ -36,7 +36,7 @@ const useStyles = makeStyles((theme) => ({
     },
     form: {
         padding: 24,
-        [theme.breakpoints.down('sm')]: {
+        [theme.breakpoints.down('md')]: {
             padding: 12,
         },
     },
@@ -44,7 +44,7 @@ const useStyles = makeStyles((theme) => ({
         marginBottom: 16,
         display: 'flex',
         alignItems: 'center',
-        [theme.breakpoints.down('sm')]: {
+        [theme.breakpoints.down('md')]: {
             flexDirection: 'column',
         },
     },
@@ -55,12 +55,12 @@ const useStyles = makeStyles((theme) => ({
         [theme.breakpoints.up('md')]: {
             marginLeft: 8,
         },
-        [theme.breakpoints.down('sm')]: {
+        [theme.breakpoints.down('md')]: {
             marginTop: 8,
         },
     },
     rightCheckbox: {
-        [theme.breakpoints.down('sm')]: {
+        [theme.breakpoints.down('md')]: {
             marginBottom: 8,
         },
     },
@@ -69,7 +69,7 @@ const useStyles = makeStyles((theme) => ({
     },
     spacer: {
         width: 20,
-        [theme.breakpoints.down('sm')]: {
+        [theme.breakpoints.down('md')]: {
             height: 16,
         },
     },
@@ -77,7 +77,7 @@ const useStyles = makeStyles((theme) => ({
         marginTop: 12,
     },
     fullMobile: {
-        [theme.breakpoints.down('sm')]: {
+        [theme.breakpoints.down('md')]: {
             width: '100%',
         },
     },

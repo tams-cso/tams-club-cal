@@ -2,20 +2,20 @@ import React, { useEffect, useState } from 'react';
 import dayjs from 'dayjs';
 import { getRepeatingReservationList, getReservationList } from '../../../functions/api';
 
-import Box from '@material-ui/core/Box';
-import InputAdornment from '@material-ui/core/InputAdornment';
-import IconButton from '@material-ui/core/IconButton';
-import EventIcon from '@material-ui/icons/Event';
+import Box from '@mui/material/Box';
+import InputAdornment from '@mui/material/InputAdornment';
+import IconButton from '@mui/material/IconButton';
+import EventIcon from '@mui/icons-material/Event';
 import Loading from '../../shared/loading';
 import ReservationDay from './reservation-day';
 import AddButton from '../../shared/add-button';
-import { DatePicker } from '@material-ui/pickers';
-import { makeStyles } from '@material-ui/core';
+import DatePicker from '@mui/lab/DatePicker';
+import makeStyles from '@mui/styles/makeStyles';
 
 const useStyles = makeStyles((theme) => ({
     date: {
         marginLeft: 24,
-        [theme.breakpoints.down('sm')]: {
+        [theme.breakpoints.down('md')]: {
             margin: 'auto',
         },
     },
@@ -122,7 +122,7 @@ const Reservations = () => {
                     InputProps={{
                         endAdornment: (
                             <InputAdornment position="end">
-                                <IconButton>
+                                <IconButton size="large">
                                     <EventIcon />
                                 </IconButton>
                             </InputAdornment>

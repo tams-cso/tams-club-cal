@@ -1,8 +1,8 @@
 import React from 'react';
 import { Event } from '../../../functions/entries';
 
-import List from '@material-ui/core/List';
-import Divider from '@material-ui/core/Divider';
+import List from '@mui/material/List';
+import Divider from '@mui/material/Divider';
 import DateSection from './date-section';
 import EventEntry from './event-entry';
 

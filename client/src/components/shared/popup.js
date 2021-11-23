@@ -3,11 +3,11 @@ import { useDispatch, useSelector } from 'react-redux';
 import { getPopupMessage, getPopupOpen, getPopupSeverity } from '../../redux/selectors';
 import { openPopup, setPopupOpen } from '../../redux/actions';
 
-import Snackbar from '@material-ui/core/Snackbar';
-import Alert from '@material-ui/lab/Alert';
-import Card from '@material-ui/core/Card';
-import Typography from '@material-ui/core/Typography';
-import { makeStyles } from '@material-ui/core';
+import Snackbar from '@mui/material/Snackbar';
+import Alert from '@mui/material/Alert';
+import Card from '@mui/material/Card';
+import Typography from '@mui/material/Typography';
+import makeStyles from '@mui/styles/makeStyles';
 import Cookies from 'universal-cookie';
 
 const useStyles = makeStyles({

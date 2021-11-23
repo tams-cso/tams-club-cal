@@ -1,11 +1,13 @@
 import React from 'react';
 import { redirect } from '../../functions/util';
 
-import Fab from '@material-ui/core/Fab';
-import AddIcon from '@material-ui/icons/Add';
-import EditIcon from '@material-ui/icons/Edit';
-import AccessTimeRoundedIcon from '@material-ui/icons/AccessTimeRounded';
-import { makeStyles, Tooltip, useMediaQuery, useTheme } from '@material-ui/core';
+import Fab from '@mui/material/Fab';
+import AddIcon from '@mui/icons-material/Add';
+import EditIcon from '@mui/icons-material/Edit';
+import AccessTimeRoundedIcon from '@mui/icons-material/AccessTimeRounded';
+import { Tooltip, useMediaQuery, useTheme } from '@mui/material';
+
+import makeStyles from '@mui/styles/makeStyles';
 
 const useStyles = makeStyles((theme) => ({
     root: {
@@ -14,7 +16,7 @@ const useStyles = makeStyles((theme) => ({
         right: 36,
         zIndex: theme.zIndex.appBar + 1,
         color: theme.palette.common.white,
-        [theme.breakpoints.down('sm')]: {
+        [theme.breakpoints.down('md')]: {
             bottom: 12,
             right: 12,
         },
@@ -40,7 +42,7 @@ const useStyles = makeStyles((theme) => ({
 const AddButton = (props) => {
     const classes = useStyles();
     const theme = useTheme();
-    const matches = useMediaQuery(theme.breakpoints.down('sm'));
+    const matches = useMediaQuery(theme.breakpoints.down('md'));
 
     const redirectTo = () => {
         redirect(props.path || '#');

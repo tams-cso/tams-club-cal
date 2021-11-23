@@ -1,8 +1,9 @@
-import { alpha, makeStyles } from '@material-ui/core/styles';
+import { alpha } from '@mui/material/styles';
+import makeStyles from '@mui/styles/makeStyles';
 import { darkSwitch } from '../../functions/util';
 
-import ButtonBase from '@material-ui/core/ButtonBase';
-import Tooltip from '@material-ui/core/Tooltip';
+import ButtonBase from '@mui/material/ButtonBase';
+import Tooltip from '@mui/material/Tooltip';
 
 const useStyles = makeStyles((theme) => ({
     root: {

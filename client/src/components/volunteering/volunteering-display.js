@@ -1,20 +1,20 @@
 import React, { useEffect, useState } from 'react';
 import { useHistory } from 'react-router';
 import { useSelector } from 'react-redux';
-import { makeStyles } from '@material-ui/core/styles';
+import makeStyles from '@mui/styles/makeStyles';
 import { getSavedVolunteeringList } from '../../redux/selectors';
 import { getVolunteering } from '../../functions/api';
 import { darkSwitchGrey, getParams } from '../../functions/util';
 
-import Container from '@material-ui/core/Container';
-import Card from '@material-ui/core/Card';
-import CardContent from '@material-ui/core/CardContent';
-import CardActions from '@material-ui/core/CardActions';
-import Button from '@material-ui/core/Button';
-import Box from '@material-ui/core/Box';
-import Typography from '@material-ui/core/Typography';
-import Divider from '@material-ui/core/Divider';
-import Hidden from '@material-ui/core/Hidden';
+import Container from '@mui/material/Container';
+import Card from '@mui/material/Card';
+import CardContent from '@mui/material/CardContent';
+import CardActions from '@mui/material/CardActions';
+import Button from '@mui/material/Button';
+import Box from '@mui/material/Box';
+import Typography from '@mui/material/Typography';
+import Divider from '@mui/material/Divider';
+import Hidden from '@mui/material/Hidden';
 import Loading from '../shared/loading';
 import FilterList from './filter-list';
 import Paragraph from '../shared/paragraph';
@@ -24,17 +24,17 @@ import Title from '../shared/title';
 const useStyles = makeStyles((theme) => ({
     root: {
         maxWidth: '50%',
-        [theme.breakpoints.down(1500)]: {
+        [theme.breakpoints.down(undefined)]: {
             maxWidth: '75%',
         },
-        [theme.breakpoints.down('md')]: {
+        [theme.breakpoints.down('lg')]: {
             maxWidth: '100%',
         },
     },
     container: {
         display: 'flex',
         flexDirection: 'row',
-        [theme.breakpoints.down('sm')]: {
+        [theme.breakpoints.down('md')]: {
             flexDirection: 'column',
         },
     },
@@ -136,7 +136,7 @@ const EventDisplay = (props) => {
                                     </Typography>
                                     <Paragraph text={volunteering.description} />
                                 </Box>
-                                <Hidden smDown>
+                                <Hidden mdDown>
                                     <Divider orientation="vertical" flexItem />
                                 </Hidden>
                                 <FilterList filters={volunteering.filters} className={classes.side} />

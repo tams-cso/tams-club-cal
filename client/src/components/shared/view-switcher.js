@@ -1,10 +1,10 @@
 import React, { useEffect } from 'react';
 import { getParams } from '../../functions/util';
 
-import Tooltip from '@material-ui/core/Tooltip';
-import IconButton from '@material-ui/core/IconButton';
-import ListRoundedIcon from '@material-ui/icons/ListRounded';
-import AppsRoundedIcon from '@material-ui/icons/AppsRounded';
+import Tooltip from '@mui/material/Tooltip';
+import IconButton from '@mui/material/IconButton';
+import ListRoundedIcon from '@mui/icons-material/ListRounded';
+import AppsRoundedIcon from '@mui/icons-material/AppsRounded';
 
 /**
  * Shows a button that will switch between a list view and grid view icon.
@@ -28,7 +28,7 @@ const ViewSwitcher = (props) => {
 
     return (
         <Tooltip title={`Switch to ${props.listView ? 'grid' : 'list'} view`} className={props.className || ''}>
-            <IconButton onClick={toggleView}>{props.listView ? <AppsRoundedIcon /> : <ListRoundedIcon />}</IconButton>
+            <IconButton onClick={toggleView} size="large">{props.listView ? <AppsRoundedIcon /> : <ListRoundedIcon />}</IconButton>
         </Tooltip>
     );
 };

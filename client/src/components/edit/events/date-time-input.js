@@ -2,10 +2,10 @@ import dayjs from 'dayjs';
 import React from 'react';
 
 import { Controller } from 'react-hook-form';
-import { DateTimePicker } from '@material-ui/pickers';
-import InputAdornment from '@material-ui/core/InputAdornment';
-import IconButton from '@material-ui/core/IconButton';
-import EventIcon from '@material-ui/icons/Event';
+import DateTimePicker from '@mui/lab/DateTimePicker';
+import InputAdornment from '@mui/material/InputAdornment';
+import IconButton from '@mui/material/IconButton';
+import EventIcon from '@mui/icons-material/Event';
 
 /**
  * Displays a date time input
@@ -48,7 +48,7 @@ const DateTimeInput = (props) => {
                     InputProps={{
                         endAdornment: (
                             <InputAdornment position="end">
-                                <IconButton>
+                                <IconButton size="large">
                                     <EventIcon />
                                 </IconButton>
                             </InputAdornment>

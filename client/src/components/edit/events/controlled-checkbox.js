@@ -1,8 +1,8 @@
 import React, { useEffect } from 'react';
 
 import { Controller } from 'react-hook-form';
-import FormControlLabel from '@material-ui/core/FormControlLabel';
-import Checkbox from '@material-ui/core/Checkbox';
+import FormControlLabel from '@mui/material/FormControlLabel';
+import Checkbox from '@mui/material/Checkbox';
 
 /**
  * Displays a controlled checkbox for a form

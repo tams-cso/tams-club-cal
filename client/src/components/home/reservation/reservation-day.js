@@ -1,15 +1,15 @@
 import React, { useEffect, useState } from 'react';
 import dayjs from 'dayjs';
-import { makeStyles } from '@material-ui/core';
+import makeStyles from '@mui/styles/makeStyles';
 import { darkSwitch } from '../../../functions/util';
 import { Reservation } from '../../../functions/entries';
 
-import Table from '@material-ui/core/Table';
-import TableBody from '@material-ui/core/TableBody';
-import TableCell from '@material-ui/core/TableCell';
-import TableContainer from '@material-ui/core/TableContainer';
-import TableHead from '@material-ui/core/TableHead';
-import TableRow from '@material-ui/core/TableRow';
+import Table from '@mui/material/Table';
+import TableBody from '@mui/material/TableBody';
+import TableCell from '@mui/material/TableCell';
+import TableContainer from '@mui/material/TableContainer';
+import TableHead from '@mui/material/TableHead';
+import TableRow from '@mui/material/TableRow';
 import ReservationEntry from './reservation-entry';
 
 import data from '../../../data.json';
@@ -24,7 +24,7 @@ const useStyles = makeStyles((theme) => ({
     table: {
         tableLayout: 'fixed',
         width: '100%',
-        [theme.breakpoints.down('sm')]: {
+        [theme.breakpoints.down('md')]: {
             width: '300%',
         },
     },

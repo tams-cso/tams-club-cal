@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { useDispatch } from 'react-redux';
-import { makeStyles } from '@material-ui/core';
+import makeStyles from '@mui/styles/makeStyles';
 import { useForm } from 'react-hook-form';
 import Cookies from 'universal-cookie';
 import { openPopup } from '../../redux/actions';
@@ -9,11 +9,11 @@ import { Filters, Volunteering } from '../../functions/entries';
 import { getVolunteering, postVolunteering, putVolunteering } from '../../functions/api';
 
 import { Controller } from 'react-hook-form';
-import Typography from '@material-ui/core/Typography';
-import Hidden from '@material-ui/core/Hidden';
-import Box from '@material-ui/core/Box';
-import Switch from '@material-ui/core/Switch';
-import FormControlLabel from '@material-ui/core/FormControlLabel';
+import Typography from '@mui/material/Typography';
+import Hidden from '@mui/material/Hidden';
+import Box from '@mui/material/Box';
+import Switch from '@mui/material/Switch';
+import FormControlLabel from '@mui/material/FormControlLabel';
 import ControlledTextField from './shared/controlled-text-field';
 import UploadBackdrop from './shared/upload-backdrop';
 import Loading from '../shared/loading';
@@ -29,14 +29,14 @@ const useStyles = makeStyles((theme) => ({
     },
     form: {
         padding: 24,
-        [theme.breakpoints.down('sm')]: {
+        [theme.breakpoints.down('md')]: {
             padding: 12,
         },
     },
     boxWrapper: {
         marginBottom: 16,
         display: 'flex',
-        [theme.breakpoints.down('sm')]: {
+        [theme.breakpoints.down('md')]: {
             flexDirection: 'column',
         },
     },
@@ -53,7 +53,7 @@ const useStyles = makeStyles((theme) => ({
     },
     spacer: {
         width: 20,
-        [theme.breakpoints.down('sm')]: {
+        [theme.breakpoints.down('md')]: {
             height: 16,
         },
     },
@@ -173,7 +173,7 @@ const EditVolunteering = () => {
                         errorMessage="Please enter a club name"
                     />
                 </Box>
-                <Hidden smDown>
+                <Hidden mdDown>
                     <Typography className={classes.filtersTitle}>Filters:</Typography>
                 </Hidden>
                 <ControlledFilterCheckbox

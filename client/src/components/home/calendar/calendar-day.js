@@ -3,12 +3,12 @@ import dayjs from 'dayjs';
 import { darkSwitch, darkSwitchGrey } from '../../../functions/util';
 import { Event } from '../../../functions/entries';
 
-import Box from '@material-ui/core/Box';
-import List from '@material-ui/core/List';
-import ListItem from '@material-ui/core/ListItem';
-import Typography from '@material-ui/core/Typography';
-import Button from '@material-ui/core/Button';
-import { makeStyles } from '@material-ui/core';
+import Box from '@mui/material/Box';
+import List from '@mui/material/List';
+import ListItem from '@mui/material/ListItem';
+import Typography from '@mui/material/Typography';
+import Button from '@mui/material/Button';
+import makeStyles from '@mui/styles/makeStyles';
 import CalendarEvent from './calendar-event';
 import CalendarPopup from './calendar-popup';
 
@@ -42,7 +42,7 @@ const useStyles = makeStyles((theme) => ({
         fontSize: '0.8rem',
         textAlign: 'center',
         color: darkSwitchGrey(theme),
-        [theme.breakpoints.down('sm')]: {
+        [theme.breakpoints.down('md')]: {
             fontSize: '0.5rem',
         },
     },

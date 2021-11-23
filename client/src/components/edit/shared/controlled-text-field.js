@@ -1,8 +1,8 @@
 import React, { useEffect } from 'react';
 
 import { Controller } from 'react-hook-form';
-import TextField from '@material-ui/core/TextField';
-import { makeStyles } from '@material-ui/core';
+import TextField from '@mui/material/TextField';
+import makeStyles from '@mui/styles/makeStyles';
 
 const useStyles = makeStyles({
     grow: {

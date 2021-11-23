@@ -1,24 +1,24 @@
 import React, { useState } from 'react';
-import { makeStyles } from '@material-ui/core';
+import makeStyles from '@mui/styles/makeStyles';
 import { darkSwitch } from '../../functions/util';
 import { githubLink } from '../../data.json';
 
-import AppBar from '@material-ui/core/AppBar';
-import Toolbar from '@material-ui/core/Toolbar';
-import SvgIcon from '@material-ui/core/SvgIcon';
-import Drawer from '@material-ui/core/Drawer';
-import IconButton from '@material-ui/core/IconButton';
-import Typography from '@material-ui/core/Typography';
-import List from '@material-ui/core/List';
-import ListItem from '@material-ui/core/ListItem';
-import ListItemIcon from '@material-ui/core/ListItemIcon';
-import ListItemText from '@material-ui/core/ListItemText';
-import MenuHamburgerIcon from '@material-ui/icons/Menu';
-import HomeRoundedIcon from '@material-ui/icons/HomeRounded';
-import AppsRoundedIcon from '@material-ui/icons/AppsRounded';
-import EmojiPeopleRoundedIcon from '@material-ui/icons/EmojiPeopleRounded';
-import InfoRoundedIcon from '@material-ui/icons/InfoRounded';
-import CreateRoundedIcon from '@material-ui/icons/CreateRounded';
+import AppBar from '@mui/material/AppBar';
+import Toolbar from '@mui/material/Toolbar';
+import SvgIcon from '@mui/material/SvgIcon';
+import Drawer from '@mui/material/Drawer';
+import IconButton from '@mui/material/IconButton';
+import Typography from '@mui/material/Typography';
+import List from '@mui/material/List';
+import ListItem from '@mui/material/ListItem';
+import ListItemIcon from '@mui/material/ListItemIcon';
+import ListItemText from '@mui/material/ListItemText';
+import MenuHamburgerIcon from '@mui/icons-material/Menu';
+import HomeRoundedIcon from '@mui/icons-material/HomeRounded';
+import AppsRoundedIcon from '@mui/icons-material/AppsRounded';
+import EmojiPeopleRoundedIcon from '@mui/icons-material/EmojiPeopleRounded';
+import InfoRoundedIcon from '@mui/icons-material/InfoRounded';
+import CreateRoundedIcon from '@mui/icons-material/CreateRounded';
 import MenuIcon from './menu-icon';
 import AppIcon from './app-icon';
 import { Link } from 'react-router-dom';
@@ -81,7 +81,10 @@ const MobileMenu = (props) => {
         <React.Fragment>
             <AppBar className={classes.bar}>
                 <Toolbar className={classes.root}>
-                    <IconButton aria-label="open mobile menu" onClick={toggleDrawer.bind(this, true)}>
+                    <IconButton
+                        aria-label="open mobile menu"
+                        onClick={toggleDrawer.bind(this, true)}
+                        size="large">
                         <MenuHamburgerIcon className={classes.hamburger} />
                     </IconButton>
                     <AppIcon className={classes.logo} noText></AppIcon>

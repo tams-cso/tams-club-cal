@@ -1,19 +1,19 @@
 import React, { useEffect } from 'react';
 import { Link, useHistory } from 'react-router-dom';
-import { makeStyles } from '@material-ui/core';
+import makeStyles from '@mui/styles/makeStyles';
 import { darkSwitchGrey } from '../../functions/util';
 
-import Container from '@material-ui/core/Container';
-import Paper from '@material-ui/core/Paper';
-import Typography from '@material-ui/core/Typography';
-import List from '@material-ui/core/List';
-import ListItem from '@material-ui/core/ListItem';
-import ListItemIcon from '@material-ui/core/ListItemIcon';
-import ListItemText from '@material-ui/core/ListItemText';
-import HomeRoundedIcon from '@material-ui/icons/HomeRounded';
-import AppsRoundedIcon from '@material-ui/icons/AppsRounded';
-import EmojiPeopleRoundedIcon from '@material-ui/icons/EmojiPeopleRounded';
-import InfoRoundedIcon from '@material-ui/icons/InfoRounded';
+import Container from '@mui/material/Container';
+import Paper from '@mui/material/Paper';
+import Typography from '@mui/material/Typography';
+import List from '@mui/material/List';
+import ListItem from '@mui/material/ListItem';
+import ListItemIcon from '@mui/material/ListItemIcon';
+import ListItemText from '@mui/material/ListItemText';
+import HomeRoundedIcon from '@mui/icons-material/HomeRounded';
+import AppsRoundedIcon from '@mui/icons-material/AppsRounded';
+import EmojiPeopleRoundedIcon from '@mui/icons-material/EmojiPeopleRounded';
+import InfoRoundedIcon from '@mui/icons-material/InfoRounded';
 
 const useStyles = makeStyles((theme) => ({
     root: {
@@ -31,7 +31,7 @@ const useStyles = makeStyles((theme) => ({
     },
     listWrapper: {
         width: '50%',
-        [theme.breakpoints.down('md')]: {
+        [theme.breakpoints.down('lg')]: {
             width: '100%',
         },
     },

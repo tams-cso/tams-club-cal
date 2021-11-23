@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
-import { makeStyles } from '@material-ui/core';
+import makeStyles from '@mui/styles/makeStyles';
 
-import ListItem from '@material-ui/core/ListItem';
+import ListItem from '@mui/material/ListItem';
 import TrashCan from './trash-can';
 import ControlledTextField from '../shared/controlled-text-field';
 

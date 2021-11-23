@@ -1,8 +1,8 @@
 import React, { useEffect, useState } from 'react';
-import { makeStyles } from '@material-ui/core';
+import makeStyles from '@mui/styles/makeStyles';
 
-import List from '@material-ui/core/List';
-import Button from '@material-ui/core/Button';
+import List from '@mui/material/List';
+import Button from '@mui/material/Button';
 import LinkInput from './link-input';
 
 const useStyles = makeStyles({

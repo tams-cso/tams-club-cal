@@ -1,7 +1,7 @@
 import React from 'react';
-import { makeStyles } from '@material-ui/core';
+import makeStyles from '@mui/styles/makeStyles';
 
-import Button from '@material-ui/core/Button';
+import Button from '@mui/material/Button';
 import { getBackendUrl } from '../../../functions/api';
 
 const useStyles = makeStyles({

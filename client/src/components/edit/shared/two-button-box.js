@@ -1,15 +1,15 @@
 import React from 'react';
-import { makeStyles } from '@material-ui/core';
+import makeStyles from '@mui/styles/makeStyles';
 
-import Box from '@material-ui/core/Box';
-import Button from '@material-ui/core/Button';
+import Box from '@mui/material/Box';
+import Button from '@mui/material/Button';
 
 const useStyles = makeStyles((theme) => ({
     root: {
         padding: '0 24px',
         display: 'flex',
         justifyContent: props => props.right ? 'flex-end' : 'center',
-        [theme.breakpoints.down('sm')]: {
+        [theme.breakpoints.down('md')]: {
             justifyContent: 'center',
         }
     },

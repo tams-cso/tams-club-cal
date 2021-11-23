@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { useDispatch } from 'react-redux';
-import { makeStyles } from '@material-ui/core';
+import makeStyles from '@mui/styles/makeStyles';
 import { useForm } from 'react-hook-form';
 import Cookies from 'universal-cookie';
 import { openPopup } from '../../redux/actions';
@@ -8,9 +8,9 @@ import { getParams, processLinkObjectList, redirect } from '../../functions/util
 import { Club, ClubImageBlobs } from '../../functions/entries';
 import { getClub, postClub, putClub } from '../../functions/api';
 
-import Typography from '@material-ui/core/Typography';
-import Box from '@material-ui/core/Box';
-import MenuItem from '@material-ui/core/MenuItem';
+import Typography from '@mui/material/Typography';
+import Box from '@mui/material/Box';
+import MenuItem from '@mui/material/MenuItem';
 import LinkInputList from './clubs/link-input-list';
 import EditCommitteeList from './clubs/edit-committee-list';
 import ControlledTextField from './shared/controlled-text-field';
@@ -30,7 +30,7 @@ const useStyles = makeStyles((theme) => ({
     },
     form: {
         padding: 24,
-        [theme.breakpoints.down('sm')]: {
+        [theme.breakpoints.down('md')]: {
             padding: 12,
         },
     },
@@ -42,7 +42,7 @@ const useStyles = makeStyles((theme) => ({
     boxWrapper: {
         marginBottom: 16,
         display: 'flex',
-        [theme.breakpoints.down('sm')]: {
+        [theme.breakpoints.down('md')]: {
             flexDirection: 'column',
         },
     },
@@ -51,7 +51,7 @@ const useStyles = makeStyles((theme) => ({
     },
     spacer: {
         width: 20,
-        [theme.breakpoints.down('sm')]: {
+        [theme.breakpoints.down('md')]: {
             height: 16,
         },
     },

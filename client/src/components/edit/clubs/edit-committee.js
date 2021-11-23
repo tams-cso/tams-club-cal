@@ -1,10 +1,10 @@
 import React, { useState } from 'react';
-import { makeStyles } from '@material-ui/core';
+import makeStyles from '@mui/styles/makeStyles';
 import { Committee } from '../../../functions/entries';
 
-import ListItem from '@material-ui/core/ListItem';
-import Box from '@material-ui/core/Box';
-import Card from '@material-ui/core/Card';
+import ListItem from '@mui/material/ListItem';
+import Box from '@mui/material/Box';
+import Card from '@mui/material/Card';
 import LinkInputList from './link-input-list';
 import TrashCan from './trash-can';
 import ControlledTextField from '../shared/controlled-text-field';
@@ -13,7 +13,7 @@ const useStyles = makeStyles((theme) => ({
     root: {
         width: '100%',
         padding: 24,
-        [theme.breakpoints.down('sm')]: {
+        [theme.breakpoints.down('md')]: {
             padding: 6,
         },
     },

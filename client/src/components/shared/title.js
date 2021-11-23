@@ -1,6 +1,6 @@
 import React from 'react';
 import { Helmet } from 'react-helmet';
-import { capitalize } from '@material-ui/core';
+import { capitalize } from '@mui/material';
 
 /**
  * Sets the title for the page

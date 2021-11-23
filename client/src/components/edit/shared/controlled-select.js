@@ -1,8 +1,8 @@
 import React, { useEffect } from 'react';
 
 import { Controller } from 'react-hook-form';
-import Select from '@material-ui/core/Select';
-import { FormControl, FormHelperText } from '@material-ui/core';
+import Select from '@mui/material/Select';
+import { FormControl, FormHelperText } from '@mui/material';
 
 /**
  * Displays a controlled select to edit.

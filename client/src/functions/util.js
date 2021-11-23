@@ -4,7 +4,7 @@ import utc from 'dayjs/plugin/utc';
 import timezone from 'dayjs/plugin/timezone';
 import isLeapYear from 'dayjs/plugin/isLeapYear';
 import customParseFormat from 'dayjs/plugin/customParseFormat';
-import Link from '@material-ui/core/Link';
+import Link from '@mui/material/Link';
 
 import { Event, Editor } from './entries';
 import { getUserById } from './api';
@@ -97,19 +97,19 @@ export function isActive(state, defaultClassName, activeClassName) {
 /**
  * Sets a style depending on whether or not the theme is light/dark
  *
- * @param {import('@material-ui/core').Theme} theme The Mui theme object
+ * @param {import('@mui/material').Theme} theme The Mui theme object
  * @param {string} light Light theme style
  * @param {string} dark Dark theme style
  * @returns {string} Style string
  */
 export function darkSwitch(theme, light, dark) {
-    return theme.palette.type === 'light' ? light : dark;
+    return theme.palette.mode === 'light' ? light : dark;
 }
 
 /**
  * Sets a grey (400/600) depending on whether or not the theme is light/dark
  *
- * @param {import('@material-ui/core').Theme} theme The Mui theme object
+ * @param {import('@mui/material').Theme} theme The Mui theme object
  * @returns {string} Style string
  */
 export function darkSwitchGrey(theme) {

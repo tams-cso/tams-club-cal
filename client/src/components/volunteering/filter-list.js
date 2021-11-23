@@ -1,11 +1,11 @@
 import React from 'react';
 import { Filters } from '../../functions/entries';
 
-import List from '@material-ui/core/List';
-import DashboardRoundedIcon from '@material-ui/icons/DashboardRounded';
-import EventNoteRoundedIcon from '@material-ui/icons/EventNoteRounded';
-import ScheduleRoundedIcon from '@material-ui/icons/ScheduleRounded';
-import EventRoundedIcon from '@material-ui/icons/EventRounded';
+import List from '@mui/material/List';
+import DashboardRoundedIcon from '@mui/icons-material/DashboardRounded';
+import EventNoteRoundedIcon from '@mui/icons-material/EventNoteRounded';
+import ScheduleRoundedIcon from '@mui/icons-material/ScheduleRounded';
+import EventRoundedIcon from '@mui/icons-material/EventRounded';
 import FilterItem from './filter-item';
 
 /**

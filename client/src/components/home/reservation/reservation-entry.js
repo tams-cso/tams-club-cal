@@ -1,11 +1,12 @@
 import React from 'react';
-import { makeStyles, alpha } from '@material-ui/core';
+import { alpha } from '@mui/material';
+import makeStyles from '@mui/styles/makeStyles';
 import { darkSwitch } from '../../../functions/util';
 import { Reservation } from '../../../functions/entries';
 
 import { Link as NavLink } from 'react-router-dom';
-import Link from '@material-ui/core/Link';
-import TableCell from '@material-ui/core/TableCell';
+import Link from '@mui/material/Link';
+import TableCell from '@mui/material/TableCell';
 
 const useStyles = makeStyles((theme) => ({
     root: {

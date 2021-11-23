@@ -1,19 +1,19 @@
 import React, { useEffect, useState } from 'react';
 import { useHistory } from 'react-router';
-import { makeStyles } from '@material-ui/core/styles';
+import makeStyles from '@mui/styles/makeStyles';
 import dayjs from 'dayjs';
 import { darkSwitchGrey, formatEventDate, formatEventTime, getParams } from '../../../functions/util';
 import { getRepeatingReservation, getReservation } from '../../../functions/api';
 
-import Container from '@material-ui/core/Container';
-import Card from '@material-ui/core/Card';
-import CardContent from '@material-ui/core/CardContent';
-import CardActions from '@material-ui/core/CardActions';
-import Button from '@material-ui/core/Button';
-import Box from '@material-ui/core/Box';
-import Divider from '@material-ui/core/Divider';
-import Hidden from '@material-ui/core/Hidden';
-import Typography from '@material-ui/core/Typography';
+import Container from '@mui/material/Container';
+import Card from '@mui/material/Card';
+import CardContent from '@mui/material/CardContent';
+import CardActions from '@mui/material/CardActions';
+import Button from '@mui/material/Button';
+import Box from '@mui/material/Box';
+import Divider from '@mui/material/Divider';
+import Hidden from '@mui/material/Hidden';
+import Typography from '@mui/material/Typography';
 import Paragraph from '../../shared/paragraph';
 import Loading from '../../shared/loading';
 import AddButton from '../../shared/add-button';
@@ -25,10 +25,10 @@ import Title from '../../shared/title';
 const useStyles = makeStyles((theme) => ({
     root: {
         maxWidth: '50%',
-        [theme.breakpoints.down(1500)]: {
+        [theme.breakpoints.down(undefined)]: {
             maxWidth: '75%',
         },
-        [theme.breakpoints.down('md')]: {
+        [theme.breakpoints.down('lg')]: {
             maxWidth: '100%',
         },
     },
@@ -36,27 +36,27 @@ const useStyles = makeStyles((theme) => ({
         width: '100%',
         display: 'flex',
         justifyContent: 'center',
-        [theme.breakpoints.down('sm')]: {
+        [theme.breakpoints.down('md')]: {
             flexDirection: 'column',
         },
     },
     gridSide: {
         width: '50%',
         textAlign: 'left',
-        [theme.breakpoints.down('sm')]: {
+        [theme.breakpoints.down('md')]: {
             width: '100%',
         },
     },
     gridLeft: {
         padding: 8,
-        [theme.breakpoints.down('sm')]: {
+        [theme.breakpoints.down('md')]: {
             padding: 0,
         },
     },
     gridRight: {
         marginLeft: 12,
         padding: '8px 0',
-        [theme.breakpoints.down('sm')]: {
+        [theme.breakpoints.down('md')]: {
             margin: 0,
             marginTop: 16,
             padding: 0,
@@ -159,7 +159,7 @@ const ReservationDisplay = () => {
                                         </Typography>
                                     ) : null}
                                 </Box>
-                                <Hidden smDown>
+                                <Hidden mdDown>
                                     <Divider orientation="vertical" flexItem />
                                 </Hidden>
                                 <Paragraph

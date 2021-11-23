@@ -1,18 +1,18 @@
 import React, { useEffect, useState } from 'react';
 import { useLocation } from 'react-router';
-import { makeStyles } from '@material-ui/core/styles';
+import makeStyles from '@mui/styles/makeStyles';
 import { darkSwitch } from '../../functions/util';
 import { githubLink } from '../../data.json';
 
-import Appbar from '@material-ui/core/AppBar';
-import Toolbar from '@material-ui/core/Toolbar';
-import SvgIcon from '@material-ui/core/SvgIcon';
-import WbSunnyRoundedIcon from '@material-ui/icons/WbSunnyRounded';
-import Brightness2RoundedIcon from '@material-ui/icons/Brightness2Rounded';
+import Appbar from '@mui/material/AppBar';
+import Toolbar from '@mui/material/Toolbar';
+import SvgIcon from '@mui/material/SvgIcon';
+import WbSunnyRoundedIcon from '@mui/icons-material/WbSunnyRounded';
+import Brightness2RoundedIcon from '@mui/icons-material/Brightness2Rounded';
 import AppIcon from './app-icon';
 import MenuLink from './menu-link';
 import MenuIcon from './menu-icon';
-import { Hidden } from '@material-ui/core';
+import { Hidden } from '@mui/material';
 import MobileMenu from './mobile-menu';
 
 const useStyles = makeStyles((theme) => ({
@@ -66,7 +66,7 @@ const Menu = (props) => {
     const location = useLocation();
     return (
         <React.Fragment>
-            <Hidden smDown>
+            <Hidden mdDown>
                 <Appbar className={classes.bar}>
                     <Toolbar className={classes.root}>
                         <AppIcon className={classes.logo}></AppIcon>

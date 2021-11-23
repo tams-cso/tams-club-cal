@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { useDispatch } from 'react-redux';
-import { makeStyles } from '@material-ui/core';
+import makeStyles from '@mui/styles/makeStyles';
 import { useForm } from 'react-hook-form';
 import Cookies from 'universal-cookie';
 import dayjs from 'dayjs';
@@ -9,9 +9,9 @@ import { getParams, redirect } from '../../functions/util';
 import { Event } from '../../functions/entries';
 import { getEvent, postEvent, putEvent } from '../../functions/api';
 
-import Typography from '@material-ui/core/Typography';
-import Box from '@material-ui/core/Box';
-import MenuItem from '@material-ui/core/MenuItem';
+import Typography from '@mui/material/Typography';
+import Box from '@mui/material/Box';
+import MenuItem from '@mui/material/MenuItem';
 import DateTimeInput from './events/date-time-input';
 import ControlledCheckbox from './events/controlled-checkbox';
 import ControlledTextField from './shared/controlled-text-field';
@@ -31,14 +31,14 @@ const useStyles = makeStyles((theme) => ({
     },
     form: {
         padding: 24,
-        [theme.breakpoints.down('sm')]: {
+        [theme.breakpoints.down('md')]: {
             padding: 12,
         },
     },
     boxWrapper: {
         marginBottom: 16,
         display: 'flex',
-        [theme.breakpoints.down('sm')]: {
+        [theme.breakpoints.down('md')]: {
             flexDirection: 'column',
         },
     },
@@ -46,7 +46,7 @@ const useStyles = makeStyles((theme) => ({
         [theme.breakpoints.up('md')]: {
             marginLeft: 8,
         },
-        [theme.breakpoints.down('sm')]: {
+        [theme.breakpoints.down('md')]: {
             marginTop: 8,
         },
     },
@@ -58,7 +58,7 @@ const useStyles = makeStyles((theme) => ({
     },
     spacer: {
         width: 20,
-        [theme.breakpoints.down('sm')]: {
+        [theme.breakpoints.down('md')]: {
             height: 16,
         },
     },

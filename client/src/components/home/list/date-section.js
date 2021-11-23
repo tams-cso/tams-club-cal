@@ -1,8 +1,9 @@
 import React from 'react';
-import { alpha, makeStyles } from '@material-ui/core';
+import { alpha } from '@mui/material';
+import makeStyles from '@mui/styles/makeStyles';
 import { darkSwitch, formatTime } from '../../../functions/util';
 
-import Typography from '@material-ui/core/Typography';
+import Typography from '@mui/material/Typography';
 
 const useStyles = makeStyles((theme) => ({
     root: {

@@ -1,12 +1,12 @@
 import React, { useEffect, useState } from 'react';
 import { BrowserRouter, Route, Switch } from 'react-router-dom';
 import { Helmet } from 'react-helmet';
-import { createTheme, ThemeProvider } from '@material-ui/core';
+import { createTheme, ThemeProvider, StyledEngineProvider, adaptV4Theme } from '@mui/material';
 import Cookies from 'universal-cookie';
-import DayjsUtils from '@date-io/dayjs';
 
-import { MuiPickersUtilsProvider } from '@material-ui/pickers';
-import CssBaseline from '@material-ui/core/CssBaseline';
+import AdapterDayjs from '@mui/lab/AdapterDayjs';
+import LocalizationProvider from '@mui/lab/LocalizationProvider';
+import CssBaseline from '@mui/material/CssBaseline';
 import Popup from './components/shared/popup';
 import Menu from './components/menu/menu';
 import Home from './components/home/home';
@@ -23,9 +23,9 @@ const App = () => {
     const cookies = new Cookies();
 
     const [darkTheme, setDarkTheme] = useState(cookies.get('dark') === 'true');
-    const theme = createTheme({
+    const theme = createTheme(adaptV4Theme({
         palette: {
-            type: darkTheme ? 'dark' : 'light',
+            mode: darkTheme ? 'dark' : 'light',
             primary: {
                 main: '#00c853',
                 light: '#96ed98',
@@ -62,37 +62,39 @@ const App = () => {
                 fontWeight: '600',
             },
         },
-    });
+    }));
 
     useEffect(() => {
         cookies.set('dark', darkTheme, { sameSite: 'strict', path: '/' });
     }, [darkTheme]);
 
     return (
-        <ThemeProvider theme={theme}>
-            <Helmet>
-                <title>TAMS Club Calendar</title>
-            </Helmet>
-            <CssBaseline />
-            <MuiPickersUtilsProvider utils={DayjsUtils}>
-                <BrowserRouter>
-                    <Popup />
-                    <Menu setDarkTheme={setDarkTheme} darkTheme={darkTheme} />
-                    <Switch>
-                        <Route exact path="/" component={Home} />
-                        <Route exact path="/events" component={Home} />
-                        <Route exact path="/volunteering" component={Volunteering} />
-                        <Route exact path="/clubs" component={Clubs} />
-                        <Route exact path="/about" component={About} />
-                        <Route exact path="/auth" component={Auth} />
-                        <Route exact path="/reservations" component={ReservationDisplay} />
-                        {/* <Route exact path="/admin" component={Admin} /> */}
-                        <Route path="/edit" component={Edit} />
-                        <Route component={NotFound} />
-                    </Switch>
-                </BrowserRouter>
-            </MuiPickersUtilsProvider>
-        </ThemeProvider>
+        <StyledEngineProvider injectFirst>
+            <ThemeProvider theme={theme}>
+                <Helmet>
+                    <title>TAMS Club Calendar</title>
+                </Helmet>
+                <CssBaseline />
+                <LocalizationProvider dateAdapter={AdapterDayjs}>
+                    <BrowserRouter>
+                        <Popup />
+                        <Menu setDarkTheme={setDarkTheme} darkTheme={darkTheme} />
+                        <Switch>
+                            <Route exact path="/" component={Home} />
+                            <Route exact path="/events" component={Home} />
+                            <Route exact path="/volunteering" component={Volunteering} />
+                            <Route exact path="/clubs" component={Clubs} />
+                            <Route exact path="/about" component={About} />
+                            <Route exact path="/auth" component={Auth} />
+                            <Route exact path="/reservations" component={ReservationDisplay} />
+                            {/* <Route exact path="/admin" component={Admin} /> */}
+                            <Route path="/edit" component={Edit} />
+                            <Route component={NotFound} />
+                        </Switch>
+                    </BrowserRouter>
+                </LocalizationProvider>
+            </ThemeProvider>
+        </StyledEngineProvider>
     );
 };
 

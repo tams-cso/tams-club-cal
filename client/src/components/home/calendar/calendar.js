@@ -1,15 +1,16 @@
 import React, { useEffect, useState } from 'react';
-import { makeStyles, Typography } from '@material-ui/core';
+import { Typography } from '@mui/material';
+import makeStyles from '@mui/styles/makeStyles';
 import { useDispatch, useSelector } from 'react-redux';
 import dayjs from 'dayjs';
 import { openPopup } from '../../../redux/actions';
 import { darkSwitch, parseEventList } from '../../../functions/util';
 import { getEventListInRange } from '../../../functions/api';
 
-import Box from '@material-ui/core/Box';
-import IconButton from '@material-ui/core/IconButton';
-import ArrowBackIosRoundedIcon from '@material-ui/icons/ArrowBackIosRounded';
-import ArrowForwardIosRoundedIcon from '@material-ui/icons/ArrowForwardIosRounded';
+import Box from '@mui/material/Box';
+import IconButton from '@mui/material/IconButton';
+import ArrowBackIosRoundedIcon from '@mui/icons-material/ArrowBackIosRounded';
+import ArrowForwardIosRoundedIcon from '@mui/icons-material/ArrowForwardIosRounded';
 import CalendarDay from './calendar-day';
 import Loading from '../../shared/loading';
 import AddButton from '../../shared/add-button';

@@ -1,8 +1,8 @@
 import React from 'react';
 
-import Tooltip from '@material-ui/core/Tooltip';
-import IconButton from '@material-ui/core/IconButton';
-import DeleteOutlineIcon from '@material-ui/icons/DeleteOutline';
+import Tooltip from '@mui/material/Tooltip';
+import IconButton from '@mui/material/IconButton';
+import DeleteOutlineIcon from '@mui/icons-material/DeleteOutline';
 
 /**
  * Displays a trash can
@@ -16,7 +16,7 @@ import DeleteOutlineIcon from '@material-ui/icons/DeleteOutline';
 const TrashCan = (props) => {
     return (
         <Tooltip title={`Delete ${props.label}`} aria-label={props['aria-label']} className={props.className}>
-            <IconButton aria-label={`delete ${props.label}`} onClick={props.onClick}>
+            <IconButton aria-label={`delete ${props.label}`} onClick={props.onClick} size="large">
                 <DeleteOutlineIcon />
             </IconButton>
         </Tooltip>

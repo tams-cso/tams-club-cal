@@ -1,10 +1,10 @@
 import React, { useEffect, useState } from 'react';
-import { makeStyles } from '@material-ui/core';
+import makeStyles from '@mui/styles/makeStyles';
 import { Exec } from '../../../functions/entries';
 
-import ListItem from '@material-ui/core/ListItem';
-import Box from '@material-ui/core/Box';
-import Card from '@material-ui/core/Card';
+import ListItem from '@mui/material/ListItem';
+import Box from '@mui/material/Box';
+import Card from '@mui/material/Card';
 import ImageUpload from './image-upload';
 import TrashCan from './trash-can';
 import ControlledTextField from '../shared/controlled-text-field';
@@ -13,7 +13,7 @@ const useStyles = makeStyles((theme) => ({
     root: {
         width: '100%',
         padding: 24,
-        [theme.breakpoints.down('sm')]: {
+        [theme.breakpoints.down('md')]: {
             padding: 6,
         },
     },
@@ -21,14 +21,14 @@ const useStyles = makeStyles((theme) => ({
         marginBottom: 12,
         display: 'flex',
         alignItems: 'center',
-        [theme.breakpoints.down('sm')]: {
+        [theme.breakpoints.down('md')]: {
             flexDirection: 'column',
         },
     },
     nameWrapper: {
         display: 'flex',
         flexGrow: 7,
-        [theme.breakpoints.down('sm')]: {
+        [theme.breakpoints.down('md')]: {
             width: '100%',
             marginBottom: 12,
         },
@@ -42,7 +42,7 @@ const useStyles = makeStyles((theme) => ({
     position: {
         flexGrow: 4,
         marginLeft: 12,
-        [theme.breakpoints.down('sm')]: {
+        [theme.breakpoints.down('md')]: {
             marginLeft: 0,
             width: '100%',
         },

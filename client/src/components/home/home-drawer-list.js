@@ -1,17 +1,17 @@
 import React from 'react';
-import { makeStyles } from '@material-ui/core/styles';
+import makeStyles from '@mui/styles/makeStyles';
 import data from '../../data.json';
 
-import List from '@material-ui/core/List';
-import ListItem from '@material-ui/core/ListItem';
-import ListItemIcon from '@material-ui/core/ListItemIcon';
-import ListItemText from '@material-ui/core/ListItemText';
-import Typography from '@material-ui/core/Typography';
-import EventRoundedIcon from '@material-ui/icons/EventRounded';
-import CreateRoundedIcon from '@material-ui/icons/CreateRounded';
-import EmojiPeopleRoundedIcon from '@material-ui/icons/EmojiPeopleRounded';
-import PublicRoundedIcon from '@material-ui/icons/PublicRounded';
-import EventAvailableRoundedIcon from '@material-ui/icons/EventAvailableRounded';
+import List from '@mui/material/List';
+import ListItem from '@mui/material/ListItem';
+import ListItemIcon from '@mui/material/ListItemIcon';
+import ListItemText from '@mui/material/ListItemText';
+import Typography from '@mui/material/Typography';
+import EventRoundedIcon from '@mui/icons-material/EventRounded';
+import CreateRoundedIcon from '@mui/icons-material/CreateRounded';
+import EmojiPeopleRoundedIcon from '@mui/icons-material/EmojiPeopleRounded';
+import PublicRoundedIcon from '@mui/icons-material/PublicRounded';
+import EventAvailableRoundedIcon from '@mui/icons-material/EventAvailableRounded';
 
 const useStyles = makeStyles({
     listIcon: {
