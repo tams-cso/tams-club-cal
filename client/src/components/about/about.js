@@ -1,5 +1,4 @@
 import React, { useState } from 'react';
-import makeStyles from '@mui/styles/makeStyles';
 import { postFeedback } from '../../functions/api';
 import { Feedback } from '../../functions/entries';
 
@@ -11,42 +10,26 @@ import Button from '@mui/material/Button';
 import SendIcon from '@mui/icons-material/Send';
 import Paragraph from '../shared/paragraph';
 import Image from '../shared/image';
-
-import data from '../../data.json';
 import PageWrapper from '../shared/page-wrapper';
 
-const useStyles = makeStyles({
-    image: {
-        margin: 'auto',
-        marginBottom: 16,
-    },
-    center: {
-        textAlign: 'center',
-        marginTop: 32,
-        marginBottom: 8,
-    },
-    area: {
-        width: '100%',
-        margin: '16px 0 8px',
-    },
-    submitWrapper: {
-        width: '100%',
-        display: 'flex',
-        flexDirection: 'row',
-        alignItems: 'center',
-    },
-    field: {
-        flexGrow: 1,
-        marginRight: 12,
-    },
-});
+import data from '../../data.json';
 
+// Style the text field component
+const textFieldStyle = {
+    width: '100%',
+    margin: '16px 0 8px',
+};
+
+/**
+ * The about page, which displays information about the website,
+ * and allows users to send feedback through a form.
+ */
 const About = () => {
     const [feedback, setFeedback] = useState('');
     const [name, setName] = useState('');
     const [error, setError] = useState(false);
-    const classes = useStyles();
 
+    // Handle change in form field (feedback and name)
     const handleChange = (event) => {
         switch (event.target.id) {
             case 'feedback':
@@ -58,6 +41,8 @@ const About = () => {
         }
     };
 
+    // Handle form submit button click by trimming string
+    // then sending feedback to database if not empty
     const handleSubmit = async () => {
         if (feedback.trim().length === 0) {
             setError(true);
@@ -77,13 +62,28 @@ const About = () => {
     return (
         <PageWrapper title="About">
             <Container>
-                <Image src="/logo-banner.png" alt="TAMS Club Calendar" className={classes.image} transparent />
+                <Image
+                    src="/logo-banner.png"
+                    alt="TAMS Club Calendar"
+                    transparent
+                    sx={{ margin: 'auto', marginBottom: 4, marginTop: 4 }}
+                />
+                {/* TODO: Set about text color to grey[100] */}
                 <Paragraph text={data.aboutText} fontSize="1.1rem" />
-                <Typography variant="h2" className={classes.center}>
+                <Typography
+                    variant="h2"
+                    sx={{
+                        marginTop: 8,
+                        marginBottom: 2,
+                        textAlign: 'center',
+                        fontWeight: 500,
+                    }}
+                >
                     Feedback
                 </Typography>
                 <Paragraph text={data.aboutFeedback} fontSize="1.1rem" />
-                <form className={classes.form} noValidate autoComplete="off">
+                {/* TODO: Replace this with a React Hook Form!!! */}
+                <form noValidate autoComplete="off">
                     <TextField
                         id="feedback"
                         label="Feedback"
@@ -91,22 +91,28 @@ const About = () => {
                         variant="outlined"
                         value={feedback}
                         onChange={handleChange}
-                        className={classes.area}
                         error={error}
                         helperText={error ? 'Feedback cannot be empty' : ''}
+                        sx={textFieldStyle}
                     ></TextField>
-                    <Box className={classes.submitWrapper}>
+                    <Box
+                        sx={{
+                            width: '100%',
+                            display: 'flex',
+                            flexDirection: 'row',
+                            alignItems: 'center',
+                        }}
+                    >
                         <TextField
                             id="name"
                             label="Name (optional)"
                             value={name}
                             onChange={handleChange}
-                            className={classes.field}
+                            sx={textFieldStyle}
                         ></TextField>
                         <Button
                             variant="contained"
                             color="primary"
-                            className={classes.submit}
                             endIcon={<SendIcon />}
                             onClick={handleSubmit}
                         >
