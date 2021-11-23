@@ -37,6 +37,12 @@ const App = () => {
                 light: '#ffffb0',
                 dark: '#ca9b52',
             },
+            ...(darkTheme && {
+                background: {
+                    default: '#303030',
+                    paper: '#303030',
+                },
+            }),
         },
         typography: {
             h1: {
