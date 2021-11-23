@@ -1,7 +1,8 @@
 import React, { useEffect, useState } from 'react';
 import { BrowserRouter, Route, Switch } from 'react-router-dom';
 import { Helmet } from 'react-helmet';
-import { createTheme, ThemeProvider, StyledEngineProvider, adaptV4Theme } from '@mui/material';
+import { createTheme, StyledEngineProvider, adaptV4Theme } from '@mui/material';
+import { ThemeProvider } from '@mui/material/styles';
 import Cookies from 'universal-cookie';
 
 import AdapterDayjs from '@mui/lab/AdapterDayjs';
@@ -23,7 +24,7 @@ const App = () => {
     const cookies = new Cookies();
 
     const [darkTheme, setDarkTheme] = useState(cookies.get('dark') === 'true');
-    const theme = createTheme(adaptV4Theme({
+    const theme = createTheme({
         palette: {
             mode: darkTheme ? 'dark' : 'light',
             primary: {
@@ -62,7 +63,7 @@ const App = () => {
                 fontWeight: '600',
             },
         },
-    }));
+    });
 
     useEffect(() => {
         cookies.set('dark', darkTheme, { sameSite: 'strict', path: '/' });
