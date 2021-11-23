@@ -16,7 +16,7 @@ import Clubs from './components/clubs/clubs';
 import NotFound from './components/404/404';
 import Volunteering from './components/volunteering/volunteering';
 import ReservationDisplay from './components/home/reservation/reservation-display';
-// import Admin from './components/admin/admin';
+// TODO: import Admin from './components/admin/admin';
 import Auth from './components/edit/auth';
 import Edit from './components/edit/edit';
 
