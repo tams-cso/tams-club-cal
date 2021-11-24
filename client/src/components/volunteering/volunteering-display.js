@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { useHistory } from 'react-router';
 import { useSelector } from 'react-redux';
-import makeStyles from '@mui/styles/makeStyles';
 import { getSavedVolunteeringList } from '../../redux/selectors';
 import { getVolunteering } from '../../functions/api';
 import { darkSwitchGrey, getParams } from '../../functions/util';
@@ -21,46 +20,6 @@ import Paragraph from '../shared/paragraph';
 import AddButton from '../shared/add-button';
 import Title from '../shared/title';
 
-const useStyles = makeStyles((theme) => ({
-    root: {
-        maxWidth: '50%',
-        [theme.breakpoints.down(undefined)]: {
-            maxWidth: '75%',
-        },
-        [theme.breakpoints.down('lg')]: {
-            maxWidth: '100%',
-        },
-    },
-    container: {
-        display: 'flex',
-        flexDirection: 'row',
-        [theme.breakpoints.down('md')]: {
-            flexDirection: 'column',
-        },
-    },
-    side: {
-        flexBasis: '50%',
-        flexShrink: 0,
-        flexGrow: 1,
-    },
-    left: {
-        paddingRight: 12,
-    },
-    open: {
-        fontSize: '1.1rem',
-        color: theme.palette.primary.main,
-    },
-    closed: {
-        color: theme.palette.error.main,
-    },
-    club: {
-        color: darkSwitchGrey(theme),
-    },
-    buttonCenter: {
-        margin: 'auto',
-    },
-}));
-
 /**
  * Displays a single event.
  * This component takes in the event ID as a parameter.
@@ -73,13 +32,9 @@ const EventDisplay = (props) => {
     const [error, setError] = useState(null);
     const volunteeringList = useSelector(getSavedVolunteeringList);
     const history = useHistory();
-    const classes = useStyles();
 
-    const back = () => {
-        const prevView = getParams('view');
-        history.push(`/volunteering${prevView ? `?view=${prevView}` : ''}`);
-    };
-
+    // TODO: Remove redux and instead fetch data from backend TT-TT
+    // When the volunteering data is loaded, create the list of links
     useEffect(async () => {
         if (props.id === null) return;
 
@@ -104,6 +59,13 @@ const EventDisplay = (props) => {
         } else setVolunteering(volunteering);
     }, [props.id]);
 
+    // Return to the previous page, but preserve the view
+    // that was paassed in the URL (ie. keep table view)
+    const back = () => {
+        const prevView = getParams('view');
+        history.push(`/volunteering${prevView ? `?view=${prevView}` : ''}`);
+    };
+
     return (
         <React.Fragment>
             {error}
@@ -112,7 +74,7 @@ const EventDisplay = (props) => {
                     <Loading />
                 )
             ) : (
-                <Container className={classes.root}>
+                <Container sx={{ maxWidth: { xl: '50%', md: '75%', xs: '100%' } }}>
                     <Title resource="volunteering" name={volunteering.name} />
                     <AddButton
                         color="secondary"
@@ -122,16 +84,31 @@ const EventDisplay = (props) => {
                     />
                     <Card>
                         <CardContent>
-                            <Box className={classes.container}>
-                                <Box className={`${classes.side} ${classes.left}`}>
+                            <Box
+                                sx={{
+                                    display: 'flex',
+                                    flexDirection: { lg: 'row', xs: 'column' },
+                                }}
+                            >
+                                <Box
+                                    sx={{
+                                        flexBasis: '50%',
+                                        flexShrink: 0,
+                                        flexGrow: 1,
+                                        paddingRight: 12,
+                                    }}
+                                >
                                     <Typography
                                         variant="subtitle2"
-                                        className={`${classes.open} ${volunteering.filters.open ? '' : classes.closed}`}
+                                        sx={{
+                                            fontSize: '1.1rem',
+                                            color: volunteering.filters.open ? 'primary.main' : 'error.main',
+                                        }}
                                     >
                                         {volunteering.filters.open ? 'Open' : 'Closed'}
                                     </Typography>
                                     <Typography variant="h2">{volunteering.name}</Typography>
-                                    <Typography variant="subtitle1" className={classes.club}>
+                                    <Typography variant="subtitle1" sx={{ color: (theme) => darkSwitchGrey(theme) }}>
                                         {volunteering.club}
                                     </Typography>
                                     <Paragraph text={volunteering.description} />
@@ -139,11 +116,18 @@ const EventDisplay = (props) => {
                                 <Hidden mdDown>
                                     <Divider orientation="vertical" flexItem />
                                 </Hidden>
-                                <FilterList filters={volunteering.filters} className={classes.side} />
+                                <FilterList
+                                    filters={volunteering.filters}
+                                    sx={{
+                                        flexBasis: '50%',
+                                        flexShrink: 0,
+                                        flexGrow: 1,
+                                    }}
+                                />
                             </Box>
                         </CardContent>
                         <CardActions>
-                            <Button size="small" className={classes.buttonCenter} onClick={back}>
+                            <Button size="small" onClick={back} sx={{ margin: 'auto' }}>
                                 Back
                             </Button>
                         </CardActions>

@@ -1,9 +1,6 @@
 import React, { useEffect, useState } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
-import makeStyles from '@mui/styles/makeStyles';
 import { getVolunteeringList } from '../../functions/api';
-import { getSavedVolunteeringList } from '../../redux/selectors';
-import { setVolunteeringList } from '../../redux/actions';
+import { darkSwitchGrey } from '../../functions/util';
 
 import Grid from '@mui/material/Grid';
 import Container from '@mui/material/Container';
@@ -23,26 +20,12 @@ import VolunteeringCard from './volunteering-card';
 import AddButton from '../shared/add-button';
 import ViewSwitcher from '../shared/view-switcher';
 import VolunteeringTable from './volunteering-table';
-import { darkSwitchGrey } from '../../functions/util';
 import SortSelect from '../shared/sort-select';
 
-const useStyles = makeStyles((theme) => ({
-    gridItem: {
-        [theme.breakpoints.down('lg')]: {
-            flexGrow: 1,
-        },
-    },
-    filterLabel: {
-        flexGrow: 1,
-        marginLeft: 12,
-        fontWeight: 500,
-        color: darkSwitchGrey(theme),
-    },
-    viewSwitcher: {
-        float: 'right',
-    },
-}));
-
+/**
+ * The VolunteeringList component displays a list of cards, each of which
+ * contains a summary of each volunteering opportunity and links to that specific volunteering opportunity.
+ */
 const VolunteeringList = () => {
     const [volunteeringList, setVolunteeringList] = useState(null);
     const [filteredList, setFilteredList] = useState(null);
@@ -58,24 +41,14 @@ const VolunteeringList = () => {
         setTimes: false,
         weekly: false,
     });
-    const classes = useStyles();
 
-    const openFilters = (event) => {
-        setAnchorEl(event.currentTarget);
-    };
-
-    const closeFilters = () => {
-        setAnchorEl(null);
-    };
-
-    const handleChange = (event) => {
-        setFilters({ ...filters, [event.target.name]: event.target.checked });
-    };
-
+    // GET the volunteering opportunities from the database
     useEffect(async () => {
+        // If the volunteering list is already fetched, do nothing
         if (volunteeringList !== null) return;
 
-        // Fetch the events list on mount from database
+        // Fetch the volunteering list on mount from database
+        // and save it to the state variable, or display an error
         const clubs = await getVolunteeringList();
         if (clubs.status !== 200) {
             setVolunteeringCardList(
@@ -89,9 +62,13 @@ const VolunteeringList = () => {
         setVolunteeringList(clubs.data);
     }, []);
 
+    // Filter the volunteering list based on the filters and sort
     useEffect(() => {
+        // If the volunteering list is not loaded yet, don't do anything
         if (volunteeringList === null) return;
 
+        // We set the filtered list to the volunteering list
+        // after filtering and sorting it.
         setFilteredList(
             volunteeringList
                 .filter((item) => {
@@ -99,7 +76,10 @@ const VolunteeringList = () => {
                     if (!(filters.open || filters.limited || filters.semester || filters.setTimes || filters.weekly))
                         return true;
 
+                    // TODO: See if we can create a better/more intuitive filter system
+
                     // See if all true filters match and return false if not
+                    // This will filter OUT any results that don't contain the required filters
                     if (filters.open && !item.filters.open) return false;
                     if (filters.limited && !item.filters.limited) return false;
                     if (filters.semester && !item.filters.semester) return false;
@@ -118,13 +98,16 @@ const VolunteeringList = () => {
         );
     }, [volunteeringList, filters, sort, reverse]);
 
+    // Create a list of ClubCard components from the filtered list
     useEffect(() => {
+        // If the filtered list is not created, don't do anything
         if (filteredList === null) return;
 
+        // Map the filtered list to a list of ClubCard components
         setVolunteeringCardList(
             <Grid container spacing={4}>
                 {filteredList.map((v) => (
-                    <Grid item xs={12} sm={6} lg={4} className={classes.gridItem} key={v.name}>
+                    <Grid item xs={12} sm={6} lg={4} key={v.name} sx={{ flexGrow: { lg: 0, xs: 1 } }}>
                         <VolunteeringCard volunteering={v} />
                     </Grid>
                 ))}
@@ -132,8 +115,24 @@ const VolunteeringList = () => {
         );
     }, [filteredList]);
 
+    // Open the popup element on click
+    // The setAchorEl is used for the Popover component
+    const openFilters = (event) => {
+        setAnchorEl(event.currentTarget);
+    };
+
+    // Close the popup element by setting the anchor element to null
+    const closeFilters = () => {
+        setAnchorEl(null);
+    };
+
+    // Toggle the filters open/closed when clicked
+    const handleChange = (event) => {
+        setFilters({ ...filters, [event.target.name]: event.target.checked });
+    };
+
     return (
-        <Container>
+        <Container maxWidth={false} sx={{ maxWidth: 1280 }}>
             <AddButton color="primary" label="Volunteering" path="/edit/volunteering" />
             <Box width="100%" marginBottom={2} display="flex" alignItems="center">
                 <Tooltip title="Filters">
@@ -141,7 +140,16 @@ const VolunteeringList = () => {
                         <FilterListIcon />
                     </IconButton>
                 </Tooltip>
-                <Typography className={classes.filterLabel}>Filter</Typography>
+                <Typography
+                    sx={{
+                        marginLeft: 2,
+                        flexGrow: 1,
+                        fontWeight: 500,
+                        color: (theme) => darkSwitchGrey(theme),
+                    }}
+                >
+                    Filter
+                </Typography>
                 <SortSelect
                     value={sort}
                     setValue={setSort}
@@ -149,7 +157,7 @@ const VolunteeringList = () => {
                     setReverse={setReverse}
                     options={['name', 'club']}
                 />
-                <ViewSwitcher tableView={listView} setTableView={setListView} className={classes.viewSwitcher} />
+                <ViewSwitcher tableView={listView} setTableView={setListView} sx={{ float: 'right' }} />
             </Box>
             {listView ? <VolunteeringTable volunteering={filteredList} /> : volunteeringCardList}
             <Popover
@@ -163,7 +171,9 @@ const VolunteeringList = () => {
             >
                 <Box padding={3}>
                     <FormControl component="fieldset">
-                        <FormLabel component="legend">Filter Volunteering</FormLabel>
+                        <FormLabel component="legend" sx={{ marginBottom: 1 }}>
+                            Filter Volunteering
+                        </FormLabel>
                         <FormGroup>
                             <FormControlLabel
                                 control={<Checkbox checked={filters.open} onChange={handleChange} name="open" />}

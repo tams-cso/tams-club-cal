@@ -1,5 +1,4 @@
 import React from 'react';
-import makeStyles from '@mui/styles/makeStyles';
 
 import SvgIcon from '@mui/material/SvgIcon';
 import ListItem from '@mui/material/ListItem';
@@ -7,17 +6,10 @@ import ListItemIcon from '@mui/material/ListItemIcon';
 import ListItemText from '@mui/material/ListItemText';
 import Typography from '@mui/material/Typography';
 
-const useStyles = makeStyles({
-    root: {
-        color: (props) => props.color,
-    },
-    hidden: {
-        display: 'none',
-    },
-});
-
 /**
- * Displays a specific volunteering filter
+ * Displays a specific volunteering filter,
+ * with a passed in icon, color, and status.
+ * If the status resolves to false, the filter will be hidden with "display: none".
  *
  * @param {object} props React props object
  * @param {SvgIcon} props.icon Material Icon that represents the filter
@@ -27,9 +19,8 @@ const useStyles = makeStyles({
  * @returns
  */
 const FilterItem = (props) => {
-    const classes = useStyles({ color: props.color });
     return (
-        <ListItem className={`${classes.root} ${props.status ? '' : classes.hidden}`}>
+        <ListItem sx={{ color: props.color, display: props.status ? 'flex' : 'none' }}>
             <ListItemIcon>{props.icon}</ListItemIcon>
             <ListItemText>
                 <Typography>{props.children}</Typography>

@@ -9,13 +9,18 @@ import EventRoundedIcon from '@mui/icons-material/EventRounded';
 import FilterItem from './filter-item';
 
 /**
+ * Show a list of filters for the volunteer list, each of which has
+ * an icon and a specific color to denote that filter.
+ * The specific filter will only be shown if it is true.
+ *
  * @param {object} props React props object
  * @param {Filters} props.filters Object containing all the filters
- * @returns
+ * @param {object} props.sx Format the FilterList component
  */
 const FilterList = (props) => {
     return (
-        <List dense className={props.className || ''}>
+        // TODO: Fix this buddy
+        <List dense sx={props.sx}>
             <FilterItem
                 icon={<DashboardRoundedIcon htmlColor="#ffb258" />}
                 color="#ffb258"
