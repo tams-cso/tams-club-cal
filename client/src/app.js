@@ -62,7 +62,7 @@ const App = () => {
                 color: darkTheme ? '#aaaaaa' : '#555555',
             },
             h5: {
-                fontFamily: ['Bubblegum Sans', 'Roboto', 'Helvetica', 'Arial', 'sans-serif'],
+                fontFamily: ['Bubblegum Sans', 'Roboto', 'Helvetica', 'Arial', 'sans-serif'].join(','),
                 fontSize: '1.5rem',
             },
             h6: {
