@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from 'react';
 import { useLocation } from 'react-router';
-import makeStyles from '@mui/styles/makeStyles';
 import { getParams } from '../../functions/util';
 
 import Box from '@mui/material/Box';
@@ -15,38 +14,34 @@ import Calendar from './calendar/calendar';
 import Reservations from './reservation/reservations';
 import ActionBar from './action-bar';
 
+// The width of the permanent drawer with external links
 const drawerWidth = 280;
-const useStyles = makeStyles({
-    root: {
-        height: 'max-content',
-    },
-    calRoot: {
-        height: 'unset',
-    },
-    drawer: {
-        width: drawerWidth,
-    },
-    spacer: {
-        width: drawerWidth,
-        marginBottom: '0',
-    },
-});
 
+/**
+ * The main home page that displays events, reservations, and a calendar.
+ * This page also contains a drawer that has external links.
+ * This component itself functions as a switch between the different views.
+ * Both '/' and '/events' will route to this component.
+ */
 const Home = () => {
     const [display, setDisplay] = useState(null);
     const [view, setView] = useState('schedule');
     const [id, setId] = useState(null);
     const location = useLocation();
-    const classes = useStyles();
 
+    // Sets the view of the page based on the url
+    // This will not run if the ID exists as that points to a page
     useEffect(() => {
+        // If the ID exists, don't show a specific view
         if (id) return;
 
+        // Set the view based on the 'view' state variable
         if (view === 'calendar') setDisplay(<Calendar />);
         else if (view === 'reservation') setDisplay(<Reservations />);
         else setDisplay(<EventList />);
     }, [view, id]);
 
+    // If the ID exists, show a single event page
     useEffect(() => {
         // Extract ID from url search params
         const newId = getParams('id');
@@ -60,8 +55,8 @@ const Home = () => {
         <PageWrapper noBottom>
             <Hidden mdDown>
                 {view === 'reservation' ? null : (
-                    <Drawer variant="permanent" className={classes.drawer}>
-                        <Toolbar className={classes.spacer} />
+                    <Drawer variant="permanent" sx={{ width: drawerWidth }}>
+                        <Toolbar sx={{ width: drawerWidth, marginBottom: 0 }} />
                         <HomeDrawerList />
                     </Drawer>
                 )}
@@ -71,7 +66,7 @@ const Home = () => {
                 flexDirection="column"
                 flexGrow={1}
                 width={0}
-                className={view === 'calendar' ? classes.calRoot : classes.root}
+                sx={{ height: view === 'calendar' ? 'unset' : 'max-content' }}
             >
                 {id ? null : <ActionBar view={view} setView={setView} />}
                 {display}
