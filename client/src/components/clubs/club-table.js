@@ -1,6 +1,6 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
-import { darkSwitch } from '../../functions/util';
+import { darkSwitch, darkSwitchGrey } from '../../functions/util';
 import { Club } from '../../functions/entries';
 
 import Table from '@mui/material/Table';
@@ -63,7 +63,9 @@ const ClubTable = (props) => {
                             <TableCell sx={{ color: v.advised ? 'primary.main' : 'secondary.main' }}>
                                 {v.advised ? 'Advised' : 'Independent'}
                             </TableCell>
-                            <TableCell>{v.description.replace(/\n/g, ' | ')}</TableCell>
+                            <TableCell sx={{ color: (theme) => darkSwitchGrey(theme) }}>
+                                {v.description.replace(/\n/g, ' | ')}
+                            </TableCell>
                         </TableRow>
                     ))}
                 </TableBody>

@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { postFeedback } from '../../functions/api';
 import { Feedback } from '../../functions/entries';
+import { darkSwitchGrey } from '../../functions/util';
 
 import Container from '@mui/material/Container';
 import Box from '@mui/material/Box';
@@ -68,8 +69,7 @@ const About = () => {
                     transparent
                     sx={{ margin: 'auto', marginBottom: 4, marginTop: 4 }}
                 />
-                {/* TODO: Set about text color to grey[100] */}
-                <Paragraph text={data.aboutText} fontSize="1.1rem" />
+                <Paragraph text={data.aboutText} fontSize="1.1rem" sx={{ color: (theme) => darkSwitchGrey(theme)} } />
                 <Typography
                     variant="h2"
                     sx={{

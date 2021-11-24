@@ -48,12 +48,11 @@ const PageNotFound = () => {
                 <Typography sx={textStyle}>The page you are trying to access could not be found :(</Typography>
                 <Typography sx={textStyle}>But here are some cool pages that you could go to!</Typography>
                 <Container sx={{ width: { md: '50%', xs: '100%' } }}>
-                    <List>
+                    <List sx={{ color: (theme) => darkSwitchGrey(theme) }}>
                         <ListItem button component={Link} to="/">
                             <ListItemIcon>
                                 <HomeRoundedIcon />
                             </ListItemIcon>
-                            {/* TODO: set the list text to light grey theme.palette.grey[100] or smth close to black */}
                             <ListItemText>Home - See upcoming events and helpful external resources</ListItemText>
                         </ListItem>
                         <ListItem button component={Link} to="/clubs">
