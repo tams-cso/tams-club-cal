@@ -12,7 +12,7 @@ import Tooltip from '@mui/material/Tooltip';
  * @param {object} props React props object
  * @param {string} props.title Tooltip title
  * @param {Function} props.onClick Function to call when clicked
- * @param {object} props.children Contents of the MenuIcon
+ * @param {*} props.children Contents of the MenuIcon
  */
 const MenuIcon = (props) => {
     return (

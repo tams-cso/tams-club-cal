@@ -20,7 +20,7 @@ const linkHoverBkgdStyle = (theme) =>
  * @param {object} props React props object
  * @param {string} props.to The path to navigate to
  * @param {boolean} props.isActive True if the link is manually set to active
- * @param {object} props.children The content of the link
+ * @param {*} props.children The content of the link
  */
 const MenuLink = (props) => {
     const [active, setActive] = useState(false);
