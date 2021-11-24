@@ -31,9 +31,9 @@ const ClubCard = (props) => {
                     </CardMedia>
                     <CardContent
                         sx={{
-                            height: 275,
+                            height: 250,
                             padding: 2,
-                            paddingTop: 3,
+                            paddingTop: 1.5,
                         }}
                     >
                         <Typography

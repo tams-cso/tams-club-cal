@@ -63,7 +63,7 @@ const ClubList = () => {
     }, [clubList, reverse]);
 
     return (
-        <Container maxWidth="xl">
+        <Container maxWidth={false} sx={{ maxWidth: 1280 }}>
             <Box width="100%" marginBottom={2} display="flex" alignItems="center" height={48} justifyContent="flex-end">
                 <SortSelect
                     value={sort}
