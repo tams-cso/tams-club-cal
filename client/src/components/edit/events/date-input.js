@@ -1,14 +1,13 @@
-import dayjs from 'dayjs';
 import React from 'react';
+import dayjs from 'dayjs';
 
 import { Controller } from 'react-hook-form';
+import TextField from '@mui/material/TextField';
 import DatePicker from '@mui/lab/DatePicker';
-import InputAdornment from '@mui/material/InputAdornment';
-import IconButton from '@mui/material/IconButton';
-import EventIcon from '@mui/icons-material/Event';
 
 /**
- * Displays a date input
+ * Displays a controlled date input
+ * 
  * @param {object} props React props object
  * @param {*} props.control Form control object
  * @param {boolean} [props.required] Is this field required
@@ -39,15 +38,7 @@ const DateInput = (props) => {
                     error={error}
                     helperText={error ? 'End date should be after start' : props.helperText}
                     disabled={props.disabled}
-                    InputProps={{
-                        endAdornment: (
-                            <InputAdornment position="end">
-                                <IconButton size="large">
-                                    <EventIcon />
-                                </IconButton>
-                            </InputAdornment>
-                        ),
-                    }}
+                    renderInput={(params) => <TextField {...params} />}
                 />
             )}
         />

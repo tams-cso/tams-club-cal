@@ -15,9 +15,11 @@ import Checkbox from '@mui/material/Checkbox';
  * @param {boolean} props.value True if checked by default
  */
 const ControlledFilterCheckbox = (props) => {
+    // Sets value of the filter checkbox given the passed in value on mount
     useEffect(() => {
         props.setValue(props.name, props.value);
     }, []);
+
     return (
         <Controller
             control={props.control}
