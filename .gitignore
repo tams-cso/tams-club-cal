@@ -9,6 +9,7 @@ node_modules
 # Generated files
 */.docusaurus
 */.cache-loader
+**/*/*.swp
 
 # misc
 .DS_Store

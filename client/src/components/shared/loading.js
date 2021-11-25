@@ -1,15 +1,15 @@
 import React from 'react';
-import { makeStyles } from '@material-ui/core/styles';
+import makeStyles from '@mui/styles/makeStyles';
 
-import Container from '@material-ui/core/Container';
-import Card from '@material-ui/core/Card';
-import Typography from '@material-ui/core/Typography';
+import Container from '@mui/material/Container';
+import Card from '@mui/material/Card';
+import Typography from '@mui/material/Typography';
 
 const useStyles = makeStyles((theme) => ({
     card: {
         margin: '0 20%',
         padding: '1rem',
-        [theme.breakpoints.down('sm')]: {
+        [theme.breakpoints.down('md')]: {
             margin: 0,
         },
     },

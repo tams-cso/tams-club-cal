@@ -1,62 +1,22 @@
-import { Button, makeStyles } from '@material-ui/core';
+import { Button } from '@mui/material';
 import React, { useEffect, useState } from 'react';
 import { useDispatch } from 'react-redux';
 import Cookies from 'universal-cookie';
-import { getIp, getLoggedIn, getUserInfo } from '../../functions/api';
-
-import Box from '@material-ui/core/Box';
-import Typography from '@material-ui/core/Typography';
 import { darkSwitchGrey } from '../../functions/util';
-import GoogleLoginButton from './shared/google-login-button';
+import { getIp, getLoggedIn, getUserInfo } from '../../functions/api';
 import { openConnectionErrorPopup } from '../../redux/actions';
 
-const useStyles = makeStyles((theme) => ({
-    root: {
-        padding: '16px 24px',
-        display: 'flex',
-        justifyContent: 'space-between',
-        alignItems: 'center',
-        [theme.breakpoints.down('sm')]: {
-            padding: 16,
-            flexDirection: 'column',
-        },
-    },
-    editText: {
-        color: theme.palette.secondary.main,
-        [theme.breakpoints.down('sm')]: {
-            marginBottom: 12,
-            alignSelf: 'flex-start',
-        },
-    },
-    message: {
-        paddingBottom: 24,
-        paddingRight: 24,
-        textAlign: 'right',
-        color: darkSwitchGrey(theme),
-        [theme.breakpoints.down('sm')]: {
-            paddingRight: 0,
-            textAlign: 'center',
-        },
-    },
-    hidden: {
-        display: 'none',
-    },
-}));
+import Box from '@mui/material/Box';
+import Typography from '@mui/material/Typography';
+import GoogleLoginButton from './shared/google-login-button';
 
 const EditLogin = () => {
     const [message, setMessage] = useState(null);
-    const classes = useStyles();
-    const dispatch = useDispatch();
     const [showLogin, setShowLogin] = useState(false);
     const [showLogout, setShowLogout] = useState(false);
+    const dispatch = useDispatch();
 
-    const logout = () => {
-        // Remove token and refresh
-        const cookies = new Cookies();
-        cookies.remove('token', { path: '/' });
-        history.go(0);
-    };
-
+    // When component mounts and the user opens any edit page, check if they are logged in
     useEffect(async () => {
         const cookies = new Cookies();
         const token = cookies.get('token');
@@ -66,16 +26,18 @@ const EditLogin = () => {
             const res = await getLoggedIn(token);
             if (res.status === 200 && res.data.loggedIn) {
                 // If all is good, display the logged in prompt!
+                // However, if the username cannot be gotten, also show an error
                 const userRes = await getUserInfo(token);
                 if (userRes.status === 200) {
                     setShowLogout(true);
                     setMessage(`You are logged in as ${userRes.data.name}!`);
-                } else {
-                    dispatch(openConnectionErrorPopup());
-                }
+                } else dispatch(openConnectionErrorPopup());
                 return;
             }
         }
+
+        // Get the IP address of the user that will be displayed
+        // if the user is not logged in; if this request errors show an error
         const ip = await getIp();
         if (ip.status === 200) {
             setMessage(`Edits will be made under your ip address [${ip.data.ip}].`);
@@ -85,10 +47,33 @@ const EditLogin = () => {
         }
     }, []);
 
+    // If the user clicks the logout button, log them out
+    // by removing the token cookie and redirect them to previous page
+    const logout = () => {
+        const cookies = new Cookies();
+        cookies.remove('token', { path: '/' });
+        history.go(0);
+    };
+
     return (
         <React.Fragment>
-            <Box className={classes.root}>
-                <Typography variant="h3" className={classes.editText}>
+            <Box
+                sx={{
+                    padding: { lg: '16px 24px', xs: 3 },
+                    display: 'flex',
+                    justifyContent: 'space-between',
+                    alignItems: 'center',
+                    flexDirection: { lg: 'row', xs: 'column' },
+                }}
+            >
+                <Typography
+                    variant="h3"
+                    sx={{
+                        color: (theme) => theme.palette.secondary.main,
+                        marginBottom: { lg: 0, xs: 2 },
+                        alignSelf: 'flex-start',
+                    }}
+                >
                     EDIT MODE
                 </Typography>
                 <GoogleLoginButton hidden={!showLogin} />
@@ -96,12 +81,21 @@ const EditLogin = () => {
                     variant="contained"
                     color="primary"
                     onClick={logout}
-                    className={showLogout ? '' : classes.hidden}
+                    sx={{ display: showLogout ? 'block' : 'none' }}
                 >
                     Log out
                 </Button>
             </Box>
-            <Typography className={classes.message}>{message}</Typography>
+            <Typography
+                sx={{
+                    paddingBottom: 4,
+                    paddingRight: { lg: 4, xs: 0 },
+                    textAlign: { lg: 'right', xs: 'center' },
+                    color: (theme) => darkSwitchGrey(theme),
+                }}
+            >
+                {message}
+            </Typography>
         </React.Fragment>
     );
 };

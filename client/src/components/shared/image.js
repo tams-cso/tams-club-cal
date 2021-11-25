@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
-import { makeStyles } from '@material-ui/core';
+import makeStyles from '@mui/styles/makeStyles';
 
-import Paper from '@material-ui/core/Paper';
+import Paper from '@mui/material/Paper';
 import { getCdnUrl } from '../../functions/api';
 
 const useStyles = makeStyles({
@@ -12,9 +12,6 @@ const useStyles = makeStyles({
         display: 'block',
         fontSize: 0,
     },
-    wrapper: {
-        backgroundColor: (props) => (props.transparent ? 'transparent' : null),
-    }
 });
 
 const url = (src) => (!src ? '' : src.endsWith('.webp') ? `${getCdnUrl()}/${src}` : src);
@@ -31,6 +28,7 @@ const url = (src) => (!src ? '' : src.endsWith('.webp') ? `${getCdnUrl()}/${src}
  * @param {number | string} [props.height] Height of the image
  * @param {boolean} [props.raised] True to add drop shadow to image
  * @param {boolean} [props.transparent] True if no background color
+ * @param {object} [props.sx] Custom styles to apply to the image
  */
 const Image = (props) => {
     const [src, setSrc] = useState(url(props.src));
@@ -45,7 +43,10 @@ const Image = (props) => {
     }, [props.src]);
 
     return (
-        <Paper elevation={props.raised ? 2 : 0} className={`${props.className} ${classes.wrapper}`}>
+        <Paper
+            elevation={props.raised ? 2 : 0}
+            sx={{ backgroundColor: (props) => (props.transparent ? 'transparent' : null), ...props.sx }}
+        >
             <img id={props.id} className={classes.root} src={src} alt={props.alt} onError={inavlidImage} />
         </Paper>
     );

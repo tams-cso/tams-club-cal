@@ -1,62 +1,12 @@
 import React, { useEffect, useState } from 'react';
-import { makeStyles } from '@material-ui/core';
 import { Exec } from '../../../functions/entries';
 
-import ListItem from '@material-ui/core/ListItem';
-import Box from '@material-ui/core/Box';
-import Card from '@material-ui/core/Card';
+import ListItem from '@mui/material/ListItem';
+import Box from '@mui/material/Box';
+import Card from '@mui/material/Card';
 import ImageUpload from './image-upload';
 import TrashCan from './trash-can';
 import ControlledTextField from '../shared/controlled-text-field';
-
-const useStyles = makeStyles((theme) => ({
-    root: {
-        width: '100%',
-        padding: 24,
-        [theme.breakpoints.down('sm')]: {
-            padding: 6,
-        },
-    },
-    titleWrapper: {
-        marginBottom: 12,
-        display: 'flex',
-        alignItems: 'center',
-        [theme.breakpoints.down('sm')]: {
-            flexDirection: 'column',
-        },
-    },
-    nameWrapper: {
-        display: 'flex',
-        flexGrow: 7,
-        [theme.breakpoints.down('sm')]: {
-            width: '100%',
-            marginBottom: 12,
-        },
-    },
-    name: {
-        flexGrow: 1,
-        [theme.breakpoints.up('md')]: {
-            marginLeft: 16,
-        },
-    },
-    position: {
-        flexGrow: 4,
-        marginLeft: 12,
-        [theme.breakpoints.down('sm')]: {
-            marginLeft: 0,
-            width: '100%',
-        },
-    },
-    hidden: {
-        display: 'none',
-    },
-    trash: {
-        height: 48,
-    },
-    area: {
-        width: '100%',
-    },
-}));
 
 /**
  * Displays a card with all fields to edit an exec
@@ -74,18 +24,29 @@ const useStyles = makeStyles((theme) => ({
 const EditExec = (props) => {
     const namePrefix = `execs.${props.index}.`;
     const [deleted, setDeleted] = useState(false);
-    const classes = useStyles();
 
+    // Register image and deleted fields on form controller
     props.register(`${namePrefix}deleted`);
     props.register(`${namePrefix}img`);
 
+    // If exec values already exist, pass them in and load it into the form
+    useEffect(() => {
+        if (props.exec) {
+            props.setValue(`${namePrefix}img`, props.exec.img);
+        }
+    }, [props.exec]);
+
+    // Delete the current exec, which simply hides this component
     const deleteMe = () => {
+        // TODO: Make this undoable
         props.setValue(`${namePrefix}name`, 'deleted');
         props.setValue(`${namePrefix}position`, 'deleted');
         props.setValue(`${namePrefix}deleted`, true);
         setDeleted(true);
     };
 
+    // Update the profile picture of the exec that was changed
+    // by replacing that exec's image in the array
     const setExecImage = (value) => {
         const newProfilePics = [
             ...props.profilePics.slice(0, props.index),
@@ -95,18 +56,34 @@ const EditExec = (props) => {
         props.setProfilePics(newProfilePics);
     };
 
-    useEffect(() => {
-        if (props.exec) {
-            props.setValue(`${namePrefix}img`, props.exec.img);
-        }
-    }, [props.exec]);
-
     return (
-        <ListItem className={deleted ? classes.hidden : null}>
-            <Card elevation={3} className={classes.root}>
-                <Box className={classes.titleWrapper}>
-                    <Box className={classes.nameWrapper}>
-                        <TrashCan label="Exec" onClick={deleteMe} className={classes.trash} />
+        <ListItem sx={{ display: deleted ? 'none' : 'flex' }}>
+            <Card elevation={3} sx={{ width: '100%', padding: { lg: 3, xs: 1 } }}>
+                <Box
+                    sx={{
+                        marginBottom: 2,
+                        display: 'flex',
+                        alignItems: 'center',
+                        flexDirection: { lg: 'row', xs: 'column' },
+                    }}
+                >
+                    <Box
+                        sx={{
+                            marginBottom: { lg: 0, xs: 2 },
+                            width: { lg: 'unset', xs: '100%' },
+                            display: 'flex',
+                            flexGrow: 7,
+                        }}
+                    >
+                        <TrashCan
+                            label="Exec"
+                            onClick={deleteMe}
+                            sx={{
+                                height: { lg: 48, xs: 36 },
+                                width: { lg: 48, xs: 36 },
+                                marginTop: { lg: 0.25, xs: 1.25 },
+                            }}
+                        />
                         <ControlledTextField
                             control={props.control}
                             setValue={props.setValue}
@@ -116,7 +93,7 @@ const EditExec = (props) => {
                             variant="outlined"
                             required
                             errorMessage="Please enter a name"
-                            className={classes.name}
+                            sx={{ flexGrow: 1, marginLeft: { lg: 2, xs: 0.5 } }}
                         />
                     </Box>
                     <ControlledTextField
@@ -128,7 +105,7 @@ const EditExec = (props) => {
                         variant="outlined"
                         required
                         errorMessage="Please enter a position"
-                        className={classes.position}
+                        sx={{ flexGrow: 4, marginLeft: { lg: 2, xs: 0 }, width: { lg: 'unset', xs: '100%' } }}
                     />
                 </Box>
                 <ControlledTextField

@@ -1,43 +1,19 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
-import { makeStyles } from '@material-ui/core';
 import { darkSwitch } from '../../functions/util';
 import { Volunteering } from '../../functions/entries';
 
-import Table from '@material-ui/core/Table';
-import TableBody from '@material-ui/core/TableBody';
-import TableCell from '@material-ui/core/TableCell';
-import TableContainer from '@material-ui/core/TableContainer';
-import TableHead from '@material-ui/core/TableHead';
-import TableRow from '@material-ui/core/TableRow';
-import Paper from '@material-ui/core/Paper';
-import DashboardRoundedIcon from '@material-ui/icons/DashboardRounded';
-import EventNoteRoundedIcon from '@material-ui/icons/EventNoteRounded';
-import ScheduleRoundedIcon from '@material-ui/icons/ScheduleRounded';
-import EventRoundedIcon from '@material-ui/icons/EventRounded';
-
-const useStyles = makeStyles((theme) => ({
-    root: {
-        marginBottom: 24,
-    },
-    centerIcon: {
-        textAlign: 'center',
-    },
-    tableLink: {
-        textDecoration: 'none',
-        color: 'inherit',
-        transition: '0.3s',
-        '&:hover': {
-            backgroundColor: darkSwitch(theme, theme.palette.grey[200], theme.palette.grey[700]),
-        },
-    },
-    open: {
-        color: theme.palette.primary.main,
-    },
-    closed: {
-        color: theme.palette.error.main,
-    },
-}));
+import Table from '@mui/material/Table';
+import TableBody from '@mui/material/TableBody';
+import TableCell from '@mui/material/TableCell';
+import TableContainer from '@mui/material/TableContainer';
+import TableHead from '@mui/material/TableHead';
+import TableRow from '@mui/material/TableRow';
+import Paper from '@mui/material/Paper';
+import DashboardRoundedIcon from '@mui/icons-material/DashboardRounded';
+import EventNoteRoundedIcon from '@mui/icons-material/EventNoteRounded';
+import ScheduleRoundedIcon from '@mui/icons-material/ScheduleRounded';
+import EventRoundedIcon from '@mui/icons-material/EventRounded';
 
 /**
  * Displays the volunteering opportunities in a table
@@ -46,9 +22,8 @@ const useStyles = makeStyles((theme) => ({
  * @param {Volunteering[]} props.volunteering Volunteering list
  */
 const VolunteeringTable = (props) => {
-    const classes = useStyles();
     return (
-        <TableContainer component={Paper} className={classes.root}>
+        <TableContainer component={Paper} sx={{ marginBottom: 8 }}>
             <Table aria-label="volunteering table">
                 <TableHead>
                     <TableRow>
@@ -66,25 +41,33 @@ const VolunteeringTable = (props) => {
                         <TableRow
                             component={Link}
                             to={`/volunteering?id=${v.id}&view=list`}
-                            className={classes.tableLink}
+                            sx={{
+                                textDecoration: 'none',
+                                color: 'inherit',
+                                transition: '0.3s',
+                                '&:hover': {
+                                    backgroundColor: (theme) =>
+                                        darkSwitch(theme, theme.palette.grey[200], theme.palette.grey[700]),
+                                },
+                            }}
                         >
                             <TableCell component="th" scope="row">
                                 {v.name}
                             </TableCell>
                             <TableCell>{v.club}</TableCell>
-                            <TableCell className={v.filters.open ? classes.open : classes.closed}>
+                            <TableCell sx={{ color: v.filters.open ? 'primary.main' : 'error.main' }}>
                                 {v.filters.open ? 'Open' : 'Closed'}
                             </TableCell>
-                            <TableCell className={classes.centerIcon}>
+                            <TableCell sx={{ textAlign: 'center' }}>
                                 {v.filters.limited ? <DashboardRoundedIcon htmlColor="#ffb258" /> : ''}
                             </TableCell>
-                            <TableCell className={classes.centerIcon}>
+                            <TableCell sx={{ textAlign: 'center' }}>
                                 {v.filters.semester ? <EventNoteRoundedIcon htmlColor="#ff8b99" /> : ''}
                             </TableCell>
-                            <TableCell className={classes.centerIcon}>
+                            <TableCell sx={{ textAlign: 'center' }}>
                                 {v.filters.setTimes ? <ScheduleRoundedIcon htmlColor="#abb8ff" /> : ''}
                             </TableCell>
-                            <TableCell className={classes.centerIcon}>
+                            <TableCell sx={{ textAlign: 'center' }}>
                                 {v.filters.weekly ? <EventRoundedIcon htmlColor="#d38cff" /> : ''}
                             </TableCell>
                         </TableRow>

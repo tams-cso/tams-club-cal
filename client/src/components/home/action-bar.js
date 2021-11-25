@@ -1,18 +1,19 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect } from 'react';
 import { useHistory, useLocation } from 'react-router';
-import { capitalize, makeStyles, useMediaQuery, useTheme } from '@material-ui/core';
+import { capitalize, useMediaQuery, useTheme } from '@mui/material';
+import makeStyles from '@mui/styles/makeStyles';
 import { getParams } from '../../functions/util';
 
-import Paper from '@material-ui/core/Paper';
-import Toolbar from '@material-ui/core/Toolbar';
-import ToggleButtonGroup from '@material-ui/lab/ToggleButtonGroup';
-import ToggleButton from '@material-ui/lab/ToggleButton';
-import Tooltip from '@material-ui/core/Tooltip';
-import Box from '@material-ui/core/Box';
-import Typography from '@material-ui/core/Typography';
-import FormatListBulletedRoundedIcon from '@material-ui/icons/FormatListBulletedRounded';
-import EventNoteRoundedIcon from '@material-ui/icons/EventNoteRounded';
-import MeetingRoomRoundedIcon from '@material-ui/icons/MeetingRoomRounded';
+import Paper from '@mui/material/Paper';
+import Toolbar from '@mui/material/Toolbar';
+import ToggleButtonGroup from '@mui/material/ToggleButtonGroup';
+import ToggleButton from '@mui/material/ToggleButton';
+import Tooltip from '@mui/material/Tooltip';
+import Box from '@mui/material/Box';
+import Typography from '@mui/material/Typography';
+import FormatListBulletedRoundedIcon from '@mui/icons-material/FormatListBulletedRounded';
+import EventNoteRoundedIcon from '@mui/icons-material/EventNoteRounded';
+import MeetingRoomRoundedIcon from '@mui/icons-material/MeetingRoomRounded';
 
 const useStyles = makeStyles({
     root: {
@@ -32,10 +33,12 @@ const useStyles = makeStyles({
 
 /**
  * Displays an action bar for the home page for switching between views
- * and other utility buttons, passed in as children.
+ * and other utility buttons, passed in as props.
+ * This relies on the props.view state object to be pased in
+ * from the home page, as well as its setter function.
  *
  * @param {object} props React props object
- * @param {*} props.children React children
+ * @param {*} [props.children] React children
  * @param {string} props.view View state variable
  * @param {Function} props.setView View state setter function
  */
@@ -46,6 +49,15 @@ const ActionBar = (props) => {
     const matches = useMediaQuery(theme.breakpoints.up('md'));
     const classes = useStyles();
 
+    // If there is a specified view in the URL params, use that
+    // otherwise, the view will be set to the default (schedule)
+    useEffect(() => {
+        const searchView = getParams('view');
+        if (searchView === 'calendar') props.setView('calendar');
+        else if (searchView === 'reservation') props.setView('reservation');
+    }, []);
+
+    // If the user clicks on a new view, update the state variable and url
     const handleView = (event, newView) => {
         if (newView !== null) {
             props.setView(newView);
@@ -53,16 +65,16 @@ const ActionBar = (props) => {
         }
     };
 
-    useEffect(() => {
-        const searchView = getParams('view');
-        if (searchView === 'calendar') props.setView('calendar');
-        else if (searchView === 'reservation') props.setView('reservation');
-    }, []);
-
     return (
-        <Paper className={classes.root}>
+        <Paper
+            sx={{
+                marginBottom: 3,
+                marginLeft: 3,
+                marginRight: 2,
+            }}
+        >
             <Toolbar>
-                <Typography variant="h3" className={classes.spacerRight}>
+                <Typography variant="h3" sx={{ marginRight: 4 }}>
                     {`${capitalize(props.view || '')}${matches ? ' View' : ''}`}
                 </Typography>
                 <Box>{props.children}</Box>
@@ -71,7 +83,11 @@ const ActionBar = (props) => {
                     exclusive
                     onChange={handleView}
                     aria-label="switch view"
-                    className={classes.buttonGroup}
+                    sx={{
+                        paddingLeft: 'auto',
+                        flexGrow: 1,
+                        justifyContent: 'flex-end',
+                    }}
                 >
                     <ToggleButton value="schedule">
                         <Tooltip title="Schedule View">

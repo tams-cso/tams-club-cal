@@ -1,21 +1,7 @@
 import React, { useEffect } from 'react';
 
 import { Controller } from 'react-hook-form';
-import TextField from '@material-ui/core/TextField';
-import { makeStyles } from '@material-ui/core';
-
-const useStyles = makeStyles({
-    grow: {
-        flexGrow: 1,
-    },
-    area: {
-        width: '100%',
-        marginBottom: 16,
-    },
-    gutterBottom: {
-        marginBottom: 12,
-    },
-});
+import TextField from '@mui/material/TextField';
 
 /**
  * Displays a controlled text field to edit.
@@ -35,11 +21,10 @@ const useStyles = makeStyles({
  * @param {boolean} [props.required] True if field is required
  * @param {string} [props.errorMessage] Error message to display in the case of an error; required if 'required' defined
  * @param {string} [props.helperText] If defined, will show helper text
- * @param {string} [props.className] React classname
+ * @param {string} [props.sx] Format the TextField component
  */
 const ControlledTextField = (props) => {
-    const classes = useStyles();
-
+    // Set the default value of the field if it is defined
     useEffect(() => {
         if (!props.value) return;
         props.setValue(props.name, props.value);
@@ -61,7 +46,12 @@ const ControlledTextField = (props) => {
                     onBlur={onBlur}
                     value={value}
                     fullWidth={props.fullWidth}
-                    className={`${props.className} ${props.grow ? classes.grow : ''} ${props.area ? classes.area : ''} ${props.gutterBottom ? classes.gutterBottom : ''}`}
+                    sx={{
+                        flexGrow: props.grow ? 1 : undefined,
+                        marginBottom: props.gutterBottom ? 2 : props.area ? 3 : undefined,
+                        width: props.area ? '100%' : undefined,
+                        ...props.sx,
+                    }}
                 />
             )}
         ></Controller>

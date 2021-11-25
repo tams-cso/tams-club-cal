@@ -1,22 +1,16 @@
 import React, { useEffect, useState } from 'react';
+import { useDispatch } from 'react-redux';
+import { openPopup } from '../../../redux/actions';
 import { Exec } from '../../../functions/entries';
 import EditExec from './edit-exec';
 
-import List from '@material-ui/core/List';
-import Button from '@material-ui/core/Button';
-import { makeStyles } from '@material-ui/core';
-import { openPopup } from '../../../redux/actions';
-import { useDispatch } from 'react-redux';
-
-const useStyles = makeStyles({
-    addButton: {
-        display: 'block',
-        margin: '6px auto 24px',
-    },
-});
+import List from '@mui/material/List';
+import Button from '@mui/material/Button';
 
 /**
- * Displays the list of link inputs
+ * Displays the list of EditExec components.
+ * This component also supports adding more execs.
+ *
  * @param {object} props React props object
  * @param {*} props.control React hook form controller
  * @param {Function} props.register React hook form register function
@@ -30,10 +24,13 @@ const EditExecList = (props) => {
     const [listItems, setListItems] = useState([]);
     const [addedList, setAddedList] = useState([]);
     const dispatch = useDispatch();
-    const classes = useStyles();
 
+    // On mount and new exec creation, re-render the list of EditExec components
     useEffect(() => {
+        // If the exec list is null, do nothing
         if (!props.execList) return;
+        
+        // Map the list of execs and added list of execs to EditExec components
         setListItems(
             [...props.execList, ...addedList].map((e, i) => (
                 <EditExec
@@ -51,7 +48,10 @@ const EditExecList = (props) => {
         );
     }, [props, addedList]);
 
+    // Adds new execs to the list; this will cap at 20 execs and return an error
+    // TODO: Ideally this limit will not be hit, but this does not consider deleted execs and may cap earlier than expected if the user has deleted a lot of execs before adding new ones
     const addItem = () => {
+        // Checks to see if the limit has been hit and returns an error if it has
         if (props.profilePics.length >= 20) {
             dispatch(
                 openPopup(
@@ -61,6 +61,8 @@ const EditExecList = (props) => {
             );
             return;
         }
+
+        // Add the new exec to the list
         setAddedList([...addedList, new Exec()]);
         props.setProfilePics([...props.profilePics, null]);
     };
@@ -68,7 +70,7 @@ const EditExecList = (props) => {
     return (
         <React.Fragment>
             <List>{listItems}</List>
-            <Button color="secondary" onClick={addItem} className={classes.addButton}>
+            <Button color="secondary" onClick={addItem} sx={{ margin: '6px auto 24px', display: 'block' }}>
                 Add Exec
             </Button>
         </React.Fragment>

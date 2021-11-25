@@ -1,20 +1,15 @@
 import React from 'react';
-import { capitalize, makeStyles } from '@material-ui/core';
+import { capitalize } from '@mui/material';
 
-import Select from '@material-ui/core/Select';
-import MenuItem from '@material-ui/core/MenuItem';
-import FormControl from '@material-ui/core/FormControl';
-import IconButton from '@material-ui/core/IconButton';
-import Tooltip from '@material-ui/core/Tooltip';
-import ArrowDownwardRoundedIcon from '@material-ui/icons/ArrowDownwardRounded';
-import ArrowUpwardRoundedIcon from '@material-ui/icons/ArrowUpwardRounded';
+import makeStyles from '@mui/styles/makeStyles';
 
-const useStyles = makeStyles({
-    tooltip: {
-        marginLeft: 12,
-        marginRight: 8,
-    },
-});
+import Select from '@mui/material/Select';
+import MenuItem from '@mui/material/MenuItem';
+import FormControl from '@mui/material/FormControl';
+import IconButton from '@mui/material/IconButton';
+import Tooltip from '@mui/material/Tooltip';
+import ArrowDownwardRoundedIcon from '@mui/icons-material/ArrowDownwardRounded';
+import ArrowUpwardRoundedIcon from '@mui/icons-material/ArrowUpwardRounded';
 
 /**
  * Simple component to display a select menu and icon button to select
@@ -28,7 +23,7 @@ const useStyles = makeStyles({
  * @param {Function} props.setReverse State variable function that sets whether or not sort order is reversed
  */
 const SortSelect = (props) => {
-    const classes = useStyles();
+    // Set state value when user changes selection
     const handleChange = (event) => {
         props.setValue(event.target.value);
     };
@@ -36,7 +31,7 @@ const SortSelect = (props) => {
     return (
         <React.Fragment>
             <FormControl>
-                <Select value={props.value} onChange={handleChange} className={classes.select}>
+                <Select value={props.value} onChange={handleChange} variant="standard">
                     {props.options
                         ? props.options.map((o) => (
                               <MenuItem value={o} key={o}>
@@ -49,9 +44,14 @@ const SortSelect = (props) => {
             <Tooltip
                 title={props.reverse ? 'Sorted descending' : 'Sorted ascending'}
                 onClick={props.setReverse.bind(this, !props.reverse)}
-                className={classes.tooltip}
+                sx={{
+                    marginLeft: 3,
+                    marginRight: 2,
+                }}
             >
-                <IconButton>{props.reverse ? <ArrowUpwardRoundedIcon /> : <ArrowDownwardRoundedIcon />}</IconButton>
+                <IconButton size="large">
+                    {props.reverse ? <ArrowUpwardRoundedIcon /> : <ArrowDownwardRoundedIcon />}
+                </IconButton>
             </Tooltip>
         </React.Fragment>
     );

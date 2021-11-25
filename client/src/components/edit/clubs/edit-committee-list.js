@@ -1,20 +1,14 @@
 import React, { useEffect, useState } from 'react';
 
-import List from '@material-ui/core/List';
-import Button from '@material-ui/core/Button';
-import { makeStyles } from '@material-ui/core';
+import List from '@mui/material/List';
+import Button from '@mui/material/Button';
 import EditCommitttee from './edit-committee';
 import { Committee } from '../../../functions/entries';
 
-const useStyles = makeStyles({
-    addButton: {
-        display: 'block',
-        margin: '6px auto 24px',
-    },
-});
-
 /**
- * Displays the list of link inputs
+ * Displays the list of EditCommittee components.
+ * This component also supports adding more committees.
+ * 
  * @param {object} props React props object
  * @param {*} props.control React hook form controller
  * @param {Function} props.register React hook form register function
@@ -25,10 +19,13 @@ const useStyles = makeStyles({
 const EditCommitteeList = (props) => {
     const [listItems, setListItems] = useState([]);
     const [addedList, setAddedList] = useState([]);
-    const classes = useStyles();
 
+    // On mount and new exec creation, re-render the list of EditCommittee components
     useEffect(() => {
+        // If the committee list is null, do nothing
         if (!props.committeeList) return;
+
+        // Map the list of committees and added list of committees to EditCommittee components
         setListItems(
             [...props.committeeList, ...addedList].map((c, i) => (
                 <EditCommitttee
@@ -44,6 +41,7 @@ const EditCommitteeList = (props) => {
         );
     }, [props, addedList]);
 
+    // Add the new committee to the list
     const addItem = () => {
         setAddedList([...addedList, new Committee()]);
     };
@@ -51,7 +49,7 @@ const EditCommitteeList = (props) => {
     return (
         <React.Fragment>
             <List>{listItems}</List>
-            <Button color="secondary" onClick={addItem} className={classes.addButton}>
+            <Button color="secondary" onClick={addItem} sx={{ margin: '6px auto 24px', display: 'block' }}>
                 Add Committee
             </Button>
         </React.Fragment>

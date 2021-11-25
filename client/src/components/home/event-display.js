@@ -1,19 +1,18 @@
 import React, { useEffect, useState } from 'react';
 import { useHistory } from 'react-router';
-import { makeStyles } from '@material-ui/core/styles';
-import { capitalize } from '@material-ui/core';
+import { capitalize } from '@mui/material';
 import { darkSwitch, darkSwitchGrey, formatEventDate, formatEventTime, getParams } from '../../functions/util';
 import { getEvent } from '../../functions/api';
 
-import Container from '@material-ui/core/Container';
-import Card from '@material-ui/core/Card';
-import CardContent from '@material-ui/core/CardContent';
-import CardActions from '@material-ui/core/CardActions';
-import Button from '@material-ui/core/Button';
-import Box from '@material-ui/core/Box';
-import Divider from '@material-ui/core/Divider';
-import Hidden from '@material-ui/core/Hidden';
-import Typography from '@material-ui/core/Typography';
+import Container from '@mui/material/Container';
+import Card from '@mui/material/Card';
+import CardContent from '@mui/material/CardContent';
+import CardActions from '@mui/material/CardActions';
+import Button from '@mui/material/Button';
+import Box from '@mui/material/Box';
+import Divider from '@mui/material/Divider';
+import Hidden from '@mui/material/Hidden';
+import Typography from '@mui/material/Typography';
 import Paragraph from '../shared/paragraph';
 import Loading from '../shared/loading';
 import AddButton from '../shared/add-button';
@@ -21,65 +20,10 @@ import Title from '../shared/title';
 
 import data from '../../data.json';
 
-const useStyles = makeStyles((theme) => ({
-    root: {
-        maxWidth: '50%',
-        [theme.breakpoints.down(1500)]: {
-            maxWidth: '75%',
-        },
-        [theme.breakpoints.down('md')]: {
-            maxWidth: '100%',
-        },
-    },
-    gridRoot: {
-        width: '100%',
-        display: 'flex',
-        justifyContent: 'center',
-        [theme.breakpoints.down('sm')]: {
-            flexDirection: 'column',
-        },
-    },
-    gridSide: {
-        width: '50%',
-        textAlign: 'left',
-        [theme.breakpoints.down('sm')]: {
-            width: '100%',
-        },
-    },
-    gridLeft: {
-        padding: 8,
-        [theme.breakpoints.down('sm')]: {
-            padding: 0,
-        },
-    },
-    gridRight: {
-        marginLeft: 12,
-        padding: '8px 0',
-        [theme.breakpoints.down('sm')]: {
-            margin: 0,
-            marginTop: 16,
-            padding: 0,
-        },
-    },
-    eventClub: {
-        marginBottom: 16,
-        color: darkSwitchGrey(theme),
-    },
-    eventType: {
-        color: darkSwitch(theme, theme.palette.grey[600], theme.palette.secondary.main),
-    },
-    date: {
-        fontWeight: 400,
-    },
-    location: {
-        marginTop: 24,
-        color: darkSwitchGrey(theme),
-        fontSize: '0.9rem',
-    },
-    buttonCenter: {
-        margin: 'auto',
-    },
-}));
+// Coloring for the event type
+const eventTypeStyle = {
+    color: (theme) => darkSwitch(theme, theme.palette.grey[600], theme.palette.secondary.main),
+};
 
 /**
  * Displays a single event.
@@ -92,14 +36,10 @@ const EventDisplay = (props) => {
     const [event, setEvent] = useState(null);
     const [error, setError] = useState(null);
     const history = useHistory();
-    const classes = useStyles();
 
-    const back = () => {
-        const prevView = getParams('view');
-        history.push(`/${prevView ? `?view=${prevView}` : ''}`);
-    };
-
+    // Get the event from the database and set the state variable or error
     useEffect(async () => {
+        // If the event ID is not in the URL, do nothing
         if (props.id === null) return;
 
         // Pull the event from the backend
@@ -113,6 +53,13 @@ const EventDisplay = (props) => {
         } else setEvent(res.data);
     }, [props.id]);
 
+    // Go back to the previous screen that took the user here
+    // If a specific view was passed in, go back to that view
+    const back = () => {
+        const prevView = getParams('view');
+        history.push(`/${prevView ? `?view=${prevView}` : ''}`);
+    };
+
     return (
         <React.Fragment>
             {error}
@@ -121,45 +68,72 @@ const EventDisplay = (props) => {
                     <Loading />
                 )
             ) : (
-                <Container className={classes.root}>
+                <Container maxWidth={false} sx={{ maxWidth: { md: '75%', xs: '100%' } }}>
                     <Title resource="events" name={event.name} />
                     <AddButton color="secondary" label="Event" path={`/edit/events?id=${event.id}`} edit />
                     <Card>
                         <CardContent>
-                            <Box className={classes.gridRoot}>
-                                <Box className={`${classes.gridSide} ${classes.gridLeft}`}>
-                                    <Typography className={classes.eventType}>{capitalize(event.type)}</Typography>
+                            <Box
+                                sx={{
+                                    width: '100%',
+                                    display: 'flex',
+                                    justifyContent: 'center',
+                                    flexDirection: { lg: 'row', xs: 'column' },
+                                }}
+                            >
+                                <Box
+                                    sx={{
+                                        width: { lg: '50%', xs: '100%' },
+                                        textAlign: 'left',
+                                        padding: { lg: 1, xs: 0 },
+                                    }}
+                                >
+                                    <Typography sx={eventTypeStyle}>{capitalize(event.type)}</Typography>
                                     <Typography variant="h2" component="h1">
                                         {event.name}
                                     </Typography>
-                                    <Typography variant="subtitle1" component="p" className={classes.eventClub}>
+                                    <Typography
+                                        variant="subtitle1"
+                                        component="p"
+                                        sx={{ marginBottom: 4, color: (theme) => darkSwitchGrey(theme) }}
+                                    >
                                         {event.club}
                                     </Typography>
-                                    <Typography variant="h3" gutterBottom className={classes.date}>
+                                    <Typography variant="h3" gutterBottom sx={{ fontWeight: 400 }}>
                                         {formatEventDate(event)}
                                     </Typography>
-                                    {
-                                        <Typography variant="h3" className={classes.date}>
-                                            {formatEventTime(event, event.noEnd, true)}
-                                        </Typography>
-                                    }
-                                    <Typography variant="h3" className={classes.location}>
+                                    <Typography variant="h3" sx={{ fontWeight: 400 }}>
+                                        {formatEventTime(event, event.noEnd, true)}
+                                    </Typography>
+                                    <Typography
+                                        variant="h3"
+                                        sx={{
+                                            marginTop: 6,
+                                            color: (theme) => darkSwitchGrey(theme),
+                                            fontSize: '0.9rem',
+                                        }}
+                                    >
                                         {event.location === 'none'
                                             ? null
                                             : 'Location: ' + data.rooms.find((d) => d.value === event.location).label}
                                     </Typography>
                                 </Box>
-                                <Hidden smDown>
+                                <Hidden mdDown>
                                     <Divider orientation="vertical" flexItem />
                                 </Hidden>
                                 <Paragraph
                                     text={event.description}
-                                    className={`${classes.gridSide} ${classes.gridRight}`}
+                                    sx={{
+                                        width: { lg: '50%', xs: '100%' },
+                                        textAlign: 'left',
+                                        margin: { lg: '0 0 0 12px', xs: '16px 0 0 0' },
+                                        padding: { lg: '8px 0', xs: 0 },
+                                    }}
                                 />
                             </Box>
                         </CardContent>
                         <CardActions>
-                            <Button size="small" className={classes.buttonCenter} onClick={back}>
+                            <Button size="small" onClick={back} sx={{ margin: 'auto' }}>
                                 Back
                             </Button>
                         </CardActions>

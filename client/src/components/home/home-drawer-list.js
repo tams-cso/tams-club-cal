@@ -1,63 +1,61 @@
 import React from 'react';
-import { makeStyles } from '@material-ui/core/styles';
+
+import List from '@mui/material/List';
+import ListItem from '@mui/material/ListItem';
+import ListItemIcon from '@mui/material/ListItemIcon';
+import ListItemText from '@mui/material/ListItemText';
+import Typography from '@mui/material/Typography';
+import EventRoundedIcon from '@mui/icons-material/EventRounded';
+import CreateRoundedIcon from '@mui/icons-material/CreateRounded';
+import EmojiPeopleRoundedIcon from '@mui/icons-material/EmojiPeopleRounded';
+import PublicRoundedIcon from '@mui/icons-material/PublicRounded';
+import EventAvailableRoundedIcon from '@mui/icons-material/EventAvailableRounded';
+
 import data from '../../data.json';
 
-import List from '@material-ui/core/List';
-import ListItem from '@material-ui/core/ListItem';
-import ListItemIcon from '@material-ui/core/ListItemIcon';
-import ListItemText from '@material-ui/core/ListItemText';
-import Typography from '@material-ui/core/Typography';
-import EventRoundedIcon from '@material-ui/icons/EventRounded';
-import CreateRoundedIcon from '@material-ui/icons/CreateRounded';
-import EmojiPeopleRoundedIcon from '@material-ui/icons/EmojiPeopleRounded';
-import PublicRoundedIcon from '@material-ui/icons/PublicRounded';
-import EventAvailableRoundedIcon from '@material-ui/icons/EventAvailableRounded';
+// Style the ListItemIcon components
+const iconStyle = { minWidth: 40 };
 
-const useStyles = makeStyles({
-    listIcon: {
-        minWidth: 40,
-    },
-    externalLinksTitle: {
-        textAlign: 'center',
-        marginTop: '1rem',
-    },
-});
-
+/**
+ * Shows a list of external links on the home page
+ * This component is only a list of links as it will be
+ * placed in two different drawers depending on if the page
+ * is in mobile or not.
+ */
 const HomeDrawerList = () => {
-    const classes = useStyles();
     const calendarUrl = process.env.NODE_ENV !== 'production' ? data.addStagingCalendar : data.addCalendar;
     return (
         <React.Fragment>
-            <Typography variant="h3" className={classes.externalLinksTitle}>
+            <Typography variant="h3" sx={{ textAlign: 'center', marginTop: '1rem' }}>
                 External Links
             </Typography>
             <List>
                 <ListItem button component="a" href={data.examCalendar} target="_blank">
-                    <ListItemIcon className={classes.listIcon}>
+                    <ListItemIcon sx={iconStyle}>
                         <EventRoundedIcon />
                     </ListItemIcon>
                     <ListItemText primary="Exam Calendar" />
                 </ListItem>
                 <ListItem button component="a" href={data.academicsGuide} target="_blank">
-                    <ListItemIcon className={classes.listIcon}>
+                    <ListItemIcon sx={iconStyle}>
                         <CreateRoundedIcon />
                     </ListItemIcon>
                     <ListItemText primary="Academics Guide" />
                 </ListItem>
                 <ListItem button component="a" href={data.clubLeaderResources} target="_blank">
-                    <ListItemIcon className={classes.listIcon}>
+                    <ListItemIcon sx={iconStyle}>
                         <EmojiPeopleRoundedIcon />
                     </ListItemIcon>
                     <ListItemText primary="Club Leader Resources" />
                 </ListItem>
                 <ListItem button component="a" href={data.tamsWiki} target="_blank">
-                    <ListItemIcon className={classes.listIcon}>
+                    <ListItemIcon sx={iconStyle}>
                         <PublicRoundedIcon />
                     </ListItemIcon>
                     <ListItemText primary="TAMS Wiki" />
                 </ListItem>
                 <ListItem button component="a" href={calendarUrl} target="_blank">
-                    <ListItemIcon className={classes.listIcon}>
+                    <ListItemIcon sx={iconStyle}>
                         <EventAvailableRoundedIcon />
                     </ListItemIcon>
                     <ListItemText primary="Add to Google Calendar!" />

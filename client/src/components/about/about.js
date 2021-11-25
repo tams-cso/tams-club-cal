@@ -1,52 +1,36 @@
 import React, { useState } from 'react';
-import { makeStyles } from '@material-ui/core';
 import { postFeedback } from '../../functions/api';
 import { Feedback } from '../../functions/entries';
+import { darkSwitchGrey } from '../../functions/util';
 
-import Container from '@material-ui/core/Container';
-import Box from '@material-ui/core/Box';
-import Typography from '@material-ui/core/Typography';
-import TextField from '@material-ui/core/TextField';
-import Button from '@material-ui/core/Button';
-import SendIcon from '@material-ui/icons/Send';
+import Container from '@mui/material/Container';
+import Box from '@mui/material/Box';
+import Typography from '@mui/material/Typography';
+import TextField from '@mui/material/TextField';
+import Button from '@mui/material/Button';
+import SendIcon from '@mui/icons-material/Send';
 import Paragraph from '../shared/paragraph';
 import Image from '../shared/image';
-
-import data from '../../data.json';
 import PageWrapper from '../shared/page-wrapper';
 
-const useStyles = makeStyles({
-    image: {
-        margin: 'auto',
-        marginBottom: 16,
-    },
-    center: {
-        textAlign: 'center',
-        marginTop: 32,
-        marginBottom: 8,
-    },
-    area: {
-        width: '100%',
-        margin: '16px 0 8px',
-    },
-    submitWrapper: {
-        width: '100%',
-        display: 'flex',
-        flexDirection: 'row',
-        alignItems: 'center',
-    },
-    field: {
-        flexGrow: 1,
-        marginRight: 12,
-    },
-});
+import data from '../../data.json';
 
+// Style the text field component
+const textFieldStyle = {
+    width: '100%',
+    margin: '16px 0 8px',
+};
+
+/**
+ * The about page, which displays information about the website,
+ * and allows users to send feedback through a form.
+ */
 const About = () => {
     const [feedback, setFeedback] = useState('');
     const [name, setName] = useState('');
     const [error, setError] = useState(false);
-    const classes = useStyles();
 
+    // Handle change in form field (feedback and name)
     const handleChange = (event) => {
         switch (event.target.id) {
             case 'feedback':
@@ -58,6 +42,8 @@ const About = () => {
         }
     };
 
+    // Handle form submit button click by trimming string
+    // then sending feedback to database if not empty
     const handleSubmit = async () => {
         if (feedback.trim().length === 0) {
             setError(true);
@@ -77,13 +63,27 @@ const About = () => {
     return (
         <PageWrapper title="About">
             <Container>
-                <Image src="/logo-banner.png" alt="TAMS Club Calendar" className={classes.image} transparent />
-                <Paragraph text={data.aboutText} fontSize="1.1rem" />
-                <Typography variant="h2" className={classes.center}>
+                <Image
+                    src="/logo-banner.png"
+                    alt="TAMS Club Calendar"
+                    transparent
+                    sx={{ margin: 'auto', marginBottom: 4, marginTop: 4 }}
+                />
+                <Paragraph text={data.aboutText} fontSize="1.1rem" sx={{ color: (theme) => darkSwitchGrey(theme)} } />
+                <Typography
+                    variant="h2"
+                    sx={{
+                        marginTop: 8,
+                        marginBottom: 2,
+                        textAlign: 'center',
+                        fontWeight: 500,
+                    }}
+                >
                     Feedback
                 </Typography>
                 <Paragraph text={data.aboutFeedback} fontSize="1.1rem" />
-                <form className={classes.form} noValidate autoComplete="off">
+                {/* TODO: Replace this with a React Hook Form!!! */}
+                <form noValidate autoComplete="off">
                     <TextField
                         id="feedback"
                         label="Feedback"
@@ -91,22 +91,28 @@ const About = () => {
                         variant="outlined"
                         value={feedback}
                         onChange={handleChange}
-                        className={classes.area}
                         error={error}
                         helperText={error ? 'Feedback cannot be empty' : ''}
+                        sx={textFieldStyle}
                     ></TextField>
-                    <Box className={classes.submitWrapper}>
+                    <Box
+                        sx={{
+                            width: '100%',
+                            display: 'flex',
+                            flexDirection: 'row',
+                            alignItems: 'center',
+                        }}
+                    >
                         <TextField
                             id="name"
                             label="Name (optional)"
                             value={name}
                             onChange={handleChange}
-                            className={classes.field}
+                            sx={textFieldStyle}
                         ></TextField>
                         <Button
                             variant="contained"
                             color="primary"
-                            className={classes.submit}
                             endIcon={<SendIcon />}
                             onClick={handleSubmit}
                         >

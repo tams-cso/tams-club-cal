@@ -1,19 +1,12 @@
 import React, { useEffect, useState } from 'react';
-import { makeStyles } from '@material-ui/core';
 
-import List from '@material-ui/core/List';
-import Button from '@material-ui/core/Button';
+import List from '@mui/material/List';
+import Button from '@mui/material/Button';
 import LinkInput from './link-input';
 
-const useStyles = makeStyles({
-    addButton: {
-        display: 'block',
-        margin: '6px auto 24px',
-    },
-});
-
 /**
- * Displays the list of link inputs
+ * Displays the list of link inputs, as well as allows for more to be added.
+ * 
  * @param {object} props React props object
  * @param {*} props.control React hook form controller
  * @param {Function} props.register React hook form register function
@@ -26,10 +19,14 @@ const useStyles = makeStyles({
 const LinkInputList = (props) => {
     const [listItems, setListItems] = useState([]);
     const [addedList, setAddedList] = useState([]);
-    const classes = useStyles();
 
+    // On mount or when an item is added, update the list of components
     useEffect(() => {
+        // If the links are null, do nothing
         if (!props.links) return;
+
+        // Concatenate the list of links with the list of added links
+        // and map them to LinkInput components
         setListItems(
             [...props.links, ...addedList].map((link, i) => (
                 <LinkInput
@@ -46,6 +43,7 @@ const LinkInputList = (props) => {
         );
     }, [props, addedList]);
 
+    // Add a new link input to the list
     const addItem = () => {
         setAddedList([...addedList, '']);
     };
@@ -53,7 +51,11 @@ const LinkInputList = (props) => {
     return (
         <React.Fragment>
             <List>{listItems}</List>
-            <Button color={props.addColor || 'primary'} onClick={addItem} className={classes.addButton}>
+            <Button
+                color={props.addColor || 'primary'}
+                onClick={addItem}
+                sx={{ margin: '6px auto 24px', display: 'block' }}
+            >
                 {`Add ${props.label}`}
             </Button>
         </React.Fragment>

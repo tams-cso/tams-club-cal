@@ -1,36 +1,34 @@
 import React, { useEffect, useState } from 'react';
-import { makeStyles } from '@material-ui/core';
 import { getClubList } from '../../functions/api';
 
-import Grid from '@material-ui/core/Grid';
-import Container from '@material-ui/core/Container';
-import Box from '@material-ui/core/Box';
+import Container from '@mui/material/Container';
+import Box from '@mui/material/Box';
+import Grid from '@mui/material/Grid';
 import ClubCard from './club-card';
+import ClubTable from './club-table';
 import Loading from '../shared/loading';
 import AddButton from '../shared/add-button';
 import ViewSwitcher from '../shared/view-switcher';
-import ClubTable from './club-table';
 import SortSelect from '../shared/sort-select';
 
-const useStyles = makeStyles((theme) => ({
-    gridItem: {
-        [theme.breakpoints.down('md')]: {
-            flexGrow: 1,
-        },
-    },
-}));
-
+/**
+ * The ClubList component displays a list of cards, each of which
+ * contains a summary of each club and links to that specific club.
+ */
 const ClubList = () => {
     const [clubList, setClubList] = useState(null);
     const [clubCardList, setClubCardList] = useState(<Loading />);
-    const [listView, setListView] = useState(false);
+    const [tableView, setTableView] = useState(false);
     const [sort, setSort] = useState('name');
     const [reverse, setReverse] = useState(false);
-    const classes = useStyles();
 
+    // Fetch the club list on mount from database
     useEffect(async () => {
-        // Fetch the events list on mount from database
+        // If the club list is already fetched, do nothing
         if (clubList !== null) return;
+
+        // Fetch the club list from the database
+        // and display the data/show an error depending on the result
         const clubs = await getClubList();
         if (clubs.status !== 200) {
             setClubCardList(
@@ -38,37 +36,34 @@ const ClubList = () => {
                     Could not get club data. Please reload the page or contact the site manager to fix this issue.
                 </Loading>
             );
-            return;
-        }
-        setClubList(clubs.data);
+        } else setClubList(clubs.data);
     }, []);
 
+    // Update the club list when the club list changes
     useEffect(() => {
         if (clubList === null) return;
 
+        // Sort the list of clubs using a custom sorting method
+        // We sort by advised first then sorting method (only name for now)
         const sortedList = clubList.sort((a, b) => {
             if (a.advised !== b.advised) return a.advised ? -1 : 1;
-            const rev = reverse ? -1 : 1;
-            if (typeof a[sort] === 'string') {
-                return rev * a[sort].localeCompare(b[sort]);
-            } else {
-                return rev * (a[sort] - b[sort]);
-            }
+            return (reverse ? -1 : 1) * a[sort].localeCompare(b[sort]);
         });
 
+        // Create a list of ClubCard components from the sorted list
         setClubCardList(
-            <Grid container spacing={4}>
+            <Grid container spacing={4} sx={{ marginBottom: 4 }}>
                 {sortedList.map((c) => (
-                    <Grid item xs={12} sm={6} lg={4} className={classes.gridItem} key={c.name}>
+                    <Grid item xs={12} sm={6} lg={4} key={c.name} sx={{ flexGrow: { lg: 1, xs: 0 } }}>
                         <ClubCard club={c} />
                     </Grid>
                 ))}
             </Grid>
         );
-    }, [clubList, sort, reverse]);
+    }, [clubList, reverse]);
 
     return (
-        <Container>
+        <Container maxWidth={false} sx={{ maxWidth: 1280 }}>
             <Box width="100%" marginBottom={2} display="flex" alignItems="center" height={48} justifyContent="flex-end">
                 <SortSelect
                     value={sort}
@@ -77,10 +72,10 @@ const ClubList = () => {
                     setReverse={setReverse}
                     options={['name']}
                 />
-                <ViewSwitcher listView={listView} setListView={setListView} className={classes.viewSwitcher} />
+                <ViewSwitcher tableView={tableView} setTableView={setTableView} />
             </Box>
             <AddButton color="primary" label="Club" path="/edit/clubs" />
-            {listView ? <ClubTable clubs={clubList} /> : clubCardList}
+            {tableView ? <ClubTable clubs={clubList} /> : clubCardList}
         </Container>
     );
 };

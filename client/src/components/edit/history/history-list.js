@@ -1,62 +1,28 @@
 import React, { useEffect, useState } from 'react';
-import { makeStyles } from '@material-ui/core';
+import { calculateEditDate, darkSwitch, redirect } from '../../../functions/util';
 import { getHistoryList } from '../../../functions/api';
 
-import Typography from '@material-ui/core/Typography';
-import Table from '@material-ui/core/Table';
-import TableBody from '@material-ui/core/TableBody';
-import TableCell from '@material-ui/core/TableCell';
-import TableContainer from '@material-ui/core/TableContainer';
-import TableHead from '@material-ui/core/TableHead';
-import TableRow from '@material-ui/core/TableRow';
-import Button from '@material-ui/core/Button';
+import Typography from '@mui/material/Typography';
+import Table from '@mui/material/Table';
+import TableBody from '@mui/material/TableBody';
+import TableCell from '@mui/material/TableCell';
+import TableContainer from '@mui/material/TableContainer';
+import TableHead from '@mui/material/TableHead';
+import TableRow from '@mui/material/TableRow';
+import Button from '@mui/material/Button';
 import Loading from '../../shared/loading';
-import { calculateEditDate, darkSwitch, redirect } from '../../../functions/util';
 
-const useStyles = makeStyles((theme) => ({
-    title: {
-        textAlign: 'center',
-        marginTop: 12,
-    },
-    tableLink: {
-        transition: '0.3s',
-        cursor: 'pointer',
-        '&:hover': {
-            backgroundColor: darkSwitch(theme, theme.palette.grey[200], theme.palette.grey[700]),
-        },
-    },
-    button: {
-        margin: '12px auto',
-        display: 'block',
-    },
-}));
-
+/**
+ * Shows a list of all the edits made, in reverse chronological order.
+ */
 const HistoryList = () => {
     const [historyList, setHistoryList] = useState(null);
     const [dataList, setDataList] = useState(null);
     const [noMore, setNoMore] = useState(true);
-    const classes = useStyles();
 
-    const loadButton = () => {
-        setNoMore(true);
-        loadMore();
-    };
-    const loadMore = async () => {
-        if (!historyList) return;
-
-        const history = await getHistoryList(historyList[historyList.length - 1].id);
-        if (history.status !== 200) {
-            setHistoryList(
-                <Loading error>Could not get history list. Please check your internet and reload the page.</Loading>
-            );
-            return;
-        }
-        setDataList([...dataList, ...history.data.dataList]);
-        setHistoryList([...historyList, ...history.data.historyList]);
-        if (history.data.historyList.length === 50) setNoMore(false);
-    };
-
+    // On mount, load the history and data lists
     useEffect(async () => {
+        // Make the API call and handle errors
         const history = await getHistoryList();
         if (history.status !== 200) {
             setHistoryList(
@@ -66,12 +32,37 @@ const HistoryList = () => {
         }
         setDataList(history.data.dataList);
         setHistoryList(history.data.historyList);
+
+        // If there are no more history items, set noMore to true (won't ever happen)
         if (history.data.historyList.length === 50) setNoMore(false);
     }, []);
 
+    // Loads more history if the user clicks on the "Load More" button
+    const loadMore = async () => {
+        // If the historyList is null, do nothing
+        if (!historyList) return;
+
+        // Get the next 50 entries, using the last entry's ID as the start ID
+        // Update the data/history lists or return an error if the API call fails
+        const history = await getHistoryList(historyList[historyList.length - 1].id);
+        if (history.status !== 200) {
+            setHistoryList(
+                <Loading error>Could not get history list. Please check your internet and reload the page.</Loading>
+            );
+            return;
+        }
+        setDataList([...dataList, ...history.data.dataList]);
+        setHistoryList([...historyList, ...history.data.historyList]);
+
+        // If we have gotten all history entries from the beginning of time, set noMore to true
+        // This is less likely than the events to hit the end of the list as there will be lots of edits,
+        // so the issue of having a total history list that's a multiple of 50 is not a big concern.
+        setNoMore(history.data.historyList.length !== 50);
+    };
+
     return (
         <React.Fragment>
-            <Typography variant="h1" component="h2" className={classes.title}>
+            <Typography variant="h1" component="h2" sx={{ margin: 2, textAlign: 'center' }}>
                 Edit History
             </Typography>
             {!historyList ? (
@@ -92,7 +83,14 @@ const HistoryList = () => {
                             {historyList.map((h, i) => (
                                 <TableRow
                                     key={i}
-                                    className={classes.tableLink}
+                                    sx={{
+                                        transition: '0.3s',
+                                        cursor: 'pointer',
+                                        '&:hover': {
+                                            backgroundColor: (theme) =>
+                                                darkSwitch(theme, theme.palette.grey[200], theme.palette.grey[700]),
+                                        },
+                                    }}
                                     onClick={redirect.bind(
                                         this,
                                         `/edit/history/${h.resource}?id=${h.editId}&view=list`
@@ -113,7 +111,7 @@ const HistoryList = () => {
                     </Table>
                 </TableContainer>
             )}
-            <Button onClick={loadButton} className={classes.button} disabled={noMore}>
+            <Button onClick={loadMore} disabled={noMore} sx={{ margin: '12px auto', display: 'block' }}>
                 Load more
             </Button>
         </React.Fragment>

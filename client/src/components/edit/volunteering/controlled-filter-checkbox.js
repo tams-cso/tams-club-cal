@@ -1,8 +1,8 @@
 import React, { useEffect } from 'react';
 
 import { Controller } from 'react-hook-form';
-import FormControlLabel from '@material-ui/core/FormControlLabel';
-import Checkbox from '@material-ui/core/Checkbox';
+import FormControlLabel from '@mui/material/FormControlLabel';
+import Checkbox from '@mui/material/Checkbox';
 
 /**
  * Shows a checkbox for a single filter
@@ -15,9 +15,11 @@ import Checkbox from '@material-ui/core/Checkbox';
  * @param {boolean} props.value True if checked by default
  */
 const ControlledFilterCheckbox = (props) => {
+    // Sets value of the filter checkbox given the passed in value on mount
     useEffect(() => {
         props.setValue(props.name, props.value);
     }, []);
+
     return (
         <Controller
             control={props.control}

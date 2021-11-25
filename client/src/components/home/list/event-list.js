@@ -1,50 +1,26 @@
 import React, { useEffect, useState } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
-import { makeStyles } from '@material-ui/core/styles';
 import dayjs from 'dayjs';
-import { setEventList } from '../../../redux/actions';
-import { getSavedEventList } from '../../../redux/selectors';
 import { getEventList, getMoreEvents } from '../../../functions/api';
 import { darkSwitchGrey, isSameDate, parseEventList } from '../../../functions/util';
 
-import Container from '@material-ui/core/Container';
-import Typography from '@material-ui/core/Typography';
-import Button from '@material-ui/core/Button';
+import Container from '@mui/material/Container';
+import Typography from '@mui/material/Typography';
+import Button from '@mui/material/Button';
 import EventListSection from './event-list-section';
 import Loading from '../../shared/loading';
 import AddButton from '../../shared/add-button';
 
-const useStyles = makeStyles((theme) => ({
-    root: {
-        height: 'max-content',
-        overflowX: 'hidden',
-    },
-    centerButton: {
-        margin: 'auto',
-        width: '100%',
-    },
-    noMore: {
-        textAlign: 'center',
-        color: darkSwitchGrey(theme),
-        marginTop: 12,
-        marginBottom: 24,
-    },
-}));
-
+/**
+ * The EventList component is responsible for displaying the list of events
+ * on the home page in a schedule view. This component will fetch the events
+ * and display future events, split by days.
+ */
 const EventList = () => {
-    const dispatch = useDispatch();
-    const eventList = useSelector(getSavedEventList);
+    const [eventList, setEventList] = useState(null);
     const [eventComponentList, setEventComponentList] = useState(<Loading />);
-    const classes = useStyles();
 
-    const loadMore = async () => {
-        const lastId = eventList[eventList.length - 1].id;
-        const newEvents = await getMoreEvents(lastId);
-        dispatch(setEventList([...eventList, ...newEvents]));
-    };
-
+    // Fetch the events list on mount from database
     useEffect(async () => {
-        // Fetch the events list on mount from database
         if (eventList !== null) return;
         const events = await getEventList();
         if (events.status !== 200) {
@@ -55,28 +31,46 @@ const EventList = () => {
             );
             return;
         }
+
+        // Sort the events by date and filter out all elements
+        // that do not start on the same date
         const filteredList = events.data
             .sort((a, b) => a.start - b.start)
             .filter((e) => e.start >= dayjs().startOf('day'));
-        dispatch(setEventList(filteredList));
+        setEventList(filteredList);
     }, []);
 
+    // This hook will first make sure the event list is not empty/null,
+    // then it will call a util function to split up multi-day events,
+    // group the events by date, and create a list of EventListSections,
+    // each containing a list of events for that day.
     useEffect(() => {
         // Make sure event list is not empty/null
         if (eventList === null) return;
         else if (eventList.length === 0) {
             // Set text if the eventList is null
             setEventComponentList(
-                <Typography variant="h6" component="h2" className={classes.noMore}>
+                <Typography
+                    variant="h6"
+                    component="h2"
+                    sx={{
+                        marginTop: 3,
+                        marginBottom: 6,
+                        textAlign: 'center',
+                        color: (theme) => darkSwitchGrey(theme),
+                    }}
+                >
                     No events planned... Click the + to add one!
                 </Typography>
             );
             return;
         }
 
+        // Split up multi-day events
         const parsedEventList = parseEventList(eventList);
 
-        // Split the events into groups
+        // Split the events into groups by date
+        // TODO: Put this in a util function
         let eventGroupList = [];
         let tempList = [];
         parsedEventList.forEach((event, index) => {
@@ -95,15 +89,24 @@ const EventList = () => {
         ));
 
         // If event list is not full, add button to retrieve more events
+        // TODO: What if the number of events is a multiple of 30??????
         if (eventList.length !== 0 && eventList.length % 30 === 0)
             groupedComponents.push(
-                <Button className={classes.centerButton} onClick={loadMore} key="load">
+                <Button onClick={loadMore} key="load" sx={{ margin: 'auto' }}>
                     Load more events
                 </Button>
             );
         else
             groupedComponents.push(
-                <Typography className={classes.noMore} key="nomore">
+                <Typography
+                    key="nomore"
+                    sx={{
+                        marginTop: 3,
+                        marginBottom: 8,
+                        textAlign: 'center',
+                        color: (theme) => darkSwitchGrey(theme),
+                    }}
+                >
                     No more events... Click the + to add one!
                 </Typography>
             );
@@ -112,8 +115,20 @@ const EventList = () => {
         setEventComponentList(groupedComponents);
     }, [eventList]);
 
+    const loadMore = async () => {
+        const lastId = eventList[eventList.length - 1].id;
+        const newEvents = await getMoreEvents(lastId);
+        setEventList([...eventList, ...newEvents]);
+    };
+
     return (
-        <Container maxWidth="lg" className={classes.root}>
+        <Container
+            maxWidth="lg"
+            sx={{
+                height: 'max-content',
+                overflowX: 'hidden',
+            }}
+        >
             <AddButton color="primary" label="Event" path="/edit/events" />
             {eventComponentList}
         </Container>

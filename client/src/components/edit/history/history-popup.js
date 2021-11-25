@@ -2,18 +2,21 @@ import React from 'react';
 import { formatTime } from '../../../functions/util';
 import { History } from '../../../functions/entries';
 
-import Dialog from '@material-ui/core/Dialog';
-import DialogTitle from '@material-ui/core/DialogTitle';
-import DialogContent from '@material-ui/core/DialogContent';
-import Typography from '@material-ui/core/Typography';
-import Table from '@material-ui/core/Table';
-import TableBody from '@material-ui/core/TableBody';
-import TableCell from '@material-ui/core/TableCell';
-import TableContainer from '@material-ui/core/TableContainer';
-import TableHead from '@material-ui/core/TableHead';
-import TableRow from '@material-ui/core/TableRow';
+import Dialog from '@mui/material/Dialog';
+import DialogTitle from '@mui/material/DialogTitle';
+import DialogContent from '@mui/material/DialogContent';
+import Typography from '@mui/material/Typography';
+import Table from '@mui/material/Table';
+import TableBody from '@mui/material/TableBody';
+import TableCell from '@mui/material/TableCell';
+import TableContainer from '@mui/material/TableContainer';
+import TableHead from '@mui/material/TableHead';
+import TableRow from '@mui/material/TableRow';
 
 /**
+ * The popup that shows the edits of a single edit history entry for a resource.
+ * This component is wrapped in a Dialog component.
+ * 
  * @param {object} props React props object
  * @param {History} props.history List of all events for the current day
  * @param {string} props.name Name of the resource
@@ -21,6 +24,8 @@ import TableRow from '@material-ui/core/TableRow';
  * @param {Function} props.close Function to run when closing dialog
  */
 const HistoryPopup = (props) => {
+    // Function to parse certain values from the history object
+    // TODO: Extend this to null values and date values
     const showValue = (value) =>
         typeof value === 'boolean'
             ? value
@@ -29,6 +34,7 @@ const HistoryPopup = (props) => {
             : typeof value !== 'string'
             ? JSON.stringify(value)
             : value;
+
     return (
         <Dialog aria-labelledby="history-popup-title" open={props.open} onClose={props.close} fullWidth>
             {!props.history ? null : (

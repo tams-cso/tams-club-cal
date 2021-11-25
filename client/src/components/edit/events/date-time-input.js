@@ -2,23 +2,22 @@ import dayjs from 'dayjs';
 import React from 'react';
 
 import { Controller } from 'react-hook-form';
-import { DateTimePicker } from '@material-ui/pickers';
-import InputAdornment from '@material-ui/core/InputAdornment';
-import IconButton from '@material-ui/core/IconButton';
-import EventIcon from '@material-ui/icons/Event';
+import TextField from '@mui/material/TextField';
+import DateTimePicker from '@mui/lab/DateTimePicker';
 
 /**
- * Displays a date time input
+ * Displays a controlled date time input
+ * 
  * @param {object} props React props object
  * @param {*} props.control Form control object
  * @param {boolean} [props.required] Is this field required
  * @param {string} props.name Name of the field
  * @param {string} props.label Label of the field
- * @param {string} props.className Classname of the input object
  * @param {boolean} [props.end] True if ending time, which means I will have to add 1 hour
  * @param {boolean} [props.disabled] True will disable the input
  * @param {number} [props.value] Default starting time value
  * @param {string} [props.helperText] Default helper text to display; will be replaced by error
+ * @param {object} [props.sx] Format the DateTimePicker TextField
  */
 const DateTimeInput = (props) => {
     return (
@@ -35,7 +34,6 @@ const DateTimeInput = (props) => {
             }
             render={({ field: { onChange, onBlur, value }, fieldState: { error } }) => (
                 <DateTimePicker
-                    className={props.className}
                     inputVariant="outlined"
                     format="MMM D, YYYY  h:mm a"
                     label={props.label}
@@ -45,15 +43,7 @@ const DateTimeInput = (props) => {
                     error={error}
                     helperText={error ? 'End date/time should be after start' : props.helperText}
                     disabled={props.disabled}
-                    InputProps={{
-                        endAdornment: (
-                            <InputAdornment position="end">
-                                <IconButton>
-                                    <EventIcon />
-                                </IconButton>
-                            </InputAdornment>
-                        ),
-                    }}
+                    renderInput={(params) => <TextField {...params} sx={props.sx} />}
                 />
             )}
         />

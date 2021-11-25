@@ -1,34 +1,37 @@
 import React, { useEffect } from 'react';
 import { getParams } from '../../functions/util';
 
-import Tooltip from '@material-ui/core/Tooltip';
-import IconButton from '@material-ui/core/IconButton';
-import ListRoundedIcon from '@material-ui/icons/ListRounded';
-import AppsRoundedIcon from '@material-ui/icons/AppsRounded';
+import Tooltip from '@mui/material/Tooltip';
+import IconButton from '@mui/material/IconButton';
+import ListRoundedIcon from '@mui/icons-material/ListRounded';
+import AppsRoundedIcon from '@mui/icons-material/AppsRounded';
 
 /**
  * Shows a button that will switch between a list view and grid view icon.
- * This component will set the listView prop to true if it is currently in
- * the list view, or else it will set the state to false. The displayed
+ * This component will set the tableView prop to true if it is currently in
+ * the table view, or else it will set the state to false. The displayed
  * icon will be opposite and have the tooltip "Switch to [list/grid] view".
  *
  * @param {object} props React props object
- * @param {boolean} props.listView List view state object
- * @param {Function} props.setListView Function to set the list view state object
+ * @param {boolean} props.tableView List view state object
+ * @param {Function} props.setTableView Function to set the list view state object
  * @param {string} props.className React className prop
+ * @param {object} props.sx Style ViewSwitcher component
  */
 const ViewSwitcher = (props) => {
+    // When the view toggle button is clicked, reverse the tableView value
     const toggleView = () => {
-        props.setListView(!props.listView);
+        props.setTableView(!props.tableView);
     };
 
     useEffect(() => {
-        if (getParams('view') === 'list') props.setListView(true);
+        // If the URL contains the view query parameter, set the tableView state to that value
+        if (getParams('view') === 'table') props.setTableView(true);
     }, []);
 
     return (
-        <Tooltip title={`Switch to ${props.listView ? 'grid' : 'list'} view`} className={props.className || ''}>
-            <IconButton onClick={toggleView}>{props.listView ? <AppsRoundedIcon /> : <ListRoundedIcon />}</IconButton>
+        <Tooltip title={`Switch to ${props.tableView ? 'grid' : 'table'} view`} sx={{...props.sx}}>
+            <IconButton onClick={toggleView} size="large">{props.tableView ? <AppsRoundedIcon /> : <ListRoundedIcon />}</IconButton>
         </Tooltip>
     );
 };

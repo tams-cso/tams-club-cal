@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from 'react';
 import { useDispatch } from 'react-redux';
-import { makeStyles } from '@material-ui/core';
 import { useForm } from 'react-hook-form';
 import dayjs from 'dayjs';
 import isSameOrBefore from 'dayjs/plugin/isSameOrBefore';
@@ -10,8 +9,8 @@ import { darkSwitchGrey, getParams, redirect } from '../../functions/util';
 import { Reservation } from '../../functions/entries';
 import { getRepeatingReservation, getReservation, postReservation, putReservation } from '../../functions/api';
 
-import Typography from '@material-ui/core/Typography';
-import Box from '@material-ui/core/Box';
+import Typography from '@mui/material/Typography';
+import Box from '@mui/material/Box';
 import DateTimeInput from './events/date-time-input';
 import DateInput from './events/date-input';
 import ControlledCheckbox from './events/controlled-checkbox';
@@ -22,67 +21,15 @@ import TwoButtonBox from './shared/two-button-box';
 import LocationSelect from './shared/location-select';
 import AddButton from '../shared/add-button';
 import Title from '../shared/title';
+import FormWrapper from './shared/form-wrapper';
+import Spacer from './shared/spacer';
 
+// Use isSameOrBefore extension from dayjs
 dayjs.extend(isSameOrBefore);
 
-const useStyles = makeStyles((theme) => ({
-    title: {
-        textAlign: 'center',
-        fontSize: '3rem',
-    },
-    subtitle: {
-        textAlign: 'center',
-        color: darkSwitchGrey(theme),
-    },
-    form: {
-        padding: 24,
-        [theme.breakpoints.down('sm')]: {
-            padding: 12,
-        },
-    },
-    boxWrapper: {
-        marginBottom: 16,
-        display: 'flex',
-        alignItems: 'center',
-        [theme.breakpoints.down('sm')]: {
-            flexDirection: 'column',
-        },
-    },
-    centerFlex: {
-        justifyContent: 'center',
-    },
-    leftCheckbox: {
-        [theme.breakpoints.up('md')]: {
-            marginLeft: 8,
-        },
-        [theme.breakpoints.down('sm')]: {
-            marginTop: 8,
-        },
-    },
-    rightCheckbox: {
-        [theme.breakpoints.down('sm')]: {
-            marginBottom: 8,
-        },
-    },
-    name: {
-        flexGrow: 3,
-    },
-    spacer: {
-        width: 20,
-        [theme.breakpoints.down('sm')]: {
-            height: 16,
-        },
-    },
-    area: {
-        marginTop: 12,
-    },
-    fullMobile: {
-        [theme.breakpoints.down('sm')]: {
-            width: '100%',
-        },
-    },
-}));
-
+/**
+ * Main form for editing and adding reservations
+ */
 const EditReservations = () => {
     const [id, setId] = useState(null);
     const [repeating, setRepeating] = useState(false);
@@ -91,7 +38,6 @@ const EditReservations = () => {
     const [prevStart, setPrevStart] = useState(null);
     const [locationError, setLocationError] = useState(false);
     const dispatch = useDispatch();
-    const classes = useStyles();
     const {
         handleSubmit,
         control,
@@ -107,6 +53,25 @@ const EditReservations = () => {
     const watchLocation = watch('location');
     const watchRepeating = watch('repeating');
     const watchRepeatEnd = watch('repeatEnd');
+
+    // When mounted, get the ID and fetch reservation data
+    useEffect(async () => {
+        // Extract ID and repeating from url search params
+        const id = getParams('id');
+        const repeating = getParams('repeating');
+
+        // If the ID is not null, fetch the reservation data from the backend and set the state variables
+        // Otherwise, create a new reservation and load the default data into the controller
+        if (id !== null) {
+            // If the reservation is repeating, fetch the data from there instead of the regular reservations
+            const currReservation = repeating ? await getRepeatingReservation(id) : await getReservation(id);
+            if (currReservation.status === 200) {
+                setId(id);
+                setRepeating(repeating);
+                setReservation(currReservation.data);
+            } else openPopup('Error fetching reservation info. Please refresh the page or add a new event.', 4);
+        } else setReservation(new Reservation());
+    }, []);
 
     // Set "prevStart" variable to the starting time to use later
     useEffect(() => {
@@ -155,33 +120,23 @@ const EditReservations = () => {
         if (watchLocation !== 'none') setLocationError(false);
     }, [watchLocation]);
 
-    useEffect(async () => {
-        // Extract ID and repeating from url search params
-        const id = getParams('id');
-        const repeating = getParams('repeating');
-
-        // Set the ID and reservation state variable
-        if (id !== null) {
-            const currReservation = repeating ? await getRepeatingReservation(id) : await getReservation(id);
-            if (currReservation.status === 200) {
-                setId(id);
-                setRepeating(repeating);
-                setReservation(currReservation.data);
-            } else openPopup('Error fetching reservation info. Please refresh the page or add a new event.', 4);
-        } else setReservation(new Reservation());
-    }, []);
-
+    // When the user submits the form, either create or update the reservation
     const onSubmit = async (data) => {
+        // If the name is empty, do nothing
         if (!('name' in data)) return;
+
+        // If the location of the reservation is "none", show an error and return
         if (data.location === 'none') {
             setLocationError(true);
             return;
         }
 
-        const cookies = new Cookies();
+        // Calculate the start and end times
+        // TODO: Check to see if the reservation overlaps a preexisting reservation
         const startTime = data.allDay ? data.date.startOf('day').valueOf() : data.start.valueOf();
         const endTime = data.allDay || data.noEnd ? startTime : data.end.valueOf();
 
+        // Create the reservation object from the data
         const newReservation = new Reservation(
             reservation.id,
             reservation.eventId,
@@ -196,15 +151,26 @@ const EditReservations = () => {
             reservation.history
         );
 
+        // Start the upload process
         setBackdrop(true);
+
+        // If the reservation ID is null, create the event, otherwise update it
         const res = id === null ? await postReservation(newReservation) : await putReservation(newReservation, id);
+
+        // Finished uploading
+        setBackdrop(false);
+
+        // If the upload was successful, redirect to the reservation page, otherwise show an error
         if (res.status === 200) {
-            cookies.set('success', id ? 'update-reservation' : 'add-reservation', { sameSite: 'strict', path: '/' });
+            new Cookies().set('success', id ? 'update-reservation' : 'add-reservation', {
+                sameSite: 'strict',
+                path: '/',
+            });
             back();
         } else dispatch(openPopup('Unable to upload data. Please refresh the page or try again.', 4));
-        setBackdrop(false);
     };
 
+    // Returns the user back to the reservation display page
     const back = () => {
         redirect(id ? `/reservations?id=${id}${repeating ? '&repeating=true' : ''}` : '/?view=reservation');
     };
@@ -215,15 +181,15 @@ const EditReservations = () => {
         <React.Fragment>
             <Title title={`${id ? 'Edit' : 'Add'} Reservation`} />
             <UploadBackdrop open={backdrop} />
-            <Typography variant="h1" className={classes.title}>
+            <Typography variant="h1" sx={{ textAlign: 'center', fontSize: '3rem' }}>
                 {id ? 'Edit Reservation' : 'Add Reservation'}
             </Typography>
             {id ? <AddButton editHistory path={`/edit/history/reservations?id=${id}`} /> : null}
-            <Typography className={classes.subtitle}>
+            <Typography sx={{ textAlign: 'center', color: (theme) => darkSwitchGrey(theme) }}>
                 Start times will be rounded down and end times will be rounded up to the nearest hour.
             </Typography>
-            <form onSubmit={handleSubmit(onSubmit)} className={classes.form}>
-                <Box className={classes.boxWrapper}>
+            <FormWrapper onSubmit={handleSubmit(onSubmit)}>
+                <Box sx={{ marginBottom: 3, display: 'flex', flexDirection: { lg: 'row', xs: 'column' } }}>
                     <LocationSelect
                         control={control}
                         setValue={setValue}
@@ -231,7 +197,7 @@ const EditReservations = () => {
                         error={locationError}
                         hideHelper
                     />
-                    <div className={classes.spacer} />
+                    <Spacer />
                     <ControlledTextField
                         control={control}
                         setValue={setValue}
@@ -242,9 +208,9 @@ const EditReservations = () => {
                         grow
                         required
                         errorMessage="Please enter a name"
-                        className={`${classes.name} ${classes.fullMobile}`}
+                        sx={{ flexGrow: 3, width: { lg: 'unset', xs: '100%' } }}
                     />
-                    <div className={classes.spacer} />
+                    <Spacer />
                     <ControlledTextField
                         control={control}
                         setValue={setValue}
@@ -255,10 +221,17 @@ const EditReservations = () => {
                         grow
                         required
                         errorMessage="Please enter a club name"
-                        className={classes.fullMobile}
+                        sx={{ width: { lg: 'unset', xs: '100%' } }}
                     />
                 </Box>
-                <Box className={`${classes.boxWrapper} ${classes.centerFlex}`}>
+                <Box
+                    sx={{
+                        marginBottom: 3,
+                        display: 'flex',
+                        justifyContent: 'center',
+                        flexDirection: { lg: 'row', xs: 'column' },
+                    }}
+                >
                     {watchAllDay ? (
                         <DateInput control={control} name="date" label="Date" value={reservation.start} />
                     ) : (
@@ -270,7 +243,7 @@ const EditReservations = () => {
                             required
                         />
                     )}
-                    <div className={classes.spacer} />
+                    <Spacer />
                     <DateTimeInput
                         name="end"
                         label="End date/time"
@@ -286,7 +259,7 @@ const EditReservations = () => {
                         label="All day reservation"
                         value={reservation.allDay}
                         setValue={setValue}
-                        className={classes.leftCheckbox}
+                        sx={{ marginLeft: { lg: 2, xs: 0 }, marginTop: { lg: 0, xs: 2 } }}
                     />
                 </Box>
                 <ControlledTextField
@@ -298,7 +271,7 @@ const EditReservations = () => {
                     variant="outlined"
                     area
                 />
-                <Box className={classes.boxWrapper}>
+                <Box sx={{ marginBottom: 3, display: 'flex', flexDirection: { lg: 'row', xs: 'column' } }}>
                     <Typography>
                         Note: Repeating reservations cannot be changed to non-repeating reservations
                     </Typography>
@@ -309,7 +282,11 @@ const EditReservations = () => {
                         value={reservation.repeatEnd !== null && reservation.repeatEnd !== undefined}
                         disabled={reservation.repeatEnd !== null && reservation.repeatEnd !== undefined}
                         setValue={setValue}
-                        className={`${classes.leftCheckbox} ${classes.rightCheckbox}`}
+                        sx={{
+                            marginLeft: { lg: 2, xs: 0 },
+                            marginBottom: { lg: 0, xs: 2 },
+                            marginTop: { lg: 0, xs: 2 },
+                        }}
                     />
                     <DateInput
                         control={control}
@@ -320,7 +297,7 @@ const EditReservations = () => {
                     />
                 </Box>
                 <TwoButtonBox success="Submit" onCancel={back} onSuccess={onSubmit} submit right />
-            </form>
+            </FormWrapper>
         </React.Fragment>
     );
 };
