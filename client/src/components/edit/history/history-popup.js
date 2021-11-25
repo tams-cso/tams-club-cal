@@ -14,6 +14,9 @@ import TableHead from '@mui/material/TableHead';
 import TableRow from '@mui/material/TableRow';
 
 /**
+ * The popup that shows the edits of a single edit history entry for a resource.
+ * This component is wrapped in a Dialog component.
+ * 
  * @param {object} props React props object
  * @param {History} props.history List of all events for the current day
  * @param {string} props.name Name of the resource
@@ -21,6 +24,8 @@ import TableRow from '@mui/material/TableRow';
  * @param {Function} props.close Function to run when closing dialog
  */
 const HistoryPopup = (props) => {
+    // Function to parse certain values from the history object
+    // TODO: Extend this to null values and date values
     const showValue = (value) =>
         typeof value === 'boolean'
             ? value
@@ -29,6 +34,7 @@ const HistoryPopup = (props) => {
             : typeof value !== 'string'
             ? JSON.stringify(value)
             : value;
+
     return (
         <Dialog aria-labelledby="history-popup-title" open={props.open} onClose={props.close} fullWidth>
             {!props.history ? null : (

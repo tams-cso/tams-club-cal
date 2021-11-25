@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { darkSwitch } from '../../functions/util';
+import { Link } from 'react-router-dom';
 
 import AppBar from '@mui/material/AppBar';
 import Toolbar from '@mui/material/Toolbar';
@@ -8,7 +9,7 @@ import Drawer from '@mui/material/Drawer';
 import IconButton from '@mui/material/IconButton';
 import Typography from '@mui/material/Typography';
 import Box from '@mui/material/Box';
-import Link from '@mui/material/Link';
+import MuiLink from '@mui/material/Link';
 import List from '@mui/material/List';
 import ListItem from '@mui/material/ListItem';
 import ListItemIcon from '@mui/material/ListItemIcon';
@@ -74,7 +75,7 @@ const MobileMenu = (props) => {
                         {props.currentDarkThemeIcon}
                     </MenuIcon>
                     <MenuIcon title="GitHub repository" aria-label="github-repository">
-                        <Link
+                        <MuiLink
                             href={githubLink}
                             target="_blank"
                             sx={{
@@ -84,7 +85,7 @@ const MobileMenu = (props) => {
                             }}
                         >
                             <GithubIcon />
-                        </Link>
+                        </MuiLink>
                     </MenuIcon>
                 </Toolbar>
             </AppBar>

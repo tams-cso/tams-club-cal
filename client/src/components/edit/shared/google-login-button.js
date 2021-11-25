@@ -1,29 +1,22 @@
 import React from 'react';
-import makeStyles from '@mui/styles/makeStyles';
-
-import Button from '@mui/material/Button';
 import { getBackendUrl } from '../../../functions/api';
 
-const useStyles = makeStyles({
-    root: {
-        padding: 4,
-        display: (props) => (props.hidden ? 'none' : 'block'),
-    },
-    hidden: {
-        display: 'none',
-    },
-});
+import Button from '@mui/material/Button';
 
 /**
- * Displays the "Sign in with Google" button
+ * Displays the "Sign in with Google" button.
+ * This uses a script provided by the Google Auth API that is included
+ * in the client/public/index.html file.
+ * See https://developers.google.com/identity/gsi/web/guides/overview for more info.
  *
  * @param {object} props React props object
- * @param {boolean} props.disabled True if the button is disabled
- * @param {boolean} props.hidden True if you want the button to be hidden
+ * @param {boolean} [props.disabled] True if the button is disabled
+ * @param {boolean} [props.hidden] True if you want the button to be hidden
  */
 const GoogleLoginButton = (props) => {
-    const classes = useStyles({ hidden: props.hidden });
+    // Gets backend URL, which is determined by the environmental variables
     const backend = `${getBackendUrl()}/auth/login`;
+    
     return (
         <React.Fragment>
             <div
@@ -36,13 +29,14 @@ const GoogleLoginButton = (props) => {
             ></div>
             <Button
                 disabled={props.disabled || false}
-                className={`g_id_signin ${classes.root}`}
+                className="g_id_signin"
                 data-type="standard"
                 data-shape="rectangular"
                 data-theme="filled_blue"
                 data-text="signin_with"
                 data-size="large"
                 data-logo_alignment="left"
+                sx={{ padding: 1, display: props.hidden ? 'none' : 'block' }}
             ></Button>
         </React.Fragment>
     );

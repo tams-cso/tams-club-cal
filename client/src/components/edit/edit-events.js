@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from 'react';
 import { useDispatch } from 'react-redux';
-import makeStyles from '@mui/styles/makeStyles';
 import { useForm } from 'react-hook-form';
 import Cookies from 'universal-cookie';
 import dayjs from 'dayjs';
@@ -23,54 +22,18 @@ import LocationSelect from './shared/location-select';
 import DateInput from './events/date-input';
 import AddButton from '../shared/add-button';
 import Title from '../shared/title';
+import FormWrapper from './shared/form-wrapper';
+import Spacer from './shared/spacer';
 
-const useStyles = makeStyles((theme) => ({
-    title: {
-        textAlign: 'center',
-        fontSize: '3rem',
-    },
-    form: {
-        padding: 24,
-        [theme.breakpoints.down('md')]: {
-            padding: 12,
-        },
-    },
-    boxWrapper: {
-        marginBottom: 16,
-        display: 'flex',
-        [theme.breakpoints.down('md')]: {
-            flexDirection: 'column',
-        },
-    },
-    leftCheckbox: {
-        [theme.breakpoints.up('md')]: {
-            marginLeft: 8,
-        },
-        [theme.breakpoints.down('md')]: {
-            marginTop: 8,
-        },
-    },
-    centerFlex: {
-        justifyContent: 'center',
-    },
-    type: {
-        height: 56,
-    },
-    spacer: {
-        width: 20,
-        [theme.breakpoints.down('md')]: {
-            height: 16,
-        },
-    },
-}));
-
+/**
+ * Main form for editing and adding events
+ */
 const EditEvents = () => {
     const [id, setId] = useState(null);
     const [event, setEvent] = useState(null);
     const [backdrop, setBackdrop] = useState(false);
     const [prevStart, setPrevStart] = useState(null);
     const dispatch = useDispatch();
-    const classes = useStyles();
     const {
         handleSubmit,
         setError,
@@ -85,11 +48,13 @@ const EditEvents = () => {
     const watchNoEnd = watch('noEnd');
     const watchAllDay = watch('allDay');
 
+    // When mounted, get the ID and fetch event data
     useEffect(async () => {
         // Extract ID from url search params
         const id = getParams('id');
 
-        // Set the ID and event state variable
+        // If the ID is not null, fetch the event data from the backend and set the state variables
+        // Otherwise, create a new event and load the default data into the controller
         if (id !== null) {
             const currEvent = await getEvent(id);
             if (currEvent.status === 200) {
@@ -130,12 +95,16 @@ const EditEvents = () => {
         if (watchAllDay) setValue('date', watchStart);
     }, [watchAllDay]);
 
+    // When the user submits the form, either create or update the event
     const onSubmit = async (data) => {
+        // If the name is empty, do nothing
         if (!('name' in data)) return;
-        const cookies = new Cookies();
 
+        // Calculate the start and end times
         const startTime = data.allDay ? data.date.startOf('day').valueOf() : data.start.valueOf();
         const endTime = data.allDay || data.noEnd ? startTime : data.end.valueOf();
+
+        // Create the event object from the data
         const newEvent = new Event(
             id,
             event.eventId,
@@ -151,15 +120,23 @@ const EditEvents = () => {
             event.history
         );
 
+        // Start the upload process
         setBackdrop(true);
+
+        // If the event ID is null, create the event, otherwise update it
         const res = id === null ? await postEvent(newEvent) : await putEvent(newEvent, id);
+
+        // Finished uploading
         setBackdrop(false);
+
+        // If the event was created successfully, redirect to the event page, otherwise display an error
         if (res.status === 200) {
-            cookies.set('success', id ? 'update-event' : 'add-event', { sameSite: 'strict', path: '/' });
+            new Cookies().set('success', id ? 'update-event' : 'add-event', { sameSite: 'strict', path: '/' });
             back();
         } else dispatch(openPopup('Unable to upload data. Please refresh the page or try again.', 4));
     };
 
+    // Returns the user back to the event display page
     const back = () => {
         redirect(`/events${id ? `?id=${id}` : ''}`);
     };
@@ -170,24 +147,24 @@ const EditEvents = () => {
         <React.Fragment>
             <Title title={`${id ? 'Edit' : 'Add'} Event`} />
             <UploadBackdrop open={backdrop} />
-            <Typography variant="h1" className={classes.title}>
+            <Typography variant="h1" sx={{ textAlign: 'center', fontSize: '3rem' }}>
                 {id ? 'Edit Event' : 'Add Event'}
             </Typography>
             {id ? <AddButton editHistory path={`/edit/history/events?id=${id}`} /> : null}
-            <form onSubmit={handleSubmit(onSubmit)} className={classes.form}>
-                <Box className={classes.boxWrapper}>
+            <FormWrapper onSubmit={handleSubmit(onSubmit)}>
+                <Box sx={{ marginBottom: 3, display: 'flex', flexDirection: { lg: 'row', xs: 'column' } }}>
                     <ControlledSelect
                         control={control}
                         setValue={setValue}
                         value={event.type}
                         name="type"
                         variant="outlined"
-                        className={classes.type}
+                        sx={{ height: 56 }}
                     >
                         <MenuItem value="event">Event</MenuItem>
                         <MenuItem value="signup">Signup/Deadline</MenuItem>
                     </ControlledSelect>
-                    <div className={classes.spacer} />
+                    <Spacer />
                     <ControlledTextField
                         control={control}
                         setValue={setValue}
@@ -200,7 +177,7 @@ const EditEvents = () => {
                         errorMessage="Please enter a name"
                     />
                 </Box>
-                <Box className={classes.boxWrapper}>
+                <Box sx={{ marginBottom: 3, display: 'flex', flexDirection: { lg: 'row', xs: 'column' } }}>
                     <ControlledTextField
                         control={control}
                         setValue={setValue}
@@ -212,10 +189,17 @@ const EditEvents = () => {
                         required
                         errorMessage="Please enter a club name"
                     />
-                    <div className={classes.spacer} />
+                    <Spacer />
                     <LocationSelect control={control} setValue={setValue} value={event.location} />
                 </Box>
-                <Box className={`${classes.boxWrapper} ${classes.centerFlex}`}>
+                <Box
+                    sx={{
+                        marginBottom: 3,
+                        display: 'flex',
+                        justifyContent: 'center',
+                        flexDirection: { lg: 'row', xs: 'column' },
+                    }}
+                >
                     {watchAllDay ? (
                         <DateInput control={control} name="date" label="Date" value={event.start} />
                     ) : (
@@ -227,7 +211,7 @@ const EditEvents = () => {
                             required
                         />
                     )}
-                    <div className={classes.spacer} />
+                    <Spacer />
                     <DateTimeInput
                         name="end"
                         label="End date/time"
@@ -243,7 +227,7 @@ const EditEvents = () => {
                         label="No end time"
                         value={false}
                         setValue={setValue}
-                        className={classes.leftCheckbox}
+                        sx={{ marginLeft: { lg: 2, xs: 0 }, marginTop: { lg: 0, xs: 2 } }}
                     />
                     <ControlledCheckbox
                         control={control}
@@ -251,6 +235,7 @@ const EditEvents = () => {
                         label="All day event"
                         value={event.allDay}
                         setValue={setValue}
+                        sx={{ marginLeft: 0 }}
                     />
                 </Box>
                 <ControlledTextField
@@ -263,7 +248,7 @@ const EditEvents = () => {
                     area
                 />
                 <TwoButtonBox success="Submit" onCancel={back} onSuccess={onSubmit} submit right />
-            </form>
+            </FormWrapper>
         </React.Fragment>
     );
 };

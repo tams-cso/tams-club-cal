@@ -1,26 +1,6 @@
 import React from 'react';
-import makeStyles from '@mui/styles/makeStyles';
-
 import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
-
-const useStyles = makeStyles((theme) => ({
-    root: {
-        padding: '0 24px',
-        display: 'flex',
-        justifyContent: props => props.right ? 'flex-end' : 'center',
-        [theme.breakpoints.down('md')]: {
-            justifyContent: 'center',
-        }
-    },
-    button: {
-        marginLeft: 12,
-        marginRight: 12,
-    },
-    cancel: {
-        color: theme.palette.error.main,
-    },
-}));
 
 /**
  * Shows the cancel and success action buttons
@@ -31,17 +11,23 @@ const useStyles = makeStyles((theme) => ({
  * @param {Function} props.onSuccess Function to run if the user presses the success button
  * @param {boolean} [props.submit] True if the button is a form submit button
  * @param {boolean} [props.right] True if align button right
- * @param {string} props.className React className object
+ * @param {object} [props.sx] Format the Box component
  */
 const TwoButtonBox = (props) => {
-    const classes = useStyles({ right: props.right });
     return (
-        <Box className={`${classes.root} ${props.className}`}>
+        <Box
+            sx={{
+                padding: '0 24px',
+                display: 'flex',
+                justifyContent: { lg: props.right ? 'flex-end' : 'center', xs: 'center' },
+                ...props.sx,
+            }}
+        >
             <Button
                 color="inherit"
                 size="small"
                 onClick={props.onCancel}
-                className={`${classes.button} ${classes.cancel}`}
+                sx={{ marginLeft: 2, marginRight: 2, color: 'error.main' }}
             >
                 Cancel
             </Button>
@@ -51,7 +37,7 @@ const TwoButtonBox = (props) => {
                 color="primary"
                 size="large"
                 onClick={props.onSuccess}
-                className={classes.button}
+                sx={{ marginLeft: 2, marginRight: 2 }}
             >
                 {props.success || 'Submit'}
             </Button>

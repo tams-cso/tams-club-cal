@@ -13,11 +13,11 @@ import DatePicker from '@mui/lab/DatePicker';
  * @param {boolean} [props.required] Is this field required
  * @param {string} props.name Name of the field
  * @param {string} props.label Label of the field
- * @param {string} props.className Classname of the input object
  * @param {boolean} [props.end] True if ending time, which means I will have to add 1 hour
  * @param {boolean} [props.disabled] True will disable the input
  * @param {number} [props.value] Default starting time value
  * @param {string} [props.helperText] Default helper text to display; will be replaced by error
+ * @param {object} [props.sx] Format the DatePicker TextField
  */
 const DateInput = (props) => {
     return (
@@ -38,7 +38,7 @@ const DateInput = (props) => {
                     error={error}
                     helperText={error ? 'End date should be after start' : props.helperText}
                     disabled={props.disabled}
-                    renderInput={(params) => <TextField {...params} />}
+                    renderInput={(params) => <TextField {...params} sx={props.sx} />}
                 />
             )}
         />

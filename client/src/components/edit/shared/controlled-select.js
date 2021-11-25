@@ -19,15 +19,20 @@ import { FormControl, FormHelperText } from '@mui/material';
  * @param {string} [props.value] Default value for the field
  * @param {Function} [props.setValue] React hook form setValue function; required if value is defined
  * @param {string} [props.helperText] If defined, will show helper text
- * @param {string} [props.className] React classname
  * @param {boolean} [props.error] If true, sets error state of the box to true
+ * @param {boolean} [props.required] True if the field is required
  * @param {*} [props.children] Children elements to display; should all be MenuItem components
+ * @param {object} [props.sx] Format the Select component
  */
 const ControlledSelect = (props) => {
-    const name = props.parentName && props.index ? `${props.parentName}.${props.index}.${props.name}` : props.name;
-
+    // When the component mounts, set the value of the current select to the default value
     useEffect(() => {
+        // If there is no default value, then do nothing
         if (!props.value) return;
+
+        // If the value is nested, append the parent name to the name or else just use the name
+        // and set that value to props.value
+        const name = props.parentName && props.index ? `${props.parentName}.${props.index}.${props.name}` : props.name;
         props.setValue(name, props.value);
     }, [props.value]);
 
@@ -45,7 +50,7 @@ const ControlledSelect = (props) => {
                         onChange={onChange}
                         onBlur={onBlur}
                         value={value}
-                        className={props.className}
+                        sx={props.sx}
                     >
                         {props.children}
                     </Select>

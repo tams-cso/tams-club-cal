@@ -1,22 +1,8 @@
 import React, { useEffect, useState } from 'react';
-import makeStyles from '@mui/styles/makeStyles';
 
 import ListItem from '@mui/material/ListItem';
 import TrashCan from './trash-can';
 import ControlledTextField from '../shared/controlled-text-field';
-
-const useStyles = makeStyles({
-    root: {
-        display: 'flex',
-        flexDirection: 'row',
-    },
-    text: {
-        flexGrow: 1,
-    },
-    hidden: {
-        display: 'none',
-    },
-});
 
 /**
  * Displays an input for a single link
@@ -33,29 +19,31 @@ const useStyles = makeStyles({
 const LinkInput = (props) => {
     const name = `${props.name}.${props.index}.value`;
     const [deleted, setDeleted] = useState(false);
-    const classes = useStyles();
 
+    // If a link is passed in, set that value to the controller
+    useEffect(() => {
+        props.setValue(name, props.link);
+    }, [props.link]);
+
+    // Register the deleted prop with the form controller
     props.register(`${props.name}.${props.index}.deleted`);
 
+    // Delete a prop by setting the deleted prop to true
     // TODO: Show popup for deleted and allow user to undo this action!!
     const deleteLink = () => {
         props.setValue(`${props.name}.${props.index}.deleted`, true);
         setDeleted(true);
     };
 
-    useEffect(() => {
-        props.setValue(name, props.link);
-    }, [props.link]);
-
     return (
-        <ListItem className={`${classes.root} ${deleted ? classes.hidden : ''}`}>
+        <ListItem sx={{ display: deleted ? 'none' : 'flex', flexDirection: 'row' }}>
             <ControlledTextField
                 control={props.control}
                 setValue={props.setValue}
                 value={props.link}
                 label={props.label}
                 name={name}
-                className={classes.text}
+                sx={{ flexGrow: 1 }}
             />
             <TrashCan label={props.label} onClick={deleteLink} />
         </ListItem>

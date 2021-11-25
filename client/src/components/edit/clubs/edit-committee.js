@@ -1,5 +1,4 @@
 import React, { useState } from 'react';
-import makeStyles from '@mui/styles/makeStyles';
 import { Committee } from '../../../functions/entries';
 
 import ListItem from '@mui/material/ListItem';
@@ -8,35 +7,6 @@ import Card from '@mui/material/Card';
 import LinkInputList from './link-input-list';
 import TrashCan from './trash-can';
 import ControlledTextField from '../shared/controlled-text-field';
-
-const useStyles = makeStyles((theme) => ({
-    root: {
-        width: '100%',
-        padding: 24,
-        [theme.breakpoints.down('md')]: {
-            padding: 6,
-        },
-    },
-    titleWrapper: {
-        display: 'flex',
-        alignItems: 'center',
-    },
-    name: {
-        flexGrow: 1,
-        [theme.breakpoints.up('sm')]: {
-            marginLeft: 16,
-        },
-    },
-    hidden: {
-        display: 'none',
-    },
-    trash: {
-        height: 48,
-    },
-    area: {
-        width: '100%',
-    },
-}));
 
 /**
  * Displays a card with all fields to edit a committee
@@ -52,10 +22,11 @@ const useStyles = makeStyles((theme) => ({
 const EditCommitttee = (props) => {
     const namePrefix = `committees.${props.index}.`;
     const [deleted, setDeleted] = useState(false);
-    const classes = useStyles();
 
+    // Register the deleted attribute to the form controller
     props.register(`${namePrefix}deleted`);
 
+    // When deleted, hide the card and set the deleted attribute to true
     const deleteMe = () => {
         props.setValue(`${namePrefix}name`, 'deleted');
         props.setValue(`${namePrefix}deleted`, true);
@@ -63,10 +34,18 @@ const EditCommitttee = (props) => {
     };
 
     return (
-        <ListItem className={deleted ? classes.hidden : null}>
-            <Card elevation={3} className={classes.root}>
-                <Box className={classes.titleWrapper}>
-                    <TrashCan label="Committee" onClick={deleteMe} className={classes.trash} />
+        <ListItem sx={{ display: deleted ? 'none' : 'flex' }}>
+            <Card elevation={3} sx={{ width: '100%', padding: { lg: 3, xs: 1 } }}>
+                <Box sx={{ display: 'flex', alignItems: 'center' }}>
+                    <TrashCan
+                        label="Committee"
+                        onClick={deleteMe}
+                        sx={{
+                            height: { lg: 48, xs: 36 },
+                            width: { lg: 48, xs: 36 },
+                            marginTop: { lg: 0.25, xs: 1.25 },
+                        }}
+                    />
                     <ControlledTextField
                         control={props.control}
                         setValue={props.setValue}
@@ -76,7 +55,7 @@ const EditCommitttee = (props) => {
                         variant="outlined"
                         required
                         errorMessage="Please enter a name"
-                        className={classes.name}
+                        sx={{ flexGrow: 1, marginLeft: { lg: 2, xs: 0.5 } }}
                     />
                 </Box>
                 <LinkInputList
@@ -94,9 +73,8 @@ const EditCommitttee = (props) => {
                     label="Description (optional)"
                     name={`${namePrefix}description`}
                     variant="outlined"
-                    multiline
-                    rows={4}
-                    className={classes.area}
+                    area
+                    sx={{ width: '100%' }}
                 />
                 <LinkInputList
                     control={props.control}
