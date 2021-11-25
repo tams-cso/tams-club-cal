@@ -1,26 +1,25 @@
 import React from 'react';
 import { alpha } from '@mui/material';
-import makeStyles from '@mui/styles/makeStyles';
 import { darkSwitch, formatTime } from '../../../functions/util';
 
 import Typography from '@mui/material/Typography';
 
-const useStyles = makeStyles((theme) => ({
-    root: {
-        color: darkSwitch(theme, theme.palette.grey[800], alpha(theme.palette.primary.light, 0.9)),
-    },
-}));
-
 /**
- * Displays a date heading
+ * Displays a date heading, in the format dddd M/D/YYYY
  *
  * @param {object} props React props object
  * @param {string} props.time Starting time of the first event of the day
  */
 const DateSection = (props) => {
-    const classes = useStyles();
     return (
-        <Typography variant="h6" component="h2" className={classes.root}>
+        <Typography
+            variant="h6"
+            component="h2"
+            sx={{
+                color: (theme) =>
+                    darkSwitch(theme, theme.palette.primary.dark, alpha(theme.palette.primary.light, 0.9)),
+            }}
+        >
             {formatTime(props.time, 'dddd M/D/YYYY')}
         </Typography>
     );

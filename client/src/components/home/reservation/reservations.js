@@ -3,31 +3,30 @@ import dayjs from 'dayjs';
 import { getRepeatingReservationList, getReservationList } from '../../../functions/api';
 
 import Box from '@mui/material/Box';
-import InputAdornment from '@mui/material/InputAdornment';
-import IconButton from '@mui/material/IconButton';
-import EventIcon from '@mui/icons-material/Event';
+import TextField from '@mui/material/TextField';
+import DatePicker from '@mui/lab/DatePicker';
 import Loading from '../../shared/loading';
 import ReservationDay from './reservation-day';
 import AddButton from '../../shared/add-button';
-import DatePicker from '@mui/lab/DatePicker';
-import makeStyles from '@mui/styles/makeStyles';
 
-const useStyles = makeStyles((theme) => ({
-    date: {
-        marginLeft: 24,
-        [theme.breakpoints.down('md')]: {
-            margin: 'auto',
-        },
-    },
-}));
-
+/**
+ * The main Reservations page that displays a list of reservations.
+ * This page will fetch the list of reservations from the server for a given week,
+ * split them by day, and display them in a table by hour.
+ * There is also a Date Picker that allows the user to select a different week.
+ */
 const Reservations = () => {
     const [reservationList, setReservationList] = useState(null);
     const [reservationComponentList, setReservationComponentList] = useState(null);
     const [week, setWeek] = useState(dayjs());
-    const classes = useStyles();
 
+    // That will get data from the server and set the state variable
     const getData = async (offset) => {
+        // If the week is invalid (ie. user manually changed the text input), do nothing
+        if (isNaN(week.valueOf())) return;
+
+        // Get the reservation and repeating reservation lists for the given week
+        // and send an error if either fails to retrieve
         const reservations = await getReservationList(offset ? week.valueOf() : null);
         const repeatingReservations = await getRepeatingReservationList(offset ? week.valueOf() : null);
         if (reservations.status !== 200 || repeatingReservations.status !== 200) {
@@ -39,17 +38,26 @@ const Reservations = () => {
             );
             return;
         }
+
+        // Set the state variable with the reservations and repeating reservations
         setReservationList({ reservations: reservations.data, repeatingReservations: repeatingReservations.data });
     };
 
+    // Run getData on mount
     useEffect(getData, []);
 
+    // Also run getData if the week changes
+    // TODO: Why tf does this need to be a seperate call lmao?
     useEffect(getData.bind(this, true), [week]);
 
+    // When the list of reservations updates, re-render the reservation components
     useEffect(() => {
+        // If the reservation list is null, do nothing
         if (reservationList === null) return;
 
         // Add repeating events to the reservation list
+        // Since repeating reservation will repeat weekly, we simply just add one instance of
+        // that repeating reservation on the day and time that it would occur
         const combinedReservationList = [
             ...reservationList.reservations,
             ...reservationList.repeatingReservations.map((r) => {
@@ -63,7 +71,11 @@ const Reservations = () => {
         // Break up reservations into days and sort the reservations
         const brokenUpReservationList = [];
         combinedReservationList.forEach((r) => {
+            // Use variable to track the current day that we are working on
             let curr = dayjs(r.start);
+
+            // If the reservation lasts all day, simply create one day-long entry and return
+            // The span attribute corresponds to the number of hours the reservation lasts
             if (r.allDay) {
                 brokenUpReservationList.push({
                     start: curr.startOf('day'),
@@ -71,25 +83,45 @@ const Reservations = () => {
                     span: 24,
                     data: r,
                 });
+                return;
             }
 
+            // Iterate through the days until we reach the end of the reservation
+            // This is useful for splitting up reservations that span multiple days
             while (!curr.isSame(dayjs(r.end), 'day')) {
+                // If the current hour is 23 and the "end" of the event is within the next hour, break
+                // This is to prevent events that end at midnight from appearing on the next day
                 if (curr.hour() === 23 && curr.add(1, 'hour').isSame(dayjs(r.end), 'hour')) break;
+                
+                // Calculate the number of hours between the current hour and the end of the day
                 const currEnd = curr.add(1, 'day').startOf('day');
                 const currSpan = currEnd.diff(curr, 'hour');
+
+                // Create an entry for the section of the event that spans this day
+                // This entry will span the entire length of the day if it crosses over the entire day
+                // However, the span will be less than 24 if it is less than the entire day
                 brokenUpReservationList.push({ start: curr, end: currEnd, span: currSpan, data: r });
                 curr = currEnd;
             }
+
+            // Now we calculate the number of hours between the current hour and the end of the reservation
+            // This is because the while loop will break on the last day of the reservation and we must
+            // push the last segment on manually
             const span = dayjs(r.end).diff(curr, 'hour');
             brokenUpReservationList.push({ start: curr, end: dayjs(r.end), span, data: r });
         });
+
+        // The reservation list is sorted by start date
         const sortedReservationList = brokenUpReservationList.sort((a, b) => a.start - b.start);
 
         // Calculate start/end dates for list
         const start = week.startOf('week');
         const end = start.add(7, 'day');
 
-        // Create the actual reservation components
+        // Create the actual reservation components by iterating through the sorted list
+        // and incrementing days when the next event in the sorted list is on the next day
+        // This will continue to increment until the last day of the week
+        // TODO: Add a catch for an infinite loop
         const components = [];
         let currTime = start;
         while (currTime.isBefore(end, 'day')) {
@@ -102,6 +134,8 @@ const Reservations = () => {
             );
             currTime = currTime.add(1, 'day');
         }
+
+        // Update the state variable with the list of reservations
         setReservationComponentList(
             <Box display="flex" flexDirection="column">
                 {components}
@@ -113,21 +147,17 @@ const Reservations = () => {
         <React.Fragment>
             <Box display="flex">
                 <DatePicker
-                    inputVariant="standard"
-                    format="[Week of] MMM Do, YYYY"
+                    inputFormat="[Week of] MMM D, YYYY"
                     label="Select week to show"
                     value={week}
                     onChange={setWeek}
-                    className={classes.date}
-                    InputProps={{
-                        endAdornment: (
-                            <InputAdornment position="end">
-                                <IconButton size="large">
-                                    <EventIcon />
-                                </IconButton>
-                            </InputAdornment>
-                        ),
-                    }}
+                    renderInput={(params) => (
+                        <TextField
+                            {...params}
+                            variant="standard"
+                            sx={{ marginRight: 'auto', marginLeft: { lg: 4, xs: 'auto' } }}
+                        />
+                    )}
                 />
             </Box>
             <AddButton color="primary" label="Reservation" path="/edit/reservations" />

@@ -6,13 +6,13 @@ import SvgIcon from '@mui/material/SvgIcon';
 import Typography from '@mui/material/Typography';
 import Box from '@mui/material/Box';
 import NavLink from '../shared/navlink';
+import StyledSpan from '../shared/styled-span';
 
 // Styled Components for formatting the SVG
 const StyledRect = styled('rect')``;
 const StyledPath = styled('path')``;
 const StyledPolygon = styled('polygon')``;
 const StyledLine = styled('line')``;
-const StyledSpan = styled('span')``;
 
 // Round paths in svg
 const roundStyles = {

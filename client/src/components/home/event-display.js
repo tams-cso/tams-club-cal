@@ -85,7 +85,7 @@ const EventDisplay = (props) => {
                                     sx={{
                                         width: { lg: '50%', xs: '100%' },
                                         textAlign: 'left',
-                                        padding: { lg: 2, xs: 0 },
+                                        padding: { lg: 1, xs: 0 },
                                     }}
                                 >
                                     <Typography sx={eventTypeStyle}>{capitalize(event.type)}</Typography>
@@ -133,7 +133,7 @@ const EventDisplay = (props) => {
                             </Box>
                         </CardContent>
                         <CardActions>
-                            <Button size="small" onClick={back} sx={{ margin: 'autp' }}>
+                            <Button size="small" onClick={back} sx={{ margin: 'auto' }}>
                                 Back
                             </Button>
                         </CardActions>

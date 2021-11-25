@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from 'react';
 import { useHistory } from 'react-router';
-import makeStyles from '@mui/styles/makeStyles';
 import dayjs from 'dayjs';
 import { darkSwitchGrey, formatEventDate, formatEventTime, getParams } from '../../../functions/util';
 import { getRepeatingReservation, getReservation } from '../../../functions/api';
@@ -18,90 +17,34 @@ import Paragraph from '../../shared/paragraph';
 import Loading from '../../shared/loading';
 import AddButton from '../../shared/add-button';
 import PageWrapper from '../../shared/page-wrapper';
-
-import data from '../../../data.json';
 import Title from '../../shared/title';
 
-const useStyles = makeStyles((theme) => ({
-    root: {
-        maxWidth: '50%',
-        [theme.breakpoints.down(undefined)]: {
-            maxWidth: '75%',
-        },
-        [theme.breakpoints.down('lg')]: {
-            maxWidth: '100%',
-        },
-    },
-    gridRoot: {
-        width: '100%',
-        display: 'flex',
-        justifyContent: 'center',
-        [theme.breakpoints.down('md')]: {
-            flexDirection: 'column',
-        },
-    },
-    gridSide: {
-        width: '50%',
-        textAlign: 'left',
-        [theme.breakpoints.down('md')]: {
-            width: '100%',
-        },
-    },
-    gridLeft: {
-        padding: 8,
-        [theme.breakpoints.down('md')]: {
-            padding: 0,
-        },
-    },
-    gridRight: {
-        marginLeft: 12,
-        padding: '8px 0',
-        [theme.breakpoints.down('md')]: {
-            margin: 0,
-            marginTop: 16,
-            padding: 0,
-        },
-    },
-    location: {
-        marginBottom: 12,
-        color: darkSwitchGrey(theme),
-        fontSize: '0.9rem',
-    },
-    club: {
-        marginBottom: 16,
-        color: darkSwitchGrey(theme),
-    },
-    date: {
-        fontWeight: 400,
-    },
-    repeat: {
-        marginTop: 24,
-        fontSize: '1rem',
-    },
-    buttonCenter: {
-        margin: 'auto',
-    },
-}));
+import data from '../../../data.json';
 
+/**
+ * Displays a single reservation, with the ID passed in the URL
+ */
 const ReservationDisplay = () => {
     const [reservation, setReservation] = useState(null);
     const [error, setError] = useState(null);
     const history = useHistory();
-    const classes = useStyles();
 
-    const back = () => {
-        history.push('/?view=reservation');
-    };
-
+    // On mount, get the reservation data from url param ID
     useEffect(async () => {
         const id = getParams('id');
+
+        // If the ID is invalid or missing, set an error
         if (!id) {
             setError(<Loading error>No ID found. Please return to the home page.</Loading>);
             return;
         }
+
+        // Check to see if the reservation is a repeating reservation
         const repeating = getParams('repeating');
 
         // Pull the event from the backend
+        // If it is repeating, fetch from the repeating reservation database
+        // Set an error or set the reservation state variable if no error
         const res = repeating ? await getRepeatingReservation(id) : await getReservation(id);
         if (res.status !== 200) {
             setError(
@@ -112,6 +55,11 @@ const ReservationDisplay = () => {
         } else setReservation(res.data);
     }, []);
 
+    // Return to the reservation list on click
+    const back = () => {
+        history.push('/?view=reservation');
+    };
+
     return (
         <PageWrapper>
             {error}
@@ -120,7 +68,7 @@ const ReservationDisplay = () => {
                     <Loading />
                 )
             ) : (
-                <Container className={classes.root}>
+                <Container sx={{ maxWidth: { xl: '50%', md: '75%', xs: '100%' } }}>
                     <Title resource="reservations" name={reservation.name} />
                     <AddButton
                         color="secondary"
@@ -136,25 +84,49 @@ const ReservationDisplay = () => {
                     />
                     <Card>
                         <CardContent>
-                            <Box className={classes.gridRoot}>
-                                <Box className={`${classes.gridSide} ${classes.gridLeft}`}>
-                                    <Typography variant="h3" className={classes.location}>
+                            <Box
+                                sx={{
+                                    width: '100%',
+                                    display: 'flex',
+                                    justifyContent: 'center',
+                                    flexDirection: { lg: 'row', xs: 'column' },
+                                }}
+                            >
+                                <Box
+                                    sx={{
+                                        width: { lg: '50%', xs: '100%' },
+                                        textAlign: 'left',
+                                        padding: { lg: 1, xs: 0 },
+                                    }}
+                                >
+                                    <Typography
+                                        variant="h3"
+                                        sx={{
+                                            marginBottom: 3,
+                                            color: (theme) => darkSwitchGrey(theme),
+                                            fontSize: '0.9rem',
+                                        }}
+                                    >
                                         {'Location: ' + data.rooms.find((d) => d.value === reservation.location).label}
                                     </Typography>
                                     <Typography variant="h2" component="h1">
                                         {reservation.name}
                                     </Typography>
-                                    <Typography variant="subtitle1" component="p" className={classes.club}>
+                                    <Typography
+                                        variant="subtitle1"
+                                        component="p"
+                                        sx={{ marginBottom: 4, color: (theme) => darkSwitchGrey(theme) }}
+                                    >
                                         {reservation.club}
                                     </Typography>
-                                    <Typography variant="h3" gutterBottom className={classes.date}>
+                                    <Typography variant="h3" gutterBottom sx={{ fontWeight: 400 }}>
                                         {formatEventDate(reservation)}
                                     </Typography>
-                                    <Typography variant="h3" className={classes.date}>
+                                    <Typography variant="h3" sx={{ fontWeight: 400 }}>
                                         {formatEventTime(reservation, false, true)}
                                     </Typography>
                                     {reservation.repeatEnd ? (
-                                        <Typography variant="h3" className={classes.repeat}>
+                                        <Typography variant="h3" sx={{ marginTop: 6, fontSize: '1rem' }}>
                                             {'Repeats Until: ' + dayjs(reservation.repeatEnd).format('MMMM D, YYYY')}
                                         </Typography>
                                     ) : null}
@@ -164,12 +136,17 @@ const ReservationDisplay = () => {
                                 </Hidden>
                                 <Paragraph
                                     text={reservation.description}
-                                    className={`${classes.gridSide} ${classes.gridRight}`}
+                                    sx={{
+                                        width: { lg: '50%', xs: '100%' },
+                                        textAlign: 'left',
+                                        margin: { lg: '0 0 0 12px', xs: '16px 0 0 0' },
+                                        padding: { lg: '8px 0', xs: 0 },
+                                    }}
                                 />
                             </Box>
                         </CardContent>
                         <CardActions>
-                            <Button size="small" className={classes.buttonCenter} onClick={back}>
+                            <Button size="small" onClick={back} sx={{ margin: 'auto' }}>
                                 Back
                             </Button>
                         </CardActions>

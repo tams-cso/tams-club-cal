@@ -7,6 +7,9 @@ import List from '@mui/material/List';
 import CalendarEvent from './calendar-event';
 
 /**
+ * Popup that displays when the user clicks on a day in the calendar.
+ * This will show a list of all events that are happening on that day.
+ * 
  * @param {object} props React props object
  * @param {Event[]} props.events List of all events for the current day
  * @param {dayjs.Dayjs} props.date Date to display
