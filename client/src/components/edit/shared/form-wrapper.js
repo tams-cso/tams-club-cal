@@ -8,10 +8,16 @@ const StyledForm = styled('form')``;
  * a default responsive padding.
  *
  * @param {object} props React props object
+ * @param {Function} props.onSubmit Form submit handler
  * @param {*} props.children React child elements
+ * @parma {object} props.sx Style the form element
  */
 const FormWrapper = (props) => {
-    return <StyledForm sx={{ padding: { lg: 4, xs: 2 }, ...props.sx }}>{props.children}</StyledForm>;
+    return (
+        <StyledForm onSubmit={props.onSubmit} sx={{ padding: { lg: 4, xs: 2 }, ...props.sx }}>
+            {props.children}
+        </StyledForm>
+    );
 };
 
 export default FormWrapper;
