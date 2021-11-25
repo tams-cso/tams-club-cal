@@ -35,13 +35,10 @@ const ReservationDay = (props) => {
 
     // When the component mounts, create the list of components from the passed in reservationList
     useEffect(() => {
-        const list = [];
+        const table = [];
 
         // Iterate through all the rooms
         data.rooms.forEach((room) => {
-            // Get the current date to start finding reservations from
-            let currTime = props.date.startOf('day');
-
             // Create the labels for each row, which is the room name
             const row = [
                 <TableCell key={room.value} sx={cellStyle}>
@@ -49,13 +46,18 @@ const ReservationDay = (props) => {
                 </TableCell>,
             ];
 
-            // Iterate through all the hours in a day
-            for (let hour = 0; hour < 24; hour++) {
+            // Get the current date to start finding reservations from
+            let currTime = props.date.startOf('day').add(6, 'hour');
+
+            // Iterate through all the hours in a day (starting from 6am)
+            for (let hour = 6; hour < 24; hour++) {
                 // Find the first reservation that starts at the current time and is in the current room
-                // TODO: Make sure this don't overlap when adding reservations
+                // THIS SHOULD BE UNIQUE!!! (As long as the adding system prevents users from overlapping)
                 const curr = props.reservationList.find(
                     (r) => r.start.isSame(currTime, 'hour') && r.data.location === room.value
                 );
+
+                console.log(curr);
 
                 // If there is no reservation at this time, add a blank cell
                 // Otherwise, add a ReservationEntry component and increment the
@@ -76,11 +78,11 @@ const ReservationDay = (props) => {
             }
 
             // Add the row to the table
-            list.push(<TableRow key={room.value}>{row}</TableRow>);
+            table.push(<TableRow key={room.value}>{row}</TableRow>);
         });
 
         // Set the state variable to the list of components (which forms the table)
-        setComponentList(list);
+        setComponentList(table);
     }, []);
 
     return (

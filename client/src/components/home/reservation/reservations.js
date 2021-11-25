@@ -55,6 +55,8 @@ const Reservations = () => {
         // If the reservation list is null, do nothing
         if (reservationList === null) return;
 
+        console.log(reservationList);
+
         // Add repeating events to the reservation list
         // Since repeating reservation will repeat weekly, we simply just add one instance of
         // that repeating reservation on the day and time that it would occur
@@ -76,11 +78,13 @@ const Reservations = () => {
 
             // If the reservation lasts all day, simply create one day-long entry and return
             // The span attribute corresponds to the number of hours the reservation lasts
+            // This will start at 6am and end at midnight the next day, spanning 18 hours
             if (r.allDay) {
+                console.log(r);
                 brokenUpReservationList.push({
-                    start: curr.startOf('day'),
+                    start: curr.startOf('day').add(6, 'hour'),
                     end: curr.startOf('day').add(1, 'day'),
-                    span: 24,
+                    span: 18,
                     data: r,
                 });
                 return;
@@ -92,7 +96,7 @@ const Reservations = () => {
                 // If the current hour is 23 and the "end" of the event is within the next hour, break
                 // This is to prevent events that end at midnight from appearing on the next day
                 if (curr.hour() === 23 && curr.add(1, 'hour').isSame(dayjs(r.end), 'hour')) break;
-                
+
                 // Calculate the number of hours between the current hour and the end of the day
                 const currEnd = curr.add(1, 'day').startOf('day');
                 const currSpan = currEnd.diff(curr, 'hour');
@@ -114,6 +118,27 @@ const Reservations = () => {
         // The reservation list is sorted by start date
         const sortedReservationList = brokenUpReservationList.sort((a, b) => a.start - b.start);
 
+        console.log(sortedReservationList);
+
+        // Create a cut reservation list that only contains reservation blocks that
+        // start at 6am or after -> this will remove all blocks between 12am and 6am
+        // and truncate blocks that start within this interval but end after
+        const cutReservationList = [];
+        sortedReservationList.forEach((r) => {
+            // If the reservation starts outside of the interval, simply add it to the list
+            if (r.start.hour() >= 6) {
+                cutReservationList.push(r);
+            } else {
+                // If the reservation starts within the 6am-12am interval,
+                // and ends after this interval, keep the block but truncate the start
+                // Otherwise we will simply ignore the block and remove it from the list
+                if (r.end.hour() >= 6 || r.end.day() !== r.start.day()) {
+                    const diff = 6 - r.start.hour();
+                    cutReservationList.push({ ...r, start: r.start.hour(6), span: r.span - diff });
+                }
+            }
+        });
+
         // Calculate start/end dates for list
         const start = week.startOf('week');
         const end = start.add(7, 'day');
@@ -127,7 +152,7 @@ const Reservations = () => {
         while (currTime.isBefore(end, 'day')) {
             components.push(
                 <ReservationDay
-                    reservationList={sortedReservationList.filter((r) => currTime.isSame(dayjs(r.start), 'day'))}
+                    reservationList={cutReservationList.filter((r) => currTime.isSame(dayjs(r.start), 'day'))}
                     date={currTime}
                     key={currTime.valueOf()}
                 />
