@@ -35,8 +35,6 @@ const useStyles = makeStyles((theme) => ({
     },
 }));
 
-// TODO: Check to see if the object is valid!!!!!!!!!!!!!!!!
-
 /**
  * Displays a list of history entries for a specific object.
  * /edit/history/:resource will route to this component.
@@ -51,6 +49,7 @@ const HistoryDisplay = (props) => {
     const [components, setComponents] = useState(null);
     const [currHistory, setCurrHistory] = useState(null);
     const [popupOpen, setPopupOpen] = useState(false);
+    const [error, setError] = useState(false);
     const resource = props.match.params.resource;
     const location = useLocation();
     const classes = useStyles();
@@ -67,9 +66,7 @@ const HistoryDisplay = (props) => {
         // Make the API call and handle errors
         const history = await getHistory(resource, queryId);
         if (history.status !== 200) {
-            setComponents(
-                <Loading error>Invalid {resource} ID. Please return to the home page and check the ID.</Loading>
-            );
+            setError(true);
             return;
         }
 
@@ -131,7 +128,15 @@ const HistoryDisplay = (props) => {
     return (
         <TableContainer>
             {components === null ? (
-                <Loading />
+                error ? (
+                    <Loading error flat>
+                        Invalid {resource} ID. Please return to the home page and check the ID. The resource you are
+                        trying to see the edit history for might be deleted. Please contact the site administrator if
+                        you believe that this error is incorrect.
+                    </Loading>
+                ) : (
+                    <Loading />
+                )
             ) : (
                 <React.Fragment>
                     <Title editHistory resource={resource} name={name} />
