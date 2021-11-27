@@ -11,6 +11,7 @@ import TableHead from '@mui/material/TableHead';
 import TableRow from '@mui/material/TableRow';
 import Paper from '@mui/material/Paper';
 import Image from '../shared/image';
+import Loading from '../shared/loading';
 
 /**
  * Displays the clubs in a table. The clubs prop will be mapped to table rows.
@@ -20,7 +21,9 @@ import Image from '../shared/image';
  * @param {Club[]} props.clubs Club list
  */
 const ClubTable = (props) => {
-    return (
+    return props.clubs === null ? (
+        <Loading />
+    ) : (
         <TableContainer component={Paper} sx={{ marginBottom: 4 }}>
             <Table aria-label="club table">
                 <TableHead>

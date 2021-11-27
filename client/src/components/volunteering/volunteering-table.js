@@ -14,6 +14,7 @@ import DashboardRoundedIcon from '@mui/icons-material/DashboardRounded';
 import EventNoteRoundedIcon from '@mui/icons-material/EventNoteRounded';
 import ScheduleRoundedIcon from '@mui/icons-material/ScheduleRounded';
 import EventRoundedIcon from '@mui/icons-material/EventRounded';
+import Loading from '../shared/loading';
 
 /**
  * Displays the volunteering opportunities in a table
@@ -22,7 +23,9 @@ import EventRoundedIcon from '@mui/icons-material/EventRounded';
  * @param {Volunteering[]} props.volunteering Volunteering list
  */
 const VolunteeringTable = (props) => {
-    return (
+    return props.volunteering === null ? (
+        <Loading />
+    ) : (
         <TableContainer component={Paper} sx={{ marginBottom: 8 }}>
             <Table aria-label="volunteering table">
                 <TableHead>
@@ -40,7 +43,7 @@ const VolunteeringTable = (props) => {
                     {props.volunteering.map((v) => (
                         <TableRow
                             component={Link}
-                            to={`/volunteering?id=${v.id}&view=list`}
+                            to={`/volunteering?id=${v.id}&view=table`}
                             sx={{
                                 textDecoration: 'none',
                                 color: 'inherit',
