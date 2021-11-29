@@ -66,7 +66,7 @@ const EditVolunteering = () => {
             data.name,
             data.club,
             data.description,
-            new Filters(data.limited, data.semester, data.setTimes, data.weekly, data.open === 'open'),
+            new Filters(data.limited, data.semester, data.setTimes, data.weekly, data.open),
             volunteering.history
         );
 
