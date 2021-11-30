@@ -186,7 +186,7 @@ export class Filters {
  * @param {Number} [time] The time that the feedback was submitted
  */
 export class Feedback {
-    constructor(feedback, name, time) {
+    constructor(id, feedback, name, time) {
         this.id = id || null;
         this.feedback = feedback || '';
         this.name = name || '';
