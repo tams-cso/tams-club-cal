@@ -7,10 +7,6 @@ import Typography from '@mui/material/Typography';
 import Box from '@mui/material/Box';
 import NavLink from '../shared/navlink';
 
-// Style the background of a link when it is hovered over
-const linkHoverBkgdStyle = (theme) =>
-    alpha(darkSwitch(theme, theme.palette.common.black, theme.palette.common.white), 0.1);
-
 /**
  * A link in the navbar that is styled to highlight when hovered over
  * and displays a different style when active.
@@ -47,11 +43,18 @@ const MenuLink = (props) => {
                 paddingRight: '1rem',
                 textDecoration: 'none',
                 borderColor: 'transparent',
-                borderBottom: (theme) => (!active ? '0.2rem' : `0.2rem solid ${theme.palette.primary.light}`),
-                backgroundColor: active ? linkHoverBkgdStyle : 'transparent',
+                borderBottom: (theme) =>
+                    darkSwitch(theme, 'none', !active ? '0.2rem' : `0.2rem solid ${theme.palette.primary.light}`),
+                backgroundColor: (theme) => (active ? alpha(theme.palette.common.white, 0.1) : 'transparent'),
                 transition: '0.2s',
+                color: (theme) =>
+                    !active
+                        ? darkSwitch(theme, theme.palette.grey[800], theme.palette.grey[400])
+                        : darkSwitch(theme, theme.palette.primary.main, theme.palette.primary.light),
                 '&:hover': {
-                    backgroundColor: linkHoverBkgdStyle,
+                    color: (theme) => darkSwitch(theme, theme.palette.primary.main, theme.palette.primary.light),
+                    backgroundColor: (theme) =>
+                        darkSwitch(theme, 'transparent', alpha(theme.palette.common.white, 0.1)),
                 },
             }}
         >
@@ -68,10 +71,6 @@ const MenuLink = (props) => {
                     sx={{
                         marginLeft: '0.5rem',
                         marginRight: '0.5rem',
-                        color: (theme) =>
-                            !active
-                                ? darkSwitch(theme, theme.palette.grey[200], theme.palette.grey[400])
-                                : darkSwitch(theme, theme.palette.common.white, theme.palette.primary.light),
                     }}
                 >
                     {props.children}

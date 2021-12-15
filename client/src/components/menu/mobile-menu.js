@@ -24,6 +24,7 @@ import MenuIcon from './menu-icon';
 import AppIcon from './app-icon';
 import HomeDrawerList from '../home/home-drawer-list';
 import GithubIcon from './github-icon';
+import MenuColorBar from './menu-color-bar';
 
 import { githubLink } from '../../data.json';
 
@@ -50,6 +51,7 @@ const MobileMenu = (props) => {
                     zIndex: (theme) => theme.zIndex.drawer + 1,
                 }}
             >
+                <MenuColorBar />
                 <Toolbar
                     sx={{
                         height: 64,

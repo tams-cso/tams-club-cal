@@ -26,7 +26,7 @@ const HomeDrawerList = () => {
     const calendarUrl = process.env.NODE_ENV !== 'production' ? data.addStagingCalendar : data.addCalendar;
     return (
         <React.Fragment>
-            <Typography variant="h3" sx={{ textAlign: 'center', marginTop: '1rem' }}>
+            <Typography variant="h3" sx={{ textAlign: 'center', marginTop: 4, marginBottom: 2 }}>
                 External Links
             </Typography>
             <List>

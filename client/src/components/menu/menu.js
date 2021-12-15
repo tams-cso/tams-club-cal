@@ -9,7 +9,7 @@ import DesktopMenu from './desktop-menu';
 
 // Style the dark theme switcher icon
 const iconStyle = {
-    fill: (theme) => darkSwitch(theme, theme.palette.common.white, theme.palette.grey[400]),
+    fill: (theme) => darkSwitch(theme, theme.palette.grey[700], theme.palette.grey[400]),
     fontSize: '2rem',
 };
 

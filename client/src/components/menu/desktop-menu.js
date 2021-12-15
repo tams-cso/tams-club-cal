@@ -10,12 +10,13 @@ import AppIcon from './app-icon';
 import MenuLink from './menu-link';
 import MenuIcon from './menu-icon';
 import GithubIcon from './github-icon';
+import MenuColorBar from './menu-color-bar';
 
 import { githubLink } from '../../data.json';
 
 /**
  * Displays the menu for desktop (and large width) devices
- * 
+ *
  * @param {object} props React props object
  * @param {Function} props.toggleDarkTheme Toggles dark theme
  * @param {boolean} props.darkTheme True if dark theme is enabled
@@ -32,11 +33,12 @@ const DesktopMenu = (props) => {
                     zIndex: (theme) => theme.zIndex.drawer + 1,
                 }}
             >
+                <MenuColorBar />
                 <Toolbar
                     sx={{
                         height: 64,
                         backgroundColor: (theme) =>
-                            darkSwitch(theme, theme.palette.primary.main, theme.palette.grey[900]),
+                            darkSwitch(theme, theme.palette.common.white, theme.palette.grey[900]),
                     }}
                 >
                     <AppIcon />

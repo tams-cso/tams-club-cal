@@ -46,8 +46,8 @@ const svgStyles = {
 };
 
 // Color functions for title/staging text
-const titleColor = (theme) => darkSwitch(theme, theme.palette.common.white, theme.palette.primary.main);
-const stagingColor = (theme) => darkSwitch(theme, theme.palette.common.black, theme.palette.error.main);
+const titleColor = (theme) => darkSwitch(theme, theme.palette.common.black, theme.palette.primary.main);
+const stagingColor = (theme) => darkSwitch(theme, theme.palette.error.light, theme.palette.error.main);
 
 /**
  * Displays the app icon and text
