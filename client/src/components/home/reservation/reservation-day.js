@@ -57,8 +57,6 @@ const ReservationDay = (props) => {
                     (r) => r.start.isSame(currTime, 'hour') && r.data.location === room.value
                 );
 
-                console.log(curr);
-
                 // If there is no reservation at this time, add a blank cell
                 // Otherwise, add a ReservationEntry component and increment the
                 // current time and the hour variables by the length of the event

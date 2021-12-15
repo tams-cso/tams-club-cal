@@ -55,8 +55,6 @@ const Reservations = () => {
         // If the reservation list is null, do nothing
         if (reservationList === null) return;
 
-        console.log(reservationList);
-
         // Add repeating events to the reservation list
         // Since repeating reservation will repeat weekly, we simply just add one instance of
         // that repeating reservation on the day and time that it would occur
@@ -80,7 +78,6 @@ const Reservations = () => {
             // The span attribute corresponds to the number of hours the reservation lasts
             // This will start at 6am and end at midnight the next day, spanning 18 hours
             if (r.allDay) {
-                console.log(r);
                 brokenUpReservationList.push({
                     start: curr.startOf('day').add(6, 'hour'),
                     end: curr.startOf('day').add(1, 'day'),
@@ -117,8 +114,6 @@ const Reservations = () => {
 
         // The reservation list is sorted by start date
         const sortedReservationList = brokenUpReservationList.sort((a, b) => a.start - b.start);
-
-        console.log(sortedReservationList);
 
         // Create a cut reservation list that only contains reservation blocks that
         // start at 6am or after -> this will remove all blocks between 12am and 6am
