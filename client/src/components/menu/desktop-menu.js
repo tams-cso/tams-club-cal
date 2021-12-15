@@ -27,10 +27,12 @@ const DesktopMenu = (props) => {
 
     return (
         <React.Fragment>
-            <AppBar
+            <AppBar 
+                elevation={0}
                 sx={{
                     position: 'sticky',
                     zIndex: (theme) => theme.zIndex.drawer + 1,
+                    borderBottom: theme => darkSwitch(theme, '1px solid #ddd', 'none'),
                 }}
             >
                 <MenuColorBar />
