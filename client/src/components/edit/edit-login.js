@@ -2,7 +2,7 @@ import { Button } from '@mui/material';
 import React, { useEffect, useState } from 'react';
 import { useDispatch } from 'react-redux';
 import Cookies from 'universal-cookie';
-import { darkSwitchGrey } from '../../functions/util';
+import { darkSwitch, darkSwitchGrey } from '../../functions/util';
 import { getIp, getLoggedIn, getUserInfo } from '../../functions/api';
 import { openConnectionErrorPopup } from '../../redux/actions';
 
@@ -69,7 +69,7 @@ const EditLogin = () => {
                 <Typography
                     variant="h3"
                     sx={{
-                        color: (theme) => theme.palette.secondary.main,
+                        color: (theme) => darkSwitch(theme, theme.palette.secondary.dark, theme.palette.secondary.main),
                         marginBottom: { lg: 0, xs: 2 },
                         alignSelf: 'flex-start',
                     }}
