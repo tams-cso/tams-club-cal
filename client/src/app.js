@@ -16,7 +16,7 @@ import Clubs from './components/clubs/clubs';
 import NotFound from './components/404/404';
 import Volunteering from './components/volunteering/volunteering';
 import ReservationDisplay from './components/home/reservation/reservation-display';
-// TODO: import Admin from './components/admin/admin';
+import Admin from './components/admin/admin';
 import Auth from './components/edit/auth';
 import Edit from './components/edit/edit';
 
@@ -94,7 +94,7 @@ const App = () => {
                             <Route exact path="/about" component={About} />
                             <Route exact path="/auth" component={Auth} />
                             <Route exact path="/reservations" component={ReservationDisplay} />
-                            {/* <Route exact path="/admin" component={Admin} /> */}
+                            <Route exact path="/admin" component={Admin} />
                             <Route path="/edit" component={Edit} />
                             <Route component={NotFound} />
                         </Switch>
