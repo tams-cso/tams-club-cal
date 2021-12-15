@@ -24,6 +24,7 @@ import MenuIcon from './menu-icon';
 import AppIcon from './app-icon';
 import HomeDrawerList from '../home/home-drawer-list';
 import GithubIcon from './github-icon';
+import MenuColorBar from './menu-color-bar';
 
 import { githubLink } from '../../data.json';
 
@@ -50,17 +51,18 @@ const MobileMenu = (props) => {
                     zIndex: (theme) => theme.zIndex.drawer + 1,
                 }}
             >
+                <MenuColorBar />
                 <Toolbar
                     sx={{
                         height: 64,
                         backgroundColor: (theme) =>
-                            darkSwitch(theme, theme.palette.primary.main, theme.palette.grey[900]),
+                            darkSwitch(theme, theme.palette.common.white, theme.palette.grey[900]),
                     }}
                 >
                     <IconButton aria-label="open mobile menu" onClick={toggleDrawer.bind(this, true)} size="large">
                         <MenuHamburgerIcon
                             sx={{
-                                fill: (theme) => darkSwitch(theme, theme.palette.common.white, theme.palette.grey[400]),
+                                fill: (theme) => darkSwitch(theme, theme.palette.grey[700], theme.palette.grey[400]),
                                 marginRight: 2,
                             }}
                         />
@@ -94,7 +96,7 @@ const MobileMenu = (props) => {
                     variant="h3"
                     sx={{
                         textAlign: 'center',
-                        marginTop: '1rem',
+                        marginTop: 4,
                         zIndex: (theme) => theme.zIndex.drawer + 2,
                     }}
                 >

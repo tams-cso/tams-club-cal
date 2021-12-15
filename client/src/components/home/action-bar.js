@@ -1,7 +1,6 @@
 import React, { useEffect } from 'react';
 import { useHistory, useLocation } from 'react-router';
 import { capitalize, useMediaQuery, useTheme } from '@mui/material';
-import makeStyles from '@mui/styles/makeStyles';
 import { getParams } from '../../functions/util';
 
 import Paper from '@mui/material/Paper';
@@ -14,22 +13,6 @@ import Typography from '@mui/material/Typography';
 import FormatListBulletedRoundedIcon from '@mui/icons-material/FormatListBulletedRounded';
 import EventNoteRoundedIcon from '@mui/icons-material/EventNoteRounded';
 import MeetingRoomRoundedIcon from '@mui/icons-material/MeetingRoomRounded';
-
-const useStyles = makeStyles({
-    root: {
-        marginBottom: 12,
-        marginLeft: 16,
-        marginRight: 12,
-    },
-    buttonGroup: {
-        paddingLeft: 'auto',
-        flexGrow: 1,
-        justifyContent: 'flex-end',
-    },
-    spacerRight: {
-        marginRight: 16,
-    },
-});
 
 /**
  * Displays an action bar for the home page for switching between views
@@ -47,7 +30,6 @@ const ActionBar = (props) => {
     const history = useHistory();
     const theme = useTheme();
     const matches = useMediaQuery(theme.breakpoints.up('md'));
-    const classes = useStyles();
 
     // If there is a specified view in the URL params, use that
     // otherwise, the view will be set to the default (schedule)
@@ -72,6 +54,7 @@ const ActionBar = (props) => {
                 marginLeft: 3,
                 marginRight: 2,
             }}
+            elevation={4}
         >
             <Toolbar>
                 <Typography variant="h3" sx={{ marginRight: 4 }}>
