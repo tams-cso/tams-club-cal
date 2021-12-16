@@ -45,7 +45,7 @@ const Image = (props) => {
     return (
         <Paper
             elevation={props.raised ? 2 : 0}
-            sx={{ backgroundColor: (props) => (props.transparent ? 'transparent' : null), ...props.sx }}
+            sx={{ backgroundColor: props.transparent ? 'transparent' : null, ...props.sx }}
         >
             <img id={props.id} className={classes.root} src={src} alt={props.alt} onError={inavlidImage} />
         </Paper>

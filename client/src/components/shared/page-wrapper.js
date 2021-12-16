@@ -1,8 +1,8 @@
 import React, { useEffect } from 'react';
 import { useLocation } from 'react-router';
-import { Helmet } from 'react-helmet';
 import { darkSwitch } from '../../functions/util';
 
+import { Helmet } from 'react-helmet';
 import Box from '@mui/material/Box';
 
 /**
@@ -11,11 +11,12 @@ import Box from '@mui/material/Box';
  * @param {object} props React props object
  * @param {boolean} [props.noBottom] If true will not have a bottom padding
  * @param {string} props.title Will change the title to the given title
- * @param {object} props.sx Format the root element
+ * @param {object} [props.sx] Format the root element
  */
 const PageWrapper = (props) => {
     const location = useLocation();
 
+    // Scroll to top on route change
     useEffect(() => {
         window.scrollTo(0, 0);
     }, [location]);
