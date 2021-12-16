@@ -1,5 +1,6 @@
 import React, { useEffect } from 'react';
 import { useLocation } from 'react-router';
+import { darkSwitch } from '../../functions/util';
 
 import { Helmet } from 'react-helmet';
 import Box from '@mui/material/Box';
@@ -10,7 +11,7 @@ import Box from '@mui/material/Box';
  * @param {object} props React props object
  * @param {boolean} [props.noBottom] If true will not have a bottom padding
  * @param {string} props.title Will change the title to the given title
- * @param {object} [props.sx] Format the main box
+ * @param {object} [props.sx] Format the root element
  */
 const PageWrapper = (props) => {
     const location = useLocation();
@@ -26,7 +27,7 @@ const PageWrapper = (props) => {
                 paddingTop: 2,
                 paddingBottom: (props) => (props.noBottom ? 0 : 2),
                 display: 'flex',
-                height: 'calc(100vh - 64px)',
+                height: (theme) => darkSwitch(theme, 'calc(100vh - 72px)', 'calc(100vh - 64px)'),
                 ...props.sx,
             }}
         >
