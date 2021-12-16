@@ -378,6 +378,14 @@ export async function getUserInfo(token) {
 }
 
 /**
+ * Checks to see if a user is an admin or not
+ * @param {string} token User auth token
+ */
+export async function getIsAdmin(token) {
+    return postRequest(`/auth/admin`, { token }, true, false);
+}
+
+/**
  * Gets the name of the user with the provided ID
  * @param {string} id User ID
  * @returns {Promise<FetchResponse>} Will return the object or error object

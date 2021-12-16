@@ -63,7 +63,7 @@ async function upsertUser(payload) {
                 name: payload.name,
                 token,
             },
-            $setOnInsert: { id },
+            $setOnInsert: { id, admin: false },
         },
         { upsert: true }
     );
@@ -71,4 +71,15 @@ async function upsertUser(payload) {
     else return null;
 }
 
-module.exports = { verifyCsrf, verifyToken, upsertUser };
+/**
+ * Checks to see if a user is an admin, given their login token
+ *
+ * @param {string} token The string token of the user
+ * @returns {boolean} True if the user is an admin
+ */
+async function isAdmin(token) {
+    const user = await User.findOne({ token }).exec();
+    return user.admin;
+}
+
+module.exports = { verifyCsrf, verifyToken, upsertUser, isAdmin };

@@ -5,19 +5,6 @@ import Container from '@mui/material/Container';
 import Card from '@mui/material/Card';
 import Typography from '@mui/material/Typography';
 
-const useStyles = makeStyles((theme) => ({
-    card: {
-        margin: '0 20%',
-        padding: '1rem',
-        [theme.breakpoints.down('md')]: {
-            margin: 0,
-        },
-    },
-    text: {
-        textAlign: 'center',
-    },
-}));
-
 /**
  * Loading screen for all data, as well as an error message display
  * if the error field is defined.
@@ -26,21 +13,27 @@ const useStyles = makeStyles((theme) => ({
  * @param {boolean} props.error If true, shows error message
  * @param {string} props.children The error message
  * @param {boolean} [props.flat] True for no elevation
+ * @param {object} [props.sx] Format the container element
  */
 const Loading = (props) => {
-    const classes = useStyles();
     return (
-        <Container>
-            <Card elevation={props.flat ? 0 : 2} className={classes.card}>
+        <Container sx={props.sx}>
+            <Card
+                elevation={props.flat ? 0 : 2}
+                sx={{
+                    margin: { lg: '0 20%', xs: 0 },
+                    padding: 3,
+                }}
+            >
                 {props.error ? (
                     <React.Fragment>
-                        <Typography variant="h1" className={classes.text}>
+                        <Typography variant="h1" sx={{ textAlign: 'center' }}>
                             ERROR :(
                         </Typography>
-                        <Typography className={classes.text}>{props.children}</Typography>
+                        <Typography sx={{ textAlign: 'center' }}>{props.children}</Typography>
                     </React.Fragment>
                 ) : (
-                    <Typography variant="h1" className={classes.text}>
+                    <Typography variant="h1" sx={{ textAlign: 'center' }}>
                         Loading...
                     </Typography>
                 )}

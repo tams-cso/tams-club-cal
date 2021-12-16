@@ -1,8 +1,8 @@
 import React, { useEffect } from 'react';
 import { BrowserRouter, Route, Switch, useLocation } from 'react-router-dom';
 import makeStyles from '@mui/styles/makeStyles';
-import Cookies from 'universal-cookie';
 import { redirect } from '../../functions/util';
+import Cookies from 'universal-cookie';
 
 import Container from '@mui/material/Container';
 import Box from '@mui/material/Box';
@@ -52,7 +52,7 @@ const Edit = () => {
     return (
         <PageWrapper title="Edit Resources" className={classes.root}>
             <Container>
-                <Paper className={classes.paper}>
+                <Paper sx={{ paddingBottom: 3, marginBottom: 4 }}>
                     <EditLogin />
                     <BrowserRouter>
                         <Switch>
