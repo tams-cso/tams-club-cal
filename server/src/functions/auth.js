@@ -89,8 +89,8 @@ async function isAdmin(token) {
  */
 async function validateHeader(token) {
     const user = await User.findOne({ token }).exec();
-    if (user === null) return false;
-    return true;
+    if (user !== null && user.admin) return true;
+    return false;
 }
 
 module.exports = { verifyCsrf, verifyToken, upsertUser, isAdmin, validateHeader };

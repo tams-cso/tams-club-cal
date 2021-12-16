@@ -93,7 +93,7 @@ router.post('/admin', async (req, res, next) => {
         sendError(res, 400, 'Missing token in body');
         return;
     }
-    if (isAdmin(req.body.token)) res.send({ admin: true });
+    if (await isAdmin(req.body.token)) res.send({ admin: true });
     else res.send({ admin: false });
 });
 
