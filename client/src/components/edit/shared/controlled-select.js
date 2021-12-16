@@ -2,7 +2,9 @@ import React, { useEffect } from 'react';
 
 import { Controller } from 'react-hook-form';
 import Select from '@mui/material/Select';
-import { FormControl, FormHelperText } from '@mui/material';
+import FormControl from '@mui/material/FormControl';
+import InputLabel from '@mui/material/InputLabel';
+import FormHelperText from '@mui/material/FormHelperText';
 
 /**
  * Displays a controlled select to edit.
@@ -16,13 +18,16 @@ import { FormControl, FormHelperText } from '@mui/material';
  * @param {number} [props.index] Index of object in array
  * @param {string} props.name Name for the input
  * @param {'standard' | 'outlined' | 'filled'} [props.variant] Variant of the select field
+ * @param {boolean} [props.autowidth] Whether or not to set the width of the select to the width of the input
  * @param {string} [props.value] Default value for the field
  * @param {Function} [props.setValue] React hook form setValue function; required if value is defined
  * @param {string} [props.helperText] If defined, will show helper text
+ * @param {string} [props.label] Label text to display
  * @param {boolean} [props.error] If true, sets error state of the box to true
  * @param {boolean} [props.required] True if the field is required
  * @param {*} [props.children] Children elements to display; should all be MenuItem components
  * @param {object} [props.sx] Format the Select component
+ * @param {object} [props.wrapperSx] Format the FormControl component
  */
 const ControlledSelect = (props) => {
     // When the component mounts, set the value of the current select to the default value
@@ -43,7 +48,8 @@ const ControlledSelect = (props) => {
             rules={{ required: props.required || false }}
             defaultValue={props.value}
             render={({ field: { onChange, onBlur, value } }) => (
-                <FormControl>
+                <FormControl sx={props.wrapperSx}>
+                    <InputLabel id={`select-label-${props.name}`}>{props.label}</InputLabel>
                     <Select
                         variant={props.variant || 'standard'}
                         error={props.error}
@@ -51,6 +57,8 @@ const ControlledSelect = (props) => {
                         onBlur={onBlur}
                         value={value}
                         sx={props.sx}
+                        autoWidth={props.autoWidth}
+                        label={props.label}
                     >
                         {props.children}
                     </Select>

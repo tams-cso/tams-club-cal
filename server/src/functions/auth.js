@@ -26,7 +26,7 @@ function verifyCsrf(cookieToken, bodyToken) {
  * https://developers.google.com/identity/sign-in/web/backend-auth#verify-the-integrity-of-the-id-token
  *
  * @param {string} token Credentials from sign in flow
- * @returns {TokenPayload} User data payload
+ * @returns {Promise<TokenPayload>} User data payload
  */
 async function verifyToken(token) {
     try {
@@ -49,7 +49,7 @@ async function verifyToken(token) {
  * The data to be extracted from the payload is: { id: sub, email, name }
  *
  * @param {TokenPayload} payload User data payload
- * @returns {string} The new auth token
+ * @returns {Promise<string>} The new auth token
  */
 async function upsertUser(payload) {
     const token = crypto.randomBytes(32).toString('hex');
@@ -75,11 +75,22 @@ async function upsertUser(payload) {
  * Checks to see if a user is an admin, given their login token
  *
  * @param {string} token The string token of the user
- * @returns {boolean} True if the user is an admin
+ * @returns {Promise<boolean>} True if the user is an admin
  */
 async function isAdmin(token) {
     const user = await User.findOne({ token }).exec();
     return user.admin;
 }
 
-module.exports = { verifyCsrf, verifyToken, upsertUser, isAdmin };
+/**
+ * Checks to see if there is a user with the given token
+ * @param {string} token Authorization token for the given user
+ * @returns {Promise<boolean>} True if the user exists
+ */
+async function validateHeader(token) {
+    const user = await User.findOne({ token }).exec();
+    if (user === null) return false;
+    return true;
+}
+
+module.exports = { verifyCsrf, verifyToken, upsertUser, isAdmin, validateHeader };
