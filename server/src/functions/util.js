@@ -76,6 +76,7 @@ async function getEditor(req) {
  * If prevData is not defined, it will simply convert the fields of the data
  * passed in to a key/value pair, or else it will run the diff between the
  * previous and new data (in req.body).
+ * // TODO: Should this be renamed to createHistory?
  *
  * @param {Request} req Express request object
  * @param {Document} data Resource data (either new data or previous data depending on "isNew")
@@ -134,7 +135,7 @@ function getDiff(prevData, data) {
             output.push(...getDiffArray(prevData[key], value, key));
             return;
         }
-        if (typeof value === 'object') {
+        if (typeof value === 'object' && value !== null) {
             const obj = getDiff(prevData[key], value);
             output.push(...obj.map((o) => ({ ...o, key: `${key}.${o.key}` })));
             return;

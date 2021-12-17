@@ -14,7 +14,6 @@ import data from '../../../data.json';
  * @param {*} props.control React hook form controller
  * @param {string} props.value Default value for the field
  * @param {Function} props.setValue React hook form setValue function
- * @param {string} [props.hideHelper] If true will hide helper text
  * @param {boolean} [props.error] If defined, helperText field will show the error if true
  * @param {object} [props.sx] Format the LocationSelect component
  */
@@ -25,15 +24,10 @@ const LocationSelect = (props) => {
             setValue={props.setValue}
             value={props.value}
             name="location"
+            label="Location"
             variant="outlined"
             error={props.error}
-            helperText={
-                props.error
-                    ? 'Please select a location'
-                    : props.hideHelper
-                    ? null
-                    : 'If start and end times are defined, this will create a reservation'
-            }
+            helperText={props.error ? 'Please select a location' : null}
             sx={props.sx}
         >
             <MenuItem value="none">No Location Set</MenuItem>

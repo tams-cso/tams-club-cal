@@ -2,7 +2,7 @@ const express = require('express');
 const dayjs = require('dayjs');
 const { addToCalendar, updateCalendar } = require('../functions/gcal');
 const { sendError, newId, createNewHistory } = require('../functions/util');
-const { updateReservation, addReservation } = require('../functions/event-reservations');
+const { updateReservation, addReservation, deleteReservation } = require('../functions/event-reservations');
 const Event = require('../models/event');
 const router = express.Router();
 
@@ -93,12 +93,17 @@ router.get('/:id', async (req, res, next) => {
  */
 router.post('/', async (req, res, next) => {
     try {
+        // Create unique IDs for history and event
         const historyId = newId();
         const id = newId();
-        const eventId = await addToCalendar(req.body);
-        const reservationId =
-            req.body.location === 'none' || req.body.start === req.body.end ? null : await addReservation(id, req);
 
+        // Add event to Google Calendar
+        const eventId = await addToCalendar(req.body);
+
+        // Create a reservation if reservationId is set to 1
+        const reservationId = req.body.reservationId === 1 ? await addReservation(id, req) : null;
+
+        // Create the event with the IDs and event data
         const newEvent = new Event({
             id,
             eventId,
@@ -139,15 +144,32 @@ router.put('/:id', async (req, res, next) => {
             return;
         }
 
+        // Update reservation, delete reservation (resId = -1), or add reservation (resId = 1)
+        // TODO: is there any way to make this section look nicer TwT
+        let reservationRes;
+        if (req.body.reservationId === -1) {
+            reservationRes = await deleteReservation(prev.reservationId);
+        } else if (prev.reservationId) {
+            reservationRes = await updateReservation(prev.reservationId, req, res);
+        } else if (req.body.reservationId === 1) {
+            reservationRes = await addReservation(id, req);
+        }
+        if (reservationRes === -1) return;
+
+        // Set the reservation ID to null if deleted, or the reservation ID if updated or added
+        const reservationId =
+            req.body.reservationId === -1 ? null : req.body.reservationId === 1 ? reservationRes : prev.reservationId;
+        
+        // Set body resId for history
+        req.body.reservationId = reservationId;
+        console.log(reservationId);
+
+        // Update history and calendar
         const historyId = newId();
         const newHistory = await createNewHistory(req, prev, 'events', id, historyId, false);
         const calendarRes = await updateCalendar(req.body, prev.eventId);
-        const reservationRes = prev.reservationId
-            ? await updateReservation(prev.reservationId, req, res)
-            : await addReservation(id, req);
-        if (reservationRes === -1) return;
 
-        const reservationId = prev.reservationId === null && reservationRes ? reservationRes : prev.reservationId;
+        // Update the event with the IDs and event data
         const eventRes = await Event.updateOne(
             { id },
             {

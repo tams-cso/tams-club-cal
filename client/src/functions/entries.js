@@ -3,6 +3,7 @@
  *
  * @param {string} [id] The unique UUIDv4 for the event
  * @param {string} [eventId] The ID assigned by the Google Calendar API to the calendar event
+ * @param {string | number} [reservationId] The ID of the reservation associated with the event
  * @param {"event"|"signup"} [type] The type of the event
  * @param {string} [name] The name of the event
  * @param {string} [club] The name of the club that is hosting the event

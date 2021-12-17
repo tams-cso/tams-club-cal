@@ -104,11 +104,25 @@ const EditEvents = () => {
         const startTime = data.allDay ? data.date.startOf('day').valueOf() : data.start.valueOf();
         const endTime = data.allDay || data.noEnd ? startTime : data.end.valueOf();
 
+        // Create or delete reservation if the state of the checkbox changes
+        let resId = event.reservationId;
+
+        if (event.reservationId === null && data.createReservation) {
+            // Check to see if preconditions for creating a reservation are met
+            if (data.location === 'none' || data.noEnd) {
+                dispatch(openPopup('Please select a valid location and time range for the reservation or remove the reservation.', 3));
+                return;
+            }
+            resId = 1;
+        } else if (event.reservationId !== null && !data.createReservation) {
+            resId = -1;
+        }
+
         // Create the event object from the data
         const newEvent = new Event(
             id,
             event.eventId,
-            event.reservationId,
+            resId,
             data.type,
             data.name,
             data.club,
@@ -158,6 +172,7 @@ const EditEvents = () => {
                         setValue={setValue}
                         value={event.type}
                         name="type"
+                        label="Type"
                         variant="outlined"
                         sx={{ height: 56 }}
                     >
@@ -190,7 +205,12 @@ const EditEvents = () => {
                         errorMessage="Please enter a club name"
                     />
                     <Spacer />
-                    <LocationSelect control={control} setValue={setValue} value={event.location} />
+                    <LocationSelect
+                        control={control}
+                        setValue={setValue}
+                        value={event.location}
+                        sx={{ minWidth: 250 }}
+                    />
                 </Box>
                 <Box
                     sx={{
@@ -225,7 +245,7 @@ const EditEvents = () => {
                         control={control}
                         name="noEnd"
                         label="No end time"
-                        value={false}
+                        value={event.start === event.end}
                         setValue={setValue}
                         sx={{ marginLeft: { lg: 2, xs: 0 }, marginTop: { lg: 0, xs: 2 } }}
                     />
@@ -234,6 +254,14 @@ const EditEvents = () => {
                         name="allDay"
                         label="All day event"
                         value={event.allDay}
+                        setValue={setValue}
+                        sx={{ marginLeft: 0 }}
+                    />
+                    <ControlledCheckbox
+                        control={control}
+                        name="createReservation"
+                        label="Create reservation"
+                        value={event.reservationId !== null}
                         setValue={setValue}
                         sx={{ marginLeft: 0 }}
                     />
