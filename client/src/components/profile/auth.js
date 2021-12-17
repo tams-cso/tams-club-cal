@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import Cookies from 'universal-cookie';
-import { getParams } from '../../functions/util';
+import { getParams, redirect } from '../../functions/util';
 
 import PageWrapper from '../shared/page-wrapper';
 import Loading from '../shared/loading';
@@ -19,7 +19,7 @@ const Auth = () => {
     // When loaded, check if the user has a token parameter in the url
     // If they do, return the user to the previous page they were on
     // Otherwise, redirect them to the home page and show an error
-    useEffect(() => {
+    useEffect(async () => {
         // Get the token from the url params
         const token = getParams('token');
 
@@ -27,19 +27,19 @@ const Auth = () => {
         if (token === null) {
             setError(true);
             setTimeout(() => {
-                history.push('/');
+                history.push('/profile');
             }, 3000);
         } else {
             // Saves the token into the cookies so the user doesn't have to re-login
-            // TODO: This does not seem to work lol
+            // TODO: This does not seem to work TT-TT
             const cookies = new Cookies();
             cookies.set('token', token, { sameSite: 'strict', path: '/' });
-            
+
             // Return the user to the previous page they were on
             const prev = cookies.get('prev');
             cookies.remove('prev', { path: '/' });
-            if (prev !== null) history.push(prev);
-            else history.push('/');
+            if (prev) redirect(prev);
+            else redirect('/profile');
         }
     }, []);
 
@@ -47,7 +47,7 @@ const Auth = () => {
         <PageWrapper>
             <Loading error={error}>
                 Error logging in. Please check your internet and allow cookies then try again. Redirecting you to the
-                home page in 3 seconds...
+                login page in 3 seconds...
             </Loading>
         </PageWrapper>
     );

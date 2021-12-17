@@ -1,5 +1,6 @@
 import { Button } from '@mui/material';
 import React, { useEffect, useState } from 'react';
+import { useHistory } from 'react-router';
 import { useDispatch } from 'react-redux';
 import Cookies from 'universal-cookie';
 import { darkSwitch, darkSwitchGrey } from '../../functions/util';
@@ -8,13 +9,12 @@ import { openConnectionErrorPopup } from '../../redux/actions';
 
 import Box from '@mui/material/Box';
 import Typography from '@mui/material/Typography';
-import GoogleLoginButton from './shared/google-login-button';
 
 const EditLogin = () => {
     const [message, setMessage] = useState(null);
-    const [showLogin, setShowLogin] = useState(false);
     const [showLogout, setShowLogout] = useState(false);
     const dispatch = useDispatch();
+    const history = useHistory();
 
     // When component mounts and the user opens any edit page, check if they are logged in
     useEffect(async () => {
@@ -41,7 +41,6 @@ const EditLogin = () => {
         const ip = await getIp();
         if (ip.status === 200) {
             setMessage(`Edits will be made under your ip address [${ip.data.ip}].`);
-            setShowLogin(true);
         } else {
             dispatch(openConnectionErrorPopup());
         }
@@ -49,7 +48,12 @@ const EditLogin = () => {
 
     // If the user clicks the logout button, log them out
     // by removing the token cookie and redirect them to previous page
-    const logout = () => {
+    const onLogoutClick = () => {
+        if (!showLogout) {
+            history.push('/profile');
+            return;
+        }
+
         const cookies = new Cookies();
         cookies.remove('token', { path: '/' });
         history.go(0);
@@ -76,14 +80,8 @@ const EditLogin = () => {
                 >
                     EDIT MODE
                 </Typography>
-                <GoogleLoginButton hidden={!showLogin} />
-                <Button
-                    variant="contained"
-                    color="primary"
-                    onClick={logout}
-                    sx={{ display: showLogout ? 'block' : 'none' }}
-                >
-                    Log out
+                <Button variant="contained" color="primary" onClick={onLogoutClick}>
+                    Log {showLogout ? 'out' : 'in'}
                 </Button>
             </Box>
             <Typography

@@ -1,11 +1,13 @@
-import React from 'react';
-import { useLocation } from 'react-router';
+import React, { useEffect, useState } from 'react';
+import { useHistory, useLocation } from 'react-router';
+import Cookies from 'universal-cookie';
 import { darkSwitch } from '../../functions/util';
 
 import AppBar from '@mui/material/AppBar';
 import Toolbar from '@mui/material/Toolbar';
 import Link from '@mui/material/Link';
 import Box from '@mui/material/Box';
+import AccountCircleIcon from '@mui/icons-material/AccountCircle';
 import AppIcon from './app-icon';
 import MenuLink from './menu-link';
 import MenuIcon from './menu-icon';
@@ -24,6 +26,20 @@ import { githubLink } from '../../data.json';
  */
 const DesktopMenu = (props) => {
     const location = useLocation();
+    const history = useHistory();
+    const [profileActive, setProfileActive] = useState(false);
+
+    // If the location is /profile, set the profileActive state variable to true
+    useEffect(() => {
+        setProfileActive(location.pathname.includes('/profile'));
+    }, [location]);
+
+    // Route user to profile page
+    const goToProfile = () => {
+        const cookies = new Cookies();
+        cookies.remove('prev');
+        history.push('/profile');
+    };
 
     return (
         <React.Fragment>
@@ -52,6 +68,19 @@ const DesktopMenu = (props) => {
                     <MenuLink to="/volunteering">Volunteering</MenuLink>
                     <MenuLink to="/about">About</MenuLink>
                     <MenuLink to="/edit">Edit</MenuLink>
+                    <MenuIcon title={`User Profile`} aria-label="user-profile">
+                        <AccountCircleIcon
+                            sx={{
+                                fill: (theme) =>
+                                    profileActive
+                                        ? theme.palette.primary.light
+                                        : darkSwitch(theme, theme.palette.grey[700], theme.palette.grey[400]),
+                                fontSize: '2rem',
+                            }}
+                            aria-label="user-profile"
+                            onClick={goToProfile}
+                        />
+                    </MenuIcon>
                     <MenuIcon
                         title={`Switch to ${props.darkTheme ? 'light' : 'dark'} theme`}
                         aria-label="toggle-theme"

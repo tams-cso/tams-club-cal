@@ -82,6 +82,24 @@ async function putRequest(url, body, json = true, auth = true) {
 }
 
 /**
+ * Performs a DELETE request to the given endpoint.
+ *
+ * @param {string} url API endpoint to GET
+ * @param {boolean} [auth] True if adding token
+ * @returns {Promise<FetchResponse>} Will return the object or error object
+ */
+async function deleteRequest(url, auth = false) {
+    try {
+        const res = await fetch(`${BACKEND_URL}${url}`, { method: 'DELETE', headers: createHeaders(auth, false) });
+        const data = await res.json();
+        return new FetchResponse(res.status, data);
+    } catch (error) {
+        console.dir(error);
+        return new FetchResponse(404, null);
+    }
+}
+
+/**
  * Creates the header object for fetch requests.
  *
  * @param {boolean} auth True if adding authorization string
@@ -384,6 +402,37 @@ export async function getUserInfo(token) {
  */
 export async function getUserById(id) {
     return getRequest(`/auth/user/id/${id}`);
+}
+
+/**
+ * Checks to see if a user is an admin or not
+ * @param {string} token User auth token
+ * @returns {Promise<FetchResponse>} Will return the object or error object
+ */
+export async function getIsAdmin(token) {
+    return postRequest(`/auth/admin`, { token }, true, false);
+}
+
+/**
+ * Gets a list of resources based on search terms
+ * @param {string} resource Resource to get
+ * @param {string} field Field to search or all
+ * @param {string} search Search term
+ * @param {number} page Page number to get
+ * @returns {Promise<FetchResponse>} Will return the object or error object
+ */
+export async function getAdminResources(resource, field, search, page) {
+    return getRequest(`/admin/resources/${resource}/${field}/${search}/${page || 0}`);
+}
+
+/**
+ * Deletes a resource given its resource name and id
+ * @param {string} resource Resource to delete
+ * @param {string} id ID of the resource to delete
+ * @returns {Promise<FetchResponse>} Will return the object or error object
+ */
+export async function deleteAdminResource(resource, id) {
+    return deleteRequest(`/admin/resources/${resource}/${id}`, true);
 }
 
 export function getBackendUrl() {

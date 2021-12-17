@@ -46,7 +46,7 @@ const Popup = () => {
 
     const getSuccessMessage = (success) => {
         const split = success.split('-');
-        if (split.length !== 2) return 'Something good happened!';
+        if (split.length !== 2) return success;
         return `Successfully ${split[0] === 'add' ? 'added' : 'updated'} ${split[1]}!`;
     };
 

@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { BrowserRouter, Route, Switch } from 'react-router-dom';
 import { Helmet } from 'react-helmet';
-import { createTheme, StyledEngineProvider, adaptV4Theme } from '@mui/material';
+import { createTheme, StyledEngineProvider } from '@mui/material';
 import { ThemeProvider } from '@mui/material/styles';
 import Cookies from 'universal-cookie';
 
@@ -16,8 +16,8 @@ import Clubs from './components/clubs/clubs';
 import NotFound from './components/404/404';
 import Volunteering from './components/volunteering/volunteering';
 import ReservationDisplay from './components/home/reservation/reservation-display';
-// TODO: import Admin from './components/admin/admin';
-import Auth from './components/edit/auth';
+import Profile from './components/profile/profile';
+import Auth from './components/profile/auth';
 import Edit from './components/edit/edit';
 
 const App = () => {
@@ -77,6 +77,7 @@ const App = () => {
         },
     });
 
+    // Set the dark theme cookie if the theme has changed
     useEffect(() => {
         cookies.set('dark', darkTheme, { sameSite: 'strict', path: '/' });
     }, [darkTheme]);
@@ -100,7 +101,7 @@ const App = () => {
                             <Route exact path="/about" component={About} />
                             <Route exact path="/auth" component={Auth} />
                             <Route exact path="/reservations" component={ReservationDisplay} />
-                            {/* <Route exact path="/admin" component={Admin} /> */}
+                            <Route path="/profile" component={Profile} />
                             <Route path="/edit" component={Edit} />
                             <Route component={NotFound} />
                         </Switch>

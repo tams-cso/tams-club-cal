@@ -20,6 +20,7 @@ import AppsRoundedIcon from '@mui/icons-material/AppsRounded';
 import EmojiPeopleRoundedIcon from '@mui/icons-material/EmojiPeopleRounded';
 import InfoRoundedIcon from '@mui/icons-material/InfoRounded';
 import CreateRoundedIcon from '@mui/icons-material/CreateRounded';
+import AccountCircleIcon from '@mui/icons-material/AccountCircle';
 import MenuIcon from './menu-icon';
 import AppIcon from './app-icon';
 import HomeDrawerList from '../home/home-drawer-list';
@@ -132,6 +133,12 @@ const MobileMenu = (props) => {
                             <CreateRoundedIcon />
                         </ListItemIcon>
                         <ListItemText primary="Edit" />
+                    </ListItem>
+                    <ListItem button component={Link} to="/profile" onClick={toggleDrawer.bind(this, false)}>
+                        <ListItemIcon>
+                            <AccountCircleIcon />
+                        </ListItemIcon>
+                        <ListItemText primary="Profile" />
                     </ListItem>
                 </List>
                 <HomeDrawerList />

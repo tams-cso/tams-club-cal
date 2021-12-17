@@ -1,14 +1,14 @@
 const express = require('express');
 const router = express.Router();
-const { verifyCsrf, verifyToken, upsertUser } = require('../functions/auth');
+const { verifyToken, upsertUser, isAdmin } = require('../functions/auth');
 const { getIp, sendError } = require('../functions/util');
 const User = require('../models/user');
 
 /**
  * GET /auth/ip
  *
- * Returns the client's IP address. Will use x-real-ip if avaliable
- * If not, simply just uses req.ip.
+ * Returns the client's IP address. Will use x-real-ip if avaliable.
+ * If not, simply just uses 'req.ip'.
  */
 router.get('/ip', (req, res, next) => {
     res.send({ ip: getIp(req) });
@@ -18,6 +18,7 @@ router.get('/ip', (req, res, next) => {
  * GET /auth/user/<token>
  *
  * Sends the user email and name to the client given the token.
+ * Used to display the logged in user on the edit pages.
  */
 router.get('/user/:token', async (req, res, next) => {
     if (!req.params.token) {
@@ -32,7 +33,8 @@ router.get('/user/:token', async (req, res, next) => {
 /**
  * GET /auth/user/id/<id>
  *
- * Sends the user name given their ID
+ * Sends the user name given their ID.
+ * Used to find the user from the ID when showing edit history.
  */
 router.get('/user/id/:id', async (req, res, next) => {
     const user = await User.findOne({ id: req.params.id });
@@ -64,7 +66,6 @@ router.post('/', async (req, res, next) => {
  */
 router.post('/login', async (req, res, next) => {
     let error = '';
-
     // Verify credentials
     const payload = await verifyToken(req.body['credential']);
     if (payload !== null) {
@@ -80,5 +81,21 @@ router.post('/login', async (req, res, next) => {
     // Redirect to error if failed verification
     res.redirect(`${process.env.ORIGIN}/auth?error=${error}`);
 });
+
+/**
+ * POST /auth/admin
+ *
+ * Given a token in the body request, determine if that user is logged in.
+ * If invalid token or missing token, return false.
+ */
+router.post('/admin', async (req, res, next) => {
+    if (!req.body.token) {
+        sendError(res, 400, 'Missing token in body');
+        return;
+    }
+    if (await isAdmin(req.body.token)) res.send({ admin: true });
+    else res.send({ admin: false });
+});
+
 
 module.exports = router;
