@@ -69,6 +69,12 @@ router.get('/resources/:resource/:field/:search/:page?', async (req, res) => {
     }
 });
 
+/**
+ * DELETE /admin/resources/<resource>/<id>
+ * 
+ * Deletes the given resource by id. This will also delete the related history entries.
+ * Additionally, if the resource is an event, then the related reservation will also be deleted.
+ */
 router.delete('/resources/:resource/:id', async (req, res) => {
     console.log(req.headers);
     console.log(req.params);
@@ -80,8 +86,9 @@ router.delete('/resources/:resource/:id', async (req, res) => {
             // If everything is good, delete the resource
             switch (req.params.resource) {
                 case 'events': {
+                    const event = await Event.findOne({ id: req.params.id });
                     const deleteRes = await Event.deleteOne({ id: req.params.id });
-                    // TODO: Also delete the reservation if there is one
+                    if (event.reservationId) await Reservation.deleteOne({ id: event.reservationId });
                     await History.deleteMany({ resource: 'events', id: req.params.id });
                     if (deleteRes.deletedCount === 1) res.send({ ok: 1 });
                     else sendError(res, 500, 'Could not delete event');

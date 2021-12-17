@@ -162,7 +162,6 @@ router.put('/:id', async (req, res, next) => {
         
         // Set body resId for history
         req.body.reservationId = reservationId;
-        console.log(reservationId);
 
         // Update history and calendar
         const historyId = newId();
