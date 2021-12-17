@@ -195,7 +195,6 @@ const EditReservations = () => {
                         setValue={setValue}
                         value={reservation.location}
                         error={locationError}
-                        hideHelper
                     />
                     <Spacer />
                     <ControlledTextField

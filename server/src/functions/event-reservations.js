@@ -49,7 +49,8 @@ async function addReservation(eventId, req) {
     const reservationRes = await newReservation.save();
     const historyRes = newHistory ? await newHistory.save() : null;
     if (reservationRes === newReservation && newHistory === historyRes) return id;
-    throw new Error('Could not add reservation to the database');
+    sendError(res, 500, 'Unable to create reservation for given event');
+    return -1;
 }
 
 /**
@@ -109,8 +110,21 @@ async function updateReservation(id, req, res) {
 
     const newHistory = prev.eventId ? null : createNewHistory(req, prev, 'reservations', id, historyId, false);
     const historyRes = newHistory ? await newHistory.save() : null;
-    if (reservationRes.n === 1 && newHistory === historyRes) return 1;
-    throw new Error('Could not add reservation to the database');
+    if (reservationRes.n === 1 && newHistory === historyRes) return id;
+    sendError(res, 500, 'Unable to update reservation for given event');
+    return -1;
+}
+
+/**
+ * Deletes a reservation from the reservations db.
+ * 
+ * @param {string} id ID of the reservation to delete
+ * @returns {Promise<-1 | 1>} -1 if the reservation was not found, 1 if the reservation was deleted
+ */
+async function deleteReservation(id) {
+    const res = await Reservation.deleteOne({ id }).exec();
+    if (res.n === 1) return 1;
+    throw new Error('Unable to delete reservation');
 }
 
 /**
@@ -126,4 +140,4 @@ function offsetTime(req) {
     return { start: roundedStart, end: fixedEnd };
 }
 
-module.exports = { addReservation, updateReservation };
+module.exports = { addReservation, updateReservation, deleteReservation };

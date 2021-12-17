@@ -115,7 +115,9 @@ const EventDisplay = (props) => {
                                     >
                                         {event.location === 'none'
                                             ? null
-                                            : 'Location: ' + data.rooms.find((d) => d.value === event.location).label}
+                                            : 'Location: ' +
+                                              data.rooms.find((d) => d.value === event.location).label +
+                                              (event.reservationId ? ' (Reserved)' : '')}
                                     </Typography>
                                 </Box>
                                 <Hidden mdDown>
