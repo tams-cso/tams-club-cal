@@ -104,6 +104,12 @@ const EditEvents = () => {
         const startTime = data.allDay ? data.date.startOf('day').valueOf() : data.start.valueOf();
         const endTime = data.allDay || data.noEnd ? startTime : data.end.valueOf();
 
+        // Make sure start > end
+        if (endTime < startTime) {
+            dispatch(openPopup('Start time should be before end time!', 3));
+            return;
+        }
+
         // Create or delete reservation if the state of the checkbox changes
         let resId = event.reservationId;
 
@@ -262,6 +268,7 @@ const EditEvents = () => {
                         label="End date/time"
                         control={control}
                         value={event.end}
+                        error={errors.end}
                         disabled={watchNoEnd || watchAllDay}
                         required
                         end
