@@ -55,9 +55,10 @@ const Admin = () => {
         }
 
         // Fetches the resource list and save it to the state variable
-        const resourceRes = await getAdminResources(data.resource, data.field, data.search, page);
+        const resourceRes = await getAdminResources(data.resource, data.field, data.search, 0);
         if (resourceRes.status === 200) {
             setPrevSearch(data);
+            setPage(0);
             setResourceList(resourceRes.data);
         } else {
             dispatch(openPopup('Error getting resource list', 4));
@@ -164,7 +165,7 @@ const Admin = () => {
                                     setValue={setValue}
                                     name="resource"
                                     label="Resource"
-                                    variant="outlined"
+                                    variant="standard"
                                     sx={{ marginRight: 1 }}
                                     wrapperSx={{ flexGrow: 1 }}
                                     autowidth
@@ -180,7 +181,7 @@ const Admin = () => {
                                     setValue={setValue}
                                     name="field"
                                     label="Field to Search"
-                                    variant="outlined"
+                                    variant="standard"
                                     wrapperSx={{ flexGrow: 1 }}
                                 >
                                     <MenuItem value="all">Find All</MenuItem>
@@ -195,7 +196,7 @@ const Admin = () => {
                                     value=""
                                     label="Search"
                                     name="search"
-                                    variant="outlined"
+                                    variant="standard"
                                     value=""
                                     fullWidth
                                 />
@@ -212,6 +213,7 @@ const Admin = () => {
                         <Typography variant="h3" sx={{ textAlign: 'center' }}>
                             Edit External Links
                         </Typography>
+                        <Typography sx={{ textAlign: 'center', color: '#888', paddingTop: 2 }}>To be added</Typography>
                     </Paper>
                 </Grid>
                 <Grid item xs={12} lg={6}>
@@ -219,6 +221,7 @@ const Admin = () => {
                         <Typography variant="h3" sx={{ textAlign: 'center' }}>
                             Change User Permissions
                         </Typography>
+                        <Typography sx={{ textAlign: 'center', color: '#888', paddingTop: 2 }}>To be added</Typography>
                     </Paper>
                 </Grid>
                 <Grid item xs={12} lg={6}>
@@ -226,6 +229,7 @@ const Admin = () => {
                         <Typography variant="h3" sx={{ textAlign: 'center' }}>
                             Feedback
                         </Typography>
+                        <Typography sx={{ textAlign: 'center', color: '#888', paddingTop: 2 }}>To be added</Typography>
                         <List></List>
                     </Paper>
                 </Grid>
