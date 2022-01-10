@@ -9,7 +9,9 @@ const s3 = new AWS.S3({
     accessKeyId: process.env.AWS_ACCESS_ID,
     secretAccessKey: process.env.AWS_SECRET_KEY,
 });
-const BUCKET = `${process.env.NODE_ENV === 'production' && !process.env.STAGING ? '' : 'staging-'}tams-club-calendar-images`;
+const BUCKET = `${
+    process.env.NODE_ENV === 'production' && !process.env.STAGING ? '' : 'staging-'
+}tams-club-calendar-images`;
 
 /**
  * Will compress, resize, and upload all images passed to a club upload.
@@ -93,7 +95,7 @@ async function uploadImage(resource, blob) {
 async function deletePrevious(previousSrc) {
     if (!previousSrc) return null;
     try {
-        const res = await s3
+        await s3
             .deleteObject({
                 Bucket: BUCKET,
                 Key: previousSrc.substring(1),
@@ -106,4 +108,26 @@ async function deletePrevious(previousSrc) {
     }
 }
 
-module.exports = { processClubUpload };
+async function deleteClubImages(club) {
+    const urls = [];
+    if (club.coverImg) urls.push(club.coverImg);
+    if (club.coverImgThumbnail) urls.push(club.coverImgThumbnail);
+    club.execs.forEach((exec) => {
+        if (exec.img) urls.push(exec.img);
+    });
+
+    try {
+        await s3
+            .deleteObjects({
+                Bucket: BUCKET,
+                Delete: { Objects: urls.map((u) => ({ Key: u })) },
+            })
+            .promise();
+        return 1;
+    } catch (error) {
+        console.error(error);
+        return null;
+    }
+}
+
+module.exports = { processClubUpload, deleteClubImages };
