@@ -68,7 +68,7 @@ const EventDisplay = (props) => {
                     <Loading />
                 )
             ) : (
-                <Container maxWidth={false} sx={{ maxWidth: { md: '75%', xs: '100%' } }}>
+                <Container maxWidth={false} sx={{ maxWidth: { lg: '60%', md: '75%', xs: '100%' } }}>
                     <Title resource="events" name={event.name} />
                     <AddButton color="secondary" label="Event" path={`/edit/events?id=${event.id}`} edit />
                     <Card>

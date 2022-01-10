@@ -68,7 +68,7 @@ const ReservationDisplay = () => {
                     <Loading />
                 )
             ) : (
-                <Container maxWidth={false} sx={{ maxWidth: { md: '75%', xs: '100%' } }}>
+                <Container maxWidth={false} sx={{ maxWidth: { lg: '50%', md: '75%', xs: '100%' } }}>
                     <Title resource="reservations" name={reservation.name} />
                     <AddButton
                         color="secondary"
