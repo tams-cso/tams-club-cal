@@ -43,12 +43,12 @@ const DesktopMenu = (props) => {
 
     return (
         <React.Fragment>
-            <AppBar 
+            <AppBar
                 elevation={0}
                 sx={{
                     position: 'sticky',
                     zIndex: (theme) => theme.zIndex.drawer + 1,
-                    borderBottom: theme => darkSwitch(theme, '1px solid #ddd', 'none'),
+                    borderBottom: (theme) => darkSwitch(theme, '1px solid #ddd', 'none'),
                 }}
             >
                 <MenuColorBar />
@@ -68,7 +68,7 @@ const DesktopMenu = (props) => {
                     <MenuLink to="/volunteering">Volunteering</MenuLink>
                     <MenuLink to="/about">About</MenuLink>
                     <MenuLink to="/edit">Edit</MenuLink>
-                    <MenuIcon title={`User Profile`} aria-label="user-profile">
+                    <MenuIcon title={`User Profile`} aria-label="user-profile" onClick={goToProfile}>
                         <AccountCircleIcon
                             sx={{
                                 fill: (theme) =>
@@ -77,8 +77,6 @@ const DesktopMenu = (props) => {
                                         : darkSwitch(theme, theme.palette.grey[700], theme.palette.grey[400]),
                                 fontSize: '2rem',
                             }}
-                            aria-label="user-profile"
-                            onClick={goToProfile}
                         />
                     </MenuIcon>
                     <MenuIcon
