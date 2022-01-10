@@ -73,7 +73,7 @@ const DesktopMenu = (props) => {
                             sx={{
                                 fill: (theme) =>
                                     profileActive
-                                        ? theme.palette.primary.light
+                                        ? darkSwitch(theme, theme.palette.primary.main, theme.palette.primary.light)
                                         : darkSwitch(theme, theme.palette.grey[700], theme.palette.grey[400]),
                                 fontSize: '2rem',
                             }}
