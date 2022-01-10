@@ -92,10 +92,10 @@ const EventDisplay = (props) => {
                             >
                                 <Box
                                     sx={{
-                                        flexBasis: '50%',
+                                        flexBasis: 'calc(50% - 24px)',
                                         flexShrink: 0,
                                         flexGrow: 1,
-                                        paddingRight: 12,
+                                        paddingRight: 3,
                                     }}
                                 >
                                     <Typography
