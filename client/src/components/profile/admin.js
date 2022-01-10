@@ -89,8 +89,7 @@ const Admin = () => {
             const cookies = new Cookies();
             cookies.set('success', `${dataToDelete.name} deleted successfully!`, { path: '/' });
             window.location.reload();
-        }
-        else {
+        } else {
             dispatch(openPopup('Error deleting resource', 4));
         }
     };
@@ -106,7 +105,9 @@ const Admin = () => {
                         <IconButton
                             onClick={window.open.bind(
                                 this,
-                                `${window.location.origin}/${prevSearch.resource}?id=${resource.id}`
+                                prevSearch.resource === 'repeating-reservations'
+                                    ? `${window.location.origin}/reservations?id=${resource.id}&repeating=true`
+                                    : `${window.location.origin}/${prevSearch.resource}?id=${resource.id}`
                             )}
                         >
                             <VisibilityIcon />
@@ -172,6 +173,7 @@ const Admin = () => {
                                     <MenuItem value="clubs">Clubs</MenuItem>
                                     <MenuItem value="volunteering">Volunteering</MenuItem>
                                     <MenuItem value="reservations">Reservations</MenuItem>
+                                    <MenuItem value="repeating-reservations">Repeating Reservations</MenuItem>
                                 </ControlledSelect>
                                 <ControlledSelect
                                     control={control}

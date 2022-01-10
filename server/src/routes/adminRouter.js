@@ -8,6 +8,7 @@ const Club = require('../models/club');
 const Volunteering = require('../models/volunteering');
 const Reservation = require('../models/reservation');
 const History = require('../models/history');
+const RepeatingReservation = require('../models/repeating-reservation');
 
 /**
  * GET /admin/resoruces/<resource>/<field>/<search>/[page]
@@ -63,6 +64,16 @@ router.get('/resources/:resource/:field/:search/:page?', async (req, res) => {
             res.send(reservations);
             break;
         }
+        case 'repeating-reservations': {
+            const repeatingRes = getAll
+                ? await RepeatingReservation.find({})
+                      .limit(pageLength)
+                      .skip((page || 0) * pageLength)
+                      .exec()
+                : await RepeatingReservation.find({ [req.params.field]: req.params.search });
+            res.send(repeatingRes);
+            break;
+        }
         default:
             sendError(res, 400, 'Invalid resource field!');
             return;
@@ -71,7 +82,7 @@ router.get('/resources/:resource/:field/:search/:page?', async (req, res) => {
 
 /**
  * DELETE /admin/resources/<resource>/<id>
- * 
+ *
  * Deletes the given resource by id. This will also delete the related history entries.
  * Additionally, if the resource is an event, then the related reservation will also be deleted.
  */
@@ -109,10 +120,17 @@ router.delete('/resources/:resource/:id', async (req, res) => {
                     break;
                 }
                 case 'reservations': {
-                    await Reservation.deleteOne({ id: req.params.id });
+                    const deleteRes = await Reservation.deleteOne({ id: req.params.id });
                     await History.deleteMany({ resource: 'reservations', id: req.params.id });
                     if (deleteRes.deletedCount === 1) res.send({ ok: 1 });
                     else sendError(res, 500, 'Could not delete reservation');
+                    break;
+                }
+                case 'repeating-reservations': {
+                    const deleteRes = await RepeatingReservation.deleteOne({ id: req.params.id });
+                    await History.deleteMany({ resource: 'repeating-reservations', id: req.params.id });
+                    if (deleteRes.deletedCount === 1) res.send({ ok: 1 });
+                    else sendError(res, 500, 'Could not delete repeating reservation');
                     break;
                 }
                 default:

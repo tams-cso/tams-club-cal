@@ -45,7 +45,15 @@ async function addReservation(eventId, req) {
               history,
           });
 
-    const newHistory = history ? await createNewHistory(req, newReservation, 'reservations', id, history[0]) : null;
+    const newHistory = history
+        ? await createNewHistory(
+              req,
+              newReservation,
+              req.body.repeatEnd ? 'repeating-reservations' : 'reservations',
+              id,
+              history[0]
+          )
+        : null;
     const reservationRes = await newReservation.save();
     const historyRes = newHistory ? await newHistory.save() : null;
     if (reservationRes === newReservation && newHistory === historyRes) return id;
@@ -108,7 +116,16 @@ async function updateReservation(id, req, res) {
               }
           );
 
-    const newHistory = prev.eventId ? null : await createNewHistory(req, prev, 'reservations', id, historyId, false);
+    const newHistory = prev.eventId
+        ? null
+        : await createNewHistory(
+              req,
+              prev,
+              req.body.repeatEnd ? 'repeating-reservations' : 'reservations',
+              id,
+              historyId,
+              false
+          );
     const historyRes = newHistory ? await newHistory.save() : null;
     if (reservationRes.n === 1 && newHistory === historyRes) return id;
     sendError(res, 500, 'Unable to update reservation for given event');
@@ -117,7 +134,7 @@ async function updateReservation(id, req, res) {
 
 /**
  * Deletes a reservation from the reservations db.
- * 
+ *
  * @param {string} id ID of the reservation to delete
  * @returns {Promise<-1 | 1>} -1 if the reservation was not found, 1 if the reservation was deleted
  */
