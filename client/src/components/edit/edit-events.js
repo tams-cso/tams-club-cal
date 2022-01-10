@@ -6,7 +6,7 @@ import dayjs from 'dayjs';
 import { openPopup } from '../../redux/actions';
 import { getParams, redirect } from '../../functions/util';
 import { Event } from '../../functions/entries';
-import { getEvent, postEvent, putEvent } from '../../functions/api';
+import { getEvent, getOverlappingReservations, postEvent, putEvent } from '../../functions/api';
 
 import Typography from '@mui/material/Typography';
 import Box from '@mui/material/Box';
@@ -107,10 +107,38 @@ const EditEvents = () => {
         // Create or delete reservation if the state of the checkbox changes
         let resId = event.reservationId;
 
+        // Start the upload process display because the reservation might take a bit to find
+        setBackdrop(true);
+
+        // Delete or create a reservation if the proper conditions are met
         if (event.reservationId === null && data.createReservation) {
             // Check to see if preconditions for creating a reservation are met
             if (data.location === 'none' || data.noEnd) {
-                dispatch(openPopup('Please select a valid location and time range for the reservation or remove the reservation.', 3));
+                dispatch(
+                    openPopup(
+                        'Please select a valid location and time range for the reservation or remove the reservation.',
+                        3
+                    )
+                );
+                setBackdrop(false);
+                return;
+            }
+
+            // Check to make sure that the reservation is not already taken
+            const overlaps = await getOverlappingReservations(data.location, startTime, endTime);
+            if (overlaps.status !== 200) {
+                dispatch(
+                    openPopup(
+                        'There was an error checking reservation time. Please check your connection and try again.',
+                        4
+                    )
+                );
+                setBackdrop(false);
+                return;
+            }
+            if (overlaps.data.length !== 0 && overlaps.data[0].id !== resId) {
+                dispatch(openPopup('There is already a reservation during that time!', 3));
+                setBackdrop(false);
                 return;
             }
             resId = 1;
@@ -133,9 +161,6 @@ const EditEvents = () => {
             data.allDay,
             event.history
         );
-
-        // Start the upload process
-        setBackdrop(true);
 
         // If the event ID is null, create the event, otherwise update it
         const res = id === null ? await postEvent(newEvent) : await putEvent(newEvent, id);
@@ -245,7 +270,7 @@ const EditEvents = () => {
                         control={control}
                         name="noEnd"
                         label="No end time"
-                        value={event.start === event.end}
+                        value={event.start ? event.start === event.end : false}
                         setValue={setValue}
                         sx={{ marginLeft: { lg: 2, xs: 0 }, marginTop: { lg: 0, xs: 2 } }}
                     />

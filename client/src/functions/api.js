@@ -238,6 +238,18 @@ export async function putReservation(reservation, id) {
     return putRequest(`/reservations/${id}`, reservation);
 }
 
+/**
+ * Looks for reservations that overlap a specified time range
+ * 
+ * @param {string} location Location to check
+ * @param {number} start UTC millisecond start time to search
+ * @param {number} end UTC millisecond end time to search
+ * @returns {Promise<FetchResponse>} Will return the response or error object
+ */
+export async function getOverlappingReservations(location, start, end) {
+    return getRequest(`/reservations/search/${location}/${start}/${end}`);
+}
+
 /* ########## CLUBS API ########### */
 
 /**

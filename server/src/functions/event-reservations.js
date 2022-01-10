@@ -108,7 +108,7 @@ async function updateReservation(id, req, res) {
               }
           );
 
-    const newHistory = prev.eventId ? null : createNewHistory(req, prev, 'reservations', id, historyId, false);
+    const newHistory = prev.eventId ? null : await createNewHistory(req, prev, 'reservations', id, historyId, false);
     const historyRes = newHistory ? await newHistory.save() : null;
     if (reservationRes.n === 1 && newHistory === historyRes) return id;
     sendError(res, 500, 'Unable to update reservation for given event');
