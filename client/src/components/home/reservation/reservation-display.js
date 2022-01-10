@@ -135,7 +135,7 @@ const ReservationDisplay = () => {
                                     <Divider orientation="vertical" flexItem />
                                 </Hidden>
                                 <Paragraph
-                                    text={reservation.description}
+                                    text={reservation.description === '' ? '[No Description]' : reservation.description}
                                     sx={{
                                         width: { lg: '50%', xs: '100%' },
                                         textAlign: 'left',

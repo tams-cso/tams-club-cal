@@ -124,7 +124,7 @@ const EventDisplay = (props) => {
                                     <Divider orientation="vertical" flexItem />
                                 </Hidden>
                                 <Paragraph
-                                    text={event.description}
+                                    text={event.description === '' ? '[No Description]' : event.description}
                                     sx={{
                                         width: { lg: '50%', xs: '100%' },
                                         textAlign: 'left',
