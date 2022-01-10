@@ -130,7 +130,7 @@ function getDiff(prevData, data) {
     let output = [];
     Object.entries(data).forEach(([key, value]) => {
         if (prevData[key] === value) return;
-        if (key.startsWith('_') || key === 'id' || key === 'history' || key === 'repeatEnd') return;
+        if (key.startsWith('_') || key.endsWith('id') || key === 'history' || key === 'repeatEnd') return;
         if (Array.isArray(value)) {
             output.push(...getDiffArray(prevData[key], value, key));
             return;

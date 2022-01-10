@@ -12,11 +12,12 @@ import TableCell from '@mui/material/TableCell';
 import TableContainer from '@mui/material/TableContainer';
 import TableHead from '@mui/material/TableHead';
 import TableRow from '@mui/material/TableRow';
+import dayjs from 'dayjs';
 
 /**
  * The popup that shows the edits of a single edit history entry for a resource.
  * This component is wrapped in a Dialog component.
- * 
+ *
  * @param {object} props React props object
  * @param {History} props.history List of all events for the current day
  * @param {string} props.name Name of the resource
@@ -25,15 +26,18 @@ import TableRow from '@mui/material/TableRow';
  */
 const HistoryPopup = (props) => {
     // Function to parse certain values from the history object
-    // TODO: Extend this to null values and date values
-    const showValue = (value) =>
-        typeof value === 'boolean'
-            ? value
-                ? 'True'
-                : 'False'
-            : typeof value !== 'string'
-            ? JSON.stringify(value)
-            : value;
+    const showValue = (value) => {
+        switch (typeof value) {
+            case 'boolean':
+                return value ? 'True' : 'False';
+            case 'object':
+                return value ? JSON.stringify(value) : '[no value]';
+            case 'number':
+                return value > 1000000000000 ? dayjs(value).format('MMM D, YYYY @ h:mma') : value;
+            default:
+                return value;
+        }
+    };
 
     return (
         <Dialog aria-labelledby="history-popup-title" open={props.open} onClose={props.close} fullWidth>
