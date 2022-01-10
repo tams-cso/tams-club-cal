@@ -88,7 +88,9 @@ const EventDisplay = (props) => {
                                         padding: { lg: 1, xs: 0 },
                                     }}
                                 >
-                                    <Typography sx={eventTypeStyle}>{capitalize(event.type)}</Typography>
+                                    <Typography sx={eventTypeStyle}>
+                                        {event.type === 'event' ? 'Event' : 'Signup/Deadline'}
+                                    </Typography>
                                     <Typography variant="h2" component="h1">
                                         {event.name}
                                     </Typography>

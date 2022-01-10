@@ -25,7 +25,7 @@ const ClubTable = (props) => {
         <Loading />
     ) : (
         <TableContainer component={Paper} sx={{ marginBottom: 4 }}>
-            <Table aria-label="club table">
+            <Table aria-label="club table" sx={{ width: { xs: '300%' } }}>
                 <TableHead>
                     <TableRow>
                         <TableCell>Cover</TableCell>
