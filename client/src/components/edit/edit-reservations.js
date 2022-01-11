@@ -7,7 +7,7 @@ import Cookies from 'universal-cookie';
 import { openPopup } from '../../redux/actions';
 import { darkSwitchGrey, getParams, redirect } from '../../functions/util';
 import { Reservation } from '../../functions/entries';
-import { getRepeatingReservation, getReservation, postReservation, putReservation } from '../../functions/api';
+import { getOverlappingReservations, getRepeatingReservation, getReservation, postReservation, putReservation } from '../../functions/api';
 
 import Typography from '@mui/material/Typography';
 import Box from '@mui/material/Box';
@@ -136,6 +136,28 @@ const EditReservations = () => {
         const startTime = data.allDay ? data.date.startOf('day').valueOf() : data.start.valueOf();
         const endTime = data.allDay || data.noEnd ? startTime : data.end.valueOf();
 
+        // Start the upload process to account for overlap check latency
+        setBackdrop(true);
+
+        // Check to make sure that the reservation is not already taken
+        const overlaps = await getOverlappingReservations(data.location, startTime, endTime);
+        if (overlaps.status !== 200) {
+            dispatch(
+                openPopup(
+                    'There was an error checking reservation time. Please check your connection and try again.',
+                    4
+                )
+            );
+            setBackdrop(false);
+            return;
+        }
+        if (overlaps.data.length !== 0 && overlaps.data[0].id !== reservation.id) {
+            console.log(overlaps.data);
+            dispatch(openPopup('There is already a reservation during that time!', 3));
+            setBackdrop(false);
+            return;
+        }
+
         // Create the reservation object from the data
         const newReservation = new Reservation(
             reservation.id,
@@ -150,9 +172,6 @@ const EditReservations = () => {
             data.repeating ? data.repeatEnd.valueOf() : null,
             reservation.history
         );
-
-        // Start the upload process
-        setBackdrop(true);
 
         // If the reservation ID is null, create the event, otherwise update it
         const res = id === null ? await postReservation(newReservation) : await putReservation(newReservation, id);

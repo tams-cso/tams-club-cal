@@ -5,6 +5,7 @@ const Event = require('../models/event');
 const Club = require('../models/club');
 const Volunteering = require('../models/volunteering');
 const Reservation = require('../models/reservation');
+const RepeatingReservation = require('../models/repeating-reservation');
 const router = express.Router();
 
 /**
@@ -43,8 +44,10 @@ router.get('/', async (req, res, next) => {
             else if (h.resource === 'clubs') resourceObj = await Club.findOne({ id: h.editId });
             else if (h.resource === 'volunteering') resourceObj = await Volunteering.findOne({ id: h.editId });
             else if (h.resource === 'reservations') resourceObj = await Reservation.findOne({ id: h.editId });
+            else if (h.resource === 'repeating-reservations')
+                resourceObj = await RepeatingReservation.findOne({ id: h.editId });
             const name = !resourceObj ? 'N/A' : resourceObj.name;
-            const first = !resourceObj ? false : (resourceObj.history[0] === h.id);
+            const first = !resourceObj ? false : resourceObj.history[0] === h.id;
             const editor = await parseEditor(h.editor);
             return { name, editor, first };
         })
@@ -66,6 +69,7 @@ router.get('/:resource/:id', async (req, res, next) => {
     else if (req.params.resource === 'clubs') resourceObj = await Club.findOne({ id });
     else if (req.params.resource === 'volunteering') resourceObj = await Volunteering.findOne({ id });
     else if (req.params.resource === 'reservations') resourceObj = await Reservation.findOne({ id });
+    else if (req.params.resource === 'repeating-reservations') resourceObj = await RepeatingReservation.findOne({ id });
     else {
         sendError(res, 400, 'Invalid resource value. Expects one of: [events, clubs, volunteering, reservations]');
         return;

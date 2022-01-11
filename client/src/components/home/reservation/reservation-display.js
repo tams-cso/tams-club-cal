@@ -68,7 +68,7 @@ const ReservationDisplay = () => {
                     <Loading />
                 )
             ) : (
-                <Container maxWidth={false} sx={{ maxWidth: { md: '75%', xs: '100%' } }}>
+                <Container maxWidth={false} sx={{ maxWidth: { lg: '50%', md: '75%', xs: '100%' } }}>
                     <Title resource="reservations" name={reservation.name} />
                     <AddButton
                         color="secondary"
@@ -135,7 +135,7 @@ const ReservationDisplay = () => {
                                     <Divider orientation="vertical" flexItem />
                                 </Hidden>
                                 <Paragraph
-                                    text={reservation.description}
+                                    text={reservation.description === '' ? '[No Description]' : reservation.description}
                                     sx={{
                                         width: { lg: '50%', xs: '100%' },
                                         textAlign: 'left',

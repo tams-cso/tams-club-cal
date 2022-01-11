@@ -17,7 +17,7 @@ import AddButton from '../../shared/add-button';
  */
 const EventList = () => {
     const [eventList, setEventList] = useState(null);
-    const [eventComponentList, setEventComponentList] = useState(<Loading />);
+    const [eventComponentList, setEventComponentList] = useState(<Loading sx={{ marginBottom: 4 }} />);
 
     // Fetch the events list on mount from database
     useEffect(async () => {
@@ -25,7 +25,7 @@ const EventList = () => {
         const events = await getEventList();
         if (events.status !== 200) {
             setEventComponentList(
-                <Loading error>
+                <Loading error sx={{ marginBottom: 4 }}>
                     Could not get event data. Please reload the page or contact the site manager to fix this issue.
                 </Loading>
             );
@@ -33,7 +33,7 @@ const EventList = () => {
         }
 
         // Sort the events by date and filter out all elements
-        // that do not start on the same date
+        // that do not start on or after the current date
         const filteredList = events.data
             .sort((a, b) => a.start - b.start)
             .filter((e) => e.start >= dayjs().startOf('day'));
@@ -45,10 +45,11 @@ const EventList = () => {
     // group the events by date, and create a list of EventListSections,
     // each containing a list of events for that day.
     useEffect(() => {
-        // Make sure event list is not empty/null
+        // Make sure event list is not null
         if (eventList === null) return;
-        else if (eventList.length === 0) {
-            // Set text if the eventList is null
+
+        // Set text if the eventList is empty
+        if (eventList.length === 0) {
             setEventComponentList(
                 <Typography
                     variant="h6"

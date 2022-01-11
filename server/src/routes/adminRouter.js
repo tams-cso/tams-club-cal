@@ -8,6 +8,8 @@ const Club = require('../models/club');
 const Volunteering = require('../models/volunteering');
 const Reservation = require('../models/reservation');
 const History = require('../models/history');
+const RepeatingReservation = require('../models/repeating-reservation');
+const { deleteClubImages } = require('../functions/images');
 
 /**
  * GET /admin/resoruces/<resource>/<field>/<search>/[page]
@@ -63,6 +65,16 @@ router.get('/resources/:resource/:field/:search/:page?', async (req, res) => {
             res.send(reservations);
             break;
         }
+        case 'repeating-reservations': {
+            const repeatingRes = getAll
+                ? await RepeatingReservation.find({})
+                      .limit(pageLength)
+                      .skip((page || 0) * pageLength)
+                      .exec()
+                : await RepeatingReservation.find({ [req.params.field]: req.params.search });
+            res.send(repeatingRes);
+            break;
+        }
         default:
             sendError(res, 400, 'Invalid resource field!');
             return;
@@ -71,14 +83,11 @@ router.get('/resources/:resource/:field/:search/:page?', async (req, res) => {
 
 /**
  * DELETE /admin/resources/<resource>/<id>
- * 
+ *
  * Deletes the given resource by id. This will also delete the related history entries.
  * Additionally, if the resource is an event, then the related reservation will also be deleted.
  */
 router.delete('/resources/:resource/:id', async (req, res) => {
-    console.log(req.headers);
-    console.log(req.params);
-
     // Check to see if header is there
     if (req.headers.authorization && req.headers.authorization.startsWith('Bearer ')) {
         const validHeader = await validateHeader(req.headers.authorization.substring(7));
@@ -95,9 +104,12 @@ router.delete('/resources/:resource/:id', async (req, res) => {
                     break;
                 }
                 case 'clubs': {
+                    const club = await Club.findOne({ id: req.params.id });
                     const deleteRes = await Club.deleteOne({ id: req.params.id });
+                    const deleteImageRes = await deleteClubImages(club);
+                    if (deleteImageRes !== 1) club.save(); // TODO: idk if this actually works lol
                     await History.deleteMany({ resource: 'clubs', id: req.params.id });
-                    if (deleteRes.deletedCount === 1) res.send({ ok: 1 });
+                    if (deleteRes.deletedCount === 1 && deleteImageRes === 1) res.send({ ok: 1 });
                     else sendError(res, 500, 'Could not delete club');
                     break;
                 }
@@ -109,10 +121,17 @@ router.delete('/resources/:resource/:id', async (req, res) => {
                     break;
                 }
                 case 'reservations': {
-                    await Reservation.deleteOne({ id: req.params.id });
+                    const deleteRes = await Reservation.deleteOne({ id: req.params.id });
                     await History.deleteMany({ resource: 'reservations', id: req.params.id });
                     if (deleteRes.deletedCount === 1) res.send({ ok: 1 });
                     else sendError(res, 500, 'Could not delete reservation');
+                    break;
+                }
+                case 'repeating-reservations': {
+                    const deleteRes = await RepeatingReservation.deleteOne({ id: req.params.id });
+                    await History.deleteMany({ resource: 'repeating-reservations', id: req.params.id });
+                    if (deleteRes.deletedCount === 1) res.send({ ok: 1 });
+                    else sendError(res, 500, 'Could not delete repeating reservation');
                     break;
                 }
                 default:
