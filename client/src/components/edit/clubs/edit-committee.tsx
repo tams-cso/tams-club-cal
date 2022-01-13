@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import type { Control, FieldValues, UseFormRegister, UseFormSetValue } from 'react-hook-form';
 import { Committee } from '../../../entries';
 
 import ListItem from '@mui/material/ListItem';
@@ -8,18 +9,30 @@ import LinkInputList from './link-input-list';
 import TrashCan from './trash-can';
 import ControlledTextField from '../shared/controlled-text-field';
 
+interface EditCommitteeProps {
+    /** React hook form controller */
+    control: Control<FieldValues, object>;
+
+    /** React hook form register function */
+    register: UseFormRegister<FieldValues>;
+
+    /** React hook form set value function */
+    setValue: UseFormSetValue<FieldValues>;
+    
+    /** React hook form error state */
+    errors: object
+    
+    /** Index of the link in the array */
+    index: number
+    
+    /** Default committee info */
+    committee: Committee
+}
+
 /**
  * Displays a card with all fields to edit a committee
- *
- * @param {object} props React props object
- * @param {*} props.control React hook form controller
- * @param {Function} props.register React hook form register function
- * @param {Function} props.setValue React hook form set value function
- * @param {object} props.errors React hook form error state
- * @param {number} props.index Index of the link in the array
- * @param {Committee} props.committee Default committee info
  */
-const EditCommitttee = (props) => {
+const EditCommitttee = (props: EditCommitteeProps) => {
     const namePrefix = `committees.${props.index}.`;
     const [deleted, setDeleted] = useState(false);
 

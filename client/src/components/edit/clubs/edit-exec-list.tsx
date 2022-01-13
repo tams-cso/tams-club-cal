@@ -1,14 +1,14 @@
 import React, { useEffect, useState } from 'react';
 import type { Control, FieldValues, UseFormRegister, UseFormSetValue } from 'react-hook-form';
 import type { Exec } from '../../../entries';
-import EditExec from './edit-exec';
+import { createExec, createPopupEvent } from '../../../util';
 
 import List from '@mui/material/List';
 import Button from '@mui/material/Button';
 import Popup from '../../shared/popup';
-import { createExec, createPopupEvent } from '../../../util';
+import EditExec from './edit-exec';
 
-interface EditExecList {
+interface EditExecListProps {
     /** React hook form controller */
     control: Control<FieldValues, object>;
 
@@ -35,7 +35,7 @@ interface EditExecList {
  * Displays the list of EditExec components.
  * This component also supports adding more execs.
  */
-const EditExecList = (props) => {
+const EditExecList = (props: EditExecListProps) => {
     const [listItems, setListItems] = useState([]);
     const [addedList, setAddedList] = useState([]);
     const [popupEvent, setPopupEvent] = useState(null);

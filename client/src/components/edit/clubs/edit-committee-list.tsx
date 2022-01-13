@@ -1,22 +1,34 @@
 import React, { useEffect, useState } from 'react';
+import type { Control, FieldValues, UseFormRegister, UseFormSetValue } from 'react-hook-form';
+import { createCommittee } from '../../../util';
+import type { Committee } from '../../../entries';
 
 import List from '@mui/material/List';
 import Button from '@mui/material/Button';
 import EditCommitttee from './edit-committee';
-import { Committee } from '../../../entries';
+
+interface EditCommitteeListProps {
+    /** React hook form controller */
+    control: Control<FieldValues, object>;
+
+    /** React hook form register function */
+    register: UseFormRegister<FieldValues>;
+
+    /** React hook form set value function */
+    setValue: UseFormSetValue<FieldValues>;
+
+    /** React hook form error state */
+    errors: object;
+
+    /** List of links or empty array. The component will not render if null */
+    committeeList: Committee[];
+}
 
 /**
  * Displays the list of EditCommittee components.
  * This component also supports adding more committees.
- * 
- * @param {object} props React props object
- * @param {*} props.control React hook form controller
- * @param {Function} props.register React hook form register function
- * @param {Function} props.setValue React hook form set value function
- * @param {object} props.errors React hook form error state
- * @param {Committee[]} props.committeeList List of links or empty array. The component will not render if null
  */
-const EditCommitteeList = (props) => {
+const EditCommitteeList = (props: EditCommitteeListProps) => {
     const [listItems, setListItems] = useState([]);
     const [addedList, setAddedList] = useState([]);
 
@@ -43,7 +55,7 @@ const EditCommitteeList = (props) => {
 
     // Add the new committee to the list
     const addItem = () => {
-        setAddedList([...addedList, new Committee()]);
+        setAddedList([...addedList, createCommittee()]);
     };
 
     return (
