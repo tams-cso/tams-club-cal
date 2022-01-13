@@ -18,9 +18,7 @@ const BACKEND_URL =
         ? 'https://dev.tams.club'
         : process.env.NODE_ENV === 'production'
         ? 'https://api.tams.club'
-        : process.env.NEXT_PUBLIC_BACKEND === 'localhost'
-        ? 'http://localhost:5000'
-        : '';
+        : 'http://localhost:5000';
 
 const CDN_URL =
     process.env.NEXT_PUBLIC_BACKEND === 'staging' || process.env.NEXT_PUBLIC_BACKEND === 'localhost'
