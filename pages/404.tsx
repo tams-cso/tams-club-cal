@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React from 'react';
 import { darkSwitchGrey } from '../src/util';
 
 import Container from '@mui/material/Container';
@@ -24,7 +24,7 @@ const PageNotFound = () => {
 
     return (
         <Container sx={{ paddingTop: { md: 12, xs: 2 } }}>
-            <Paper sx={{ paddingBottom: 3 }}>
+            <Paper sx={{ py: 3 }}>
                 <Typography
                     variant="h1"
                     sx={{
