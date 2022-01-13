@@ -1,3 +1,0 @@
-# LinkInput
-
-**Category**: Component

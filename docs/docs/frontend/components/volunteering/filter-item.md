@@ -1,3 +1,0 @@
-# FilterItem
-
-**Category**: Component

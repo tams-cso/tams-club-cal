@@ -1,3 +1,0 @@
-# ControlledCheckbox
-
-**Category**: Component

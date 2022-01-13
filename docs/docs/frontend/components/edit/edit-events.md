@@ -1,3 +1,0 @@
-# EditEvents
-
-**Category**: Page

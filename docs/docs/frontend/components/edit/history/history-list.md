@@ -1,3 +1,0 @@
-# HistoryList
-
-**Category**: Component

@@ -1,3 +1,0 @@
-# VolunteeringList
-
-**Category**: Page (List)

@@ -1,3 +1,0 @@
-# UploadBackdrop
-
-**Category**: Component

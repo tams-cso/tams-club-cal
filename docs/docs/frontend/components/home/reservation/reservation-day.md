@@ -1,3 +1,0 @@
-# ReservationDay
-
-**Category**: Component

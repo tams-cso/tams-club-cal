@@ -1,3 +1,0 @@
-# MenuLink
-
-**Category**: Component

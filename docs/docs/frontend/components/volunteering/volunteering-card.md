@@ -1,3 +1,0 @@
-# VolunteeringCard
-
-**Category**: Component

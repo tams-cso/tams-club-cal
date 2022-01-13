@@ -1,3 +1,0 @@
-# ControlledSelect
-
-**Category**: Component

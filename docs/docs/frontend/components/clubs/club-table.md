@@ -1,3 +1,0 @@
-# ClubTable
-
-**Category**: Page (Table)

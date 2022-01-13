@@ -1,3 +1,0 @@
-# DateInput
-
-**Category**: Component

@@ -1,3 +1,0 @@
-# ClubList
-
-**Category**: Page (List)

@@ -1,3 +1,0 @@
-# EditReservations
-
-**Category**: Page

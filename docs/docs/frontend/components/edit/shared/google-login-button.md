@@ -1,3 +1,0 @@
-# GoogleLoginButton
-
-**Category**: Component

@@ -1,3 +1,0 @@
-# CalendarEvent
-
-**Category**: Component

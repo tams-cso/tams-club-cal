@@ -1,3 +1,0 @@
-# EditLogin
-
-**Category**: Page

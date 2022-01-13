@@ -1,3 +1,0 @@
-# VolunteeringTable
-
-**Category**: Page (Table)

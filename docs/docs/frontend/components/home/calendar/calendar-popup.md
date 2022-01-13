@@ -1,3 +1,0 @@
-# CalendarPopup
-
-**Category**: Component

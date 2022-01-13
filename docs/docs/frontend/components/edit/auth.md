@@ -1,3 +1,0 @@
-# Auth
-
-**Category**: Page

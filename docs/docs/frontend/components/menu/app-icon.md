@@ -1,3 +1,0 @@
-# AppIcon
-
-**Category**: Component
