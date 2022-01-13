@@ -281,10 +281,10 @@ export interface HistoryItemData {
  */
 export interface Editor {
     /** The unique UUIDv4 for the user */
-    id: string;
+    id?: string;
 
     /** The ip address of the editor */
-    ip: string;
+    ip?: string;
 }
 
 /** An object containing a specific edited field */
@@ -293,10 +293,10 @@ export interface Field {
     key: string;
 
     /** The old value of the field */
-    oldValue: object;
+    oldValue: object | string;
 
     /** The new value of the field */
-    newValue: object;
+    newValue: object | string;
 }
 
 /** Return object for fetch requests */

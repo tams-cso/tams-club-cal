@@ -51,7 +51,7 @@ const Reservations = ({ now, reservationList, error }: InferGetServerSidePropsTy
     // This will create a table of reservations
     useEffect(() => {
         // If the reservation list is null, do nothing
-        if (reservationList === null) return;
+        if (error) return;
 
         // Add repeating events to the reservation list
         // Since repeating reservation will repeat weekly, we simply just add one instance of
@@ -172,6 +172,18 @@ const Reservations = ({ now, reservationList, error }: InferGetServerSidePropsTy
         // Otherwise, redirect the user to the new week
         router.push(`/events/reservations/${week.format('YYYY/M/D')}`);
     }, [week]);
+
+    // Send error if cannot get data
+    if (error) {
+        return (
+            <HomeBase noDrawer>
+                <Loading error sx={{ marginBottom: 4 }}>
+                    Could not get reservation list. Please reload the page or contact the site manager to fix this
+                    issue.
+                </Loading>
+            </HomeBase>
+        );
+    }
 
     return (
         <HomeBase noDrawer>

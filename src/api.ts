@@ -5,7 +5,6 @@ import type {
     Event,
     Feedback,
     FetchResponse,
-    History,
     HistoryItemData,
     HistoryListData,
     Reservation,
@@ -272,7 +271,11 @@ export async function putReservation(reservation: Reservation, id: string): Prom
  * @param start UTC millisecond start time to search
  * @param end UTC millisecond end time to search
  */
-export async function getOverlappingReservations(location: string, start: number, end: number): Promise<ListFetchResponse<Reservation>> {
+export async function getOverlappingReservations(
+    location: string,
+    start: number,
+    end: number
+): Promise<ListFetchResponse<Reservation>> {
     return getRequest(`/reservations/search/${location}/${start}/${end}`) as Promise<ListFetchResponse<Reservation>>;
 }
 

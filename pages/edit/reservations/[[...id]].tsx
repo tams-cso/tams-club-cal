@@ -148,7 +148,7 @@ const EditReservations = ({
 
     // Returns the user back to the reservation display page
     const back = () => {
-        router.push(id ? `/reservations/${id}${repeating ? '?repeating=true' : ''}` : '/?view=reservation');
+        router.push(id ? `/events/reservations/view/${id}${repeating ? '?repeating=true' : ''}` : '/?view=reservation');
     };
 
     // On load
