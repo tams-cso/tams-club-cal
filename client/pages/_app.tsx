@@ -44,6 +44,11 @@ export default function MyApp(props: MyAppProps) {
         }
     }, []);
 
+    useEffect(() => {
+        const cookies = new Cookies();
+        cookies.set('dark', dark, { sameSite: 'strict', path: '/' });
+    }, [dark]);
+
     return (
         <CacheProvider value={emotionCache}>
             <Head>
