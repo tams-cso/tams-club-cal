@@ -1,61 +1,9 @@
-const { Document } = require('mongoose');
-const { Request } = require('express');
-const uuid = require('uuid');
-
-const statusList = require('../files/status.json');
-const envList = require('../files/env.json');
-const History = require('../models/history');
-const User = require('../models/user');
-
-/**
- * Checks that all the neccessary environmental variables
- * are defined before running the app.
- * The function will throw an error and exit the app if
- * a variable is missing.
- */
-function checkEnv() {
-    envList.forEach((e) => {
-        if (process.env[e] === undefined) {
-            console.error(`ERROR: The ${e} environmental variable was not defined.`);
-            process.exit(1);
-        }
-    });
-}
-
-/**
- * Sends an error with the provided status
- * (see: https://httpstatuses.com/) and error message
- *
- * @param {import("express").Response} res The express response object
- * @param {number} status The error status code
- * @param {string} message The message to send the user
- */
-function sendError(res, status, message) {
-    res.status(status);
-    res.send({
-        status,
-        statusMessage: `${status} ${statusList[status]}`,
-        error: message,
-    });
-}
-
-/**
- * Creates and returns a new UUIDv4
- * @returns {string} UUIDv4
- */
-function newId() {
-    return uuid.v4();
-}
-
-/**
- * Extracts the IP address from the header of the express request object
- *
- * @param {Request} req Express request object
- * @returns {string} IP address of the user
- */
-function getIp(req) {
-    return req.headers['x-real-ip'] || req.ip;
-}
+import { Request } from 'express';
+import { Document } from 'mongoose';
+import History from '../models/history';
+import User from '../models/user';
+import type { Editor, Field, ClubObject } from './types';
+import { getIp } from './util';
 
 /**
  * Creates the editor object, where it will first save the ID, and if not avaliable, then it
@@ -64,7 +12,7 @@ function getIp(req) {
  * @param {Request} req Express request object
  * @returns {Promise<object>} Returns { id, ip } with only one of them null, where id takes priority
  */
-async function getEditor(req) {
+async function getEditor(req: Request): Promise<Editor> {
     const authorization = req.headers['authorization'];
     const token = authorization ? await User.findOne({ token: authorization.substring(7) }) : null;
     if (token) return { id: token.id, ip: null };
@@ -76,18 +24,24 @@ async function getEditor(req) {
  * If prevData is not defined, it will simply convert the fields of the data
  * passed in to a key/value pair, or else it will run the diff between the
  * previous and new data (in req.body).
- * // TODO: Should this be renamed to createHistory?
  *
- * @param {Request} req Express request object
- * @param {Document} data Resource data (either new data or previous data depending on "isNew")
- * @param {string} resource Resource name
- * @param {string} id UUIDv4 for the resource
- * @param {string} historyId UUIDv4 for the history object
- * @param {boolean} [isNew] True if a new resource (default: true)
- * @param {object} [club] Will use club object instead of req.body to get diff if defined
- * @returns {Promise<Document>} The history document
+ * @param req Express request object
+ * @param data Resource data (either new data or previous data depending on "isNew")
+ * @param resource Resource name
+ * @param id UUIDv4 for the resource
+ * @param historyId UUIDv4 for the history object
+ * @param isNew True if a new resource (default: true)
+ * @param club Will use club object instead of req.body to get diff if defined
  */
-async function createNewHistory(req, data, resource, id, historyId, isNew = true, club) {
+export async function createHistory(
+    req: Request,
+    data: Document,
+    resource: string,
+    id: string,
+    historyId: string,
+    isNew: boolean = true,
+    club?: ClubObject
+): Promise<Document> {
     return new History({
         id: historyId,
         resource,
@@ -100,20 +54,19 @@ async function createNewHistory(req, data, resource, id, historyId, isNew = true
 
 /**
  * Checks for key; All fields that ends with "id" or are "history"/"repeatEnd" will be omitted.
- * @param {string} key Key to check
- * @returns {boolean} True if is a valid key
  */
-const isValidKey = (key) => !key.toLowerCase().endsWith('id') && key !== 'history' && key !== 'repeatEnd';
+const isValidKey = (key: string) => !key.toLowerCase().endsWith('id') && key !== 'history' && key !== 'repeatEnd';
+
+// Define types to be used for history object manipulation
+type HistoryData = object | HistoryArrayData;
+type HistoryArrayData = (HistoryData | HistoryArrayData)[];
 
 /**
  * Creates a history "fields" object from a created object.
  * All fields that start with _ or is "id"/"history" will be omitted.
  * This will simply map all key value pairs to "keys" and "newValue".
- *
- * @param {object} data Data object
- * @returns {object} History object split into keys and "newValue". "oldValue" will simply be null
  */
-function objectToHistoryObject(data) {
+function objectToHistoryObject(data: HistoryData): Field[] {
     const parsedFields = Object.entries(data).map(([key, value]) => ({
         key,
         oldValue: null,
@@ -123,18 +76,12 @@ function objectToHistoryObject(data) {
 }
 
 /**
- * Creates a history "fields" object from a created object.
- *
  * This will compare the previous data with the current data and save all changes.
  * If you look closely, this forms a recursive function with getDiffArray and will
  * loop through all fields in the object.
- *
- * @param {object} prevData Previous data object
- * @param {object} data Data object
- * @returns {object} History fields object
  */
-function getDiff(prevData, data) {
-    let output = [];
+function getDiff(prevData: HistoryData, data: HistoryData): Field[] {
+    const output: Field[] = [];
     Object.entries(data).forEach(([key, value]) => {
         if (prevData[key] === value) return;
         if (!isValidKey(key)) return;
@@ -168,8 +115,8 @@ function getDiff(prevData, data) {
  * @param {string} key The name of the key of this array
  * @returns {object} History fields object
  */
-function getDiffArray(prevData, data, key) {
-    const output = [];
+function getDiffArray(prevData: HistoryArrayData, data: HistoryArrayData, key: string): Field[] {
+    const output: Field[] = [];
     for (let i = 0; i < prevData.length && i < data.length; i++) {
         if (i < prevData.length && i >= data.length)
             output.push({ key: `${key}[${i}]`, oldValue: prevData[i], newValue: '[deleted]' });
@@ -177,7 +124,10 @@ function getDiffArray(prevData, data, key) {
             output.push({ key: `${key}[${i}]`, oldValue: null, newValue: data[i] });
         else {
             if (prevData[i] === data[i]) continue;
-            if (Array.isArray(data[i])) output.push(...getDiffArray(prevData[i], data[i], `${key}[${i}]`));
+            if (Array.isArray(data[i]))
+                output.push(
+                    ...getDiffArray(prevData[i] as HistoryArrayData, data[i] as HistoryArrayData, `${key}[${i}]`)
+                );
             else if (typeof data[i] === 'object') {
                 const obj = getDiff(prevData[i], data[i]);
                 output.push(...obj.map((o) => ({ ...o, key: `${key}[${i}].${o.key}` })));
@@ -195,11 +145,8 @@ function getDiffArray(prevData, data, key) {
 /**
  * Will parse the editor object into a readable string depending
  * on the stored values. Will also display "N/A" for invalid objects or values
- *
- * @param {Editor} editor The editor object
- * @returns {Promise<string>} The parsed editor to display
  */
-async function parseEditor(editor) {
+export async function parseEditor(editor: Editor): Promise<string> {
     if (!editor) return 'N/A';
     if (editor.id === null) return editor.ip;
 
@@ -207,5 +154,3 @@ async function parseEditor(editor) {
     if (!editorRes) return 'N/A';
     return editorRes.name;
 }
-
-module.exports = { checkEnv, sendError, newId, getIp, getEditor, createNewHistory, parseEditor };

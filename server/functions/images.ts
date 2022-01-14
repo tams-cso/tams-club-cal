@@ -1,9 +1,10 @@
-const AWS = require('aws-sdk');
-const sharp = require('sharp');
-const { Request } = require('express');
-const { newId } = require('./util');
-AWS.config.update({ region: 'us-east-1' });
+import AWS from 'aws-sdk';
+import sharp from 'sharp';
+import type { ClubObject, MulterFile, RequestWithClubFiles } from './types';
+import { newId } from './util';
 
+// Connect to AWS S3 instance
+AWS.config.update({ region: 'us-east-1' });
 const s3 = new AWS.S3({
     apiVersion: '2006-03-01',
     accessKeyId: process.env.AWS_ACCESS_ID,
@@ -16,19 +17,17 @@ const BUCKET = `${
 /**
  * Will compress, resize, and upload all images passed to a club upload.
  * This will return an object with the string urls of the coverImgThumbnail,
- *  coverImg, and array of exec imgs.
- *
- * @param {Request} req Express request object
+ * coverImg, and array of exec imgs.
  */
-async function processClubUpload(req) {
-    const cover = req.files.cover ? req.files.cover[0] : '';
-    const execs = req.files.exec ? req.files.exec : '';
-    const club = JSON.parse(req.body.data);
-    const execPhotos = JSON.parse(req.body.execPhotos);
+export async function processClubUpload(req: RequestWithClubFiles) {
+    const cover = req.files.cover ? req.files.cover[0] : null;
+    const execs = req.files.exec ? req.files.exec : null;
+    const club: ClubObject = JSON.parse(req.body.data);
+    const execPhotos: boolean[] = JSON.parse(req.body.execPhotos);
 
-    let coverSrc = club.coverImg;
-    let coverThumbSrc = club.coverImgThumbnail;
-    let execsSrc = club.execs.map((e) => e.img || '');
+    let coverSrc: string = club.coverImg;
+    let coverThumbSrc: string = club.coverImgThumbnail;
+    let execsSrc: string[] = club.execs.map((e) => e.img || '');
 
     if (cover) {
         const compressedCover = await compressImage(cover, 1800);
@@ -40,11 +39,10 @@ async function processClubUpload(req) {
     }
 
     if (execs && execs.length > 0) {
-        let count = 0;
-        const rawExecList = execPhotos.map((e, i) => (!e ? null : execs[count++]));
+        const rawExecList = execPhotos.map((e: boolean, i: number) => (!e ? null : execs[i]));
         const compressedExecs = await Promise.all(
-            rawExecList.map(async (e) => {
-                return await compressImage(e);
+            rawExecList.map(async (e: MulterFile) => {
+                return await compressImage(e, 300);
             })
         );
         execsSrc = await Promise.all(
@@ -62,18 +60,19 @@ async function processClubUpload(req) {
 
 /**
  * Compresses and resizes image to webp format
- *
- * @param {object} input Input buffer
- * @param {number} width Width to resize to
- * @returns {Promise<Buffer>} Resized image
  */
-async function compressImage(input, width) {
+async function compressImage(input: MulterFile, width: number): Promise<Buffer> {
     if (!input) return null;
     return sharp(input.buffer).resize(width).webp().toBuffer();
 }
 
-async function uploadImage(resource, blob) {
-    if (!blob) return null;
+/**
+ * Uploads an images to a specified resource given a blob.
+ * 
+ * @returns The ID of the image
+ */
+async function uploadImage(resource: string, buffer: Buffer): Promise<string> {
+    if (!buffer) return null;
 
     const id = newId();
 
@@ -82,7 +81,7 @@ async function uploadImage(resource, blob) {
             .putObject({
                 Bucket: BUCKET,
                 Key: `${resource}/${id}.webp`,
-                Body: blob,
+                Body: buffer,
             })
             .promise();
         return `${resource}/${id}.webp`;
@@ -92,7 +91,10 @@ async function uploadImage(resource, blob) {
     }
 }
 
-async function deletePrevious(previousSrc) {
+/**
+ * Deletes the previous image that was used
+ */
+async function deletePrevious(previousSrc: string): Promise<1> {
     if (!previousSrc) return null;
     try {
         await s3
@@ -108,7 +110,10 @@ async function deletePrevious(previousSrc) {
     }
 }
 
-async function deleteClubImages(club) {
+/**
+ * Deletes all images from a club object, given the club
+ */
+export async function deleteClubImages(club: ClubObject) {
     const urls = [];
     if (club.coverImg) urls.push(club.coverImg);
     if (club.coverImgThumbnail) urls.push(club.coverImgThumbnail);
@@ -129,5 +134,3 @@ async function deleteClubImages(club) {
         return null;
     }
 }
-
-module.exports = { processClubUpload, deleteClubImages };

@@ -1,6 +1,8 @@
-const express = require('express');
-const { sendError, newId, createNewHistory } = require('../functions/util');
-const Volunteering = require('../models/volunteering');
+import express from 'express';
+import type { Request, Response } from 'express';
+import { sendError, newId } from '../functions/util';
+import { createHistory } from '../functions/edit-history';
+import Volunteering from '../models/volunteering';
 const router = express.Router();
 
 /**
@@ -8,7 +10,7 @@ const router = express.Router();
  *
  * Sends the list of all volunteering opportunities
  */
-router.get('/', async (req, res, next) => {
+router.get('/', async (req: Request, res: Response) => {
     const volunteering = await Volunteering.find({});
     res.send(volunteering);
 });
@@ -18,7 +20,7 @@ router.get('/', async (req, res, next) => {
  *
  * Gets a volunteering opportunity by id
  */
-router.get('/:id', async (req, res, next) => {
+router.get('/:id', async (req: Request, res: Response) => {
     const id = req.params.id;
     const volunteering = await Volunteering.findOne({ id }).exec();
     if (volunteering) res.send(volunteering);
@@ -30,7 +32,7 @@ router.get('/:id', async (req, res, next) => {
  *
  * Creates a new event
  */
-router.post('/', async (req, res, next) => {
+router.post('/', async (req: Request, res: Response) => {
     const historyId = newId();
     const id = newId();
 
@@ -42,7 +44,7 @@ router.post('/', async (req, res, next) => {
         filters: req.body.filters,
         history: [historyId],
     });
-    const newHistory = await createNewHistory(req, newVolunteering, 'volunteering', id, historyId);
+    const newHistory = await createHistory(req, newVolunteering, 'volunteering', id, historyId);
 
     const volunteeringRes = await newVolunteering.save();
     const historyRes = await newHistory.save();
@@ -53,7 +55,7 @@ router.post('/', async (req, res, next) => {
 /**
  * PUT /volunteering/<id>
  */
-router.put('/:id', async (req, res, next) => {
+router.put('/:id', async (req: Request, res: Response) => {
     const id = req.params.id;
     const prev = await Volunteering.findOne({ id }).exec();
     if (!prev) {
@@ -62,7 +64,7 @@ router.put('/:id', async (req, res, next) => {
     }
 
     const historyId = newId();
-    const newHistory = await createNewHistory(req, prev, 'volunteering', id, historyId, false);
+    const newHistory = await createHistory(req, prev, 'volunteering', id, historyId, false);
     const volunteeringRes = await Volunteering.updateOne(
         { id },
         {
@@ -77,8 +79,8 @@ router.put('/:id', async (req, res, next) => {
     );
     const historyRes = await newHistory.save();
 
-    if (volunteeringRes.n === 1 && historyRes === newHistory) res.send({ ok: 1 });
+    if (volunteeringRes.acknowledged && historyRes === newHistory) res.send({ ok: 1 });
     else sendError(res, 500, 'Unable to update volunteering opportunity in database.');
 });
 
-module.exports = router;
+export default router;

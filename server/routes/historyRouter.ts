@@ -1,11 +1,13 @@
-const express = require('express');
-const { sendError, parseEditor } = require('../functions/util');
-const History = require('../models/history');
-const Event = require('../models/event');
-const Club = require('../models/club');
-const Volunteering = require('../models/volunteering');
-const Reservation = require('../models/reservation');
-const RepeatingReservation = require('../models/repeating-reservation');
+import express from 'express';
+import type { Request, Response } from 'express';
+import { sendError } from '../functions/util';
+import { parseEditor } from '../functions/edit-history';
+import History from '../models/history';
+import Event from '../models/event';
+import Club from '../models/club';
+import Volunteering from '../models/volunteering';
+import Reservation from '../models/reservation';
+import RepeatingReservation from '../models/repeating-reservation';
 const router = express.Router();
 
 /**
@@ -20,7 +22,7 @@ const router = express.Router();
  *          the 50 edits preceeding the element given will be returned
  *          If null, will return the last 50 edits.
  */
-router.get('/', async (req, res, next) => {
+router.get('/', async (req: Request, res: Response) => {
     let history = null;
     if (req.query.start) {
         const prev = await History.findOne({ id: req.query.start });
@@ -61,7 +63,7 @@ router.get('/', async (req, res, next) => {
  * Gets the entire history of a single resource, given the
  * resource and id in the request parameters
  */
-router.get('/:resource/:id', async (req, res, next) => {
+router.get('/:resource/:id', async (req: Request, res: Response) => {
     const id = req.params.id;
 
     let resourceObj = null;
@@ -85,4 +87,4 @@ router.get('/:resource/:id', async (req, res, next) => {
     else sendError(res, 500, 'Could not fetch history list for the given resource');
 });
 
-module.exports = router;
+export default router;

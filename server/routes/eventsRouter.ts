@@ -1,9 +1,12 @@
-const express = require('express');
-const dayjs = require('dayjs');
-const { addToCalendar, updateCalendar } = require('../functions/gcal');
-const { sendError, newId, createNewHistory } = require('../functions/util');
-const { updateReservation, addReservation, deleteReservation } = require('../functions/event-reservations');
-const Event = require('../models/event');
+import express from 'express';
+import type { Request, Response } from 'express';
+import dayjs from 'dayjs';
+import { addToCalendar, updateCalendar } from '../functions/gcal';
+import { sendError, newId } from '../functions/util';
+import { updateReservation, addReservation, deleteReservation } from '../functions/event-reservations';
+import Event from '../models/event';
+import { createHistory } from '../functions/edit-history';
+
 const router = express.Router();
 
 /**
@@ -32,7 +35,7 @@ const router = express.Router();
  *               If defined start/end will be ignored. This parameter will be ignored
  *               if the firstEvent parameter is already defined
  */
-router.get('/', async (req, res, next) => {
+router.get('/', async (req: Request, res: Response) => {
     const count = Number(req.query.count) || 30;
     const start = Number(req.query.start) || new Date().valueOf();
     const end = Number(req.query.end) || null;
@@ -79,7 +82,7 @@ router.get('/', async (req, res, next) => {
  *
  * Gets an event by id
  */
-router.get('/:id', async (req, res, next) => {
+router.get('/:id', async (req: Request, res: Response) => {
     const id = req.params.id;
     const event = await Event.findOne({ id }).exec();
     if (event) res.send(event);
@@ -91,7 +94,7 @@ router.get('/:id', async (req, res, next) => {
  *
  * Creates a new event
  */
-router.post('/', async (req, res, next) => {
+router.post('/', async (req: Request, res: Response) => {
     try {
         // Create unique IDs for history and event
         const historyId = newId();
@@ -101,7 +104,7 @@ router.post('/', async (req, res, next) => {
         const eventId = await addToCalendar(req.body);
 
         // Create a reservation if reservationId is set to 1
-        const reservationId = req.body.reservationId === 1 ? await addReservation(id, req) : null;
+        const reservationId = req.body.reservationId === 1 ? await addReservation(req, res, id) : null;
 
         // Create the event with the IDs and event data
         const newEvent = new Event({
@@ -118,7 +121,7 @@ router.post('/', async (req, res, next) => {
             allDay: req.body.allDay,
             history: [historyId],
         });
-        const newHistory = await createNewHistory(req, newEvent, 'events', id, historyId);
+        const newHistory = await createHistory(req, newEvent, 'events', id, historyId);
 
         const eventRes = await newEvent.save();
         const historyRes = await newHistory.save();
@@ -135,7 +138,7 @@ router.post('/', async (req, res, next) => {
  *
  * Updates an event
  */
-router.put('/:id', async (req, res, next) => {
+router.put('/:id', async (req: Request, res: Response) => {
     try {
         const id = req.params.id;
         const prev = await Event.findOne({ id }).exec();
@@ -145,27 +148,27 @@ router.put('/:id', async (req, res, next) => {
         }
 
         // Update reservation, delete reservation (resId = -1), or add reservation (resId = 1)
-        // TODO: is there any way to make this section look nicer TwT
-        let reservationRes;
+        // TODO: is there any way to make this section look nicer TwT (and not return string | number)
+        let reservationRes: string | number;
         if (req.body.reservationId === -1) {
             reservationRes = await deleteReservation(prev.reservationId);
         } else if (prev.reservationId) {
             reservationRes = await updateReservation(prev.reservationId, req, res);
         } else if (req.body.reservationId === 1) {
-            reservationRes = await addReservation(id, req);
+            reservationRes = await addReservation(req, res, id);
         }
         if (reservationRes === -1) return;
 
         // Set the reservation ID to null if deleted, or the reservation ID if updated or added
         const reservationId =
             req.body.reservationId === -1 ? null : req.body.reservationId === 1 ? reservationRes : prev.reservationId;
-        
+
         // Set body resId for history
         req.body.reservationId = reservationId;
 
         // Update history and calendar
         const historyId = newId();
-        const newHistory = await createNewHistory(req, prev, 'events', id, historyId, false);
+        const newHistory = await createHistory(req, prev, 'events', id, historyId, false);
         const calendarRes = await updateCalendar(req.body, prev.eventId);
 
         // Update the event with the IDs and event data
@@ -188,7 +191,7 @@ router.put('/:id', async (req, res, next) => {
         );
         const historyRes = await newHistory.save();
 
-        if (calendarRes === 1 && eventRes.n === 1 && historyRes === newHistory) res.send({ ok: 1 });
+        if (calendarRes === 1 && eventRes.acknowledged && historyRes === newHistory) res.send({ ok: 1 });
         else sendError(res, 500, 'Unable to update event in database.');
     } catch (error) {
         console.error(error);
@@ -196,4 +199,4 @@ router.put('/:id', async (req, res, next) => {
     }
 });
 
-module.exports = router;
+export default router;

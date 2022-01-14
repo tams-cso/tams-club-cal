@@ -1,12 +1,13 @@
-const express = require('express');
-const { sendError, newId } = require('../functions/util');
-const Feedback = require('../models/feedback');
+import express from 'express';
+import type { Request, Response } from 'express';
+import { sendError, newId } from '../functions/util';
+import Feedback from '../models/feedback';
 const router = express.Router();
 
 /**
  * POST /feedback
  */
-router.post('/', async (req, res) => {
+router.post('/', async (req: Request, res: Response) => {
     try {
         const newFeedback = new Feedback({
             id: newId(),
@@ -24,4 +25,4 @@ router.post('/', async (req, res) => {
     }
 });
 
-module.exports = router;
+export default router;
