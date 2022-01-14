@@ -67,7 +67,7 @@ async function upsertUser(payload) {
         },
         { upsert: true }
     );
-    if (res.ok > 0) return token;
+    if (res.modifiedCount > 0 || res.upsertedCount > 0) return token;
     else return null;
 }
 
