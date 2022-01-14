@@ -99,6 +99,13 @@ async function createNewHistory(req, data, resource, id, historyId, isNew = true
 }
 
 /**
+ * Checks for key; All fields that ends with "id" or are "history"/"repeatEnd" will be omitted.
+ * @param {string} key Key to check
+ * @returns {boolean} True if is a valid key
+ */
+const isValidKey = (key) => !key.toLowerCase().endsWith('id') && key !== 'history' && key !== 'repeatEnd';
+
+/**
  * Creates a history "fields" object from a created object.
  * All fields that start with _ or is "id"/"history" will be omitted.
  * This will simply map all key value pairs to "keys" and "newValue".
@@ -112,14 +119,12 @@ function objectToHistoryObject(data) {
         oldValue: null,
         newValue: value,
     }));
-    return parsedFields.filter(
-        (f) => !key.startsWith('_') && !key.toLowerCase().endsWith('id') && key !== 'history' && key !== 'repeatEnd'
-    );
+    return parsedFields.filter((f) => isValidKey(f.key));
 }
 
 /**
  * Creates a history "fields" object from a created object.
- * All fields that start with _ or is "id" or "history" will be omitted.
+ *
  * This will compare the previous data with the current data and save all changes.
  * If you look closely, this forms a recursive function with getDiffArray and will
  * loop through all fields in the object.
@@ -132,7 +137,7 @@ function getDiff(prevData, data) {
     let output = [];
     Object.entries(data).forEach(([key, value]) => {
         if (prevData[key] === value) return;
-        if (key.startsWith('_') || key.toLowerCase().endsWith('id') || key === 'history' || key === 'repeatEnd') return;
+        if (!isValidKey(key)) return;
         if (Array.isArray(value)) {
             output.push(...getDiffArray(prevData[key], value, key));
             return;
