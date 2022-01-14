@@ -44,21 +44,21 @@ app.use(function (req: Request, res: Response, next) {
     res.header('Access-Control-Allow-Origin', '*');
     res.header('Access-Control-Allow-Headers', 'X-Requested-With');
 
-    // Check for correct origin
-    // Set this in the .env file as ORIGIN
-    // This will return as an error if no origin in headers OR if the origin does not match the expected origin
-    // The block will be skipped if no ORIGIN environmental variable is defined
-    if (
-        process.env.NODE_ENV === 'production' &&
-        process.env.ORIGIN !== undefined &&
-        !process.env.NO_ORIGIN_CHECK &&
-        req.path !== '/auth/login'
-    ) {
-        if (req.headers.origin === undefined || req.headers.origin.indexOf(process.env.ORIGIN) === -1) {
-            sendError(res, 403, 'Invalid request origin.');
-            return;
-        }
-    }
+    // // Check for correct origin
+    // // Set this in the .env file as ORIGIN
+    // // This will return as an error if no origin in headers OR if the origin does not match the expected origin
+    // // The block will be skipped if no ORIGIN environmental variable is defined
+    // if (
+    //     process.env.NODE_ENV === 'production' &&
+    //     process.env.ORIGIN !== undefined &&
+    //     !process.env.NO_ORIGIN_CHECK &&
+    //     req.path !== '/auth/login'
+    // ) {
+    //     if (req.headers.origin === undefined || req.headers.origin.indexOf(process.env.ORIGIN) === -1) {
+    //         sendError(res, 403, 'Invalid request origin.');
+    //         return;
+    //     }
+    // }
 
     // Continue looking for path matches
     next();
