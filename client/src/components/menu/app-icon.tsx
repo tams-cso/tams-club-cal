@@ -1,5 +1,6 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { darkSwitch } from '../../util';
+import type { Theme } from '@mui/material';
 import { styled } from '@mui/system';
 
 import SvgIcon from '@mui/material/SvgIcon';
@@ -7,6 +8,7 @@ import Typography from '@mui/material/Typography';
 import Box from '@mui/material/Box';
 import Link from '../shared/Link';
 import StyledSpan from '../shared/styled-span';
+import { useRouter } from 'next/router';
 
 // Styled Components for formatting the SVG
 const StyledRect = styled('rect')``;
@@ -46,8 +48,16 @@ const svgStyles = {
 };
 
 // Color functions for title/staging text
-const titleColor = (theme) => darkSwitch(theme, theme.palette.common.black, theme.palette.primary.main);
-const stagingColor = (theme) => darkSwitch(theme, theme.palette.error.light, theme.palette.error.main);
+const titleColor = (theme: Theme) => darkSwitch(theme, theme.palette.common.black, theme.palette.primary.main);
+const stagingColor = (theme: Theme) => darkSwitch(theme, theme.palette.error.light, theme.palette.error.main);
+
+interface AppIconProps {
+    /** Won't display logo text if true */
+    noText?: boolean;
+
+    /** Style the Link component */
+    sx?: object;
+}
 
 /**
  * Displays the app icon and text
@@ -56,8 +66,13 @@ const stagingColor = (theme) => darkSwitch(theme, theme.palette.error.light, the
  * @param {boolean} props.noText Won't display logo text if true
  * @param {object} [props.sx] Style the AppIcon component
  */
-function AppIcon(props) {
-    const isProd = process.env.NODE_ENV === 'production' && process.env.REACT_APP_BACKEND !== 'staging';
+function AppIcon(props: AppIconProps) {
+    const [prod, setProd] = useState(false);
+
+    useEffect(() => {
+        setProd(window.location.origin === 'https://tams.club');
+    }, []);
+
     return (
         <Link href="/" sx={{ textDecoration: 'none', ...props.sx }}>
             <Box
@@ -99,7 +114,7 @@ function AppIcon(props) {
                         }}
                     >
                         TAMS Club Calendar
-                        {isProd ? null : <StyledSpan sx={{ color: stagingColor }}>{'  '}[STAGING]</StyledSpan>}
+                        {prod ? null : <StyledSpan sx={{ color: stagingColor }}>{'  '}[STAGING]</StyledSpan>}
                     </Typography>
                 )}
             </Box>

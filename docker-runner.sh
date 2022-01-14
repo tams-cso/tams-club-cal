@@ -1,9 +1,9 @@
 #!/bin/bash
 
-# Start the first process
+# Start the client app
 node client/server.js &
   
-# Start the second process
+# Start the server app
 node server/app.js &
   
 # Wait for any process to exit

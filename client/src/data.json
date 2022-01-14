@@ -102,6 +102,15 @@
     ],
     "changelog": [
         {
+            "v": "4.1",
+            "date": "January 14th, 2022",
+            "changes": [
+                "Fixed issue where users could no longer log in",
+                "Fixed issue where changing the dark theme would not save when page refreshes",
+                "Added missing staging text on the staging app"
+            ]
+        },
+        {
             "v": "4.0",
             "date": "January 14th, 2022",
             "changes": [
