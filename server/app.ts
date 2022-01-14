@@ -1,24 +1,26 @@
+import { Request, Response } from "express";
+
 require('dotenv').config();
 
-const express = require('express');
+import express from 'express';
 const app = express();
-const cors = require('cors');
-const compression = require('compression');
-const helmet = require('helmet');
-const morgan = require('morgan');
-const cookieParser = require('cookie-parser');
-const mongoose = require('mongoose');
-const { checkEnv, sendError } = require('./functions/util');
+import cors from 'cors';
+import compression from 'compression';
+import helmet from 'helmet';
+import morgan from 'morgan';
+import cookieParser from 'cookie-parser';
+import mongoose, { ConnectOptions } from 'mongoose';
+import { checkEnv, sendError } from './functions/util';
 
 // Import routers
-const authRouter = require('./routes/authRouter');
-const eventsRouter = require('./routes/eventsRouter');
-const clubsRouter = require('./routes/clubsRouter');
-const volunteeringRouter = require('./routes/volunteeringRouter');
-const reservationsRouter = require('./routes/reservationsRouter');
-const historyRouter = require('./routes/historyRouter');
-const feedbackRouter = require('./routes/feedbackRouter');
-const adminRouter = require('./routes/adminRouter');
+import authRouter from './routes/authRouter';
+import eventsRouter from './routes/eventsRouter';
+import clubsRouter from './routes/clubsRouter';
+import volunteeringRouter from './routes/volunteeringRouter';
+import reservationsRouter from './routes/reservationsRouter';
+import historyRouter from './routes/historyRouter';
+import feedbackRouter from './routes/feedbackRouter';
+import adminRouter from './routes/adminRouter';
 
 // Check for the correct environmental variables
 if (process.env.NODE_ENV !== 'production') checkEnv();
@@ -37,10 +39,10 @@ app.use(express.urlencoded({ limit: '50mb', extended: true, parameterLimit: 5000
 app.set('trust proxy', true);
 
 // Parse every request here first
-app.use(function (req, res, next) {
+app.use(function (req: Request, res: Response, next) {
     // Add CORS headers
-    req.header('Access-Control-Allow-Origin', '*');
-    req.header('Access-Control-Allow-Headers', 'X-Requested-With');
+    res.header('Access-Control-Allow-Origin', '*');
+    res.header('Access-Control-Allow-Headers', 'X-Requested-With');
 
     // Check for correct origin
     // Set this in the .env file as ORIGIN
@@ -88,7 +90,7 @@ app.listen(process.env.PORT || 5000, () => console.log(`Listening on port ${proc
 
 // Start mongoose
 const mongoUrl = `mongodb+srv://${process.env.MONGO_USER}:${process.env.MONGO_PASS}@${process.env.MONGO_URL}/data?retryWrites=true&w=majority`;
-mongoose.connect(mongoUrl, { useNewUrlParser: true, useUnifiedTopology: true });
+mongoose.connect(mongoUrl, { useNewUrlParser: true, useUnifiedTopology: true } as ConnectOptions);
 
 // Callbacks for db connections
 const db = mongoose.connection;
