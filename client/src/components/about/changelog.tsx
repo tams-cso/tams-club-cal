@@ -14,9 +14,12 @@ import data from '../../data.json';
 const Changelog = () => {
     return (
         <React.Fragment>
-            {data.changelog.map((version) => (
-                <React.Fragment>
-                    <Typography variant="h3">{`${version.v} — ${version.date}`}</Typography>
+            {data.changelog.map((version, i) => (
+                <React.Fragment key={i}>
+                    <Typography
+                        variant="h3"
+                        sx={{ color: (theme) => theme.palette.primary.main }}
+                    >{`${version.v} — ${version.date}`}</Typography>
                     <List sx={{ color: (theme) => darkSwitchGrey(theme) }}>
                         {version.changes.map((change) => (
                             <ListItem>

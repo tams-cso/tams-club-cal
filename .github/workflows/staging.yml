@@ -40,6 +40,8 @@ jobs:
                   file: ./Dockerfile
                   push: true
                   tags: ${{ secrets.DOCKER_HUB_USERNAME }}/tcc-staging:latest
+                  build-args: |
+                      NEXT_PUBLIC_BACKEND=staging
 
             - name: Image digest
               run: echo ${{ steps.docker_build.outputs.digest }}
