@@ -102,6 +102,31 @@
     ],
     "changelog": [
         {
+            "v": "3.2",
+            "date": "January 12th, 2022",
+            "changes": [
+                "Removed random debugging log statements",
+                "Created a new menu theme for light mode",
+                "Updated elevation of menu bar",
+                "Darkened the EDIT HISTORY text on light mode",
+                "Added a light green background for light mode",
+                "Created a new system for logging in and profiles - see the new profile menu icon!",
+                "Created an admin dashboard",
+                "Fixed event reservation system so that users can now choose whether or not to create a reservation from an event",
+                "Added text to show whether or not an event is reserved",
+                "Fixed issue where users could schedule reservations over other reservations",
+                "Changed edit history entries to be more human readable",
+                "Changed text on events to be Signup/Deadline instead of just Signup",
+                "Fixed strange margins on volunteering display",
+                "Fixed new issue where users could set event end times to be before start times",
+                "Fixed issue where images are not deleted from the database when clubs are deleted",
+                "Fixed weird loading box bottom on the main page",
+                "Added a [No Description] label if an event has no description",
+                "Added this changelog",
+                "Removed id data from future edit history entries"
+            ]
+        },
+        {
             "v": "3.1",
             "date": "December 1st, 2021",
             "changes": ["Fixed feedback form"]
