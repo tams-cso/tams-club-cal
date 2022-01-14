@@ -65,7 +65,7 @@ const Dashboard = ({ authorized, error, isAdmin, info }: InferGetServerSideProps
 
         // If missing or bad token, return user to login page
         if (!authorized) {
-            cookies.remove('token');
+            cookies.remove('token', { path: '/' });
             router.push('/profile');
             return;
         }

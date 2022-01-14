@@ -150,18 +150,18 @@ router.put('/:id', async (req: Request, res: Response) => {
         // Update reservation, delete reservation (resId = -1), or add reservation (resId = 1)
         // TODO: is there any way to make this section look nicer TwT (and not return string | number)
         let reservationRes: string | number;
-        if (req.body.reservationId === -1) {
+        if (req.body.reservationId === "-1") {
             reservationRes = await deleteReservation(prev.reservationId);
         } else if (prev.reservationId) {
             reservationRes = await updateReservation(prev.reservationId, req, res);
-        } else if (req.body.reservationId === 1) {
+        } else if (req.body.reservationId === "1") {
             reservationRes = await addReservation(req, res, id);
         }
         if (reservationRes === -1) return;
 
         // Set the reservation ID to null if deleted, or the reservation ID if updated or added
         const reservationId =
-            req.body.reservationId === -1 ? null : req.body.reservationId === 1 ? reservationRes : prev.reservationId;
+            req.body.reservationId === "-1" ? null : req.body.reservationId === "1" ? reservationRes : prev.reservationId;
 
         // Set body resId for history
         req.body.reservationId = reservationId;

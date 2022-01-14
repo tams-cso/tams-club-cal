@@ -45,7 +45,7 @@ const DesktopMenu = (props: DesktopMenuProps) => {
     // Route user to profile page
     const goToProfile = () => {
         const cookies = new Cookies();
-        cookies.remove('prev');
+        cookies.remove('prev', { path: '/' });
         router.push('/profile');
     };
 
