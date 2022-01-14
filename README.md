@@ -55,3 +55,5 @@ Finally, you will need to create a new [Google Calendar](https://calendar.google
 To develop the frontend without a local backend, run `yarn dev:staging`, which will use the local frontend with http://dev.tams.club as the backend.
 
 If you would like to host a local backend, run `yarn dev` and `yarn backend`. The first will start the frontend and the second will start the backend. To do this, you **must have all the required environmental variables**!
+
+To build the Docker image, simply run `docker build`. You must have all of the environemntal variables defined for the backend as well to run this command or the app will not work correctly. The port of the client app will be 80, but make sure to set the port of the server app to something other than 80 in the `.env` file or it will not work properly.
