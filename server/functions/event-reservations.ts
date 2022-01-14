@@ -1,19 +1,17 @@
-const dayjs = require('dayjs');
-const { Request, Response } = require('express');
-const Reservation = require('../models/reservation');
-const RepeatingReservation = require('../models/repeating-reservation');
-const { newId, createNewHistory, sendError } = require('./util');
+import dayjs from 'dayjs';
+import { Request, Response } from 'express';
+import RepeatingReservation from '../models/repeating-reservation';
+import Reservation from '../models/reservation';
+import { createHistory } from './edit-history';
+import { newId, sendError } from './util';
 
 /**
  * Creates a new reservation and adds it to the reservations db.
  * This only works in increments of hours!!! Minutes and seconds will be IGNORED.
  * Therefore, if your event is from 1:30-2:30pm, the room will be reserved from 1pm to 3pm.
- *
- * @param {string} [eventId] ID of the event this reservation is attributed to
- * @param {Request} req Express request object
- * @returns {Promise<string>} ID of the reservation
+ * If an `eventId` is passed in, it will be saved and the `resId` will be returned.
  */
-async function addReservation(eventId, req) {
+export async function addReservation(req: Request, res: Response, eventId?: string): Promise<string | number> {
     const { start, end } = offsetTime(req);
     const id = newId();
     const history = eventId ? null : [newId()];
@@ -46,7 +44,7 @@ async function addReservation(eventId, req) {
           });
 
     const newHistory = history
-        ? await createNewHistory(
+        ? await createHistory(
               req,
               newReservation,
               req.body.repeatEnd ? 'repeating-reservations' : 'reservations',
@@ -58,6 +56,8 @@ async function addReservation(eventId, req) {
     const historyRes = newHistory ? await newHistory.save() : null;
     if (reservationRes === newReservation && newHistory === historyRes) return id;
     sendError(res, 500, 'Unable to create reservation for given event');
+
+    // TODO: DO NOT RETURN -1 >:((( -> THROW AN ERROR CRYING EMOJI
     return -1;
 }
 
@@ -65,13 +65,8 @@ async function addReservation(eventId, req) {
  * Updates a reservation from the reservations db.
  * This only works in increments of hours!!! Minutes and seconds will be IGNORED.
  * Therefore, if your event is from 1:30-2:30pm, the room will be reserved from 1pm to 3pm.
- *
- * @param {string} id ID of the reservation
- * @param {Request} req Express request object
- * @param {Response} res Express response object
- * @returns {Promise<string>} ID of the reservation
  */
-async function updateReservation(id, req, res) {
+export async function updateReservation(id: string, req: Request, res: Response): Promise<string | number> {
     const prev = req.body.repeatEnd
         ? await RepeatingReservation.findOne({ id }).exec()
         : await Reservation.findOne({ id }).exec();
@@ -118,7 +113,7 @@ async function updateReservation(id, req, res) {
 
     const newHistory = prev.eventId
         ? null
-        : await createNewHistory(
+        : await createHistory(
               req,
               prev,
               req.body.repeatEnd ? 'repeating-reservations' : 'reservations',
@@ -127,7 +122,7 @@ async function updateReservation(id, req, res) {
               false
           );
     const historyRes = newHistory ? await newHistory.save() : null;
-    if (reservationRes.n === 1 && newHistory === historyRes) return id;
+    if (reservationRes.acknowledged && newHistory === historyRes) return id;
     sendError(res, 500, 'Unable to update reservation for given event');
     return -1;
 }
@@ -138,17 +133,16 @@ async function updateReservation(id, req, res) {
  * @param {string} id ID of the reservation to delete
  * @returns {Promise<-1 | 1>} -1 if the reservation was not found, 1 if the reservation was deleted
  */
-async function deleteReservation(id) {
+export async function deleteReservation(id: string): Promise<-1 | 1> {
     const res = await Reservation.deleteOne({ id }).exec();
-    if (res.n === 1) return 1;
+    if (res.deletedCount === 1) return 1;
     throw new Error('Unable to delete reservation');
 }
 
 /**
  * Offsets time to start of hour/end of hour
- * @param {Request} req Express request object
  */
-function offsetTime(req) {
+function offsetTime(req: Request) {
     const roundedStart = dayjs(req.body.start).startOf('hour').valueOf();
     const roundedEnd = dayjs(req.body.end).startOf('hour');
     const fixedEnd = roundedEnd.isSame(dayjs(req.body.end), 'minute')
@@ -156,5 +150,3 @@ function offsetTime(req) {
         : roundedEnd.add(1, 'hour').valueOf();
     return { start: roundedStart, end: fixedEnd };
 }
-
-module.exports = { addReservation, updateReservation, deleteReservation };

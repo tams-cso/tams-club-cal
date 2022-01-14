@@ -1,15 +1,16 @@
-const express = require('express');
-const { sendError } = require('../functions/util');
-const { validateHeader } = require('../functions/auth');
-const router = express.Router();
+import express from 'express';
+import type { Request, Response } from 'express';
+import { sendError } from '../functions/util';
+import { validateHeader } from '../functions/auth';
+import { deleteClubImages } from '../functions/images';
+import Event from '../models/event';
+import Club from '../models/club';
+import Volunteering from '../models/volunteering';
+import Reservation from '../models/reservation';
+import RepeatingReservation from '../models/repeating-reservation';
+import History from '../models/history';
 
-const Event = require('../models/event');
-const Club = require('../models/club');
-const Volunteering = require('../models/volunteering');
-const Reservation = require('../models/reservation');
-const History = require('../models/history');
-const RepeatingReservation = require('../models/repeating-reservation');
-const { deleteClubImages } = require('../functions/images');
+const router = express.Router();
 
 /**
  * GET /admin/resoruces/<resource>/<field>/<search>/[page]
@@ -19,7 +20,7 @@ const { deleteClubImages } = require('../functions/images');
  * If the page field is defined and the field is 'all', then the function will return
  * the specified page of the resource list.
  */
-router.get('/resources/:resource/:field/:search/:page?', async (req, res) => {
+router.get('/resources/:resource/:field/:search/:page?', async (req: Request, res: Response) => {
     const getAll = req.params.field === 'all';
     const pageLength = 50;
     const page = req.params.page ? parseInt(req.params.page) : 0;
@@ -87,7 +88,7 @@ router.get('/resources/:resource/:field/:search/:page?', async (req, res) => {
  * Deletes the given resource by id. This will also delete the related history entries.
  * Additionally, if the resource is an event, then the related reservation will also be deleted.
  */
-router.delete('/resources/:resource/:id', async (req, res) => {
+router.delete('/resources/:resource/:id', async (req: Request, res: Response) => {
     // Check to see if header is there
     if (req.headers.authorization && req.headers.authorization.startsWith('Bearer ')) {
         const validHeader = await validateHeader(req.headers.authorization.substring(7));
@@ -147,4 +148,4 @@ router.delete('/resources/:resource/:id', async (req, res) => {
     }
 });
 
-module.exports = router;
+export default router;

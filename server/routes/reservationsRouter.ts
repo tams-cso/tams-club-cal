@@ -1,9 +1,10 @@
-const express = require('express');
-const dayjs = require('dayjs');
-const { sendError } = require('../functions/util');
-const Reservation = require('../models/reservation');
-const { addReservation, updateReservation } = require('../functions/event-reservations');
-const RepeatingReservation = require('../models/repeating-reservation');
+import express from 'express';
+import type { Request, Response } from 'express';
+import dayjs from 'dayjs';
+import { sendError } from '../functions/util';
+import Reservation from '../models/reservation';
+import { addReservation, updateReservation } from '../functions/event-reservations';
+import RepeatingReservation from '../models/repeating-reservation';
 const router = express.Router();
 
 /**
@@ -15,7 +16,7 @@ const router = express.Router();
  * - week: Week to get reservations of, should be a UTC date number
  *         This can be any time within the week
  */
-router.get('/repeating', async (req, res, next) => {
+router.get('/repeating', async (req: Request, res: Response) => {
     const week = req.query.week ? dayjs(Number(req.query.week)) : dayjs();
     try {
         const repeatingReservations = await RepeatingReservation.find({
@@ -34,7 +35,7 @@ router.get('/repeating', async (req, res, next) => {
  *
  * Gets a repeating reservation by id
  */
-router.get('/repeating/:id', async (req, res, next) => {
+router.get('/repeating/:id', async (req: Request, res: Response) => {
     const id = req.params.id;
     const repeatingReservation = await RepeatingReservation.findOne({ id }).exec();
     if (repeatingReservation) res.send(repeatingReservation);
@@ -50,7 +51,7 @@ router.get('/repeating/:id', async (req, res, next) => {
  * - week: Week to get reservations of, should be a UTC date number
  *         This can be any time within the week
  */
-router.get('/', async (req, res, next) => {
+router.get('/', async (req: Request, res: Response) => {
     const week = req.query.week ? dayjs(Number(req.query.week)) : dayjs();
     try {
         const reservations = await Reservation.find({
@@ -71,7 +72,7 @@ router.get('/', async (req, res, next) => {
  *
  * Gets a reservation by id
  */
-router.get('/:id', async (req, res, next) => {
+router.get('/:id', async (req: Request, res: Response) => {
     const id = req.params.id;
     const reservation = await Reservation.findOne({ id }).exec();
     if (reservation) res.send(reservation);
@@ -83,9 +84,9 @@ router.get('/:id', async (req, res, next) => {
  *
  * Creates a new reservation
  */
-router.post('/', async (req, res, next) => {
+router.post('/', async (req: Request, res: Response) => {
     try {
-        await addReservation(null, req);
+        await addReservation(req, res);
         res.send({ ok: 1 });
     } catch (error) {
         console.error(error);
@@ -98,7 +99,7 @@ router.post('/', async (req, res, next) => {
  *
  * Updates a reservation
  */
-router.put('/:id', async (req, res, next) => {
+router.put('/:id', async (req: Request, res: Response) => {
     try {
         if (req.body.eventId !== null) {
             sendError(res, 400, 'Cannot update a reservation connected to an event. Please edit the event instead.');
@@ -121,7 +122,7 @@ router.put('/:id', async (req, res, next) => {
  * start and end, which are passed in as UTC millisecond times, as well as the location that
  * in which all events should be searched for
  */
-router.get('/search/:location/:start/:end', async (req, res, next) => {
+router.get('/search/:location/:start/:end', async (req: Request, res: Response) => {
     try {
         // Parse the passed in start and end times
         const start = Number.parseInt(req.params.start);
@@ -169,4 +170,4 @@ router.get('/search/:location/:start/:end', async (req, res, next) => {
     }
 });
 
-module.exports = router;
+export default router;

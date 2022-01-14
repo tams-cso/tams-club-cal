@@ -1,5 +1,6 @@
-const { google } = require('googleapis');
-const dayjs = require('dayjs');
+import dayjs from 'dayjs';
+import { google } from 'googleapis';
+import type { EventObject } from './types';
 
 authorize();
 
@@ -15,7 +16,10 @@ async function authorize() {
     console.log('Authorized google api service account!');
 }
 
-async function addToCalendar(data) {
+/**
+ * Creates a Google Calendar entry given the event object and returns the id
+ */
+export async function addToCalendar(data: EventObject): Promise<string> {
     try {
         const start = data.allDay
             ? { date: dayjs(data.start).format('YYYY-MM-DD') }
@@ -35,11 +39,15 @@ async function addToCalendar(data) {
         return res.data.id;
     } catch (error) {
         console.dir(error);
+        // TODO: Throw an error if this happens !!!!!!!!!
         return null;
     }
 }
 
-async function updateCalendar(data, id) {
+/**
+ * Updates a Google Calendar entry given the event object and the id
+ */
+export async function updateCalendar(data: EventObject, id: string): Promise<1> {
     try {
         const start = data.allDay
             ? { date: dayjs(data.start).format('YYYY-MM-DD') }
@@ -63,5 +71,3 @@ async function updateCalendar(data, id) {
         return null;
     }
 }
-
-module.exports = { addToCalendar, updateCalendar };

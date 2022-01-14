@@ -1,8 +1,12 @@
-const express = require('express');
-const multer = require('multer');
-const { processClubUpload } = require('../functions/images');
-const { newId, createNewHistory, sendError } = require('../functions/util');
-const Club = require('../models/club');
+import express from 'express';
+import type { Request, Response } from 'express';
+import multer from 'multer';
+import { processClubUpload } from '../functions/images';
+import { newId, sendError } from '../functions/util';
+import { createHistory } from '../functions/edit-history';
+import Club from '../models/club';
+import { RequestWithClubFiles } from '../functions/types';
+
 const router = express.Router();
 const upload = multer({ storage: multer.memoryStorage() });
 
@@ -11,7 +15,7 @@ const upload = multer({ storage: multer.memoryStorage() });
  *
  * Sends the list of all clubs
  */
-router.get('/', async (req, res, next) => {
+router.get('/', async (req: Request, res: Response) => {
     const clubs = await Club.find({});
     res.send(clubs);
 });
@@ -21,7 +25,7 @@ router.get('/', async (req, res, next) => {
  *
  * Gets a club by id
  */
-router.get('/:id', async (req, res, next) => {
+router.get('/:id', async (req: Request, res: Response) => {
     const id = req.params.id;
     const club = await Club.findOne({ id }).exec();
     if (club) res.send(club);
@@ -39,9 +43,9 @@ const imageUpload = upload.fields([
  *
  * Creates a new club
  */
-router.post('/', imageUpload, async (req, res, next) => {
+router.post('/', imageUpload, async (req: Request, res: Response) => {
     try {
-        const { coverImg, coverImgThumbnail, execImgList, club } = await processClubUpload(req);
+        const { coverImg, coverImgThumbnail, execImgList, club } = await processClubUpload(req as RequestWithClubFiles);
 
         const historyId = newId();
         const id = newId();
@@ -65,7 +69,7 @@ router.post('/', imageUpload, async (req, res, next) => {
             committees: club.committees,
             history: [historyId],
         });
-        const newHistory = await createNewHistory(req, newClub, 'clubs', id, historyId, true, club);
+        const newHistory = await createHistory(req, newClub, 'clubs', id, historyId, true, club);
 
         const clubRes = await newClub.save();
         const historyRes = await newHistory.save();
@@ -80,7 +84,7 @@ router.post('/', imageUpload, async (req, res, next) => {
 /**
  * PUT /clubs/<id>
  */
-router.put('/:id', imageUpload, async (req, res, next) => {
+router.put('/:id', imageUpload, async (req: Request, res: Response) => {
     try {
         const id = req.params.id;
         const prev = await Club.findOne({ id }).exec();
@@ -89,7 +93,7 @@ router.put('/:id', imageUpload, async (req, res, next) => {
             return;
         }
 
-        const { coverImg, coverImgThumbnail, execImgList, club } = await processClubUpload(req);
+        const { coverImg, coverImgThumbnail, execImgList, club } = await processClubUpload(req as RequestWithClubFiles);
 
         const execs = club.execs.map((e, i) => ({
             name: e.name,
@@ -99,7 +103,7 @@ router.put('/:id', imageUpload, async (req, res, next) => {
         }));
 
         const historyId = newId();
-        const newHistory = await createNewHistory(req, prev, 'clubs', id, historyId, false, club);
+        const newHistory = await createHistory(req, prev, 'clubs', id, historyId, false, club);
         const clubRes = await Club.updateOne(
             { id },
             {
@@ -118,7 +122,7 @@ router.put('/:id', imageUpload, async (req, res, next) => {
         );
         const historyRes = await newHistory.save();
 
-        if (clubRes.n === 1 && historyRes === newHistory) res.send({ ok: 1 });
+        if (clubRes.acknowledged && historyRes === newHistory) res.send({ ok: 1 });
         else sendError(res, 500, 'Unable to update event in database.');
     } catch (error) {
         console.error(error);
@@ -126,4 +130,4 @@ router.put('/:id', imageUpload, async (req, res, next) => {
     }
 });
 
-module.exports = router;
+export default router;

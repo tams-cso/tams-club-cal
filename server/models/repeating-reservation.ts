@@ -1,4 +1,4 @@
-const mongoose = require('mongoose');
+import mongoose from 'mongoose';
 
 const repeatingReservationSchema = new mongoose.Schema(
     {
@@ -18,4 +18,5 @@ const repeatingReservationSchema = new mongoose.Schema(
 );
 
 const RepeatingReservation = mongoose.model('Repeating Reservations', repeatingReservationSchema);
-module.exports = RepeatingReservation;
+
+export default RepeatingReservation;

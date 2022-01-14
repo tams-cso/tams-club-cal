@@ -1,4 +1,4 @@
-const mongoose = require('mongoose');
+import mongoose from 'mongoose';
 
 const clubSchema = new mongoose.Schema(
     {
@@ -31,4 +31,5 @@ const clubSchema = new mongoose.Schema(
 );
 
 const Club = mongoose.model('Club', clubSchema);
-module.exports = Club;
+
+export default Club;
