@@ -143,6 +143,7 @@ function createHeaders(auth, json): Headers {
     let headers = new Headers();
     if (auth && token) headers.set('Authorization', `Bearer ${token}`);
     if (json) headers.set('Content-Type', 'application/json');
+    headers.set('Referer', 'https://tams.club');
     return headers;
 }
 
