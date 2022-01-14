@@ -10,14 +10,17 @@ import { createPopupEvent } from '../../util';
 
 interface PopupProps {
     /** Event to display */
-    event: PopupEvent | null;
+    event?: PopupEvent | null;
+
+    /** If true, will check cookies to show success message */
+    cookieCheck?: boolean
 }
 
 /**
  * Displays a popup whenever event is updated. For this to happen,
  * props.event.time must be set to the current time.
  */
-const Popup = ({ event }: PopupProps) => {
+const Popup = ({ event, cookieCheck }: PopupProps) => {
     const [open, setOpen] = useState(false);
     const [data, setData] = useState<PopupEvent>({ severity: 0, message: '', time: 0 });
 
@@ -49,10 +52,11 @@ const Popup = ({ event }: PopupProps) => {
     // Open the popup if the success cookie was set
     // Only do this on mount
     useEffect(() => {
+        if (!cookieCheck) return;
         const cookies = new Cookies();
         const success = cookies.get('success');
-        cookies.remove('success');
         if (success) {
+            cookies.remove('success', { path: '/' });
             setData(createPopupEvent(getSuccessMessage(success), 2));
             setOpen(true);
         }

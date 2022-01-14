@@ -54,7 +54,7 @@ export async function addReservation(req: Request, res: Response, eventId?: stri
         : null;
     const reservationRes = await newReservation.save();
     const historyRes = newHistory ? await newHistory.save() : null;
-    if (reservationRes === newReservation && newHistory === historyRes) return id;
+    if (reservationRes === newReservation && (historyRes === null || newHistory === historyRes)) return id;
     sendError(res, 500, 'Unable to create reservation for given event');
 
     // TODO: DO NOT RETURN -1 >:((( -> THROW AN ERROR CRYING EMOJI

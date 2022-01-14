@@ -4,6 +4,7 @@ import { darkSwitch } from '../../util';
 
 import { Helmet } from 'react-helmet';
 import Box from '@mui/material/Box';
+import Popup from './popup';
 
 interface PageWrapperProps extends React.HTMLProps<HTMLDivElement> {
     /** If true, page will not have a bottom padding */
@@ -38,6 +39,7 @@ const PageWrapper = (props: PageWrapperProps) => {
                 ...props.sx,
             }}
         >
+            <Popup cookieCheck />
             {props.title ? (
                 <Helmet>
                     <title>{`${props.title} - TAMS Club Calendar`}</title>
