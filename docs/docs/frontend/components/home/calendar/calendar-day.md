@@ -1,3 +1,0 @@
-# CalendarDay
-
-**Category**: Component

@@ -1,3 +1,0 @@
-# ControlledFilterCheck
-
-**Category**: Component

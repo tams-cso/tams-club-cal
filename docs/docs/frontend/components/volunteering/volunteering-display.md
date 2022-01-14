@@ -1,3 +1,0 @@
-# VolunteeringDisplay
-
-**Category**: Page (Display)

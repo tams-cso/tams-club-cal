@@ -1,3 +1,0 @@
-# CommitteeCard
-
-**Category**: Component

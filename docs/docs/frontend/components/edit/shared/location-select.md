@@ -1,3 +1,0 @@
-# LocationSelect
-
-**Category**: Component

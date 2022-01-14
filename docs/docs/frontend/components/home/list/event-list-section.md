@@ -1,3 +1,0 @@
-# EventListSection
-
-**Category**: Component

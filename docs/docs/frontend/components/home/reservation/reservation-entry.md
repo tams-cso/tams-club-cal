@@ -1,3 +1,0 @@
-# Calendar
-
-**Category**: Component

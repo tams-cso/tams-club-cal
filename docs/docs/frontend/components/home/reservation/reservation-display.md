@@ -1,3 +1,0 @@
-# ReservationDisplay
-
-**Category**: Page (Display)

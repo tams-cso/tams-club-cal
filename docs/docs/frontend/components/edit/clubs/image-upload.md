@@ -1,3 +1,0 @@
-# ImageUpload
-
-**Category**: Component

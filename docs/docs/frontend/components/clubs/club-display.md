@@ -1,3 +1,0 @@
-# ClubDisplay
-
-**Category**: Page (Display)

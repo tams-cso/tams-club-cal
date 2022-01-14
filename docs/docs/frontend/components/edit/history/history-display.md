@@ -1,3 +1,0 @@
-# HistoryDisplay
-
-**Category**: Page (Display)

@@ -1,3 +1,0 @@
-# EditCommitteeList
-
-**Category**: Component

@@ -1,3 +1,0 @@
-# DateSection
-
-**Category**: Component

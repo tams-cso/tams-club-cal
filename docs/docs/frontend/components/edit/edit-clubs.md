@@ -1,3 +1,0 @@
-# EditClubs
-
-**Category**: Page

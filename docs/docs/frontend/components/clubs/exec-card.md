@@ -1,3 +1,0 @@
-# ExecCard
-
-**Category**: Component

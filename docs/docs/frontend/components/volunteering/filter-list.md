@@ -1,3 +1,0 @@
-# FilterList
-
-**Category**: Component

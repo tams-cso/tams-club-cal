@@ -1,3 +1,0 @@
-# HistoryPopup
-
-**Category**: Component

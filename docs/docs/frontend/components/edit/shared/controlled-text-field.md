@@ -1,3 +1,0 @@
-# ControlledTextField
-
-**Category**: Component

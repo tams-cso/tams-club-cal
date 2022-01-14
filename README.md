@@ -52,16 +52,6 @@ Finally, you will need to create a new [Google Calendar](https://calendar.google
 
 ## Execution
 
-To run the client:
+To develop the frontend without a local backend, run `yarn dev:staging`, which will use the local frontend with http://dev.tams.club as the backend.
 
-```bash
-cd client
-yarn start
-```
-
-To run the server:
-
-```bash
-cd server
-yarn start
-```
+If you would like to host a local backend, run `yarn dev` and `yarn backend`. The first will start the frontend and the second will start the backend. To do this, you **must have all the required environmental variables**!
