@@ -41,7 +41,7 @@ jobs:
                   push: true
                   tags: ${{ secrets.DOCKER_HUB_USERNAME }}/tcc-staging:latest
                   build-args: |
-                      NEXT_PUBLIC_BACKEND=staging
+                      "NEXT_PUBLIC_BACKEND=staging"
 
             - name: Image digest
               run: echo ${{ steps.docker_build.outputs.digest }}
@@ -55,5 +55,5 @@ jobs:
                   script: |
                       docker pull michaelzhao21/tcc-staging:latest
                       docker stop staging
-                      docker run --rm -d --name tcc-staging -p 8083:80 -p 8085:90 michaelzhao21/tcc-staging
+                      docker run --rm -d --name staging -p 8083:80 -p 8085:90 michaelzhao21/tcc-staging
                       docker image prune -af
