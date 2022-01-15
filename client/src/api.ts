@@ -151,21 +151,9 @@ function createHeaders(auth, json): Headers {
 
 /**
  * Gets the list of events.
- * Default options will return ~20 events including the current day.
- *
  */
 export async function getEventList(): Promise<ListFetchResponse<Event>> {
     return getRequest('/events') as Promise<ListFetchResponse<Event>>;
-}
-
-/**
- * Gets the list of events.
- * Default options will return ~20 events including the current day.
- *
- * @param id The ID of the last event gotten
- */
-export async function getMoreEvents(id: string): Promise<ListFetchResponse<Event>> {
-    return getRequest(`/events?lastEvent=${id}`) as Promise<ListFetchResponse<Event>>;
 }
 
 /**

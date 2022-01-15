@@ -3,6 +3,7 @@ import { InferGetServerSidePropsType } from 'next';
 import dayjs from 'dayjs';
 import { getEventList } from '../src/api';
 import { darkSwitchGrey, parseEventList, isSameDate } from '../src/util';
+import type { SxProps, Theme } from '@mui/material';
 
 import Container from '@mui/material/Container';
 import Typography from '@mui/material/Typography';
@@ -10,6 +11,14 @@ import HomeBase from '../src/components/home/home-base';
 import Loading from '../src/components/shared/loading';
 import AddButton from '../src/components/shared/add-button';
 import EventListSection from '../src/components/home/event-list-section';
+
+// Format the no events/add more events text on the event list
+const listTextFormat = {
+    marginTop: 3,
+    marginBottom: 8,
+    textAlign: 'center',
+    color: (theme) => darkSwitchGrey(theme),
+} as SxProps<Theme>;
 
 // Server-side Rendering
 export const getServerSideProps = async () => {
@@ -40,19 +49,10 @@ const Home = ({ eventList, error }: InferGetServerSidePropsType<typeof getServer
         // Make sure event list is not null
         if (eventList === null) return;
 
-        // Set text if the eventList is empty
+        // Set text to the end of the events list if empty
         if (eventList.length === 0) {
             setEventComponentList(
-                <Typography
-                    variant="h6"
-                    component="h2"
-                    sx={{
-                        marginTop: 3,
-                        marginBottom: 6,
-                        textAlign: 'center',
-                        color: (theme) => darkSwitchGrey(theme),
-                    }}
-                >
+                <Typography variant="h6" component="h2" sx={listTextFormat}>
                     No events planned... Click the + to add one!
                 </Typography>
             );
@@ -83,15 +83,7 @@ const Home = ({ eventList, error }: InferGetServerSidePropsType<typeof getServer
 
         // No more message at the bottom!
         groupedComponents.push(
-            <Typography
-                key="nomore"
-                sx={{
-                    marginTop: 3,
-                    marginBottom: 8,
-                    textAlign: 'center',
-                    color: (theme) => darkSwitchGrey(theme),
-                }}
-            >
+            <Typography key="nomore" sx={listTextFormat}>
                 No more events... Click the + to add one!
             </Typography>
         );
