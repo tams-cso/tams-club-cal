@@ -1,6 +1,6 @@
 import React from 'react';
 import { darkSwitchGrey } from '../../util';
-import type { Volunteering } from '../../entries';
+import type { Volunteering } from '../../types';
 
 import Card from '@mui/material/Card';
 import CardActionArea from '@mui/material/CardActionArea';

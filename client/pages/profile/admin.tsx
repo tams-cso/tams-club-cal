@@ -4,7 +4,7 @@ import { useRouter } from 'next/router';
 import { GetServerSidePropsContext, InferGetServerSidePropsType } from 'next';
 import Cookies from 'universal-cookie';
 import { getAdminResources, deleteAdminResource, getIsAdmin, getLoggedIn } from '../../src/api';
-import type { AdminResource, PopupEvent, Resource } from '../../src/entries';
+import type { AdminResource, PopupEvent, Resource } from '../../src/types';
 import { createPopupEvent } from '../../src/util';
 
 import Typography from '@mui/material/Typography';
@@ -37,7 +37,11 @@ import Popup from '../../src/components/shared/popup';
 interface DeleteObject {
     /** Resource type to delete */
     resource: Resource;
+
+    /** ID of resource to delete */
     id: string;
+
+    /** Name of resource to delete */
     name: string;
 }
 

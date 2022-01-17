@@ -3,7 +3,7 @@ import { GetServerSidePropsContext, InferGetServerSidePropsType } from 'next';
 import { useRouter } from 'next/router';
 import { calculateEditDate, darkSwitch, getParams, parseEditor, redirect } from '../../../../src/util';
 import { getHistory } from '../../../../src/api';
-import type { History, Resource } from '../../../../src/entries';
+import type { History, Resource } from '../../../../src/types';
 
 import Table from '@mui/material/Table';
 import TableBody from '@mui/material/TableBody';

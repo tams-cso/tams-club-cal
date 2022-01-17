@@ -1,7 +1,7 @@
 import React from 'react';
 import { alpha } from '@mui/material';
 import { darkSwitch } from '../../util';
-import type { Reservation } from '../../entries';
+import type { Reservation } from '../../types';
 
 import TableCell from '@mui/material/TableCell';
 import Link from '../shared/Link';

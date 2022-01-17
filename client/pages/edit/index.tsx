@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useRouter } from 'next/router';
-import type { History, Resource } from '../../src/entries';
+import type { History, Resource } from '../../src/types';
 import { calculateEditDate, darkSwitch, redirect } from '../../src/util';
 import { getHistoryList } from '../../src/api';
 

@@ -1,5 +1,5 @@
 import React from 'react';
-import type { Event } from '../../entries';
+import type { Event } from '../../types';
 
 import List from '@mui/material/List';
 import Divider from '@mui/material/Divider';

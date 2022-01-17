@@ -1,6 +1,6 @@
 import React from 'react';
 import type { Theme } from '@mui/material';
-import type { Event } from '../../entries';
+import type { Event } from '../../types';
 import { darkSwitch, formatEventTime } from '../../util';
 
 import Box from '@mui/material/Box';

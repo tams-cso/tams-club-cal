@@ -5,7 +5,7 @@ import { useForm } from 'react-hook-form';
 import Cookies from 'universal-cookie';
 import dayjs from 'dayjs';
 import { createPopupEvent, createEvent } from '../../../src/util';
-import type { PopupEvent } from '../../../src/entries';
+import type { PopupEvent } from '../../../src/types';
 import { getEvent, getOverlappingReservations, postEvent, putEvent } from '../../../src/api';
 
 import Typography from '@mui/material/Typography';
