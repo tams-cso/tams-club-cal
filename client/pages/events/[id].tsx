@@ -116,6 +116,9 @@ const EventDisplay = ({ event, error }: InferGetServerSidePropsType<typeof getSe
                             <Hidden mdDown>
                                 <Divider orientation="vertical" flexItem />
                             </Hidden>
+                            <Hidden mdUp>
+                                <Divider orientation="horizontal" flexItem sx={{ marginTop: 2 }} />
+                            </Hidden>
                             <Paragraph
                                 text={event.description === '' ? '[No Description]' : event.description}
                                 sx={{
@@ -123,6 +126,7 @@ const EventDisplay = ({ event, error }: InferGetServerSidePropsType<typeof getSe
                                     textAlign: 'left',
                                     margin: { lg: '0 0 0 12px', xs: '16px 0 0 0' },
                                     padding: { lg: '8px 0', xs: 0 },
+                                    color: (theme: Theme) => darkSwitch(theme, theme.palette.grey[700], theme.palette.grey[200])
                                 }}
                             />
                         </Box>

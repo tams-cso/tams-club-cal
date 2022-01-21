@@ -15,8 +15,6 @@ const router = express.Router();
  * Sends a list of events
  *
  * Query parameters:
- * - count:      Number of events to get (default: 30)
- *
  * - start:      Starting time to get events from (default: Current Day Start)
  *               All times will be rounded to the start of the day before
  *               For example, if start is 5:30pm on 1/15, then the events will
@@ -27,52 +25,22 @@ const router = express.Router();
  *               Instead it will get all events between the start and end times
  *               The same rules will apply to end time. It will round to exactly
  *               23:59:59 the next UTC day.
- *
- * - lastEvent:  Get all elements later than the object with this ID to count.
- *               If defined start/end will be ignored.
- *
- * - firstEvent: Get all elements earlier than the object with this ID to count.
- *               If defined start/end will be ignored. This parameter will be ignored
- *               if the firstEvent parameter is already defined
  */
 router.get('/', async (req: Request, res: Response) => {
-    const count = Number(req.query.count) || 30;
     const start = Number(req.query.start) || new Date().valueOf();
     const end = Number(req.query.end) || null;
-    const firstEvent = req.query.firstEvent || null;
-    const lastEvent = req.query.lastEvent || null;
 
-    if (lastEvent) {
-        const lastStart = await Event.findOne({ id: lastEvent });
-        if (!lastStart) {
-            sendError(res, 400, 'Invalid last event ID');
-            return;
-        }
-        const events = await Event.find({ start: { $lte: lastStart.start } });
-        const lastIndex = events.findIndex((e) => e.id === lastStart.id);
-        const filteredEvents = events.slice(lastIndex + 1);
-        res.send(filteredEvents);
-    } else if (firstEvent) {
-        const firstStart = await Event.findOne({ id: firstEvent });
-        if (!firstStart) {
-            sendError(res, 400, 'Invalid first event ID');
-            return;
-        }
-        const events = await Event.find({ start: { $gte: firstStart.start } });
-        const firstIndex = events.findIndex((e) => e.id === firstStart.id);
-        const filteredEvents = events.slice(0, firstIndex);
-        res.send(filteredEvents);
-    } else if (start) {
+    if (!end) {
         const events = await Event.find({ start: { $gte: dayjs(start).startOf('day').subtract(1, 'day') } })
-            .sort({ start: 1, _id: 1 })
-            .limit(count)
             .exec();
         res.send(events);
-    } else if (!end) {
-        const events = await Event.find({ start: { $gte: dayjs(end).endOf('day').add(1, 'day') } })
-            .sort({ start: 1, _id: 1 })
-            .limit(count)
-            .exec();
+    } else {
+        const events = await Event.find({
+            start: {
+                $gte: dayjs(start).startOf('day').subtract(1, 'day'),
+                $lte: dayjs(end).endOf('day').add(1, 'day'),
+            },
+        }).exec();
         res.send(events);
     }
 });
@@ -150,18 +118,22 @@ router.put('/:id', async (req: Request, res: Response) => {
         // Update reservation, delete reservation (resId = -1), or add reservation (resId = 1)
         // TODO: is there any way to make this section look nicer TwT (and not return string | number)
         let reservationRes: string | number;
-        if (req.body.reservationId === "-1") {
+        if (req.body.reservationId === '-1') {
             reservationRes = await deleteReservation(prev.reservationId);
         } else if (prev.reservationId) {
             reservationRes = await updateReservation(prev.reservationId, req, res);
-        } else if (req.body.reservationId === "1") {
+        } else if (req.body.reservationId === '1') {
             reservationRes = await addReservation(req, res, id);
         }
         if (reservationRes === -1) return;
 
         // Set the reservation ID to null if deleted, or the reservation ID if updated or added
         const reservationId =
-            req.body.reservationId === "-1" ? null : req.body.reservationId === "1" ? reservationRes : prev.reservationId;
+            req.body.reservationId === '-1'
+                ? null
+                : req.body.reservationId === '1'
+                ? reservationRes
+                : prev.reservationId;
 
         // Set body resId for history
         req.body.reservationId = reservationId;

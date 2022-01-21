@@ -2,7 +2,8 @@ import React from 'react';
 import { useRouter } from 'next/router';
 import { GetServerSidePropsContext, InferGetServerSidePropsType } from 'next';
 import dayjs from 'dayjs';
-import { darkSwitchGrey, formatEventDate, formatEventTime } from '../../../../src/util';
+import type { Theme } from '@mui/material';
+import { darkSwitch, darkSwitchGrey, formatEventDate, formatEventTime } from '../../../../src/util';
 import { getRepeatingReservation, getReservation } from '../../../../src/api';
 
 import Container from '@mui/material/Container';
@@ -121,6 +122,9 @@ const ReservationDisplay = ({ reservation, error }: InferGetServerSidePropsType<
                             <Hidden mdDown>
                                 <Divider orientation="vertical" flexItem />
                             </Hidden>
+                            <Hidden mdUp>
+                                <Divider orientation="horizontal" flexItem sx={{ marginTop: 2 }} />
+                            </Hidden>
                             <Paragraph
                                 text={reservation.description === '' ? '[No Description]' : reservation.description}
                                 sx={{
@@ -128,6 +132,7 @@ const ReservationDisplay = ({ reservation, error }: InferGetServerSidePropsType<
                                     textAlign: 'left',
                                     margin: { lg: '0 0 0 12px', xs: '16px 0 0 0' },
                                     padding: { lg: '8px 0', xs: 0 },
+                                    color: (theme: Theme) => darkSwitch(theme, theme.palette.grey[700], theme.palette.grey[200])
                                 }}
                             />
                         </Box>

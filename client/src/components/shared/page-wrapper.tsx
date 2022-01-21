@@ -35,7 +35,7 @@ const PageWrapper = (props: PageWrapperProps) => {
                 paddingTop: 2,
                 paddingBottom: props.noBottom ? 0 : 2,
                 display: 'flex',
-                height: (theme) => darkSwitch(theme, 'calc(100vh - 72px)', 'calc(100vh - 64px)'),
+                height: (theme) => darkSwitch(theme, 'calc(100vh - 73px)', 'calc(100vh - 64px)'),
                 ...props.sx,
             }}
         >
