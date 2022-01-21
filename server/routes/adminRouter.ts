@@ -89,6 +89,8 @@ router.get('/resources/:resource/:field/:search/:page?', async (req: Request, re
  * Additionally, if the resource is an event, then the related reservation will also be deleted.
  */
 router.delete('/resources/:resource/:id', async (req: Request, res: Response) => {
+    // TODO: This is honestly also a spaghetti pile but idk if it can actually be cleaned up LMAO
+    
     // Check to see if header is there
     if (req.headers.authorization && req.headers.authorization.startsWith('Bearer ')) {
         const validHeader = await validateHeader(req.headers.authorization.substring(7));
@@ -96,6 +98,7 @@ router.delete('/resources/:resource/:id', async (req: Request, res: Response) =>
             // If everything is good, delete the resource
             switch (req.params.resource) {
                 case 'events': {
+                    // Delete events but also delete reservations if there is one and 
                     const event = await Event.findOne({ id: req.params.id });
                     const deleteRes = await Event.deleteOne({ id: req.params.id });
                     if (event.reservationId) await Reservation.deleteOne({ id: event.reservationId });
@@ -108,7 +111,7 @@ router.delete('/resources/:resource/:id', async (req: Request, res: Response) =>
                     const club = await Club.findOne({ id: req.params.id });
                     const deleteRes = await Club.deleteOne({ id: req.params.id });
                     const deleteImageRes = await deleteClubImages(club);
-                    if (deleteImageRes !== 1) club.save(); // TODO: idk if this actually works lol
+                    if (deleteImageRes !== 1) club.save();
                     await History.deleteMany({ resource: 'clubs', id: req.params.id });
                     if (deleteRes.deletedCount === 1 && deleteImageRes === 1) res.send({ ok: 1 });
                     else sendError(res, 500, 'Could not delete club');
