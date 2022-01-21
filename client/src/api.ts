@@ -3,6 +3,7 @@ import type {
     Club,
     ClubImageBlobs,
     Event,
+    ExternalLinks,
     Feedback,
     FetchResponse,
     HistoryItemData,
@@ -10,7 +11,7 @@ import type {
     Reservation,
     Resource,
     Volunteering,
-} from './entries';
+} from './types';
 import Cookies from 'universal-cookie';
 
 const BACKEND_URL =
@@ -449,6 +450,10 @@ export async function getIsAdmin(token: string): Promise<ResourceFetchResponse<I
     return postRequest(`/auth/admin`, JSON.stringify({ token }), true, false) as Promise<
         ResourceFetchResponse<IsAdmin>
     >;
+}
+
+export async function getExternalLinks(): Promise<ResourceFetchResponse<ExternalLinks>> {
+    return getRequest('/external-links') as Promise<ResourceFetchResponse<ExternalLinks>>;
 }
 
 /**
