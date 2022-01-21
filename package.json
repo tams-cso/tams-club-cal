@@ -10,6 +10,7 @@
         "build": "next build",
         "build:staging": "NEXT_PUBLIC_BACKEND=staging next build ./client",
         "backend": "nodemon -r dotenv/config server/app.ts dotenv_config_path=server/.env",
+        "backend:start": "ts-node -r dotenv/config server/app.ts dotenv_config_path=server/.env",
         "start": "next start",
         "build:backend": "node esbuild.js",
         "docker": "docker build --no-cache --progress=plain --build-arg NEXT_PUBLIC_BACKEND=staging -t tams-club-cal ."
