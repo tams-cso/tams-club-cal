@@ -57,6 +57,7 @@ const DesktopMenu = (props: DesktopMenuProps) => {
                     position: 'sticky',
                     zIndex: (theme) => theme.zIndex.drawer + 1,
                     borderBottom: (theme) => darkSwitch(theme, '1px solid #ddd', 'none'),
+                    backgroundColor: (theme) => darkSwitch(theme, theme.palette.common.white, theme.palette.grey[900]),
                 }}
             >
                 <MenuColorBar />
