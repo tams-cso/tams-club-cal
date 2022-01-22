@@ -16,11 +16,11 @@ import TableRow from '@mui/material/TableRow';
 import Loading from '../../src/components/shared/loading';
 import EditWrapper from '../../src/components/edit/shared/edit-wrapper';
 
-
 const Edit = () => {
     const [historyList, setHistoryList] = useState(null);
     const [dataList, setDataList] = useState(null);
     const [noMore, setNoMore] = useState(true);
+    const [error, setError] = useState(false);
     const router = useRouter();
 
     // Redirect user to an add resource page
@@ -35,9 +35,7 @@ const Edit = () => {
         // Update the data/history lists or return an error if the API call fails
         const newHistory = await getHistoryList(historyList[historyList.length - 1].id);
         if (newHistory.status !== 200) {
-            setHistoryList(
-                <Loading error>Could not get history list. Please check your internet and reload the page.</Loading>
-            );
+            setError(true);
             return;
         }
         setDataList([...dataList, ...newHistory.data.dataList]);
@@ -55,9 +53,7 @@ const Edit = () => {
             // Make the API call and handle errors
             const history = await getHistoryList();
             if (history.status !== 200) {
-                setHistoryList(
-                    <Loading error>Could not get history list. Please check your internet and reload the page.</Loading>
-                );
+                setError(true);
                 return;
             }
             setDataList(history.data.dataList);
@@ -94,7 +90,9 @@ const Edit = () => {
                 Edit History
             </Typography>
             {!historyList ? (
-                <Loading />
+                <Loading error={error}>
+                    Could not get history list. Please check your internet and reload the page.
+                </Loading>
             ) : (
                 <TableContainer>
                     <Table>

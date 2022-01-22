@@ -141,3 +141,26 @@ export interface ClubImageBlobs {
     /** All exec profile pictures */
     profilePictures: Blob[];
 }
+
+export type Resource = 'activities' | 'clubs' | 'volunteering';
+
+/** An object containing the information for a single edit to a specific resource */
+export interface HistoryObject {
+    /** The unique UUIDv4 for the history object */
+    id: string;
+
+    /** Resource name of the history */
+    resource: Resource;
+
+    /** The ID of the original resource */
+    editId: string;
+
+    /** The time in UTC milliseconds that this edit was made */
+    time: number;
+
+    /** The editor of this specific resource */
+    editor: Editor;
+
+    /** List of fields that were edited */
+    fields: Field[];
+}
