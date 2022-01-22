@@ -1,6 +1,6 @@
 import React from 'react';
 import { formatTime } from '../../../util';
-import type { History } from '../../../entries';
+import type { History } from '../../../types';
 
 import Dialog from '@mui/material/Dialog';
 import DialogTitle from '@mui/material/DialogTitle';

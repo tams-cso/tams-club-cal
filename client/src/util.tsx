@@ -10,7 +10,7 @@ import type {
     Exec,
     Committee,
     ClubImageBlobs,
-} from './entries';
+} from './types';
 import type { Theme } from '@mui/material';
 import React from 'react';
 import dayjs, { Dayjs } from 'dayjs';

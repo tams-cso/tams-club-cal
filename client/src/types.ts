@@ -250,7 +250,7 @@ export interface HistoryData {
     name: string;
 
     /** Name of the editor of the resource */
-    editor: string; 
+    editor: string;
 
     /** True if it was the first edit */
     first: boolean;
@@ -336,4 +336,22 @@ export interface PopupEvent {
 
     /** Time that popup was activated; this is so same popup can be activated twice w/o clearing state */
     time: number;
+}
+
+/** List of external links for the site */
+export interface ExternalLinks {
+    /** Exam calendar current link */
+    examCalendar: string;
+    
+    /** Link for current academic guide */
+    academicsGuide: string;
+    
+    /** Club leader resources link */
+    clubLeaderResources: string;
+    
+    /** tamswiki.org link */
+    tamsWiki: string;
+    
+    /** Add Google Calendar link for the current app */
+    addCalendar: string;
 }

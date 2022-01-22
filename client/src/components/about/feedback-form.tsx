@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { useForm } from 'react-hook-form';
-import type { Feedback, PopupEvent } from '../../entries';
+import type { Feedback, PopupEvent } from '../../types';
 import { postFeedback } from '../../api';
 
 import Button from '@mui/material/Button';

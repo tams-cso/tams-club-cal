@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import type { Control, FieldValues, UseFormRegister, UseFormSetValue } from 'react-hook-form';
 import { createCommittee } from '../../../util';
-import type { Committee } from '../../../entries';
+import type { Committee } from '../../../types';
 
 import List from '@mui/material/List';
 import Button from '@mui/material/Button';

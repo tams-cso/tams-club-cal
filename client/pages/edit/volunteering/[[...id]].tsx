@@ -4,7 +4,7 @@ import { GetServerSidePropsContext, InferGetServerSidePropsType } from 'next';
 import { useForm } from 'react-hook-form';
 import Cookies from 'universal-cookie';
 import { getParams, createPopupEvent, createVolunteering, createFilters } from '../../../src/util';
-import type { Filters, PopupEvent, Volunteering } from '../../../src/entries';
+import type { Filters, PopupEvent, Volunteering } from '../../../src/types';
 import { getVolunteering, postVolunteering, putVolunteering } from '../../../src/api';
 
 import { Controller } from 'react-hook-form';

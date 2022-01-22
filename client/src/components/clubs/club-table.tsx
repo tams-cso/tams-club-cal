@@ -1,6 +1,6 @@
 import React from 'react';
 import { darkSwitch, darkSwitchGrey } from '../../util';
-import { Club } from '../../entries';
+import { Club } from '../../types';
 
 import Table from '@mui/material/Table';
 import TableBody from '@mui/material/TableBody';

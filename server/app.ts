@@ -21,6 +21,7 @@ import reservationsRouter from './routes/reservationsRouter';
 import historyRouter from './routes/historyRouter';
 import feedbackRouter from './routes/feedbackRouter';
 import adminRouter from './routes/adminRouter';
+import indexRouter from './routes/indexRouter';
 
 // Check for the correct environmental variables
 if (process.env.NODE_ENV !== 'production') checkEnv();
@@ -84,6 +85,7 @@ app.use('/reservations', reservationsRouter);
 app.use('/history', historyRouter);
 app.use('/feedback', feedbackRouter);
 app.use('/admin', adminRouter);
+app.use('/', indexRouter);
 
 // Start express server
 app.listen(process.env.PORT || 5000, () => console.log(`Listening on port ${process.env.PORT || 5000}`));

@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { GetServerSidePropsContext, InferGetServerSidePropsType } from 'next';
 import dayjs from 'dayjs';
 import { getRepeatingReservationList, getReservationList } from '../../../src/api';
-import type { BrokenReservation } from '../../../src/entries';
+import type { BrokenReservation } from '../../../src/types';
 import { parseDateParams } from '../../../src/util';
 
 import Box from '@mui/material/Box';

@@ -1,7 +1,7 @@
 import React from 'react';
 import type { Theme } from '@mui/material';
 import { darkSwitch, darkSwitchGrey, formatEventTime } from '../../util';
-import type { Event } from '../../entries';
+import type { Event } from '../../types';
 
 import ListItem from '@mui/material/ListItem';
 import Typography from '@mui/material/Typography';

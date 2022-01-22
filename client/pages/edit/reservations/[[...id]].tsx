@@ -6,7 +6,7 @@ import dayjs from 'dayjs';
 import isSameOrBefore from 'dayjs/plugin/isSameOrBefore';
 import Cookies from 'universal-cookie';
 import { darkSwitchGrey, createPopupEvent, createReservation } from '../../../src/util';
-import type { PopupEvent } from '../../../src/entries';
+import type { PopupEvent } from '../../../src/types';
 import {
     getOverlappingReservations,
     getRepeatingReservation,

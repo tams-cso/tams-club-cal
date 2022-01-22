@@ -4,7 +4,7 @@ import { GetServerSidePropsContext, InferGetServerSidePropsType } from 'next';
 import { useForm } from 'react-hook-form';
 import Cookies from 'universal-cookie';
 import { processLinkObjectList, createPopupEvent, createClub, createClubImageBlobs } from '../../../src/util';
-import type { Exec, PopupEvent } from '../../../src/entries';
+import type { Exec, PopupEvent } from '../../../src/types';
 import { getClub, postClub, putClub } from '../../../src/api';
 
 import Typography from '@mui/material/Typography';

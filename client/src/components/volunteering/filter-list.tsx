@@ -1,5 +1,5 @@
 import React from 'react';
-import type { Filters } from '../../entries';
+import type { Filters } from '../../types';
 
 import List from '@mui/material/List';
 import DashboardRoundedIcon from '@mui/icons-material/DashboardRounded';
