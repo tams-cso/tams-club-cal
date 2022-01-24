@@ -21,7 +21,7 @@ async function getEditor(req: Request): Promise<Editor> {
 
 /**
  * Creates a history object given the data of the newly created resource.
- * If prevData is not defined, it will simply convert the fields of the data
+ * If it's a new history entry (default), it will simply convert the fields of the data
  * passed in to a key/value pair, or else it will run the diff between the
  * previous and new data (in req.body).
  *
@@ -35,7 +35,7 @@ async function getEditor(req: Request): Promise<Editor> {
  */
 export async function createHistory(
     req: Request,
-    data: Document,
+    data: object,
     resource: string,
     id: string,
     historyId: string,
@@ -48,7 +48,7 @@ export async function createHistory(
         editId: id,
         time: new Date().valueOf(),
         editor: await getEditor(req),
-        fields: isNew ? objectToHistoryObject(data.toObject()) : getDiff(data.toObject(), club || req.body),
+        fields: isNew ? objectToHistoryObject(data) : getDiff(data, club || req.body),
     });
 }
 

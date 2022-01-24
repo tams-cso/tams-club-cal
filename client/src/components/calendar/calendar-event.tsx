@@ -1,6 +1,6 @@
 import React from 'react';
 import type { Theme } from '@mui/material';
-import { darkSwitch, darkSwitchGrey, formatEventTime } from '../../util';
+import { darkSwitch, darkSwitchGrey, formatActivityTime } from '../../util';
 import type { Event } from '../../types';
 
 import ListItem from '@mui/material/ListItem';
@@ -9,7 +9,7 @@ import Link from '../shared/Link';
 
 interface CalendarEventProps {
     /** Event object to display */
-    event: Event;
+    activity: Event;
 
     /** True if you want the highlight color to be lighter */
     lighter?: boolean;
@@ -22,7 +22,7 @@ const CalendarEvent = (props: CalendarEventProps) => {
     return (
         <ListItem sx={{ overflow: 'hidden', padding: 0 }}>
             <Link
-                href={`/events/${props.event.id}?view=calendar`}
+                href={`/events/${props.activity.id}?view=calendar`}
                 sx={{
                     width: '100%',
                     padding: '2px 8px',
@@ -47,7 +47,7 @@ const CalendarEvent = (props: CalendarEventProps) => {
                         fontSize: '0.65rem',
                     }}
                 >
-                    {formatEventTime(props.event, true)}
+                    {formatActivityTime(props.activity, true)}
                 </Typography>
                 <Typography
                     sx={{
@@ -59,7 +59,7 @@ const CalendarEvent = (props: CalendarEventProps) => {
                         fontSize: { lg: '0.85rem', xs: '0.65rem' },
                     }}
                 >
-                    {props.event.name}
+                    {props.activity.name}
                 </Typography>
             </Link>
         </ListItem>

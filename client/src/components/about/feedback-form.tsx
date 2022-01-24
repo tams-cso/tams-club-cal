@@ -37,7 +37,7 @@ const FeedbackForm = () => {
         setBackdrop(false);
 
         // Check if feedback was successfully sent and send message to user
-        if (res.status == 200) {
+        if (res.status == 204) {
             setValue('feedback', '');
             setValue('name', '');
             setPopupEvent({ severity: 2, message: 'Feedback successfully submitted!', time: new Date().valueOf() });

@@ -73,7 +73,7 @@ router.post('/', imageUpload, async (req: Request, res: Response) => {
 
         const clubRes = await newClub.save();
         const historyRes = await newHistory.save();
-        if (clubRes === newClub && historyRes === newHistory) res.send({ ok: 1 });
+        if (clubRes === newClub && historyRes === newHistory) res.sendStatus(204);
         else sendError(res, 500, 'Unable to add new club to database');
     } catch (error) {
         console.error(error);
@@ -122,7 +122,7 @@ router.put('/:id', imageUpload, async (req: Request, res: Response) => {
         );
         const historyRes = await newHistory.save();
 
-        if (clubRes.acknowledged && historyRes === newHistory) res.send({ ok: 1 });
+        if (clubRes.acknowledged && historyRes === newHistory) res.sendStatus(204);
         else sendError(res, 500, 'Unable to update event in database.');
     } catch (error) {
         console.error(error);

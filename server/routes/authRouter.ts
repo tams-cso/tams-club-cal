@@ -45,19 +45,26 @@ router.get('/user/id/:id', async (req: Request, res: Response) => {
 });
 
 /**
- * POST /auth
+ * GET /auth/<token>
  *
  * Given a token in the body request, determine if that user is logged in.
  * If invalid token or missing token, return false.
  */
-router.post('/', async (req: Request, res: Response) => {
-    if (!req.body.token) {
-        sendError(res, 400, 'Missing token in body');
-        return;
-    }
-    const user = await User.findOne({ token: req.body.token }).exec();
+router.get('/:token', async (req: Request, res: Response) => {
+    const user = await User.findOne({ token: req.params.token }).exec();
     if (user) res.send({ loggedIn: true });
     else res.send({ loggedIn: false });
+});
+
+/**
+ * GET /auth/admin/<token>
+ *
+ * Given a token in the body request, determine if that user is logged in.
+ * If invalid token or missing token, return false.
+ */
+router.get('/admin/:token', async (req: Request, res: Response) => {
+    if (await isAdmin(req.params.token)) res.send({ admin: true });
+    else res.send({ admin: false });
 });
 
 /**
@@ -82,21 +89,6 @@ router.post('/login', async (req: Request, res: Response) => {
 
     // Redirect to error if failed verification
     res.redirect(`${process.env.ORIGIN}/auth?error=${error}`);
-});
-
-/**
- * POST /auth/admin
- *
- * Given a token in the body request, determine if that user is logged in.
- * If invalid token or missing token, return false.
- */
-router.post('/admin', async (req: Request, res: Response) => {
-    if (!req.body.token) {
-        sendError(res, 400, 'Missing token in body');
-        return;
-    }
-    if (await isAdmin(req.body.token)) res.send({ admin: true });
-    else res.send({ admin: false });
 });
 
 export default router;

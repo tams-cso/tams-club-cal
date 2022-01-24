@@ -17,7 +17,7 @@ router.post('/', async (req: Request, res: Response) => {
         });
 
         const feedbackRes = await newFeedback.save();
-        if (feedbackRes == newFeedback) res.send({ ok: 1 });
+        if (feedbackRes == newFeedback) res.sendStatus(204);
         else sendError(res, 500, 'Unable to add feedback to database');
     } catch (err) {
         console.error(err);

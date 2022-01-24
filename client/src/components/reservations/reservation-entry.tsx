@@ -1,14 +1,14 @@
 import React from 'react';
 import { alpha } from '@mui/material';
 import { darkSwitch } from '../../util';
-import type { Reservation } from '../../types';
+import type { Event } from '../../types';
 
 import TableCell from '@mui/material/TableCell';
 import Link from '../shared/Link';
 
 interface ReservationEntryProps {
     /** The reservation data object to display */
-    reservation: Reservation;
+    reservation: Event;
 
     /** How many hours does the reservation last; this will determine the column span */
     span: number;
@@ -25,7 +25,7 @@ const ReservationEntry = (props: ReservationEntryProps) => {
     return (
         <TableCell colSpan={props.span || 1} sx={props.sx}>
             <Link
-                href={`/events/reservations/view/${props.reservation.id}${props.reservation.repeatEnd ? '?repeating=true' : ''}`}
+                href={`/events/${props.reservation.id}?view=reservations`}
                 sx={{
                     display: 'block',
                     fontSize: '0.75rem',

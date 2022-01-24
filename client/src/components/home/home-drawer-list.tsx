@@ -12,7 +12,7 @@ import PublicRoundedIcon from '@mui/icons-material/PublicRounded';
 import EventAvailableRoundedIcon from '@mui/icons-material/EventAvailableRounded';
 import { getExternalLinks } from '../../api';
 import Popup from '../shared/popup';
-import { createPopupEvent } from '../../util';
+import { createPopupEvent, darkSwitchGrey } from '../../util';
 
 // Style the ListItemIcon components
 const iconStyle = { minWidth: 40 };
@@ -45,7 +45,11 @@ const HomeDrawerList = () => {
             <Typography variant="h3" sx={{ textAlign: 'center', marginTop: 4, marginBottom: 2 }}>
                 External Links
             </Typography>
-            {!links ? null : (
+            {!links ? (
+                <Typography sx={{ color: (theme) => darkSwitchGrey(theme), textAlign: 'center' }}>
+                    Loading...
+                </Typography>
+            ) : (
                 <List>
                     <ListItemButton component="a" href={links.examCalendar} target="_blank">
                         <ListItemIcon sx={iconStyle}>

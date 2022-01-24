@@ -4,11 +4,11 @@ import type { Event } from '../../types';
 import List from '@mui/material/List';
 import Divider from '@mui/material/Divider';
 import DateSection from './date-section';
-import EventEntry from './event-entry';
+import ActivityEntry from './event-entry';
 
 interface EventListSectionProps {
     /** List of events for this section (day) */
-    eventList: Event[];
+    activityList: Event[];
 }
 
 /**
@@ -18,13 +18,13 @@ interface EventListSectionProps {
 const EventListSection = (props: EventListSectionProps) => {
     return (
         <React.Fragment>
-            <DateSection time={props.eventList[0].start} />
+            <DateSection time={props.activityList[0].start} />
             <List>
-                {props.eventList.map((event, index) => {
+                {props.activityList.map((activity, index) => {
                     return (
                         <React.Fragment key={index}>
                             {index === 0 ? null : <Divider variant="middle" />}
-                            <EventEntry event={event} />
+                            <ActivityEntry activity={activity} />
                         </React.Fragment>
                     );
                 })}

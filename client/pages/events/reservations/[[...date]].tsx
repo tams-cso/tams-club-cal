@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { GetServerSidePropsContext, InferGetServerSidePropsType } from 'next';
 import dayjs from 'dayjs';
-import { getRepeatingReservationList, getReservationList } from '../../../src/api';
+import { getReservationList } from '../../../src/api';
 import type { BrokenReservation } from '../../../src/types';
 import { parseDateParams } from '../../../src/util';
 
@@ -19,19 +19,14 @@ export const getServerSideProps = async (ctx: GetServerSidePropsContext) => {
     // Extract params to get the month to use
     const now = parseDateParams(ctx.params.date as string[]);
 
-    // Get the reservation and repeating reservation lists for the given week
+    // Get the reservation for the given week
     // and send an error if either fails to retrieve
     const reservations = await getReservationList(now.valueOf());
-    const repeatingReservations = await getRepeatingReservationList(now.valueOf());
-
-    // Set the state variable with the reservations and repeating reservations
-    const reservationList = { reservations: reservations.data, repeatingReservations: repeatingReservations.data };
-
     return {
         props: {
             now: now.valueOf(),
-            reservationList,
-            error: reservations.status !== 200 || repeatingReservations.status !== 200,
+            reservationList: reservations.data,
+            error: reservations.status !== 200,
         },
     };
 };
@@ -53,22 +48,9 @@ const Reservations = ({ now, reservationList, error }: InferGetServerSidePropsTy
         // If the reservation list is null, do nothing
         if (error) return;
 
-        // Add repeating events to the reservation list
-        // Since repeating reservation will repeat weekly, we simply just add one instance of
-        // that repeating reservation on the day and time that it would occur
-        const combinedReservationList = [
-            ...reservationList.reservations,
-            ...reservationList.repeatingReservations.map((r) => {
-                const start = week.day(dayjs(r.start).day()).hour(dayjs(r.start).hour()).valueOf();
-                const tempEnd = week.day(dayjs(r.end).day()).hour(dayjs(r.end).hour());
-                const end = tempEnd.isBefore(start) ? tempEnd.add(1, 'week').valueOf() : tempEnd.valueOf();
-                return { ...r, start, end };
-            }),
-        ];
-
         // Break up reservations into days and sort the reservations
         const brokenUpReservationList: BrokenReservation[] = [];
-        combinedReservationList.forEach((r) => {
+        reservationList.forEach((r) => {
             // Use variable to track the current day that we are working on
             let curr = dayjs(r.start);
 
@@ -202,7 +184,7 @@ const Reservations = ({ now, reservationList, error }: InferGetServerSidePropsTy
                     )}
                 />
             </Box>
-            <AddButton color="primary" label="Reservation" path="/edit/reservations" />
+            <AddButton color="primary" label="Reservation" path="/edit/events" />
             {reservationComponentList === null ? <Loading /> : reservationComponentList}
         </HomeBase>
     );

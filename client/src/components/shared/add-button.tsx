@@ -37,6 +37,9 @@ const AddButton = (props: AddButtonProps) => {
         router.push(props.path || '#');
     };
 
+    // Change position of button to the left side if it's the edit history button
+    const leftOrRight = props.editHistory ? { left: { lg: 32, xs: 12 } } : { right: { lg: 32, xs: 12 } };
+
     return (
         <Tooltip
             title={
@@ -54,9 +57,9 @@ const AddButton = (props: AddButtonProps) => {
                     margin: props.editHistory ? '12px auto' : 'auto',
                     position: 'fixed',
                     bottom: { lg: 32, xs: 12 },
-                    right: { lg: 32, xs: 12 },
                     zIndex: (theme) => theme.zIndex.appBar + 1,
                     color: (theme) => theme.palette.common.white,
+                    ...leftOrRight,
                 }}
             >
                 {props.editHistory ? (

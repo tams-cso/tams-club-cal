@@ -11,6 +11,7 @@ import type {
     Committee,
     ClubImageBlobs,
 } from './types';
+import { RepeatingStatus } from './types';
 import type { Theme } from '@mui/material';
 import React from 'react';
 import dayjs, { Dayjs } from 'dayjs';
@@ -163,13 +164,14 @@ export function isSameDate(first: number, second: number): boolean {
  * Formats the full date of the event.
  * Includes an end date if not the same as the start date.
  *
- * @param event The event object
+ * @param activity The activity object
  * @returns The formatted full date
  */
-export function formatEventDate(event: Event | Reservation): string {
-    if (!toTz(event.start).isSame(toTz(event.end), 'day')) return formatTime(event.start, 'dddd, MMMM D, YYYY h:mma');
-    let formattedTime = formatTime(event.start, 'dddd, MMMM D, YYYY');
-    if (!isSameDate(event.start, event.end)) formattedTime += formatTime(event.end, ' - dddd, MMMM D, YYYY');
+export function formatActivityDate(activity: Event): string {
+    if (!toTz(activity.start).isSame(toTz(activity.end), 'day'))
+        return formatTime(activity.start, 'dddd, MMMM D, YYYY h:mma');
+    let formattedTime = formatTime(activity.start, 'dddd, MMMM D, YYYY');
+    if (!isSameDate(activity.start, activity.end)) formattedTime += formatTime(activity.end, ' - dddd, MMMM D, YYYY');
     return formattedTime;
 }
 
@@ -177,22 +179,18 @@ export function formatEventDate(event: Event | Reservation): string {
  * Formats the time of the event.
  * Includes an end time if not the same as the start time.
  *
- * @param event The event object
+ * @param activity The activity object
  * @param noEnd If true, will not show an end time
  * @param checkSame If true, will check to see if start !== end and return the end time. This is used for the EventDisplay component
  * @returns The formatted time for the event in the format [h:mma - h:mma]
  */
-export function formatEventTime(
-    event: Event | Reservation,
-    noEnd: boolean = false,
-    checkSame: boolean = false
-): string {
-    if (event.allDay) return 'Full Day';
-    if (checkSame && !toTz(event.start).isSame(toTz(event.end), 'day'))
-        return formatTime(event.end, 'dddd, MMMM D, YYYY h:mma');
+export function formatActivityTime(activity: Event, noEnd: boolean = false, checkSame: boolean = false): string {
+    if (activity.allDay) return 'Full Day';
+    if (checkSame && !toTz(activity.start).isSame(toTz(activity.end), 'day'))
+        return formatTime(activity.end, 'dddd, MMMM D, YYYY h:mma');
 
-    let formattedTime = formatTime(event.start, 'h:mma', true);
-    if (!noEnd && event.start !== event.end) formattedTime += ` - ${formatTime(event.end, 'h:mma', true)}`;
+    let formattedTime = formatTime(activity.start, 'h:mma', true);
+    if (!noEnd && activity.start !== activity.end) formattedTime += ` - ${formatTime(activity.end, 'h:mma', true)}`;
     return formattedTime;
 }
 
@@ -261,34 +259,34 @@ export function parseDateParams(dates: string[]): Dayjs {
  * Will split up multiple day events to be displayed correctly.
  * This will essentially create a new event for each day of the multi-day event.
  *
- * @param eventList The unparsed event list
- * @returns The parsed event list
+ * @param activityList The unparsed activity list
+ * @returns The parsed activity list
  */
-export function parseEventList(eventList: Event[]): Event[] {
+export function parsePublicActivityList(activityList: Event[]): Event[] {
     const outputList = [];
-    eventList.forEach((e) => {
+    activityList.forEach((a) => {
         // Simply return the event if it does not span across multiple days
-        if (dayjs(e.start).isSame(dayjs(e.end), 'day') || e.allDay) {
-            outputList.push(e);
+        if (dayjs(a.start).isSame(dayjs(a.end), 'day') || a.allDay) {
+            outputList.push(a);
             return;
         }
 
         // Calculate how many days the events span
-        let currDate = dayjs(e.start);
-        const span = dayjs(e.end).diff(currDate, 'day') + isNotMidnight(e.start) + isNotMidnight(e.end);
+        let currDate = dayjs(a.start);
+        const span = dayjs(a.end).diff(currDate, 'day') + isNotMidnight(a.start) + isNotMidnight(a.end);
 
         // Iterate through the days and set the display start/end times
         for (let day = 1; day <= span; day++) {
-            const currEnd = day === span ? dayjs(e.end) : currDate.add(1, 'day').startOf('day');
+            const currEnd = day === span ? dayjs(a.end) : currDate.add(1, 'day').startOf('day');
             outputList.push({
-                ...e,
+                ...a,
                 start: currDate.valueOf(),
                 end: currEnd.valueOf(),
-                name: `${e.name} (Day ${day}/${span})`,
+                name: `${a.name} (Day ${day}/${span})`,
                 allDay:
                     (day !== 1 && day !== span) ||
-                    (day === 1 && isNotMidnight(e.start) === 0) ||
-                    (day === span && isNotMidnight(e.end) === 0),
+                    (day === 1 && isNotMidnight(a.start) === 0) ||
+                    (day === span && isNotMidnight(a.end) === 0),
             });
             currDate = currEnd;
         }
@@ -432,16 +430,39 @@ export function createReservation(
 export function createEvent(
     id: string = null,
     eventId: string = null,
-    reservationId: string = null,
-    type: 'event' | 'signup' = 'event',
+    type: string = 'Event',
     name: string = '',
     club: string = '',
     description: string = '',
     start: number = 0,
     end: number = 0,
     location: string = 'none',
+    noEnd: boolean = false,
     allDay: boolean = false,
+    repeats: RepeatingStatus = RepeatingStatus.NONE,
+    repeatsUntil: number = null,
+    repeatOriginId: string = null,
+    publicEvent: boolean = true,
+    reservation: boolean = false,
     history: string[] = null
 ): Event {
-    return { id, eventId, reservationId, type, name, club, description, start, end, location, allDay, history };
+    return {
+        id,
+        eventId,
+        type,
+        name,
+        club,
+        description,
+        start,
+        end,
+        location,
+        noEnd,
+        allDay,
+        repeats,
+        repeatsUntil,
+        repeatOriginId,
+        publicEvent,
+        reservation,
+        history,
+    };
 }

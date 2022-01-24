@@ -6,7 +6,7 @@ import History from '../models/history';
 import Club from '../models/club';
 import Volunteering from '../models/volunteering';
 import { HistoryObject } from '../functions/types';
-import Activity from '../models/activity';
+import Event from '../models/event';
 const router = express.Router();
 
 /**
@@ -41,7 +41,7 @@ router.get('/', async (req: Request, res: Response) => {
     const dataList = await Promise.all(
         sortedHistory.map(async (h: HistoryObject) => {
             let resourceObj = null;
-            if (h.resource === 'activities') resourceObj = await Activity.findOne({ id: h.editId });
+            if (h.resource === 'activities') resourceObj = await Event.findOne({ id: h.editId });
             else if (h.resource === 'clubs') resourceObj = await Club.findOne({ id: h.editId });
             else if (h.resource === 'volunteering') resourceObj = await Volunteering.findOne({ id: h.editId });
             const name = !resourceObj ? 'N/A' : resourceObj.name;
@@ -65,7 +65,7 @@ router.get('/:resource/:id', async (req: Request, res: Response) => {
 
     // Get the resource object based on the passed in resource name
     let resourceObj = null;
-    if (req.params.resource === 'activities') resourceObj = await Activity.findOne({ id });
+    if (req.params.resource === 'events') resourceObj = await Event.findOne({ id });
     else if (req.params.resource === 'clubs') resourceObj = await Club.findOne({ id });
     else if (req.params.resource === 'volunteering') resourceObj = await Volunteering.findOne({ id });
     else {

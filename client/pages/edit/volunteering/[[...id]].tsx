@@ -71,7 +71,7 @@ const EditVolunteering = ({ volunteering, id, error }: InferGetServerSidePropsTy
         setBackdrop(false);
 
         // If the request was successful, redirect to the volunteering page, otherwise display an error
-        if (res.status === 200) {
+        if (res.status === 204) {
             new Cookies().set('success', id ? 'update-volunteering' : 'add-volunteering', {
                 sameSite: 'strict',
                 path: '/',

@@ -13,7 +13,7 @@ import CalendarPopup from './calendar-popup';
 
 interface CalendarDayPopup {
     /** List of all events for the current day */
-    events: Event[];
+    activities: Event[];
 
     /** Date to display */
     date: Dayjs;
@@ -45,9 +45,9 @@ const CalendarDay = (props: CalendarDayPopup) => {
 
     // Calculates how many extra events there are that can't fit
     // and slices the array accordingly
-    const maxEvents = props.rows === 5 ? 3 : 4;
-    const extraEvents = Math.max(props.events.length - maxEvents, 0);
-    const events = extraEvents > 0 ? props.events.slice(0, maxEvents) : props.events;
+    const maxActivities = props.rows === 5 ? 3 : 4;
+    const extraActivities = Math.max(props.activities.length - maxActivities, 0);
+    const activities = extraActivities > 0 ? props.activities.slice(0, maxActivities) : props.activities;
 
     return (
         <Box
@@ -79,10 +79,10 @@ const CalendarDay = (props: CalendarDayPopup) => {
                 {props.date.date()}
             </Button>
             <List sx={{ paddingTop: 0 }}>
-                {events.map((e) => (
-                    <CalendarEvent event={e} key={e.id} />
+                {activities.map((a) => (
+                    <CalendarEvent activity={a} key={a.id} />
                 ))}
-                {extraEvents === 0 ? null : (
+                {extraActivities === 0 ? null : (
                     <ListItem sx={{ padding: 0 }}>
                         <Typography
                             sx={{
@@ -92,13 +92,13 @@ const CalendarDay = (props: CalendarDayPopup) => {
                                 color: (theme) => darkSwitchGrey(theme),
                             }}
                         >
-                            {`+${extraEvents} more event(s)`}
+                            {`+${extraActivities} more event(s)`}
                         </Typography>
                     </ListItem>
                 )}
             </List>
             <CalendarPopup
-                events={props.events}
+                activities={props.activities}
                 date={props.date}
                 open={popupOpen}
                 close={togglePopup.bind(this, false)}

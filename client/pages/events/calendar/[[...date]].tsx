@@ -3,8 +3,8 @@ import { GetServerSidePropsContext, InferGetServerSidePropsType } from 'next';
 import { useRouter } from 'next/router';
 import { Typography } from '@mui/material';
 import dayjs from 'dayjs';
-import { darkSwitch, parseDateParams, parseEventList } from '../../../src/util';
-import { getEventListInRange } from '../../../src/api';
+import { darkSwitch, parseDateParams, parsePublicActivityList } from '../../../src/util';
+import { getPublicEventListInRange } from '../../../src/api';
 
 import Box from '@mui/material/Box';
 import IconButton from '@mui/material/IconButton';
@@ -52,11 +52,11 @@ export const getServerSideProps = async (ctx: GetServerSidePropsContext) => {
 
     // Retrieve the events based on the set dates
     // If there is an error, show an error popup and don't continue
-    let res = await getEventListInRange(startOfPrevMonth.valueOf(), endOfNextMonth.valueOf());
+    let res = await getPublicEventListInRange(startOfPrevMonth.valueOf(), endOfNextMonth.valueOf());
     const error = res.status !== 200;
     return {
         props: {
-            events: res.data,
+            activities: res.data,
             error,
             firstDateInMonth: firstDateInMonth.valueOf(),
             numRows,
@@ -84,7 +84,7 @@ const Calendar = (props: InferGetServerSidePropsType<typeof getServerSideProps>)
         if (props.error) return;
 
         // Parse the fetched events by splitting multi-day events into separate event objects
-        const events = parseEventList(props.events);
+        const events = parsePublicActivityList(props.activities);
 
         // Create the actual list of calendar days by grouping
         // events into their days and adding it to the components list
@@ -103,7 +103,7 @@ const Calendar = (props: InferGetServerSidePropsType<typeof getServerSideProps>)
             // Add a CalendarDay to the list of components
             dayComponents.push(
                 <CalendarDay
-                    events={currentDayEvents}
+                    activities={currentDayEvents}
                     date={currDay}
                     key={i}
                     noRight={i % 7 === 6}
@@ -118,7 +118,7 @@ const Calendar = (props: InferGetServerSidePropsType<typeof getServerSideProps>)
         setCalendarDays(dayComponents);
         setRows(props.numRows);
         setMonth(now.format('MMMM YYYY'));
-    }, [props.events]);
+    }, [props.activities]);
 
     // Adjust the offset of month when user clicks on the arrow buttons
     // The change that is passed in will be +1 or -1 depending on which arrow button was clicked

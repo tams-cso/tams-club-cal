@@ -1,5 +1,12 @@
 import type { Request } from 'express';
 
+/** Status representing how an event repeats */
+export enum RepeatingStatus {
+    NONE,
+    WEEKLY,
+    MONTHLY,
+}
+
 /**
  * An object containing the information for an editor.
  * Either the id or ip will contain data, but the id will take precedence.
@@ -32,11 +39,8 @@ export interface EventObject {
     /** The ID assigned by the Google Calendar API to the calendar event */
     eventId: string;
 
-    /** The ID of the reservation associated with the event */
-    reservationId?: string | number;
-
     /** The type of the event */
-    type: 'event' | 'signup';
+    type: string;
 
     /** The name of the event */
     name: string;
@@ -56,11 +60,26 @@ export interface EventObject {
     /** The value of the location that the event takes place in */
     location: string;
 
-    /** If true, the event will last the entire day, will ignore start/end datetime */
-    allDay?: boolean;
-
     /** If true, the event will not have an end time */
-    noEnd?: boolean;
+    noEnd: boolean;
+
+    /** If true, the event will last the entire day, will ignore start/end datetime */
+    allDay: boolean;
+
+    /** RepeatingStatus enum # */
+    repeats: RepeatingStatus;
+
+    /** UTC milliscond date that event stops repeating */
+    repeatsUntil: number;
+
+    /** ID of the original repeating event */
+    repeatOriginId: string;
+
+    /** True to show on schedule view/calendar/Google Calendar */
+    publicEvent: boolean;
+
+    /** True to show on reservation calendar/check for overlaps */
+    reservation: boolean;
 
     /** Edit history list */
     history: string[];

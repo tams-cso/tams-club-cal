@@ -1,7 +1,7 @@
 import React from 'react';
 import type { Theme } from '@mui/material';
 import type { Event } from '../../types';
-import { darkSwitch, formatEventTime } from '../../util';
+import { darkSwitch, formatActivityTime } from '../../util';
 
 import Box from '@mui/material/Box';
 import ListItem from '@mui/material/ListItem';
@@ -9,17 +9,17 @@ import Typography from '@mui/material/Typography';
 import Link from '../shared/Link';
 import StyledSpan from '../shared/styled-span';
 
-interface EventEntryProps {
+interface ActivityEntryProps {
     /** The event object to display */
-    event: Event
+    activity: Event;
 }
 
 /**
  * An event entry on the home page events list
  */
-const EventEntry = (props: EventEntryProps) => {
+const ActivityEntry = (props: ActivityEntryProps) => {
     // Replace all the newlines in the description with a pipe
-    const description = props.event.description.replace(/\n/g, ' | ');
+    const description = props.activity.description.replace(/\n/g, ' | ');
 
     return (
         <ListItem
@@ -30,7 +30,7 @@ const EventEntry = (props: EventEntryProps) => {
             }}
         >
             <Link
-                href={`/events/${props.event.id}`}
+                href={`/events/${props.activity.id}`}
                 sx={{
                     width: '100%',
                     padding: { lg: 2, xs: '8px 0' },
@@ -49,7 +49,7 @@ const EventEntry = (props: EventEntryProps) => {
                         fontSize: { lg: '1.2rem', xs: '0.9rem' },
                     }}
                 >
-                    {formatEventTime(props.event)}
+                    {formatActivityTime(props.activity)}
                 </Typography>
                 <Box sx={{ overflow: 'hidden' }}>
                     <Typography
@@ -60,7 +60,7 @@ const EventEntry = (props: EventEntryProps) => {
                             fontSize: { lg: '1.25rem', xs: '1rem' },
                         }}
                     >
-                        {props.event.name}
+                        {props.activity.name}
                     </Typography>
                     <Typography
                         sx={{
@@ -78,9 +78,9 @@ const EventEntry = (props: EventEntryProps) => {
                                     darkSwitch(theme, theme.palette.common.black, theme.palette.grey[400]),
                             }}
                         >
-                            {props.event.club}
+                            {props.activity.club}
                         </StyledSpan>
-                        {props.event.description ? ` - ${description}` : ''}
+                        {props.activity.description ? ` - ${description}` : ''}
                     </Typography>
                 </Box>
             </Link>
@@ -88,4 +88,4 @@ const EventEntry = (props: EventEntryProps) => {
     );
 };
 
-export default EventEntry;
+export default ActivityEntry;

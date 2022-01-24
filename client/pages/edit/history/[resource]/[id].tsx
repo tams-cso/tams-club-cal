@@ -16,7 +16,6 @@ import Button from '@mui/material/Button';
 import Loading from '../../../../src/components/shared/loading';
 import HistoryPopup from '../../../../src/components/edit/history/history-popup';
 import Title from '../../../../src/components/shared/title';
-import EditLogin from '../../../../src/components/edit/shared/edit-login';
 import EditWrapper from '../../../../src/components/edit/shared/edit-wrapper';
 
 // Server-side Rendering
@@ -25,6 +24,7 @@ export const getServerSideProps = async (ctx: GetServerSidePropsContext) => {
     const resource = ctx.params.resource as Resource;
     const historyRes = await getHistory(resource, id);
     const sortedHistory = historyRes.status === 200 ? historyRes.data.history.sort((a, b) => b.time - a.time) : null;
+    // TODO: If historyRes.data.name is undefined, this will throw an unhandled error; find a way to mitigate this
     return {
         props: {
             historyList: sortedHistory,
