@@ -8,6 +8,7 @@ import Club from '../models/club';
 import Volunteering from '../models/volunteering';
 import History from '../models/history';
 import { deleteCalendarEvent } from '../functions/gcal';
+import { EventObject } from '../functions/types';
 
 const router = express.Router();
 
@@ -88,14 +89,14 @@ router.delete('/resources/:resource/:id', async (req: Request, res: Response) =>
         switch (req.params.resource) {
             case 'events': {
                 // Get previous event and return error if invalid ID
-                const event = await Event.findOne({ id: req.params.id });
+                const event: EventObject = await Event.findOne({ id: req.params.id });
                 if (!event) {
                     sendError(res, 400, 'Invalid ID');
                     return;
                 }
     
                 // Delete event from Google Calendar, History DB, and Events DB
-                await deleteCalendarEvent(event.eventId);
+                if (event.publicEvent) await deleteCalendarEvent(event.eventId);
                 const deleteRes = await Event.deleteOne({ id: req.params.id });
                 await History.deleteMany({ resource: 'events', id: req.params.id });
     

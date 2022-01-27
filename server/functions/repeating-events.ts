@@ -75,8 +75,8 @@ export async function updateRepeatingEvents(originalId: string, updateData: Even
                 location: updateData.location,
                 allDay: updateData.allDay,
                 noEnd: updateData.noEnd,
-                publicEvent: updateData.name,
-                reservation: updateData.name,
+                publicEvent: updateData.publicEvent,
+                reservation: updateData.reservation,
             },
         }
     );

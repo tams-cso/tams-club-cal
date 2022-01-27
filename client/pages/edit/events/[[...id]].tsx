@@ -220,6 +220,11 @@ const EditEvents = ({ event, id, error }: InferGetServerSidePropsType<typeof get
         else setPrevStart(dayjs().startOf('hour').add(1, 'hour').valueOf());
     }, []);
 
+    // Change start and end times if event changes
+    useEffect(() => {
+        setValue('start', dayjs(event.start));
+    }, [event]);
+
     // Offset the end time if startTime is changed to the same duration
     useEffect(() => {
         if (watchEnd === undefined || errors.end) return;
@@ -440,7 +445,7 @@ const EditEvents = ({ event, id, error }: InferGetServerSidePropsType<typeof get
                     name="repeatsUntil"
                     label="Repeat Until (Exclusive)"
                     value={event.repeatsUntil}
-                    disabled={!watchRepeatsMonthly && !watchRepeatsWeekly}
+                    disabled={(!watchRepeatsMonthly && !watchRepeatsWeekly) || (event.repeatOriginId && event.repeatOriginId !== event.id)}
                     errorMessage="Repeats Until must be after start time"
                     validate={() =>
                         (!watchRepeatsMonthly && !watchRepeatsWeekly) || watchRepeatsUntil.isAfter(watchStart)

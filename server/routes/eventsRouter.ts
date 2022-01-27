@@ -259,12 +259,10 @@ router.put('/:id', async (req: Request, res: Response) => {
         // Blocks follow this order:
         //      1. Instance of a repeating event (delete instance, create a new event, and RETURN)
         //      2. Event is no longer public (delete calendar event)
-        //      3. "repeats" field changed from WEEKLY/MONTHLY OR START/END time has changed for the event (delete repeating events)
+        //      3. "repeats" field changed from WEEKLY/MONTHLY OR START/END time has changed for the event OR "repeatUntil" time is LATER than previous (delete repeating events)
         //      4. Event does not currently repeat (update one, create history, and RETURN)
-        //      5. Completely new repeated events need to be made because 3 and IS NOW repeating (create new repeating instances, and RETURN)
-        //      6. "repeatUntil" time is EARLIER than previous (remove no longer repeated events, update events, and RETURN)
-        //      7. "repeatUntil" time is LATER than previous (insert new events, update events, and RETURN)
-        //      8. Default case: event is repeating but "repeats" and "repeatUntil" has not changed (update event and repetitions, RETURN)
+        //      5. Completely new repeated events need to be made because 3 and IS NOW repeating OR "repeatUntil" time is LATER than previous (create new repeating instances, and RETURN)
+        //      6. Default case: event is repeating but "repeats" and "repeatUntil" has not changed (update event and repetitions, RETURN)
 
         // (1) Case that the event is an INSTANCE of a repeating event -> DETACH IT FROM THE ORIGINAL EVENT!
         // Will return after block
@@ -281,17 +279,17 @@ router.put('/:id', async (req: Request, res: Response) => {
             };
 
             // Create pseudo object to update history/calendar
-            const newPseudoEvent = { ...toUpdate, ...newFields };
+            const newEvent = { ...toUpdate, ...newFields };
 
             // Create new history object
-            const newHistory = await createHistory(req, newPseudoEvent, 'events', id, historyId, true);
+            const newHistory = await createHistory(req, newEvent, 'events', id, historyId, true);
 
             // If public, add to calendar
-            if (toUpdate.publicEvent) newFields.eventId = await addToCalendar(newPseudoEvent);
+            if (toUpdate.publicEvent) newFields.eventId = await addToCalendar(newEvent);
 
             // Save changes and send success to user
             // Exit router when done as nothing else needs to be done
-            await Event.updateOne({ id }, { $set: newFields });
+            await Event.updateOne({ id }, { $set: newEvent });
             await newHistory.save();
             res.sendStatus(204);
             return;
@@ -304,12 +302,15 @@ router.put('/:id', async (req: Request, res: Response) => {
             toUpdate.eventId = null;
         }
 
-        // (3) Case that the event was repeating and has changed OR time changed on repeating event => delete previous repeating events
+        // (3) Case that the event was repeating and has changed OR time changed on repeating event OR repeatsUntil changed => delete previous repeating events
         // This block can only be executed if the event is the ORIGINAL REPEATING EVENT
         // Will NOT return after block
         if (
             (prev.repeats !== RepeatingStatus.NONE && prev.repeats !== repeats) ||
-            (timeChanged && repeats !== RepeatingStatus.NONE)
+            (timeChanged && repeats !== RepeatingStatus.NONE) ||
+            (prev.repeats !== RepeatingStatus.NONE &&
+                prev.repeats === repeats &&
+                toUpdate.repeatsUntil != prev.repeatsUntil)
         ) {
             // Delete repeating events from database
             await Event.deleteMany({
@@ -338,10 +339,14 @@ router.put('/:id', async (req: Request, res: Response) => {
         }
 
         // (5) Case that (3) deleted repeating events OR is now repeating when it wasn't before => updates current event, creates new repeating instances
-        // Covers case where Repeat pattern changed, event was set to repeating, or Start/end time changed
+        // Covers case where Repeat pattern changed, event was set to repeating, Start/end time changed, OR repeat until time changed
         // Note that (4) catches all cases where "repeats" was set to NONE
         // Will return after block
-        if (prev.repeats !== repeats || timeChanged) {
+        if (
+            prev.repeats !== repeats ||
+            timeChanged ||
+            (prev.repeats === repeats && toUpdate.repeatsUntil != prev.repeatsUntil)
+        ) {
             // Create new repeating events
             const repeatingList = await addRepeatingEvents(id, toUpdate);
 
@@ -354,8 +359,9 @@ router.put('/:id', async (req: Request, res: Response) => {
                 toUpdate.eventId = ids[0];
             }
 
-            // Update event in DB
+            // Update event and upload repeating to DB
             await Event.updateOne({ id }, { $set: toUpdate });
+            await Event.insertMany(repeatingList);
 
             // Create and save history
             const newHistory = await createHistory(req, prev, 'events', id, historyId, false);
@@ -366,73 +372,7 @@ router.put('/:id', async (req: Request, res: Response) => {
             return;
         }
 
-        // (6) Case that the repeat until time has DECREASED (less repetitions)
-        // This will only execute if the repeats status and start/end time does NOT change
-        // Will return after block
-        // Remove all events that happen after the new repeating until date
-        if (toUpdate.repeatsUntil < prev.repeatsUntil && prev.repeats !== repeats) {
-            const cutoff = dayjs(toUpdate.repeatsUntil).startOf('day').subtract(1, 'second').valueOf();
-            await Event.deleteMany({
-                repeatOriginId: id,
-                start: { $gte: cutoff },
-            });
-
-            // Also update Google Calendar repeating event to be shorter if prev was public
-            if (prev.publicEvent && toUpdate.publicEvent) updateCalendar(toUpdate, toUpdate.eventId);
-            else if (toUpdate.publicEvent) toUpdate.eventId = addToCalendar(toUpdate);
-
-            // Update main event and all repeating events
-            await updateRepeatingEvents(id, toUpdate);
-
-            // Create and save history
-            const newHistory = await createHistory(req, prev, 'events', id, historyId, false);
-            await newHistory.save();
-
-            // Send success
-            res.sendStatus(204);
-            return;
-        }
-
-        // (7) Case that the repeat until time has INCREASED (more repetitions)
-        // This will only execute if the repeats status does NOT change
-        // Will return after block
-        // TODO: Should we just get rid of all repeating events and start over cause im so over this function
-        if (toUpdate.repeatsUntil > prev.repeatsUntil && prev.repeats !== repeats) {
-            // Get the last repeating instance
-            const lastEventQuery = await Event.find({ repeatOriginId: id }).sort({ start: -1 }).limit(1).exec();
-
-            // Create new repeating instances in DB
-            const newRepeats = await addRepeatingEvents(id, toUpdate, lastEventQuery[0]);
-            await Event.insertMany(newRepeats);
-
-            // Update main event and all repeating events
-            await updateRepeatingEvents(id, toUpdate);
-
-            // If public, update or add calendar
-            if (toUpdate.publicEvent) {
-                const calendarIds = prev.publicEvent
-                    ? await updateRecurringCalendar(toUpdate, toUpdate.eventId, true)
-                    : await addRecurringToCalendar(toUpdate);
-
-                // Get all repeating events and update their eventIds
-                const allRepeating = await Event.find({ repeatOriginId: id, id: { $ne: id } })
-                    .sort({ start: 1 })
-                    .exec();
-                for (let i = 1; i < calendarIds.length; i++) {
-                    allRepeating[i].eventId = calendarIds[i];
-                }
-            }
-
-            // Create and save history
-            const newHistory = await createHistory(req, prev, 'events', id, historyId, false);
-            await newHistory.save();
-
-            // Send success
-            res.sendStatus(204);
-            return;
-        }
-
-        // (8) Reaching this block means that the event is repeating but neither "repeats" nor "repeatUntil" has changed
+        // (6) Reaching this block means that the event is repeating but neither "repeats" nor "repeatUntil" has changed
         // Again, only the original repeating event object can reach this block
         // Simply update the event and its repetitions
 
