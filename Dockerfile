@@ -24,9 +24,11 @@ COPY server ./
 COPY --from=deps /app/node_modules ./node_modules
 RUN yarn build:backend
 
-# Production image, copy all the files and run next
+# Production image, copy all the files and run apps
 FROM node:16-alpine AS runner
 WORKDIR /app/client
+RUN apk add --no-cache tzdata
+RUN cp /usr/share/zoneinfo/America/Chicago /etc/localtime
 
 ENV NODE_ENV production
 
