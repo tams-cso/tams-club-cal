@@ -6,8 +6,8 @@ import { RepeatingStatus } from '../../src/types';
 import {
     darkSwitch,
     darkSwitchGrey,
-    formatActivityDate,
-    formatActivityTime,
+    formatEventDate,
+    formatEventTime,
     formatDate,
     getParams,
 } from '../../src/util';
@@ -103,10 +103,10 @@ const EventDisplay = ({ event, error }: InferGetServerSidePropsType<typeof getSe
                                     {event.club}
                                 </Typography>
                                 <Typography variant="h3" gutterBottom sx={{ fontWeight: 400 }}>
-                                    {formatActivityDate(event)}
+                                    {formatEventDate(event)}
                                 </Typography>
                                 <Typography variant="h3" gutterBottom sx={{ fontWeight: 400 }}>
-                                    {formatActivityTime(event, event.noEnd, true)}
+                                    {formatEventTime(event, event.noEnd, true)}
                                 </Typography>
                                 {event.repeats !== RepeatingStatus.NONE ? (
                                     <Typography

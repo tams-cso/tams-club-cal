@@ -174,14 +174,13 @@ export function isSameDate(first: number, second: number): boolean {
  * Formats the full date of the event.
  * Includes an end date if not the same as the start date.
  *
- * @param activity The activity object
+ * @param event The activity object
  * @returns The formatted full date
  */
-export function formatActivityDate(activity: Event): string {
-    if (!toTz(activity.start).isSame(toTz(activity.end), 'day'))
-        return formatTime(activity.start, 'dddd, MMMM D, YYYY h:mma');
-    let formattedTime = formatTime(activity.start, 'dddd, MMMM D, YYYY');
-    if (!isSameDate(activity.start, activity.end)) formattedTime += formatTime(activity.end, ' - dddd, MMMM D, YYYY');
+export function formatEventDate(event: Event): string {
+    if (!toTz(event.start).isSame(toTz(event.end), 'day')) return formatTime(event.start, 'dddd, MMMM D, YYYY h:mma');
+    let formattedTime = formatTime(event.start, 'dddd, MMMM D, YYYY');
+    if (!isSameDate(event.start, event.end)) formattedTime += formatTime(event.end, ' - dddd, MMMM D, YYYY');
     return formattedTime;
 }
 
@@ -189,18 +188,18 @@ export function formatActivityDate(activity: Event): string {
  * Formats the time of the event.
  * Includes an end time if not the same as the start time.
  *
- * @param activity The activity object
+ * @param event The activity object
  * @param noEnd If true, will not show an end time
  * @param checkSame If true, will check to see if start !== end and return the end time. This is used for the EventDisplay component
  * @returns The formatted time for the event in the format [h:mma - h:mma]
  */
-export function formatActivityTime(activity: Event, noEnd: boolean = false, checkSame: boolean = false): string {
-    if (activity.allDay) return 'Full Day';
-    if (checkSame && !toTz(activity.start).isSame(toTz(activity.end), 'day'))
-        return formatTime(activity.end, 'dddd, MMMM D, YYYY h:mma');
+export function formatEventTime(event: Event, noEnd: boolean = false, checkSame: boolean = false): string {
+    if (event.allDay) return 'Full Day';
+    if (checkSame && !toTz(event.start).isSame(toTz(event.end), 'day'))
+        return formatTime(event.end, 'dddd, MMMM D, YYYY h:mma');
 
-    let formattedTime = formatTime(activity.start, 'h:mma', true);
-    if (!noEnd && activity.start !== activity.end) formattedTime += ` - ${formatTime(activity.end, 'h:mma', true)}`;
+    let formattedTime = formatTime(event.start, 'h:mma', true);
+    if (!noEnd && event.start !== event.end) formattedTime += ` - ${formatTime(event.end, 'h:mma', true)}`;
     return formattedTime;
 }
 

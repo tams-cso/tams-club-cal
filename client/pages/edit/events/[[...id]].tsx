@@ -4,7 +4,7 @@ import { GetServerSidePropsContext, InferGetServerSidePropsType } from 'next';
 import { useForm } from 'react-hook-form';
 import Cookies from 'universal-cookie';
 import dayjs, { Dayjs } from 'dayjs';
-import { createPopupEvent, createEvent, darkSwitch } from '../../../src/util';
+import { createPopupEvent, createEvent, darkSwitch, formatEventTime, formatDate } from '../../../src/util';
 import { PopupEvent, RepeatingStatus } from '../../../src/types';
 import { getEvent, getOverlappingReservations, postEvent, putEvent } from '../../../src/api';
 
@@ -44,7 +44,7 @@ type SubmitData = {
     reservation: boolean;
     repeatsWeekly: boolean;
     repeatsMonthly: boolean;
-    repeatsUntil: number;
+    repeatsUntil: Dayjs;
 };
 
 // Server-side Rendering
@@ -163,6 +163,43 @@ const EditEvents = ({ event, id, error }: InferGetServerSidePropsType<typeof get
                 setPopupEvent(createPopupEvent('There is already a reservation during that time!', 3));
                 setBackdrop(false);
                 return;
+            }
+
+            // If also repeating, make sure none of those are overlapping too D:
+            // This will only check if it is the original repeating event
+            // TODO: ain't this redundant with the backend idk
+            if (repeats !== RepeatingStatus.NONE && event.id === event.repeatOriginId) {
+                const unit = repeats === RepeatingStatus.WEEKLY ? 'week' : 'month';
+                let currStart = dayjs(startTime).add(1, unit);
+                let currEnd = dayjs(endTime).add(1, unit);
+                const repEnd = data.repeatsUntil.startOf('day').add(1, 'day');
+                while (currStart.isBefore(repEnd)) {
+                    const repOverlap = await getOverlappingReservations(data.location, currStart.valueOf(), currEnd.valueOf());
+                    if (repOverlap.status !== 200) {
+                        setPopupEvent(
+                            createPopupEvent(
+                                'There was an error checking reservation time. Please check your connection and try again.',
+                                4
+                            )
+                        );
+                        setBackdrop(false);
+                        return;
+                    }
+                    if (repOverlap.data.length !== 0 && repOverlap.data[0].id !== event.id) {
+                        setPopupEvent(
+                            createPopupEvent(
+                                `There is already a reservation during the repeating event on ${currStart.format(
+                                    'MM/DD/YYYY'
+                                )}!`,
+                                3
+                            )
+                        );
+                        setBackdrop(false);
+                        return;
+                    }
+                    currStart = currStart.add(1, unit);
+                    currEnd = currEnd.add(1, unit);
+                }
             }
         }
 
@@ -466,7 +503,8 @@ const EditEvents = ({ event, id, error }: InferGetServerSidePropsType<typeof get
                                 sx={{ color: (theme) => darkSwitch(theme, theme.palette.primary.dark, null) }}
                             >
                                 {' '}
-                                Click here to go to the original event and make edits to ALL event repetitions and repeating status.
+                                Click here to go to the original event and make edits to ALL event repetitions and
+                                repeating status.
                             </Link>
                         </Alert>
                     </React.Fragment>

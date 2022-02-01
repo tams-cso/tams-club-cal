@@ -1,6 +1,6 @@
 import React from 'react';
 import type { Theme } from '@mui/material';
-import { darkSwitch, darkSwitchGrey, formatActivityTime } from '../../util';
+import { darkSwitch, darkSwitchGrey, formatEventTime } from '../../util';
 import type { Event } from '../../types';
 
 import ListItem from '@mui/material/ListItem';
@@ -47,7 +47,7 @@ const CalendarEvent = (props: CalendarEventProps) => {
                         fontSize: '0.65rem',
                     }}
                 >
-                    {formatActivityTime(props.activity, true)}
+                    {formatEventTime(props.activity, true)}
                 </Typography>
                 <Typography
                     sx={{

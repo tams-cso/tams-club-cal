@@ -1,7 +1,7 @@
 import React from 'react';
 import type { Theme } from '@mui/material';
 import { Event, RepeatingStatus } from '../../types';
-import { darkSwitch, formatActivityTime } from '../../util';
+import { darkSwitch, formatEventTime } from '../../util';
 
 import Box from '@mui/material/Box';
 import ListItem from '@mui/material/ListItem';
@@ -49,7 +49,7 @@ const EventEntry = (props: EventEntryProps) => {
                         fontSize: { lg: '1.2rem', xs: '0.9rem' },
                     }}
                 >
-                    {`${formatActivityTime(props.event)}`}
+                    {`${formatEventTime(props.event)}`}
                 </Typography>
                 <Box sx={{ overflow: 'hidden' }}>
                     <Typography
