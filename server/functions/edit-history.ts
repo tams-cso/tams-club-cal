@@ -55,7 +55,8 @@ export async function createHistory(
 /**
  * Checks for key; All fields that ends with "id" or are "history"/"repeatEnd" will be omitted.
  */
-const isValidKey = (key: string) => !key.toLowerCase().endsWith('id') && !key.startsWith('history') && key !== 'repeatEnd';
+const isValidKey = (key: string) =>
+    !key.toLowerCase().endsWith('id') && !key.startsWith('history') && key !== 'repeatEnd';
 
 // Define types to be used for history object manipulation
 type HistoryData = object | HistoryArrayData;
@@ -72,7 +73,8 @@ function objectToHistoryObject(data: HistoryData, prevKey: string = ''): Field[]
     const pk = prevKey ? `${prevKey}.` : '';
     Object.entries(data).forEach(([key, value]) => {
         const keyStr = `${pk}${key}`;
-        if (Array.isArray(value)) parsedFields.push(...objectArrToHistoryObject(value, keyStr));
+        if (value === null || value === undefined) parsedFields.push({ key: keyStr, oldValue: null, newValue: null });
+        else if (Array.isArray(value)) parsedFields.push(...objectArrToHistoryObject(value, keyStr));
         else if (typeof value === 'object') parsedFields.push(...objectToHistoryObject(value, keyStr));
         else parsedFields.push({ key: keyStr, oldValue: null, newValue: value });
     });
