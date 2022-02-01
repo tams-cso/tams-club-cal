@@ -254,29 +254,33 @@ router.put('/:id', async (req: Request, res: Response) => {
         const timeChanged =
             prev.start !== toUpdate.start || prev.end !== toUpdate.end || prev.allDay !== toUpdate.allDay;
 
-        console.log(prev);
-        console.log(toUpdate);
-        if (repeats !== RepeatingStatus.NONE && toUpdate.repeatOriginId !== id && prev.repeats !== RepeatingStatus.NONE)
-            console.log(1);
-        else {
-            if (prev.publicEvent && !toUpdate.publicEvent) console.log(2);
-            if (
-                (prev.repeats !== RepeatingStatus.NONE && prev.repeats !== repeats) ||
-                (timeChanged && repeats !== RepeatingStatus.NONE) ||
-                (prev.repeats !== RepeatingStatus.NONE &&
-                    prev.repeats === repeats &&
-                    toUpdate.repeatsUntil != prev.repeatsUntil)
-            )
-                console.log(3);
-            if (repeats === RepeatingStatus.NONE) console.log(4);
-            else if (
-                prev.repeats !== repeats ||
-                timeChanged ||
-                (prev.repeats === repeats && toUpdate.repeatsUntil != prev.repeatsUntil)
-            )
-                console.log(5);
-            else console.log(6);
-        }
+        // ##### Logging used for debugging the next giant section #####################################################################
+        //
+        // console.log(prev);
+        // console.log(toUpdate);
+        // if (repeats !== RepeatingStatus.NONE && toUpdate.repeatOriginId !== id && prev.repeats !== RepeatingStatus.NONE)
+        //     console.log(1);
+        // else {
+        //     if (prev.publicEvent && !toUpdate.publicEvent) console.log(2);
+        //     if (
+        //         (prev.repeats !== RepeatingStatus.NONE && prev.repeats !== repeats) ||
+        //         (timeChanged && repeats !== RepeatingStatus.NONE) ||
+        //         (prev.repeats !== RepeatingStatus.NONE &&
+        //             prev.repeats === repeats &&
+        //             toUpdate.repeatsUntil != prev.repeatsUntil)
+        //     )
+        //         console.log(3);
+        //     if (repeats === RepeatingStatus.NONE) console.log(4);
+        //     else if (
+        //         prev.repeats !== repeats ||
+        //         timeChanged ||
+        //         (prev.repeats === repeats && toUpdate.repeatsUntil != prev.repeatsUntil)
+        //     )
+        //         console.log(5);
+        //     else console.log(6);
+        // }
+        // 
+        // #############################################################################################################################
 
         // ### Do things based on the repeating status of the updated event and the previous event ###
         // Blocks follow this order:
