@@ -112,7 +112,7 @@ const Home = ({ activityList, error }: InferGetServerSidePropsType<typeof getSer
                     overflowX: 'hidden',
                 }}
             >
-                <AddButton color="primary" label="Activities" path="/edit/events" />
+                <AddButton color="primary" label="Event" path="/edit/events" />
                 {eventComponentList}
             </Container>
         </HomeBase>

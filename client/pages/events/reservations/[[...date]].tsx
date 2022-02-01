@@ -184,7 +184,7 @@ const Reservations = ({ now, reservationList, error }: InferGetServerSidePropsTy
                     )}
                 />
             </Box>
-            <AddButton color="primary" label="Events" path="/edit/events" />
+            <AddButton color="primary" label="Event" path="/edit/events" />
             {reservationComponentList === null ? <Loading /> : reservationComponentList}
         </HomeBase>
     );
