@@ -72,7 +72,7 @@ const ReservationDay = (props: ReservationDayProps) => {
                     row.push(
                         <ReservationEntry reservation={curr.data} span={curr.span} key={curr.data.id} sx={cellStyle} />
                     );
-                    increment = curr.span;
+                    increment = Math.max(1, curr.span);
                     hour += increment - 1;
                 }
 
