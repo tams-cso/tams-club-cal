@@ -4,17 +4,16 @@ import { GetServerSidePropsContext, InferGetServerSidePropsType } from 'next';
 import { useForm } from 'react-hook-form';
 import Cookies from 'universal-cookie';
 import dayjs, { Dayjs } from 'dayjs';
-import { createPopupEvent, createEvent } from '../../../src/util';
+import { createPopupEvent, createEvent, darkSwitch } from '../../../src/util';
 import { PopupEvent, RepeatingStatus } from '../../../src/types';
 import { getEvent, getOverlappingReservations, postEvent, putEvent } from '../../../src/api';
 
 import Typography from '@mui/material/Typography';
 import Box from '@mui/material/Box';
-import MenuItem from '@mui/material/MenuItem';
+import Alert from '@mui/material/Alert';
 import DateTimeInput from '../../../src/components/edit/events/date-time-input';
 import ControlledCheckbox from '../../../src/components/edit/events/controlled-checkbox';
 import ControlledTextField from '../../../src/components/edit/shared/controlled-text-field';
-import ControlledSelect from '../../../src/components/edit/shared/controlled-select';
 import UploadBackdrop from '../../../src/components/edit/shared/upload-backdrop';
 import TwoButtonBox from '../../../src/components/shared/two-button-box';
 import LocationSelect from '../../../src/components/edit/events/location-select';
@@ -99,7 +98,7 @@ const EditEvents = ({ event, id, error }: InferGetServerSidePropsType<typeof get
         const endTime = data.allDay || data.noEnd ? startTime : data.end.valueOf();
 
         // Check to make sure repeating data is valid and set the variables if true
-        let repeats = event.repeats;
+        let repeats = 0;
         if (data.repeatsWeekly || data.repeatsMonthly) {
             // Make sure there is actually an end time
             if (data.noEnd) {
@@ -159,7 +158,7 @@ const EditEvents = ({ event, id, error }: InferGetServerSidePropsType<typeof get
                 setBackdrop(false);
                 return;
             }
-            if (overlaps.data.length !== 0 && overlaps.data[0].id !== id) {
+            if (overlaps.data.length !== 0 && overlaps.data[0].id !== event.id) {
                 // TODO: Log error to admins if the overlaps length is > 1
                 setPopupEvent(createPopupEvent('There is already a reservation during that time!', 3));
                 setBackdrop(false);
@@ -216,8 +215,7 @@ const EditEvents = ({ event, id, error }: InferGetServerSidePropsType<typeof get
         }
 
         // Set "prevStart" variable to the starting time to use later
-        if (event.start) setPrevStart(event.start);
-        else setPrevStart(dayjs().startOf('hour').add(1, 'hour').valueOf());
+        setPrevStart(event.start);
     }, []);
 
     // Change start and end times if event changes
@@ -227,7 +225,7 @@ const EditEvents = ({ event, id, error }: InferGetServerSidePropsType<typeof get
 
     // Offset the end time if startTime is changed to the same duration
     useEffect(() => {
-        if (watchEnd === undefined || errors.end) return;
+        if (!watchEnd || errors.end) return;
         const diff = watchEnd.valueOf() - prevStart;
         setValue('end', dayjs(watchStart.valueOf() + diff));
         setPrevStart(watchStart.valueOf());
@@ -235,7 +233,7 @@ const EditEvents = ({ event, id, error }: InferGetServerSidePropsType<typeof get
 
     // Set an error if the end time is set before the start time
     useEffect(() => {
-        if (watchEnd === undefined) return;
+        if (!watchEnd) return;
         if (watchAllDay || watchNoEnd) {
             clearErrors('end');
             return;
@@ -367,7 +365,7 @@ const EditEvents = ({ event, id, error }: InferGetServerSidePropsType<typeof get
                         value={event.end}
                         disabled={watchNoEnd || watchAllDay}
                         errorMessage="End time cannot be before start time"
-                        validate={() => watchStart.isBefore(watchEnd)}
+                        validate={() => watchNoEnd || watchAllDay || watchStart.isBefore(watchEnd)}
                         required
                         end
                     />
@@ -375,7 +373,7 @@ const EditEvents = ({ event, id, error }: InferGetServerSidePropsType<typeof get
                         control={control}
                         name="noEnd"
                         label="No end time"
-                        value={event.start ? event.start === event.end : false}
+                        value={event.noEnd}
                         setValue={setValue}
                         sx={{ marginLeft: { lg: 2, xs: 0 }, marginTop: { lg: 0, xs: 2 } }}
                     />
@@ -443,31 +441,44 @@ const EditEvents = ({ event, id, error }: InferGetServerSidePropsType<typeof get
                 <DateInput
                     control={control}
                     name="repeatsUntil"
-                    label="Repeat Until (Exclusive)"
+                    label="Repeat Until (Inclusive)"
                     value={event.repeatsUntil}
-                    disabled={(!watchRepeatsMonthly && !watchRepeatsWeekly) || (event.repeatOriginId && event.repeatOriginId !== event.id)}
+                    disabled={
+                        (!watchRepeatsMonthly && !watchRepeatsWeekly) ||
+                        (event.repeatOriginId && event.repeatOriginId !== event.id)
+                    }
                     errorMessage="Repeats Until must be after start time"
                     validate={() =>
                         (!watchRepeatsMonthly && !watchRepeatsWeekly) || watchRepeatsUntil.isAfter(watchStart)
                     }
                 />
-                {event.repeatOriginId && event.repeatOriginId !== event.id ? (
+                {event.repeats !== RepeatingStatus.NONE && event.repeatOriginId && event.repeatOriginId !== event.id ? (
                     <React.Fragment>
-                        <Typography sx={{ marginTop: 3 }}>
-                            If you edit this repeating event instance, it will disassociate with the original event, and
-                            any changes made to the original event will not impact this event.
-                        </Typography>
-                        <Link href={`/edit/events/${event.repeatOriginId}`}>
-                            Go to the original event to make global edits to the event and repeating status.
-                        </Link>
+                        <Alert
+                            severity="warning"
+                            sx={{ my: 3, backgroundColor: (theme) => darkSwitch(theme, null, '#3f372a') }}
+                        >
+                            Changing this event will NOT affect the other event repetitions! Additionally, this event
+                            will no longer be able to be edited by the original repeating event and act as its own
+                            event.
+                            <Link
+                                href={`/edit/events/${event.repeatOriginId}`}
+                                sx={{ color: (theme) => darkSwitch(theme, theme.palette.primary.dark, null) }}
+                            >
+                                {' '}
+                                Click here to go to the original event and make edits to ALL event repetitions and repeating status.
+                            </Link>
+                        </Alert>
                     </React.Fragment>
                 ) : null}
-                {event.repeatOriginId && event.repeatOriginId === event.id ? (
-                    <Typography sx={{ marginTop: 3 }}>
-                        If you edit this event, all repeated instances of the event will be modified. Additionally, if
-                        the time or repeating behavior is changed, repeated events will be recreated and exceptions will
-                        be ignored.
-                    </Typography>
+                {event.repeats !== RepeatingStatus.NONE && event.repeatOriginId && event.repeatOriginId === event.id ? (
+                    <Alert
+                        severity="info"
+                        sx={{ my: 3, backgroundColor: (theme) => darkSwitch(theme, null, '#304249') }}
+                    >
+                        If you edit this event, all repeated instances of the event will be modified. If the time or
+                        repeating behavior is changed, repeated events will be recreated.
+                    </Alert>
                 ) : null}
                 <TwoButtonBox success="Submit" onCancel={back} submit right />
             </FormWrapper>

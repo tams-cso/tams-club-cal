@@ -46,6 +46,7 @@ export async function addToCalendar(data: EventObject): Promise<string> {
  * @param id Google Calendar event ID to update
  */
 export async function updateCalendar(data: EventObject, id: string): Promise<void> {
+    console.log(id);
     const start = data.allDay
         ? { date: dayjs(data.start).format('YYYY-MM-DD') }
         : { dateTime: new Date(data.start).toISOString() };

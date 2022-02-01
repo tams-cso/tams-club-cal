@@ -1,4 +1,5 @@
 import React from 'react';
+import type { Theme } from '@mui/material';
 import { darkSwitchGrey } from '../../util';
 import type { Committee } from '../../types';
 
@@ -35,14 +36,17 @@ const CommitteeCard = (props: CommitteeCardProps) => {
             >
                 {props.committee.name}
             </Typography>
-            <Paragraph text={props.committee.description} sx={{ color: (theme) => darkSwitchGrey(theme) }} />
+            <Typography variant="h3" sx={{ fontWeight: 300 }}>
+                {props.committee.heads.length > 0 ? `Heads: ${props.committee.heads.join(', ')}` : null}
+            </Typography>
+            <Paragraph text={props.committee.description} sx={{ color: (theme: Theme) => darkSwitchGrey(theme), marginTop: 2 }} />
             {props.committee.links.map((link) => (
                 <Link
                     href={link}
                     key={link}
                     target="_blank"
                     underline="hover"
-                    sx={{ display: 'block', width: 'max-content', fontSize: '0.85rem', color: 'primary.dark' }}
+                    sx={{ display: 'block', width: 'max-content', fontSize: '0.85rem', color: 'primary' }}
                 >
                     {link}
                 </Link>

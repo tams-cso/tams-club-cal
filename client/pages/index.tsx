@@ -78,7 +78,7 @@ const Home = ({ activityList, error }: InferGetServerSidePropsType<typeof getSer
 
         // Map each group item to an EventListSection object
         const groupedComponents = eventGroupList.map((group, index) => (
-            <EventListSection activityList={group} key={index} />
+            <EventListSection eventList={group} key={index} />
         ));
 
         // No more message at the bottom!

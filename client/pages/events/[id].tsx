@@ -2,7 +2,15 @@ import React from 'react';
 import type { Theme } from '@mui/material';
 import { GetServerSidePropsContext, InferGetServerSidePropsType } from 'next';
 import { useRouter } from 'next/router';
-import { darkSwitch, darkSwitchGrey, formatActivityDate, formatActivityTime, getParams } from '../../src/util';
+import { RepeatingStatus } from '../../src/types';
+import {
+    darkSwitch,
+    darkSwitchGrey,
+    formatActivityDate,
+    formatActivityTime,
+    formatDate,
+    getParams,
+} from '../../src/util';
 
 import Container from '@mui/material/Container';
 import Card from '@mui/material/Card';
@@ -15,7 +23,6 @@ import Hidden from '@mui/material/Hidden';
 import Typography from '@mui/material/Typography';
 import Paragraph from '../../src/components/shared/paragraph';
 import AddButton from '../../src/components/shared/add-button';
-
 import Loading from '../../src/components/shared/loading';
 import HomeBase from '../../src/components/home/home-base';
 import { getEvent } from '../../src/api';
@@ -67,7 +74,7 @@ const EventDisplay = ({ event, error }: InferGetServerSidePropsType<typeof getSe
         <HomeBase title={`${event.name} | Events`} noActionBar>
             <Container maxWidth={false} sx={{ maxWidth: { lg: '60%', md: '75%', xs: '100%' } }}>
                 <AddButton color="secondary" label="Event" path={`/edit/events/${event.id}`} edit />
-                <Card>
+                <Card sx={{ marginBottom: 3 }}>
                     <CardContent>
                         <Box
                             sx={{
@@ -84,9 +91,7 @@ const EventDisplay = ({ event, error }: InferGetServerSidePropsType<typeof getSe
                                     padding: { lg: 1, xs: 0 },
                                 }}
                             >
-                                <Typography sx={eventTypeStyle}>
-                                    {event.type === 'event' ? 'Event' : 'Signup/Deadline'}
-                                </Typography>
+                                <Typography sx={eventTypeStyle}>{event.type}</Typography>
                                 <Typography variant="h2" component="h1">
                                     {event.name}
                                 </Typography>
@@ -100,9 +105,19 @@ const EventDisplay = ({ event, error }: InferGetServerSidePropsType<typeof getSe
                                 <Typography variant="h3" gutterBottom sx={{ fontWeight: 400 }}>
                                     {formatActivityDate(event)}
                                 </Typography>
-                                <Typography variant="h3" sx={{ fontWeight: 400 }}>
+                                <Typography variant="h3" gutterBottom sx={{ fontWeight: 400 }}>
                                     {formatActivityTime(event, event.noEnd, true)}
                                 </Typography>
+                                {event.repeats !== RepeatingStatus.NONE ? (
+                                    <Typography
+                                        variant="h3"
+                                        sx={{ color: (theme) => darkSwitchGrey(theme), fontWeight: 400, marginTop: 2 }}
+                                    >
+                                        {`Repeats ${
+                                            event.repeats === RepeatingStatus.WEEKLY ? 'weekly' : 'monthly'
+                                        } until ${formatDate(event.repeatsUntil, 'dddd, MMMM D, YYYY')}`}
+                                    </Typography>
+                                ) : null}
                                 <Typography
                                     variant="h3"
                                     sx={{

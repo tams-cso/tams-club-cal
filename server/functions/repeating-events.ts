@@ -1,8 +1,6 @@
-import dayjs, { Dayjs } from 'dayjs';
+import dayjs from 'dayjs';
 import Event from '../models/event';
-import { addRecurringToCalendar, deleteCalendarEvent, updateCalendar, updateRecurringCalendar } from './gcal';
 import { EventObject, RepeatingStatus } from './types';
-import type { calendar_v3 } from 'googleapis';
 import { newId } from './util';
 
 /**
@@ -26,9 +24,10 @@ export async function addRepeatingEvents(
 
     // Create duplicate reservations
     const repeatDates = [];
+    const repeatsUntil = dayjs(originalEvent.repeatsUntil).startOf('day').add(1, 'day');
     let currStart = dayjs(offsetEvent ? offsetEvent.start : originalEvent.start).add(1, unit);
     let currEnd = dayjs(offsetEvent ? offsetEvent.end : originalEvent.end).add(1, unit);
-    while (currStart.isBefore(originalEvent.repeatsUntil)) {
+    while (currStart.isBefore(repeatsUntil)) {
         repeatDates.push({ start: currStart, end: currEnd });
         currStart = currStart.add(1, unit);
         currEnd = currEnd.add(1, unit);

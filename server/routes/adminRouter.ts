@@ -98,7 +98,7 @@ router.delete('/resources/:resource/:id', async (req: Request, res: Response) =>
                 // Delete event from Google Calendar, History DB, and Events DB
                 if (event.publicEvent) await deleteCalendarEvent(event.eventId);
                 const deleteRes = await Event.deleteOne({ id: req.params.id });
-                await History.deleteMany({ resource: 'events', id: req.params.id });
+                await History.deleteMany({ resource: 'events', editId: req.params.id });
     
                 // Also delete any repeating events
                 await Event.deleteMany({ repeatOriginId: req.params.id });
@@ -109,18 +109,24 @@ router.delete('/resources/:resource/:id', async (req: Request, res: Response) =>
                 break;
             }
             case 'clubs': {
+                // Get club
                 const club = await Club.findOne({ id: req.params.id });
+                
+                // Delete images from AWS
+                await deleteClubImages(club);
+
+                // Delete club and history
                 const deleteRes = await Club.deleteOne({ id: req.params.id });
-                const deleteImageRes = await deleteClubImages(club);
-                if (deleteImageRes !== 1) club.save();
-                await History.deleteMany({ resource: 'clubs', id: req.params.id });
-                if (deleteRes.deletedCount === 1 && deleteImageRes === 1) res.send({ ok: 1 });
+                await History.deleteMany({ resource: 'clubs', editId: req.params.id });
+
+                // Return ok: 1 or error
+                if (deleteRes.deletedCount === 1) res.send({ ok: 1 });
                 else sendError(res, 500, 'Could not delete club');
                 break;
             }
             case 'volunteering': {
                 const deleteRes = await Volunteering.deleteOne({ id: req.params.id });
-                await History.deleteMany({ resource: 'volunteering', id: req.params.id });
+                await History.deleteMany({ resource: 'volunteering', editId: req.params.id });
                 if (deleteRes.deletedCount === 1) res.send({ ok: 1 });
                 else sendError(res, 500, 'Could not delete volunteering');
                 break;

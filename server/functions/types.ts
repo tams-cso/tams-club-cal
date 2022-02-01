@@ -161,7 +161,7 @@ export interface ClubImageBlobs {
     profilePictures: Blob[];
 }
 
-export type Resource = 'activities' | 'clubs' | 'volunteering';
+export type Resource = 'events' | 'clubs' | 'volunteering';
 
 /** An object containing the information for a single edit to a specific resource */
 export interface HistoryObject {

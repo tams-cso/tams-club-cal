@@ -55,7 +55,7 @@ export async function createHistory(
 /**
  * Checks for key; All fields that ends with "id" or are "history"/"repeatEnd" will be omitted.
  */
-const isValidKey = (key: string) => !key.toLowerCase().endsWith('id') && key !== 'history' && key !== 'repeatEnd';
+const isValidKey = (key: string) => !key.toLowerCase().endsWith('id') && !key.startsWith('history') && key !== 'repeatEnd';
 
 // Define types to be used for history object manipulation
 type HistoryData = object | HistoryArrayData;
@@ -65,14 +65,32 @@ type HistoryArrayData = (HistoryData | HistoryArrayData)[];
  * Creates a history "fields" object from a created object.
  * All fields that start with _ or is "id"/"history" will be omitted.
  * This will simply map all key value pairs to "keys" and "newValue".
+ * All nested objects and arrays will also be recursed through
  */
-function objectToHistoryObject(data: HistoryData): Field[] {
-    const parsedFields = Object.entries(data).map(([key, value]) => ({
-        key,
-        oldValue: null,
-        newValue: value,
-    }));
+function objectToHistoryObject(data: HistoryData, prevKey: string = ''): Field[] {
+    const parsedFields = [];
+    const pk = prevKey ? `${prevKey}.` : '';
+    Object.entries(data).forEach(([key, value]) => {
+        const keyStr = `${pk}${key}`;
+        if (Array.isArray(value)) parsedFields.push(...objectArrToHistoryObject(value, keyStr));
+        else if (typeof value === 'object') parsedFields.push(...objectToHistoryObject(value, keyStr));
+        else parsedFields.push({ key: keyStr, oldValue: null, newValue: value });
+    });
     return parsedFields.filter((f) => isValidKey(f.key));
+}
+
+/**
+ * Same as objectToHistoryObject function except iterates through array
+ * There is no case for nested arrays (thank god)
+ */
+function objectArrToHistoryObject(data: HistoryArrayData, prevKey: string = ''): Field[] {
+    const parsedFields = [];
+    data.forEach((d, i) => {
+        const key = `${prevKey}[${i}]`;
+        if (typeof d === 'object') parsedFields.push(...objectToHistoryObject(d, key));
+        else parsedFields.push({ key, oldValue: null, newValue: d });
+    });
+    return parsedFields;
 }
 
 /**
@@ -89,6 +107,8 @@ function getDiff(prevData: HistoryData, data: HistoryData): Field[] {
             output.push(...getDiffArray(prevData[key], value, key));
             return;
         }
+        console.log(value);
+        console.log(typeof value);
         if (typeof value === 'object' && value !== null) {
             const obj = getDiff(prevData[key], value);
             output.push(...obj.map((o) => ({ ...o, key: `${key}.${o.key}` })));

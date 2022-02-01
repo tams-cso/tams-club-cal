@@ -150,6 +150,16 @@ export function formatTime(millis: number, format: string, checkMidnight: boolea
 }
 
 /**
+ * Formats a UTC millisecond date while converting to central timezone
+ *
+ * @param millis UTC millisecond time to format
+ * @param format Dayjs format to format the time to
+ */
+export function formatDate(millis: number, format: string): string {
+    return toTz(millis).format(format);
+}
+
+/**
  * Checks if the date is the same between two UTC millisecond times, in the current time zone.
  *
  * @param first The first UTC millisecond time
@@ -400,7 +410,7 @@ export function createFilters(
     semester: boolean = false,
     setTimes: boolean = false,
     weekly: boolean = false,
-    open: boolean = false
+    open: boolean = true
 ): Filters {
     return { limited, semester, setTimes, weekly, open };
 }
@@ -434,8 +444,8 @@ export function createEvent(
     name: string = '',
     club: string = '',
     description: string = '',
-    start: number = 0,
-    end: number = 0,
+    start: number = dayjs().startOf('hour').add(1, 'hour').valueOf(),
+    end: number = dayjs().startOf('hour').add(2, 'hour').valueOf(),
     location: string = 'none',
     noEnd: boolean = false,
     allDay: boolean = false,

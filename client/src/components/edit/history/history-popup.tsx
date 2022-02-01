@@ -1,6 +1,6 @@
 import React from 'react';
 import { formatTime } from '../../../util';
-import type { History } from '../../../types';
+import { History, RepeatingStatus } from '../../../types';
 
 import Dialog from '@mui/material/Dialog';
 import DialogTitle from '@mui/material/DialogTitle';
@@ -25,7 +25,7 @@ interface HistoryPopupProps {
     open: boolean;
 
     /** Function to run when closing dialog */
-    close: (event: {}, reason: "backdropClick" | "escapeKeyDown") => void;
+    close: (event: {}, reason: 'backdropClick' | 'escapeKeyDown') => void;
 }
 
 /**
@@ -34,7 +34,20 @@ interface HistoryPopupProps {
  */
 const HistoryPopup = (props: HistoryPopupProps) => {
     // Function to parse certain values from the history object
-    const showValue = (value: boolean | object | number | string) => {
+    const showValue = (key: string, value: boolean | object | number | string) => {
+        if (key === 'repeats') {
+            switch (value) {
+                case RepeatingStatus.NONE:
+                    return 'Not Repeating';
+                case RepeatingStatus.WEEKLY:
+                    return 'Weekly';
+                case RepeatingStatus.MONTHLY:
+                    return 'Monthly';
+                default:
+                    return '[no value]';
+            }
+        }
+        
         switch (typeof value) {
             case 'boolean':
                 return value ? 'True' : 'False';
@@ -67,8 +80,8 @@ const HistoryPopup = (props: HistoryPopupProps) => {
                                     {props.history.fields.map((f, i) => (
                                         <TableRow key={i}>
                                             <TableCell>{f.key}</TableCell>
-                                            <TableCell>{showValue(f.oldValue)}</TableCell>
-                                            <TableCell>{showValue(f.newValue)}</TableCell>
+                                            <TableCell>{showValue(f.key, f.oldValue)}</TableCell>
+                                            <TableCell>{showValue(f.key, f.newValue)}</TableCell>
                                         </TableRow>
                                     ))}
                                 </TableBody>

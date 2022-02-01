@@ -44,7 +44,7 @@ router.post('/', async (req: Request, res: Response) => {
         filters: req.body.filters,
         history: [historyId],
     });
-    const newHistory = await createHistory(req, newVolunteering, 'volunteering', id, historyId);
+    const newHistory = await createHistory(req, newVolunteering.toObject(), 'volunteering', id, historyId);
 
     const volunteeringRes = await newVolunteering.save();
     const historyRes = await newHistory.save();

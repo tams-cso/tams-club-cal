@@ -41,7 +41,7 @@ router.get('/', async (req: Request, res: Response) => {
     const dataList = await Promise.all(
         sortedHistory.map(async (h: HistoryObject) => {
             let resourceObj = null;
-            if (h.resource === 'activities') resourceObj = await Event.findOne({ id: h.editId });
+            if (h.resource === 'events') resourceObj = await Event.findOne({ id: h.editId });
             else if (h.resource === 'clubs') resourceObj = await Club.findOne({ id: h.editId });
             else if (h.resource === 'volunteering') resourceObj = await Volunteering.findOne({ id: h.editId });
             const name = !resourceObj ? 'N/A' : resourceObj.name;

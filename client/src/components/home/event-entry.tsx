@@ -1,6 +1,6 @@
 import React from 'react';
 import type { Theme } from '@mui/material';
-import type { Event } from '../../types';
+import { Event, RepeatingStatus } from '../../types';
 import { darkSwitch, formatActivityTime } from '../../util';
 
 import Box from '@mui/material/Box';
@@ -9,17 +9,17 @@ import Typography from '@mui/material/Typography';
 import Link from '../shared/Link';
 import StyledSpan from '../shared/styled-span';
 
-interface ActivityEntryProps {
+interface EventEntryProps {
     /** The event object to display */
-    activity: Event;
+    event: Event;
 }
 
 /**
  * An event entry on the home page events list
  */
-const ActivityEntry = (props: ActivityEntryProps) => {
+const EventEntry = (props: EventEntryProps) => {
     // Replace all the newlines in the description with a pipe
-    const description = props.activity.description.replace(/\n/g, ' | ');
+    const description = props.event.description.replace(/\n/g, ' | ');
 
     return (
         <ListItem
@@ -30,7 +30,7 @@ const ActivityEntry = (props: ActivityEntryProps) => {
             }}
         >
             <Link
-                href={`/events/${props.activity.id}`}
+                href={`/events/${props.event.id}`}
                 sx={{
                     width: '100%',
                     padding: { lg: 2, xs: '8px 0' },
@@ -49,7 +49,7 @@ const ActivityEntry = (props: ActivityEntryProps) => {
                         fontSize: { lg: '1.2rem', xs: '0.9rem' },
                     }}
                 >
-                    {formatActivityTime(props.activity)}
+                    {`${formatActivityTime(props.event)}`}
                 </Typography>
                 <Box sx={{ overflow: 'hidden' }}>
                     <Typography
@@ -60,7 +60,7 @@ const ActivityEntry = (props: ActivityEntryProps) => {
                             fontSize: { lg: '1.25rem', xs: '1rem' },
                         }}
                     >
-                        {props.activity.name}
+                        {`${props.event.name}${props.event.repeats !== RepeatingStatus.NONE ? ' [Repeating]' : ''}`}
                     </Typography>
                     <Typography
                         sx={{
@@ -78,9 +78,9 @@ const ActivityEntry = (props: ActivityEntryProps) => {
                                     darkSwitch(theme, theme.palette.common.black, theme.palette.grey[400]),
                             }}
                         >
-                            {props.activity.club}
+                            {props.event.club}
                         </StyledSpan>
-                        {props.activity.description ? ` - ${description}` : ''}
+                        {props.event.description ? ` - ${description}` : ''}
                     </Typography>
                 </Box>
             </Link>
@@ -88,4 +88,4 @@ const ActivityEntry = (props: ActivityEntryProps) => {
     );
 };
 
-export default ActivityEntry;
+export default EventEntry;

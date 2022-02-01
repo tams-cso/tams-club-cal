@@ -6,7 +6,6 @@ import {
     addToCalendar,
     deleteCalendarEvent,
     updateCalendar,
-    updateRecurringCalendar,
 } from '../functions/gcal';
 import { sendError, newId } from '../functions/util';
 import { createHistory } from '../functions/edit-history';
@@ -168,7 +167,7 @@ router.post('/', async (req: Request, res: Response) => {
             noEnd: req.body.noEnd,
             repeats,
             repeatsUntil: Number(req.body.repeatsUntil),
-            repeatOriginId: id,
+            repeatOriginId: repeats === RepeatingStatus.NONE ? null : id,
             publicEvent: req.body.publicEvent,
             reservation: req.body.reservation,
             history: [historyId],
@@ -196,7 +195,7 @@ router.post('/', async (req: Request, res: Response) => {
         }
 
         // Create a new history object
-        const newHistory = await createHistory(req, newEvent, 'events', id, historyId);
+        const newHistory = await createHistory(req, newEvent.toObject(), 'events', id, historyId);
         await newHistory.save();
 
         // Save the event and possibly repeating events then send 204 to user
@@ -255,6 +254,30 @@ router.put('/:id', async (req: Request, res: Response) => {
         const timeChanged =
             prev.start !== toUpdate.start || prev.end !== toUpdate.end || prev.allDay !== toUpdate.allDay;
 
+        console.log(prev);
+        console.log(toUpdate);
+        if (repeats !== RepeatingStatus.NONE && toUpdate.repeatOriginId !== id && prev.repeats !== RepeatingStatus.NONE)
+            console.log(1);
+        else {
+            if (prev.publicEvent && !toUpdate.publicEvent) console.log(2);
+            if (
+                (prev.repeats !== RepeatingStatus.NONE && prev.repeats !== repeats) ||
+                (timeChanged && repeats !== RepeatingStatus.NONE) ||
+                (prev.repeats !== RepeatingStatus.NONE &&
+                    prev.repeats === repeats &&
+                    toUpdate.repeatsUntil != prev.repeatsUntil)
+            )
+                console.log(3);
+            if (repeats === RepeatingStatus.NONE) console.log(4);
+            else if (
+                prev.repeats !== repeats ||
+                timeChanged ||
+                (prev.repeats === repeats && toUpdate.repeatsUntil != prev.repeatsUntil)
+            )
+                console.log(5);
+            else console.log(6);
+        }
+
         // ### Do things based on the repeating status of the updated event and the previous event ###
         // Blocks follow this order:
         //      1. Instance of a repeating event (delete instance, create a new event, and RETURN)
@@ -266,7 +289,11 @@ router.put('/:id', async (req: Request, res: Response) => {
 
         // (1) Case that the event is an INSTANCE of a repeating event -> DETACH IT FROM THE ORIGINAL EVENT!
         // Will return after block
-        if (repeats !== RepeatingStatus.NONE && toUpdate.repeatOriginId !== id) {
+        if (
+            repeats !== RepeatingStatus.NONE &&
+            toUpdate.repeatOriginId !== id &&
+            prev.repeats !== RepeatingStatus.NONE
+        ) {
             // Delete instance from calendar if it was on the calendar
             if (prev.publicEvent) await deleteCalendarEvent(prev.eventId);
 
@@ -323,9 +350,15 @@ router.put('/:id', async (req: Request, res: Response) => {
         }
 
         // (4) Case that the event DOES NOT CURRENTLY REPEAT
-        // This will apply to events that were never repeating and events that are newly repeating
+        // This will apply to all non-repeating events
         // Will return after block
         if (repeats === RepeatingStatus.NONE) {
+            // Update or create google calendar event
+            // Note that if the event was previously repeating, the calendar event will no longer exist and needs to be created
+            if (prev.publicEvent && toUpdate.publicEvent && prev.repeats === RepeatingStatus.NONE)
+                await updateCalendar(req.body, prev.eventId);
+            else if (toUpdate.publicEvent) toUpdate.eventId = await addToCalendar(toUpdate);
+
             // Update event in DB
             await Event.updateOne({ id }, { $set: toUpdate });
 
@@ -349,6 +382,7 @@ router.put('/:id', async (req: Request, res: Response) => {
         ) {
             // Create new repeating events
             const repeatingList = await addRepeatingEvents(id, toUpdate);
+            toUpdate.repeatOriginId = toUpdate.id;
 
             // If public, add to Google Calendar
             if (toUpdate.publicEvent) {

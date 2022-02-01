@@ -3,8 +3,8 @@ import { useRouter } from 'next/router';
 import { GetServerSidePropsContext, InferGetServerSidePropsType } from 'next';
 import { useForm } from 'react-hook-form';
 import Cookies from 'universal-cookie';
-import { getParams, createPopupEvent, createVolunteering, createFilters } from '../../../src/util';
-import type { Filters, PopupEvent, Volunteering } from '../../../src/types';
+import { createPopupEvent, createVolunteering, createFilters } from '../../../src/util';
+import type { PopupEvent } from '../../../src/types';
 import { getVolunteering, postVolunteering, putVolunteering } from '../../../src/api';
 
 import { Controller } from 'react-hook-form';
@@ -15,7 +15,6 @@ import Switch from '@mui/material/Switch';
 import FormControlLabel from '@mui/material/FormControlLabel';
 import ControlledTextField from '../../../src/components/edit/shared/controlled-text-field';
 import UploadBackdrop from '../../../src/components/edit/shared/upload-backdrop';
-import Loading from '../../../src/components/shared/loading';
 import TwoButtonBox from '../../../src/components/shared/two-button-box';
 import ControlledFilterCheckbox from '../../../src/components/edit/volunteering/controlled-filter-checkbox';
 import AddButton from '../../../src/components/shared/add-button';
