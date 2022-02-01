@@ -1,7 +1,7 @@
 {
     "name": "tams-club-calendar",
     "description": "The TAMS Club Calendar is a fully contained event tracker, club/volunteering database, and general resource center. This is the unofficial club event calendar for the Texas Academy of Mathematics and Science!",
-    "version": "1.0.0",
+    "version": "5.0.0",
     "private": true,
     "author": "Michael Zhao <michaelzhao314@gmail.com> (https://michaelzhao.xyz/)",
     "scripts": {
@@ -10,6 +10,7 @@
         "build": "next build",
         "build:staging": "NEXT_PUBLIC_BACKEND=staging next build ./client",
         "backend": "nodemon -r dotenv/config server/app.ts dotenv_config_path=server/.env",
+        "backend:start": "ts-node -r dotenv/config server/app.ts dotenv_config_path=server/.env",
         "start": "next start",
         "build:backend": "node esbuild.js",
         "docker": "docker build --no-cache --progress=plain --build-arg NEXT_PUBLIC_BACKEND=staging -t tams-club-cal ."

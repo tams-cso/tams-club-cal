@@ -2,10 +2,8 @@ import React from 'react';
 import type { Control, FieldValues, UseFormSetValue } from 'react-hook-form';
 
 import MenuItem from '@mui/material/MenuItem';
-import ControlledSelect from './controlled-select';
+import ControlledSelect from '../shared/controlled-select';
 import data from '../../../data.json';
-
-// TODO: Allow the user to input a custom location
 
 interface LocationSelectProps {
     /** React hook form controller */
@@ -26,7 +24,8 @@ interface LocationSelectProps {
 
 /**
  * Select a location from the list of predefined rooms
- * using a ControlledSelect component.
+ * using a ControlledSelect component, with an option to
+ * select "none" by default or "other" at the bottom of the list
  */
 const LocationSelect = (props: LocationSelectProps) => {
     return (
@@ -41,12 +40,13 @@ const LocationSelect = (props: LocationSelectProps) => {
             helperText={props.error ? 'Please select a location' : null}
             sx={props.sx}
         >
-            <MenuItem value="none">No Location Set</MenuItem>
+            <MenuItem key="none" value="none">No Location Set</MenuItem>
             {data.rooms.map((r) => (
                 <MenuItem value={r.value} id={r.value}>
                     {r.label}
                 </MenuItem>
             ))}
+            <MenuItem key="other" value="other">Other...</MenuItem>
         </ControlledSelect>
     );
 };

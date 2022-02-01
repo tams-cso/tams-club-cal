@@ -1,8 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import { InferGetServerSidePropsType } from 'next';
 import dayjs from 'dayjs';
-import { getEventList } from '../src/api';
-import { darkSwitchGrey, parseEventList, isSameDate } from '../src/util';
+import { getPublicEventList } from '../src/api';
+import { darkSwitchGrey, parsePublicActivityList, isSameDate } from '../src/util';
 import type { SxProps, Theme } from '@mui/material';
 
 import Container from '@mui/material/Container';
@@ -22,21 +22,21 @@ const listTextFormat = {
 
 // Server-side Rendering
 export const getServerSideProps = async () => {
-    const eventRes = await getEventList();
+    const activityRes = await getPublicEventList();
 
     // Return error if bad data
-    if (eventRes.status !== 200) return { props: { eventList: null, error: true } };
+    if (activityRes.status !== 200) return { props: { activityList: null, error: true } };
 
     // Sort the events by date and filter out all elements
     // that do not start on or after the current date
     const startOfToday = dayjs().startOf('day').valueOf();
-    const filteredList = eventRes.data.sort((a, b) => a.start - b.start).filter((e) => e.start >= startOfToday);
+    const filteredList = activityRes.data.sort((a, b) => a.start - b.start).filter((e) => e.start >= startOfToday);
     return {
-        props: { eventList: filteredList, error: false },
+        props: { activityList: filteredList, error: false },
     };
 };
 
-const Home = ({ eventList, error }: InferGetServerSidePropsType<typeof getServerSideProps>) => {
+const Home = ({ activityList, error }: InferGetServerSidePropsType<typeof getServerSideProps>) => {
     const [eventComponentList, setEventComponentList] = useState<JSX.Element | JSX.Element[]>(
         <Loading sx={{ marginBottom: 4 }} />
     );
@@ -47,10 +47,10 @@ const Home = ({ eventList, error }: InferGetServerSidePropsType<typeof getServer
     // each containing a list of events for that day.
     useEffect(() => {
         // Make sure event list is not null
-        if (eventList === null) return;
+        if (activityList === null) return;
 
         // Set text to the end of the events list if empty
-        if (eventList.length === 0) {
+        if (activityList.length === 0) {
             setEventComponentList(
                 <Typography variant="h6" component="h2" sx={listTextFormat}>
                     No events planned... Click the + to add one!
@@ -60,7 +60,7 @@ const Home = ({ eventList, error }: InferGetServerSidePropsType<typeof getServer
         }
 
         // Split up multi-day events
-        const parsedEventList = parseEventList(eventList);
+        const parsedEventList = parsePublicActivityList(activityList);
 
         // Split the events into groups by date
         // TODO: Put this in a util function
@@ -90,14 +90,14 @@ const Home = ({ eventList, error }: InferGetServerSidePropsType<typeof getServer
 
         // Display list
         setEventComponentList(groupedComponents);
-    }, [eventList]);
+    }, [activityList]);
 
     // Show error message if errored
     if (error) {
         return (
             <HomeBase title={`Events`}>
                 <Loading error sx={{ marginBottom: 4 }}>
-                    Could not get event list. Please reload the page or contact the site manager to fix this issue.
+                    Could not get activity list. Please reload the page or contact the site manager to fix this issue.
                 </Loading>
             </HomeBase>
         );
@@ -112,7 +112,7 @@ const Home = ({ eventList, error }: InferGetServerSidePropsType<typeof getServer
                     overflowX: 'hidden',
                 }}
             >
-                <AddButton color="primary" label="Event" path="/edit/events" />
+                <AddButton color="primary" label="Activities" path="/edit/events" />
                 {eventComponentList}
             </Container>
         </HomeBase>

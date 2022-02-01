@@ -3,11 +3,10 @@ import type { Request, Response } from 'express';
 import { sendError } from '../functions/util';
 import { parseEditor } from '../functions/edit-history';
 import History from '../models/history';
-import Event from '../models/event';
 import Club from '../models/club';
 import Volunteering from '../models/volunteering';
-import Reservation from '../models/reservation';
-import RepeatingReservation from '../models/repeating-reservation';
+import { HistoryObject } from '../functions/types';
+import Event from '../models/event';
 const router = express.Router();
 
 /**
@@ -38,16 +37,13 @@ router.get('/', async (req: Request, res: Response) => {
         history = await History.find({}).sort({ time: -1, _id: 1 }).limit(50).exec();
     }
 
-    const sortedHistory = history.sort((a, b) => b.time - a.time);
+    const sortedHistory = history.sort((a: HistoryObject, b: HistoryObject) => b.time - a.time);
     const dataList = await Promise.all(
-        sortedHistory.map(async (h) => {
+        sortedHistory.map(async (h: HistoryObject) => {
             let resourceObj = null;
             if (h.resource === 'events') resourceObj = await Event.findOne({ id: h.editId });
             else if (h.resource === 'clubs') resourceObj = await Club.findOne({ id: h.editId });
             else if (h.resource === 'volunteering') resourceObj = await Volunteering.findOne({ id: h.editId });
-            else if (h.resource === 'reservations') resourceObj = await Reservation.findOne({ id: h.editId });
-            else if (h.resource === 'repeating-reservations')
-                resourceObj = await RepeatingReservation.findOne({ id: h.editId });
             const name = !resourceObj ? 'N/A' : resourceObj.name;
             const first = !resourceObj ? false : resourceObj.history[0] === h.id;
             const editor = await parseEditor(h.editor);
@@ -64,24 +60,26 @@ router.get('/', async (req: Request, res: Response) => {
  * resource and id in the request parameters
  */
 router.get('/:resource/:id', async (req: Request, res: Response) => {
+    // Get ID from parameters
     const id = req.params.id;
 
+    // Get the resource object based on the passed in resource name
     let resourceObj = null;
     if (req.params.resource === 'events') resourceObj = await Event.findOne({ id });
     else if (req.params.resource === 'clubs') resourceObj = await Club.findOne({ id });
     else if (req.params.resource === 'volunteering') resourceObj = await Volunteering.findOne({ id });
-    else if (req.params.resource === 'reservations') resourceObj = await Reservation.findOne({ id });
-    else if (req.params.resource === 'repeating-reservations') resourceObj = await RepeatingReservation.findOne({ id });
     else {
         sendError(res, 400, 'Invalid resource value. Expects one of: [events, clubs, volunteering, reservations]');
         return;
     }
 
+    // If there is no valid ID defined throw error
     if (!resourceObj) {
         sendError(res, 400, 'Invalid resource ID.');
         return;
     }
 
+    // Otherwise, return the history object based on the ID of the resource
     const history = await History.find({ id: { $in: resourceObj.history } });
     if (history) res.send({ history, name: resourceObj.name });
     else sendError(res, 500, 'Could not fetch history list for the given resource');

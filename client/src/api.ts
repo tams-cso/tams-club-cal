@@ -1,16 +1,17 @@
 import type {
+    Event,
     AdminResource,
     Club,
     ClubImageBlobs,
-    Event,
+    ExternalLinks,
     Feedback,
     FetchResponse,
+    StatusResponse,
     HistoryItemData,
     HistoryListData,
-    Reservation,
     Resource,
     Volunteering,
-} from './entries';
+} from './types';
 import Cookies from 'universal-cookie';
 
 const BACKEND_URL =
@@ -21,7 +22,7 @@ const BACKEND_URL =
         : 'http://localhost:5000';
 
 const CDN_URL =
-    process.env.NEXT_PUBLIC_BACKEND === 'staging' || process.env.NEXT_PUBLIC_BACKEND === 'localhost'
+    process.env.NEXT_PUBLIC_BACKEND === 'staging' || process.env.NODE_ENV !== 'production'
         ? 'https://staging.cdn.tams.club'
         : 'https://cdn.tams.club';
 
@@ -70,7 +71,7 @@ async function postRequest(
     body: BodyInit,
     json: boolean = true,
     auth: boolean = true
-): Promise<FetchResponse> {
+): Promise<StatusResponse> {
     try {
         const options: RequestInit = {
             method: 'POST',
@@ -79,11 +80,10 @@ async function postRequest(
         };
 
         const res = await fetch(`${BACKEND_URL}${url}`, options);
-        const data = await res.json();
-        return <FetchResponse>{ status: res.status, data };
+        return <StatusResponse>{ status: res.status };
     } catch (error) {
         console.dir(error);
-        return <FetchResponse>{ status: 404, data: null };
+        return <StatusResponse>{ status: 404 };
     }
 }
 
@@ -100,16 +100,15 @@ async function putRequest(
     body: BodyInit,
     json: boolean = true,
     auth: boolean = true
-): Promise<FetchResponse> {
+): Promise<StatusResponse> {
     try {
         const options = { method: 'PUT', body, headers: createHeaders(auth, json) };
 
         const res = await fetch(`${BACKEND_URL}${url}`, options);
-        const data = await res.json();
-        return <FetchResponse>{ status: res.status, data };
+        return <StatusResponse>{ status: res.status };
     } catch (error) {
         console.dir(error);
-        return <FetchResponse>{ status: 404, data: null };
+        return <StatusResponse>{ status: 404 };
     }
 }
 
@@ -136,7 +135,7 @@ async function deleteRequest(url: string, auth: boolean = false): Promise<FetchR
  * @param auth True if adding authorization string
  * @param json True if adding json content type
  */
-function createHeaders(auth, json): Headers {
+function createHeaders(auth: boolean, json: boolean): Headers {
     const cookies = new Cookies();
     const token = cookies.get('token');
 
@@ -147,27 +146,27 @@ function createHeaders(auth, json): Headers {
     return headers;
 }
 
-/* ########## EVENTS/RESERVATIONS API ########### */
+/* ########## ACTIVITIES API ########### */
 
 /**
- * Gets the list of events.
+ * Gets the list of public activities.
  */
-export async function getEventList(): Promise<ListFetchResponse<Event>> {
+export async function getPublicEventList(): Promise<ListFetchResponse<Event>> {
     return getRequest('/events') as Promise<ListFetchResponse<Event>>;
 }
 
 /**
- * Returns a list of events between two dates
+ * Returns a list of public activities between two dates
  *
  * @param start Starting time to get events from
  * @param end Ending time to get events to
  */
-export async function getEventListInRange(start: number, end: number): Promise<ListFetchResponse<Event>> {
+export async function getPublicEventListInRange(start: number, end: number): Promise<ListFetchResponse<Event>> {
     return getRequest(`/events?start=${start}&end=${end}`) as Promise<ListFetchResponse<Event>>;
 }
 
 /**
- * Gets a specific event by ID.
+ * Gets a specific activity by ID.
  *
  * @param id ID of the event to get
  */
@@ -176,11 +175,21 @@ export async function getEvent(id: string): Promise<ResourceFetchResponse<Event>
 }
 
 /**
+ * Gets the list of all reservations in a week
+ * If week is not defined, will get the current week's reservations by default
+ *
+ * @param week UTC time for the current week to get; this can be any time within the week
+ */
+export async function getReservationList(week: number = null): Promise<ListFetchResponse<Event>> {
+    return getRequest(`/events/reservations/${week ? week : ''}`) as Promise<ListFetchResponse<Event>>;
+}
+
+/**
  * Creates a new event
  *
  * @param event Event object
  */
-export async function postEvent(event: Event): Promise<FetchResponse> {
+export async function postEvent(event: Event): Promise<StatusResponse> {
     return postRequest('/events', JSON.stringify(event));
 }
 
@@ -190,65 +199,8 @@ export async function postEvent(event: Event): Promise<FetchResponse> {
  * @param event Event object
  * @param id ID of the event to update
  */
-export async function putEvent(event: Event, id: string): Promise<FetchResponse> {
+export async function putEvent(event: Event, id: string): Promise<StatusResponse> {
     return putRequest(`/events/${id}`, JSON.stringify(event));
-}
-
-/**
- * Gets the list of all reservations in a week
- * If week is not defined, will get the current week's reservations by default
- *
- * @param week UTC time for the current week to get; this can be any time within the week
- */
-export async function getReservationList(week: number = null): Promise<ListFetchResponse<Reservation>> {
-    return getRequest(`/reservations${week ? `?week=${week}` : ''}`) as Promise<ListFetchResponse<Reservation>>;
-}
-
-/**
- * Gets a specific reservation by ID.
- *
- * @param id ID of the reservation to get
- */
-export async function getReservation(id: string): Promise<ResourceFetchResponse<Reservation>> {
-    return getRequest(`/reservations/${id}`) as Promise<ResourceFetchResponse<Reservation>>;
-}
-
-/**
- * Gets the list of all repeating reservations for a week
- * If week is not defined, will get all reservations that repeat up to and after the current week
- *
- * @param week UTC time for the current week to get; this can be any time within the week
- */
-export async function getRepeatingReservationList(week: number = null): Promise<ListFetchResponse<Reservation>> {
-    return getRequest(`/reservations/repeating${week ? `?week=${week}` : ''}`) as Promise<
-        ListFetchResponse<Reservation>
-    >;
-}
-
-/**
- * Gets a specific repeating reservation by ID.
- */
-export async function getRepeatingReservation(id: string): Promise<ResourceFetchResponse<Reservation>> {
-    return getRequest(`/reservations/repeating/${id}`) as Promise<ResourceFetchResponse<Reservation>>;
-}
-
-/**
- * Creates a new reservation
- *
- * @param reservation Reservation object
- */
-export async function postReservation(reservation: Reservation): Promise<FetchResponse> {
-    return postRequest('/reservations', JSON.stringify(reservation));
-}
-
-/**
- * Updates an reservation
- *
- * @param reservation Reservation object
- * @param id ID of the event to update
- */
-export async function putReservation(reservation: Reservation, id: string): Promise<FetchResponse> {
-    return putRequest(`/reservations/${id}`, JSON.stringify(reservation));
 }
 
 /**
@@ -262,9 +214,11 @@ export async function getOverlappingReservations(
     location: string,
     start: number,
     end: number
-): Promise<ListFetchResponse<Reservation>> {
-    return getRequest(`/reservations/search/${location}/${start}/${end}`) as Promise<ListFetchResponse<Reservation>>;
+): Promise<ListFetchResponse<Event>> {
+    return getRequest(`/events/reservations/search/${location}/${start}/${end}`) as Promise<ListFetchResponse<Event>>;
 }
+
+/* ########## EVENTS/RESERVATIONS API ########### */
 
 /* ########## CLUBS API ########### */
 
@@ -289,7 +243,7 @@ export async function getClub(id: string): Promise<ResourceFetchResponse<Club>> 
  * @param images Club image blobs object
  * @param execPhotos True for the execs that have new images; should be same length as club.execs
  */
-export async function postClub(club: Club, images: ClubImageBlobs, execPhotos: boolean[]): Promise<FetchResponse> {
+export async function postClub(club: Club, images: ClubImageBlobs, execPhotos: boolean[]): Promise<StatusResponse> {
     const data = new FormData();
     data.append('data', JSON.stringify(club));
     data.append('cover', images.coverPhoto);
@@ -313,7 +267,7 @@ export async function putClub(
     images: ClubImageBlobs,
     execPhotos: boolean[],
     id: string
-): Promise<FetchResponse> {
+): Promise<StatusResponse> {
     const data = new FormData();
     data.append('data', JSON.stringify(club));
     data.append('cover', images.coverPhoto);
@@ -345,7 +299,7 @@ export async function getVolunteering(id: string): Promise<ResourceFetchResponse
  *
  * @param volunteering Volunteering object
  */
-export async function postVolunteering(volunteering: Volunteering): Promise<FetchResponse> {
+export async function postVolunteering(volunteering: Volunteering): Promise<StatusResponse> {
     return postRequest(`/volunteering`, JSON.stringify(volunteering));
 }
 
@@ -355,7 +309,7 @@ export async function postVolunteering(volunteering: Volunteering): Promise<Fetc
  * @param volunteering Volunteering object
  * @param id ID of the volunteering opportunity to update
  */
-export async function putVolunteering(volunteering: Volunteering, id: string): Promise<FetchResponse> {
+export async function putVolunteering(volunteering: Volunteering, id: string): Promise<StatusResponse> {
     return putRequest(`/volunteering/${id}`, JSON.stringify(volunteering));
 }
 
@@ -387,7 +341,7 @@ export async function getHistory(resource: string, id: string): Promise<Resource
  *
  * @param feedback Feedback object
  */
-export async function postFeedback(feedback: Feedback): Promise<FetchResponse> {
+export async function postFeedback(feedback: Feedback): Promise<StatusResponse> {
     return postRequest('/feedback', JSON.stringify(feedback), true, false);
 }
 
@@ -407,7 +361,7 @@ export type LoggedIn = { loggedIn: boolean };
  * @param token User auth token
  */
 export async function getLoggedIn(token: string): Promise<ResourceFetchResponse<LoggedIn>> {
-    return postRequest('/auth', JSON.stringify({ token }), true, false) as Promise<ResourceFetchResponse<LoggedIn>>;
+    return getRequest(`/auth/${token}`) as Promise<ResourceFetchResponse<LoggedIn>>;
 }
 
 /**
@@ -434,9 +388,11 @@ export type IsAdmin = { admin: boolean };
  * @param token User auth token
  */
 export async function getIsAdmin(token: string): Promise<ResourceFetchResponse<IsAdmin>> {
-    return postRequest(`/auth/admin`, JSON.stringify({ token }), true, false) as Promise<
-        ResourceFetchResponse<IsAdmin>
-    >;
+    return getRequest(`/auth/admin/${token}`) as Promise<ResourceFetchResponse<IsAdmin>>;
+}
+
+export async function getExternalLinks(): Promise<ResourceFetchResponse<ExternalLinks>> {
+    return getRequest('/external-links') as Promise<ResourceFetchResponse<ExternalLinks>>;
 }
 
 /**

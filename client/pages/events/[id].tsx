@@ -2,8 +2,15 @@ import React from 'react';
 import type { Theme } from '@mui/material';
 import { GetServerSidePropsContext, InferGetServerSidePropsType } from 'next';
 import { useRouter } from 'next/router';
-import { darkSwitch, darkSwitchGrey, formatEventDate, formatEventTime, getParams } from '../../src/util';
-import { getEvent } from '../../src/api';
+import { RepeatingStatus } from '../../src/types';
+import {
+    darkSwitch,
+    darkSwitchGrey,
+    formatActivityDate,
+    formatActivityTime,
+    formatDate,
+    getParams,
+} from '../../src/util';
 
 import Container from '@mui/material/Container';
 import Card from '@mui/material/Card';
@@ -16,10 +23,11 @@ import Hidden from '@mui/material/Hidden';
 import Typography from '@mui/material/Typography';
 import Paragraph from '../../src/components/shared/paragraph';
 import AddButton from '../../src/components/shared/add-button';
-
-import data from '../../src/data.json';
 import Loading from '../../src/components/shared/loading';
 import HomeBase from '../../src/components/home/home-base';
+import { getEvent } from '../../src/api';
+
+import data from '../../src/data.json';
 
 // Coloring for the event type
 const eventTypeStyle = {
@@ -48,21 +56,25 @@ const EventDisplay = ({ event, error }: InferGetServerSidePropsType<typeof getSe
     };
 
     // Show error message if errored
+    // TODO: Differentiate between invalid ID error and could not connect error
     if (error) {
         return (
-            <HomeBase title={`Reservations`}>
+            <HomeBase title={`Events`}>
                 <Loading error sx={{ marginBottom: 4 }}>
-                    Could not get event data. Please reload the page or contact the site manager to fix this issue.
+                    Could not get event data. Make sure the ID you have is valid and reload the page.
                 </Loading>
             </HomeBase>
         );
     }
 
+    const location = data.rooms.find((d) => d.value === event.location);
+    const reserved = event.reservation ? ' (Reserved)' : '';
+
     return (
-        <HomeBase title={`${event.name} | Reservations`} noActionBar>
+        <HomeBase title={`${event.name} | Events`} noActionBar>
             <Container maxWidth={false} sx={{ maxWidth: { lg: '60%', md: '75%', xs: '100%' } }}>
                 <AddButton color="secondary" label="Event" path={`/edit/events/${event.id}`} edit />
-                <Card>
+                <Card sx={{ marginBottom: 3 }}>
                     <CardContent>
                         <Box
                             sx={{
@@ -79,9 +91,7 @@ const EventDisplay = ({ event, error }: InferGetServerSidePropsType<typeof getSe
                                     padding: { lg: 1, xs: 0 },
                                 }}
                             >
-                                <Typography sx={eventTypeStyle}>
-                                    {event.type === 'event' ? 'Event' : 'Signup/Deadline'}
-                                </Typography>
+                                <Typography sx={eventTypeStyle}>{event.type}</Typography>
                                 <Typography variant="h2" component="h1">
                                     {event.name}
                                 </Typography>
@@ -93,11 +103,21 @@ const EventDisplay = ({ event, error }: InferGetServerSidePropsType<typeof getSe
                                     {event.club}
                                 </Typography>
                                 <Typography variant="h3" gutterBottom sx={{ fontWeight: 400 }}>
-                                    {formatEventDate(event)}
+                                    {formatActivityDate(event)}
                                 </Typography>
-                                <Typography variant="h3" sx={{ fontWeight: 400 }}>
-                                    {formatEventTime(event, event.noEnd, true)}
+                                <Typography variant="h3" gutterBottom sx={{ fontWeight: 400 }}>
+                                    {formatActivityTime(event, event.noEnd, true)}
                                 </Typography>
+                                {event.repeats !== RepeatingStatus.NONE ? (
+                                    <Typography
+                                        variant="h3"
+                                        sx={{ color: (theme) => darkSwitchGrey(theme), fontWeight: 400, marginTop: 2 }}
+                                    >
+                                        {`Repeats ${
+                                            event.repeats === RepeatingStatus.WEEKLY ? 'weekly' : 'monthly'
+                                        } until ${formatDate(event.repeatsUntil, 'dddd, MMMM D, YYYY')}`}
+                                    </Typography>
+                                ) : null}
                                 <Typography
                                     variant="h3"
                                     sx={{
@@ -108,9 +128,7 @@ const EventDisplay = ({ event, error }: InferGetServerSidePropsType<typeof getSe
                                 >
                                     {event.location === 'none'
                                         ? null
-                                        : 'Location: ' +
-                                          data.rooms.find((d) => d.value === event.location).label +
-                                          (event.reservationId ? ' (Reserved)' : '')}
+                                        : `Location: ${location ? location.label : event.location}${reserved}`}
                                 </Typography>
                             </Box>
                             <Hidden mdDown>
@@ -126,7 +144,8 @@ const EventDisplay = ({ event, error }: InferGetServerSidePropsType<typeof getSe
                                     textAlign: 'left',
                                     margin: { lg: '0 0 0 12px', xs: '16px 0 0 0' },
                                     padding: { lg: '8px 0', xs: 0 },
-                                    color: (theme: Theme) => darkSwitch(theme, theme.palette.grey[700], theme.palette.grey[200])
+                                    color: (theme: Theme) =>
+                                        darkSwitch(theme, theme.palette.grey[700], theme.palette.grey[200]),
                                 }}
                             />
                         </Box>

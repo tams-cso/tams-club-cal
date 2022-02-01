@@ -4,7 +4,7 @@ import { GetServerSidePropsContext, InferGetServerSidePropsType } from 'next';
 import { useForm } from 'react-hook-form';
 import Cookies from 'universal-cookie';
 import { processLinkObjectList, createPopupEvent, createClub, createClubImageBlobs } from '../../../src/util';
-import type { Exec, PopupEvent } from '../../../src/entries';
+import type { Exec, PopupEvent } from '../../../src/types';
 import { getClub, postClub, putClub } from '../../../src/api';
 
 import Typography from '@mui/material/Typography';
@@ -110,7 +110,7 @@ const EditClubs = ({ club, id, error }: InferGetServerSidePropsType<typeof getSe
         setBackdrop(false);
 
         // If the response is successful, redirect to the club page, otherwise display an error
-        if (res.status === 200) {
+        if (res.status === 204) {
             new Cookies().set('success', id ? 'update-club' : 'add-club', { sameSite: 'strict', path: '/' });
             back();
         } else setPopupEvent(createPopupEvent('Unable to upload data. Please refresh the page or try again.', 4));

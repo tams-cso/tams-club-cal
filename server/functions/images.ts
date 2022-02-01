@@ -68,7 +68,7 @@ async function compressImage(input: MulterFile, width: number): Promise<Buffer> 
 
 /**
  * Uploads an images to a specified resource given a blob.
- * 
+ *
  * @returns The ID of the image
  */
 async function uploadImage(resource: string, buffer: Buffer): Promise<string> {
@@ -115,11 +115,14 @@ async function deletePrevious(previousSrc: string): Promise<1> {
  */
 export async function deleteClubImages(club: ClubObject) {
     const urls = [];
-    if (club.coverImg) urls.push(club.coverImg);
-    if (club.coverImgThumbnail) urls.push(club.coverImgThumbnail);
+    if (club.coverImg && club.coverImg !== '') urls.push(club.coverImg);
+    if (club.coverImgThumbnail && club.coverImgThumbnail !== '') urls.push(club.coverImgThumbnail);
     club.execs.forEach((exec) => {
-        if (exec.img) urls.push(exec.img);
+        if (exec.img && exec.img !== '') urls.push(exec.img);
     });
+    
+    // Return if nothing to delete
+    if (urls.length === 0) return;
 
     try {
         await s3

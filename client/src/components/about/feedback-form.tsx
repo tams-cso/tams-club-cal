@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { useForm } from 'react-hook-form';
-import type { Feedback, PopupEvent } from '../../entries';
+import type { Feedback, PopupEvent } from '../../types';
 import { postFeedback } from '../../api';
 
 import Button from '@mui/material/Button';
@@ -37,7 +37,7 @@ const FeedbackForm = () => {
         setBackdrop(false);
 
         // Check if feedback was successfully sent and send message to user
-        if (res.status == 200) {
+        if (res.status == 204) {
             setValue('feedback', '');
             setValue('name', '');
             setPopupEvent({ severity: 2, message: 'Feedback successfully submitted!', time: new Date().valueOf() });

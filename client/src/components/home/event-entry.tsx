@@ -1,7 +1,7 @@
 import React from 'react';
 import type { Theme } from '@mui/material';
-import type { Event } from '../../entries';
-import { darkSwitch, formatEventTime } from '../../util';
+import { Event, RepeatingStatus } from '../../types';
+import { darkSwitch, formatActivityTime } from '../../util';
 
 import Box from '@mui/material/Box';
 import ListItem from '@mui/material/ListItem';
@@ -11,7 +11,7 @@ import StyledSpan from '../shared/styled-span';
 
 interface EventEntryProps {
     /** The event object to display */
-    event: Event
+    event: Event;
 }
 
 /**
@@ -49,7 +49,7 @@ const EventEntry = (props: EventEntryProps) => {
                         fontSize: { lg: '1.2rem', xs: '0.9rem' },
                     }}
                 >
-                    {formatEventTime(props.event)}
+                    {`${formatActivityTime(props.event)}`}
                 </Typography>
                 <Box sx={{ overflow: 'hidden' }}>
                     <Typography
@@ -60,7 +60,7 @@ const EventEntry = (props: EventEntryProps) => {
                             fontSize: { lg: '1.25rem', xs: '1rem' },
                         }}
                     >
-                        {props.event.name}
+                        {`${props.event.name}${props.event.repeats !== RepeatingStatus.NONE ? ' [Repeating]' : ''}`}
                     </Typography>
                     <Typography
                         sx={{

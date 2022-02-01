@@ -11,7 +11,7 @@ interface TwoButtonBoxProps {
     onCancel: MouseEventHandler<HTMLButtonElement>;
 
     /** Function to run if the user presses the success button */
-    onSuccess: MouseEventHandler<HTMLButtonElement>;
+    onSuccess?: MouseEventHandler<HTMLButtonElement>;
 
     /** True if the button is a form submit button */
     submit?: boolean;

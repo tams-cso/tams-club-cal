@@ -1,5 +1,5 @@
 import React from 'react';
-import type { Event } from '../../entries';
+import type { Event } from '../../types';
 
 import List from '@mui/material/List';
 import Divider from '@mui/material/Divider';
@@ -20,11 +20,11 @@ const EventListSection = (props: EventListSectionProps) => {
         <React.Fragment>
             <DateSection time={props.eventList[0].start} />
             <List>
-                {props.eventList.map((event, index) => {
+                {props.eventList.map((activity, index) => {
                     return (
                         <React.Fragment key={index}>
                             {index === 0 ? null : <Divider variant="middle" />}
-                            <EventEntry event={event} />
+                            <EventEntry event={activity} />
                         </React.Fragment>
                     );
                 })}

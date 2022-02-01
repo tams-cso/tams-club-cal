@@ -3,7 +3,7 @@ import { GetServerSidePropsContext, InferGetServerSidePropsType } from 'next';
 import { useRouter } from 'next/router';
 import { calculateEditDate, darkSwitch, getParams, parseEditor, redirect } from '../../../../src/util';
 import { getHistory } from '../../../../src/api';
-import type { History, Resource } from '../../../../src/entries';
+import type { History, Resource } from '../../../../src/types';
 
 import Table from '@mui/material/Table';
 import TableBody from '@mui/material/TableBody';
@@ -16,20 +16,22 @@ import Button from '@mui/material/Button';
 import Loading from '../../../../src/components/shared/loading';
 import HistoryPopup from '../../../../src/components/edit/history/history-popup';
 import Title from '../../../../src/components/shared/title';
-import EditLogin from '../../../../src/components/edit/shared/edit-login';
 import EditWrapper from '../../../../src/components/edit/shared/edit-wrapper';
+import Link from '../../../../src/components/shared/Link';
 
 // Server-side Rendering
 export const getServerSideProps = async (ctx: GetServerSidePropsContext) => {
     const id = ctx.params.id as string;
     const resource = ctx.params.resource as Resource;
+    console.log('?');
     const historyRes = await getHistory(resource, id);
     const sortedHistory = historyRes.status === 200 ? historyRes.data.history.sort((a, b) => b.time - a.time) : null;
+    const error = historyRes.status !== 200;
     return {
         props: {
-            historyList: sortedHistory,
-            name: historyRes.data.name as string,
-            error: historyRes.status !== 200,
+            historyList: error ? [] : sortedHistory,
+            name: error ? '' : historyRes.data.name as string,
+            error,
             resource,
             id,
         },
@@ -125,7 +127,12 @@ const HistoryDisplay = ({
                                 textAlign: 'center',
                                 marginBottom: 1.5,
                             }}
-                        >{`Edit History for ${name}`}</Typography>
+                        >
+                            {`Edit History for ${name}`}
+                        </Typography>
+                        <Link href={`/edit/${resource}/${id}`} sx={{ textAlign: 'center', display: 'block' }}>
+                            Edit this resource
+                        </Link>
                         <Table>
                             <TableHead>
                                 <TableRow>

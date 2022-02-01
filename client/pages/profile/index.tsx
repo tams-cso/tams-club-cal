@@ -24,7 +24,7 @@ export const getServerSideProps = async (ctx: GetServerSidePropsContext) => {
     if (res.status === 200 && res.data.loggedIn) {
         return { props: { authorized: true } };
     } else {
-        return { props: { authorized: false } };
+        return { props: { authorized: false, error: res.status !== 200 } };
     }
 };
 
@@ -34,10 +34,10 @@ export const getServerSideProps = async (ctx: GetServerSidePropsContext) => {
  * This redirection will, by default, be to the dashboard. However, if a path is passed in through the querystring, then
  * the user will be redirected to the specified path.
  */
-const Login = ({ authorized }: InferGetServerSidePropsType<typeof getServerSideProps>) => {
+const Login = ({ authorized, error }: InferGetServerSidePropsType<typeof getServerSideProps>) => {
     const router = useRouter();
     const cookies = new Cookies();
-    const [loadScreen, setLoadScreen] = useState(true);
+    const [loadScreen, setLoadScreen] = useState(true); // TODO: What is this
 
     // Gets backend URL, which is determined by the environmental variables
     const backend = `${getBackendUrl()}/auth/login`;
@@ -90,8 +90,9 @@ const Login = ({ authorized }: InferGetServerSidePropsType<typeof getServerSideP
                         ></Button>
                     </Box>
                     <Typography sx={{ color: (theme) => darkSwitchGrey(theme) }}>
-                        You can securely login with Google to track your edits across this site. You may edit resources
-                        without logging in, but edits will be made under your IP address instead.
+                        {error
+                            ? 'Error getting login page! Please check your internet and try again!'
+                            : 'You can securely login with Google to track your edits across this site. You may edit resources without logging in, but edits will be made under your IP address instead.'}
                     </Typography>
                 </CardContent>
             </Card>

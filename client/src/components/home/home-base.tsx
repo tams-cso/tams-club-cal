@@ -28,10 +28,8 @@ interface HomeBaseProps extends React.HTMLProps<HTMLDivElement> {
 }
 
 /**
- * The main home page that displays events, reservations, and a calendar.
- * This page also contains a drawer that has external links.
- * This component itself functions as a switch between the different views.
- * Both '/' and '/events' will route to this component.
+ * Base for all home pages, contains an action bar and a drawer with external links
+ * that both can be hidden manually.
  */
 const HomeBase = (props: HomeBaseProps) => {
     return (

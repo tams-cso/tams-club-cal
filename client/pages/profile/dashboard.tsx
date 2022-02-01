@@ -35,7 +35,7 @@ export const getServerSideProps = async (ctx: GetServerSidePropsContext) => {
                 return {
                     props: {
                         authorized: true,
-                        isAdmin: adminRes && adminRes.data.admin,
+                        isAdmin: adminRes.data && adminRes.data.admin,
                         info: userRes.data,
                         error: true,
                     },

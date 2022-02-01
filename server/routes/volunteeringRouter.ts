@@ -44,11 +44,11 @@ router.post('/', async (req: Request, res: Response) => {
         filters: req.body.filters,
         history: [historyId],
     });
-    const newHistory = await createHistory(req, newVolunteering, 'volunteering', id, historyId);
+    const newHistory = await createHistory(req, newVolunteering.toObject(), 'volunteering', id, historyId);
 
     const volunteeringRes = await newVolunteering.save();
     const historyRes = await newHistory.save();
-    if (volunteeringRes === newVolunteering && historyRes === newHistory) res.send({ ok: 1 });
+    if (volunteeringRes === newVolunteering && historyRes === newHistory) res.sendStatus(204);
     else sendError(res, 500, 'Unable to add new volunteering opportunity to database');
 });
 
@@ -79,7 +79,7 @@ router.put('/:id', async (req: Request, res: Response) => {
     );
     const historyRes = await newHistory.save();
 
-    if (volunteeringRes.acknowledged && historyRes === newHistory) res.send({ ok: 1 });
+    if (volunteeringRes.acknowledged && historyRes === newHistory) res.sendStatus(204);
     else sendError(res, 500, 'Unable to update volunteering opportunity in database.');
 });
 

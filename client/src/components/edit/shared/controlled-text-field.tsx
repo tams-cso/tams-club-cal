@@ -1,5 +1,5 @@
 import React, { useEffect } from 'react';
-import type { Control, FieldValues, UseFormSetValue, UseFormRegister } from 'react-hook-form';
+import type { Control, FieldValues, UseFormSetValue, Validate } from 'react-hook-form';
 
 import { Controller } from 'react-hook-form';
 import TextField from '@mui/material/TextField';
@@ -38,6 +38,9 @@ interface ControlledTextFieldProps {
     /** True if field is required */
     required?: boolean;
 
+    /** Pass custom validation function to controller */
+    validate?: Validate<any> | Record<string, Validate<any>>;
+
     /** Error message to display in the case of an error; required if 'required' defined */
     errorMessage?: string;
 
@@ -63,7 +66,7 @@ const ControlledTextField = (props: ControlledTextFieldProps) => {
         <Controller
             control={props.control}
             name={props.name}
-            rules={{ required: props.required || false }}
+            rules={{ required: props.required || false, validate: props.validate }}
             render={({ field: { onChange, onBlur, value }, fieldState: { error } }) => (
                 <TextField
                     label={props.label}

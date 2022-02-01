@@ -1,6 +1,6 @@
 import React from 'react';
 import { darkSwitch } from '../../util';
-import { Volunteering } from '../../entries';
+import { Volunteering } from '../../types';
 
 import Table from '@mui/material/Table';
 import TableBody from '@mui/material/TableBody';

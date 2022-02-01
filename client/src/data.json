@@ -102,6 +102,31 @@
     ],
     "changelog": [
         {
+            "v": "5.0",
+            "date": "Febuary 1st, 2022",
+            "changes": [
+                "Completely overhauled events system",
+                "Removed seperate reservation add page",
+                "Added ability to make repeating events",
+                "Added ability to repeat events weekly and monthly",
+                "Repeating events are now labeled on the schedule view",
+                "Top navigation bar no longer disappears when scrolling down",
+                "Volunteering opportunities will now be open by default when creating them",
+                "Fixed issue where edit history looks janky when creating a resource",
+                "Fixed issue where edit history page would crash if accessing a deleted resource",
+                "Fixed issue where edit history entries were not deleted when admins deleted resources",
+                "Club committee cards will now properly display committee heads"
+            ]
+        },
+        {
+            "v": "4.2",
+            "date": "January 21st, 2022",
+            "changes": [
+                "Fixed events not all loading in schedule view",
+                "Fixed issue where the calendar would not move correctly to December"
+            ]
+        },
+        {
             "v": "4.1",
             "date": "January 14th, 2022",
             "changes": [

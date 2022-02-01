@@ -6,9 +6,9 @@ import { deleteClubImages } from '../functions/images';
 import Event from '../models/event';
 import Club from '../models/club';
 import Volunteering from '../models/volunteering';
-import Reservation from '../models/reservation';
-import RepeatingReservation from '../models/repeating-reservation';
 import History from '../models/history';
+import { deleteCalendarEvent } from '../functions/gcal';
+import { EventObject } from '../functions/types';
 
 const router = express.Router();
 
@@ -56,26 +56,6 @@ router.get('/resources/:resource/:field/:search/:page?', async (req: Request, re
             res.send(volunteering);
             break;
         }
-        case 'reservations': {
-            const reservations = getAll
-                ? await Reservation.find({})
-                      .limit(pageLength)
-                      .skip((page || 0) * pageLength)
-                      .exec()
-                : await Reservation.find({ [req.params.field]: req.params.search });
-            res.send(reservations);
-            break;
-        }
-        case 'repeating-reservations': {
-            const repeatingRes = getAll
-                ? await RepeatingReservation.find({})
-                      .limit(pageLength)
-                      .skip((page || 0) * pageLength)
-                      .exec()
-                : await RepeatingReservation.find({ [req.params.field]: req.params.search });
-            res.send(repeatingRes);
-            break;
-        }
         default:
             sendError(res, 400, 'Invalid resource field!');
             return;
@@ -89,62 +69,75 @@ router.get('/resources/:resource/:field/:search/:page?', async (req: Request, re
  * Additionally, if the resource is an event, then the related reservation will also be deleted.
  */
 router.delete('/resources/:resource/:id', async (req: Request, res: Response) => {
+    // TODO: This is honestly also a spaghetti pile but idk if it can actually be cleaned up LMAO
+
     // Check to see if header is there
-    if (req.headers.authorization && req.headers.authorization.startsWith('Bearer ')) {
-        const validHeader = await validateHeader(req.headers.authorization.substring(7));
-        if (validHeader) {
-            // If everything is good, delete the resource
-            switch (req.params.resource) {
-                case 'events': {
-                    const event = await Event.findOne({ id: req.params.id });
-                    const deleteRes = await Event.deleteOne({ id: req.params.id });
-                    if (event.reservationId) await Reservation.deleteOne({ id: event.reservationId });
-                    await History.deleteMany({ resource: 'events', id: req.params.id });
-                    if (deleteRes.deletedCount === 1) res.send({ ok: 1 });
-                    else sendError(res, 500, 'Could not delete event');
-                    break;
-                }
-                case 'clubs': {
-                    const club = await Club.findOne({ id: req.params.id });
-                    const deleteRes = await Club.deleteOne({ id: req.params.id });
-                    const deleteImageRes = await deleteClubImages(club);
-                    if (deleteImageRes !== 1) club.save(); // TODO: idk if this actually works lol
-                    await History.deleteMany({ resource: 'clubs', id: req.params.id });
-                    if (deleteRes.deletedCount === 1 && deleteImageRes === 1) res.send({ ok: 1 });
-                    else sendError(res, 500, 'Could not delete club');
-                    break;
-                }
-                case 'volunteering': {
-                    const deleteRes = await Volunteering.deleteOne({ id: req.params.id });
-                    await History.deleteMany({ resource: 'volunteering', id: req.params.id });
-                    if (deleteRes.deletedCount === 1) res.send({ ok: 1 });
-                    else sendError(res, 500, 'Could not delete volunteering');
-                    break;
-                }
-                case 'reservations': {
-                    const deleteRes = await Reservation.deleteOne({ id: req.params.id });
-                    await History.deleteMany({ resource: 'reservations', id: req.params.id });
-                    if (deleteRes.deletedCount === 1) res.send({ ok: 1 });
-                    else sendError(res, 500, 'Could not delete reservation');
-                    break;
-                }
-                case 'repeating-reservations': {
-                    const deleteRes = await RepeatingReservation.deleteOne({ id: req.params.id });
-                    await History.deleteMany({ resource: 'repeating-reservations', id: req.params.id });
-                    if (deleteRes.deletedCount === 1) res.send({ ok: 1 });
-                    else sendError(res, 500, 'Could not delete repeating reservation');
-                    break;
-                }
-                default:
-                    sendError(res, 400, 'Invalid resource field!');
-                    return;
-            }
-        } else {
-            sendError(res, 401, 'Invalid authorization token');
-        }
-    } else {
-        sendError(res, 401, 'Missing valid authorization token in header');
+    if (!req.headers.authorization || !req.headers.authorization.startsWith('Bearer ')) {
+        sendError(res, 401, 'Missing authorization token');
         return;
+    }
+
+    // Make sure the token is valid
+    const validHeader = await validateHeader(req.headers.authorization.substring(7));
+    if (!validHeader) {
+        sendError(res, 401, 'Invalid authorization token');
+        return;
+    }
+
+    // If everything is good, delete the resource
+    try {
+        switch (req.params.resource) {
+            case 'events': {
+                // Get previous event and return error if invalid ID
+                const event: EventObject = await Event.findOne({ id: req.params.id });
+                if (!event) {
+                    sendError(res, 400, 'Invalid ID');
+                    return;
+                }
+    
+                // Delete event from Google Calendar, History DB, and Events DB
+                if (event.publicEvent) await deleteCalendarEvent(event.eventId);
+                const deleteRes = await Event.deleteOne({ id: req.params.id });
+                await History.deleteMany({ resource: 'events', editId: req.params.id });
+    
+                // Also delete any repeating events
+                await Event.deleteMany({ repeatOriginId: req.params.id });
+    
+                // Return ok: 1 or error
+                if (deleteRes.deletedCount === 1) res.send({ ok: 1 });
+                else sendError(res, 500, 'Could not delete event');
+                break;
+            }
+            case 'clubs': {
+                // Get club
+                const club = await Club.findOne({ id: req.params.id });
+                
+                // Delete images from AWS
+                await deleteClubImages(club);
+
+                // Delete club and history
+                const deleteRes = await Club.deleteOne({ id: req.params.id });
+                await History.deleteMany({ resource: 'clubs', editId: req.params.id });
+
+                // Return ok: 1 or error
+                if (deleteRes.deletedCount === 1) res.send({ ok: 1 });
+                else sendError(res, 500, 'Could not delete club');
+                break;
+            }
+            case 'volunteering': {
+                const deleteRes = await Volunteering.deleteOne({ id: req.params.id });
+                await History.deleteMany({ resource: 'volunteering', editId: req.params.id });
+                if (deleteRes.deletedCount === 1) res.send({ ok: 1 });
+                else sendError(res, 500, 'Could not delete volunteering');
+                break;
+            }
+            default:
+                sendError(res, 400, 'Invalid resource field!');
+                return;
+        }
+    } catch (error) {
+        console.error(error);
+        sendError(res, 500, 'Internal server error when deleting resource!');
     }
 });
 

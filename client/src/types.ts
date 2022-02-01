@@ -2,7 +2,14 @@ import type { Dayjs } from 'dayjs';
 
 // TODO: Formalize a type of union of constants for location from the data file
 
-/** An object containing the information for calendar events */
+/** Status representing how an event repeats */
+export enum RepeatingStatus {
+    NONE,
+    WEEKLY,
+    MONTHLY,
+}
+
+/** An object containing the information for events */
 export interface Event {
     /** The unique UUIDv4 for the event */
     id: string;
@@ -14,7 +21,7 @@ export interface Event {
     reservationId?: string | number;
 
     /** The type of the event */
-    type: 'event' | 'signup';
+    type: string;
 
     /** The name of the event */
     name: string;
@@ -34,11 +41,26 @@ export interface Event {
     /** The value of the location that the event takes place in */
     location: string;
 
+    /** If true, the event will not have an end time */
+    noEnd?: boolean;
+
     /** If true, the event will last the entire day, will ignore start/end datetime */
     allDay?: boolean;
 
-    /** If true, the event will not have an end time */
-    noEnd?: boolean;
+    /** RepeatingStatus enum # */
+    repeats: RepeatingStatus;
+
+    /** UTC milliscond date that event stops repeating */
+    repeatsUntil: number;
+
+    /** ID of the original repeating event */
+    repeatOriginId: string;
+
+    /** True to show on schedule view/calendar/Google Calendar */
+    publicEvent: boolean;
+
+    /** True to show on reservation calendar/check for overlaps */
+    reservation: boolean;
 
     /** Edit history list */
     history: string[];
@@ -92,7 +114,7 @@ export interface BrokenReservation {
     span: number;
 
     /** Actual reservation data stored here */
-    data: Reservation;
+    data: Event;
 }
 
 /** An object containing the information for a club */
@@ -250,7 +272,7 @@ export interface HistoryData {
     name: string;
 
     /** Name of the editor of the resource */
-    editor: string; 
+    editor: string;
 
     /** True if it was the first edit */
     first: boolean;
@@ -308,6 +330,13 @@ export interface FetchResponse {
     data: object | null;
 }
 
+// TODO: Apply this to all POST/PUT requests and change responses to 204! 
+/** Return object for fetch requests that only have a status */
+export type StatusResponse = {
+    /** The HTTP status code */
+    status: number;
+}
+
 /** Link data from forms; the deleted field is for lazy deletion of input fields to simplify forms */
 export interface LinkInputData {
     /** Actual value of the link */
@@ -336,4 +365,22 @@ export interface PopupEvent {
 
     /** Time that popup was activated; this is so same popup can be activated twice w/o clearing state */
     time: number;
+}
+
+/** List of external links for the site */
+export interface ExternalLinks {
+    /** Exam calendar current link */
+    examCalendar: string;
+
+    /** Link for current academic guide */
+    academicsGuide: string;
+
+    /** Club leader resources link */
+    clubLeaderResources: string;
+
+    /** tamswiki.org link */
+    tamsWiki: string;
+
+    /** Add Google Calendar link for the current app */
+    addCalendar: string;
 }

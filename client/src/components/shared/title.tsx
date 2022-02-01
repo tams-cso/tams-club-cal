@@ -1,7 +1,7 @@
 import React from 'react';
 import { Helmet } from 'react-helmet';
 import { capitalize } from '@mui/material';
-import { Resource } from '../../entries';
+import { Resource } from '../../types';
 
 interface TitleProps {
     /** Name of the resource */

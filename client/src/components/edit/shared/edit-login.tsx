@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { useRouter } from 'next/router';
 import Cookies from 'universal-cookie';
-import type { PopupEvent } from '../../../entries';
+import type { PopupEvent } from '../../../types';
 import { createConnectionErrorPopup, darkSwitch, darkSwitchGrey } from '../../../util';
 import { getIp, getLoggedIn, getUserInfo } from '../../../api';
 

@@ -58,5 +58,6 @@ RUN ls -la
 RUN pwd
 EXPOSE 80 90
 ENV PORT 80
+ENV TZ "America/Chicago"
 
 CMD [ "sh", "./docker-runner.sh" ]
