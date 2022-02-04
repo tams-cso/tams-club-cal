@@ -11,6 +11,7 @@ import type {
     HistoryListData,
     Resource,
     Volunteering,
+    AdminResourceList,
 } from './types';
 import Cookies from 'universal-cookie';
 
@@ -398,19 +399,19 @@ export async function getExternalLinks(): Promise<ResourceFetchResponse<External
 /**
  * Gets a list of resources based on search terms
  * @param resource Resource type to get
- * @param field Field to search or all
- * @param search Search term
  * @param page Page number to get
+ * @param limit Number of items per page
  */
 export async function getAdminResources(
     resource: Resource,
-    field: string,
-    search: string | null,
-    page?: number
-): Promise<ListFetchResponse<AdminResource>> {
-    return getRequest(`/admin/resources/${resource}/${field}/${search}/${page || 0}`) as Promise<
-        ListFetchResponse<AdminResource>
-    >;
+    page: number = 1,
+    limit: number = 10,
+    sort: string = '',
+    reverse: boolean = false
+): Promise<ResourceFetchResponse<AdminResourceList<Event | Club | Volunteering>>> {
+    return getRequest(
+        `/admin/resources/${resource}?page=${page}&limit=${limit}&sort=${sort}&reverse=${reverse}`
+    ) as Promise<ResourceFetchResponse<AdminResourceList<Event | Club | Volunteering>>>;
 }
 
 /**

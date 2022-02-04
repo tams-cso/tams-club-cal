@@ -2,12 +2,9 @@ import React, { useEffect } from 'react';
 import { useRouter } from 'next/router';
 import { GetServerSidePropsContext, InferGetServerSidePropsType } from 'next';
 import { getIsAdmin, getLoggedIn } from '../../src/api';
-import type { Resource } from '../../src/types';
 
 import Typography from '@mui/material/Typography';
 import Container from '@mui/material/Container';
-import Paper from '@mui/material/Paper';
-import Grid from '@mui/material/Grid';
 import List from '@mui/material/List';
 import PageWrapper from '../../src/components/shared/page-wrapper';
 import Loading from '../../src/components/shared/loading';
@@ -59,47 +56,23 @@ const Admin = ({ authorized, error }: InferGetServerSidePropsType<typeof getServ
                 <Typography variant="h2" component="h1" sx={{ textAlign: 'center', padding: 2 }}>
                     Admin Dashboard
                 </Typography>
-                <Grid container spacing={{ xs: 2, lg: 4 }} sx={{ padding: 3 }}>
-                    <Grid item xs={12} lg={6}>
-                        <Paper elevation={1} sx={{ padding: 2, height: '100%' }}>
-                            <Typography variant="h3" sx={{ textAlign: 'center' }}>
-                                Manage Resources
-                            </Typography>
-                            <ManageResources />
-                        </Paper>
-                    </Grid>
-                    <Grid item xs={12} lg={6}>
-                        <Paper elevation={1} sx={{ padding: 2, height: '100%' }}>
-                            <Typography variant="h3" sx={{ textAlign: 'center' }}>
-                                Edit External Links
-                            </Typography>
-                            <Typography sx={{ textAlign: 'center', color: '#888', paddingTop: 2 }}>
-                                To be added
-                            </Typography>
-                        </Paper>
-                    </Grid>
-                    <Grid item xs={12} lg={6}>
-                        <Paper elevation={1} sx={{ padding: 2, height: '100%' }}>
-                            <Typography variant="h3" sx={{ textAlign: 'center' }}>
-                                Change User Permissions
-                            </Typography>
-                            <Typography sx={{ textAlign: 'center', color: '#888', paddingTop: 2 }}>
-                                To be added
-                            </Typography>
-                        </Paper>
-                    </Grid>
-                    <Grid item xs={12} lg={6}>
-                        <Paper elevation={1} sx={{ padding: 2, height: '100%' }}>
-                            <Typography variant="h3" sx={{ textAlign: 'center' }}>
-                                Feedback
-                            </Typography>
-                            <Typography sx={{ textAlign: 'center', color: '#888', paddingTop: 2 }}>
-                                To be added
-                            </Typography>
-                            <List></List>
-                        </Paper>
-                    </Grid>
-                </Grid>
+                <Typography variant="h3" sx={{ textAlign: 'center', marginTop: 3 }}>
+                    Manage Resources
+                </Typography>
+                <ManageResources />
+                <Typography variant="h3" sx={{ textAlign: 'center', marginTop: 3 }}>
+                    Edit External Links
+                </Typography>
+                <Typography sx={{ textAlign: 'center', color: '#888', paddingTop: 2 }}>To be added</Typography>
+                <Typography variant="h3" sx={{ textAlign: 'center', marginTop: 3 }}>
+                    Change User Permissions
+                </Typography>
+                <Typography sx={{ textAlign: 'center', color: '#888', paddingTop: 2 }}>To be added</Typography>
+                <Typography variant="h3" sx={{ textAlign: 'center', marginTop: 3 }}>
+                    Feedback
+                </Typography>
+                <Typography sx={{ textAlign: 'center', color: '#888', paddingTop: 2 }}>To be added</Typography>
+                <List></List>
             </Container>
         </PageWrapper>
     );

@@ -1,17 +1,11 @@
 import React, { useEffect, useState } from 'react';
-import { useForm } from 'react-hook-form';
 import Cookies from 'universal-cookie';
 import { deleteAdminResource, getAdminResources } from '../../api';
-import type { Resource, AdminResource, PopupEvent } from '../../types';
-import { createPopupEvent } from '../../util';
+import { Resource, PopupEvent, RepeatingStatus } from '../../types';
+import { createPopupEvent, formatDate } from '../../util';
 
-import Box from '@mui/system/Box';
-import List from '@mui/material/List';
-import ListItem from '@mui/material/ListItem';
-import ListItemText from '@mui/material/ListItemText';
-import MenuItem from '@mui/material/MenuItem';
-import IconButton from '@mui/material/IconButton';
 import Button from '@mui/material/Button';
+import IconButton from '@mui/material/IconButton';
 import Dialog from '@mui/material/Dialog';
 import DialogActions from '@mui/material/DialogActions';
 import DialogContent from '@mui/material/DialogContent';
@@ -19,10 +13,9 @@ import DialogContentText from '@mui/material/DialogContentText';
 import DialogTitle from '@mui/material/DialogTitle';
 import DeleteOutlineIcon from '@mui/icons-material/DeleteOutline';
 import VisibilityIcon from '@mui/icons-material/Visibility';
-import FormWrapper from '../edit/shared/form-wrapper';
-import ControlledSelect from '../edit/shared/controlled-select';
-import ControlledTextField from '../edit/shared/controlled-text-field';
+import { DataGrid, GridColDef, GridSortModel } from '@mui/x-data-grid';
 import Popup from '../shared/popup';
+import { capitalize } from '@mui/material';
 
 interface DeleteObject {
     /** Resource type to delete */
@@ -36,59 +29,74 @@ interface DeleteObject {
 }
 
 const ManageResources = () => {
-    const [resourceList, setResourceList] = useState<AdminResource[]>([]);
-    const [resourceComponentList, setResourceComponentList] = useState([]);
-    const [prevSearch, setPrevSearch] = useState(null);
     const [dataToDelete, setDataToDelete] = useState<DeleteObject>({ resource: 'events', id: '', name: '' });
     const [deletePrompt, setDeletePrompt] = useState(false);
     const [popupEvent, setPopupEvent] = useState<PopupEvent>(null);
-    const [page, setPage] = useState(0);
-    const { control, handleSubmit, setValue } = useForm();
+    const [rowCount, setRowCount] = useState(0);
+    const [rowsState, setRowsState] = React.useState({
+        page: 0,
+        pageSize: 10,
+        rows: [],
+        loading: true,
+    });
+    const [sortModel, setSortModel] = useState<GridSortModel>([]);
+    const [resource, setResource] = useState<Resource>('events');
 
-    // On form submit, get resource list
-    const onSubmit = async (data) => {
-        // Invalid resource field
-        if (data.resource === undefined) {
-            setPopupEvent(createPopupEvent('Please select a resource to search for', 4));
-            return;
-        }
+    // Format start/end datetime
+    const dts = (params) => formatDate(params.row.start, 'MM/DD/YY, HH:mma');
+    const dte = (params) => formatDate(params.row.end, 'MM/DD/YY, HH:mma');
 
-        // Invalid field/search fields
-        if (data.field !== 'all' && (data.search === '' || data.search === undefined)) {
-            setPopupEvent(createPopupEvent('Please enter a search term or select "Find All"', 4));
-            return;
-        }
+    // Define columns to show for events
+    const columns: GridColDef[] = [
+        { field: 'name', headerName: 'Name', width: 325 },
+        { field: 'club', headerName: 'Club', width: 150 },
+        { field: 'start', headerName: 'Start', width: 150, valueGetter: dts },
+        { field: 'end', headerName: 'End', width: 150, valueGetter: dte },
+        { field: 'id', headerName: 'ID', width: 225 },
+        {
+            field: 'view',
+            headerName: '👁️',
+            width: 75,
+            sortable: false,
+            filterable: false,
+            renderCell: (params) => {
+                return (
+                    <IconButton
+                        onClick={window.open.bind(this, `${window.location.origin}/${resource}/${params.row.id}`)}
+                        sx={{ margin: 'auto' }}
+                    >
+                        <VisibilityIcon />
+                    </IconButton>
+                );
+            },
+        },
+        {
+            field: 'delete',
+            headerName: '❌',
+            width: 75,
+            sortable: false,
+            filterable: false,
+            renderCell: (params) => {
+                if (params.row.repeats !== RepeatingStatus.NONE && params.row.id !== params.row.repeatOriginId)
+                    return null;
+                return (
+                    <IconButton
+                        onClick={promptDelete.bind(this, params.row.id, params.row.name)}
+                        sx={{ margin: 'auto' }}
+                    >
+                        <DeleteOutlineIcon />
+                    </IconButton>
+                );
+            },
+        },
+    ];
 
-        // Fetches the resource list and save it to the state variable
-        const resourceRes = await getAdminResources(data.resource, data.field, data.search, 0);
-        if (resourceRes.status === 200) {
-            console.log(data);
-            setPrevSearch(data);
-            setPage(0);
-            setResourceList(resourceRes.data);
-        } else {
-            setPopupEvent(createPopupEvent('Error getting resource list', 4));
-        }
-    };
-
-    // On page change, get next set of resources and append it to the list
-    const nextPage = async () => {
-        const resourceRes = await getAdminResources(
-            prevSearch.resource,
-            prevSearch.field,
-            prevSearch.search || 'none',
-            page + 1
-        );
-        if (resourceRes.status === 200) {
-            setPage(page + 1);
-            setResourceList([...resourceList, ...resourceRes.data]);
-        } else {
-            setPopupEvent(createPopupEvent('Error getting additional resource list', 4));
-        }
+    const handleSortModelChange = (newModel: GridSortModel) => {
+        setSortModel(newModel);
     };
 
     // This function will prompt the user first to see if they are sure they want to delete
-    const promptDelete = (resource: Resource, id: string, name: string) => {
+    const promptDelete = (id: string, name: string) => {
         setDataToDelete({ resource, id, name });
         setDeletePrompt(true);
     };
@@ -106,37 +114,38 @@ const ManageResources = () => {
         }
     };
 
-    // Create list of resource components
-    // whenever the resourceList updates
+    // On load, get the number of rows
     useEffect(() => {
-        setResourceComponentList([
-            ...resourceList.map((resource) => {
-                return (
-                    <ListItem key={resource.id}>
-                        <ListItemText primary={resource.name} />
-                        <IconButton
-                            onClick={window.open.bind(
-                                this,
-                                prevSearch.resource === 'repeating-reservations'
-                                    ? `${window.location.origin}/reservations/${resource.id}?repeating=true`
-                                    : `${window.location.origin}/${prevSearch.resource}/${resource.id}`
-                            )}
-                        >
-                            <VisibilityIcon />
-                        </IconButton>
-                        <IconButton onClick={promptDelete.bind(this, prevSearch.resource, resource.id, resource.name)}>
-                            <DeleteOutlineIcon />
-                        </IconButton>
-                    </ListItem>
-                );
-            }),
-            <ListItem key="next-page">
-                {resourceList.length % 50 == 0 && resourceList.length !== 0 ? (
-                    <Button onClick={nextPage}>Next Page</Button>
-                ) : null}
-            </ListItem>,
-        ]);
-    }, [resourceList]);
+        (async () => {
+            setRowsState((prev) => ({ ...prev, loading: true }));
+            const sort = sortModel[0] ? sortModel[0].field : null;
+            const reverse = sortModel[0] ? sortModel[0].sort === 'desc' : false;
+            const rowsRes = await getAdminResources('events', 1, rowsState.pageSize, sort, reverse);
+            if (rowsRes.status !== 200) {
+                setPopupEvent(createPopupEvent('Error fetching resource', 4));
+                return;
+            }
+            setRowsState((prev) => ({ ...prev, rows: rowsRes.data.docs, page: 0, loading: false }));
+            setRowCount(rowsRes.data.totalPages * 10);
+        })();
+    }, [sortModel]);
+
+    useEffect(() => {
+        if (rowCount === 0) return;
+
+        (async () => {
+            setRowsState((prev) => ({ ...prev, loading: true }));
+            const sort = sortModel[0] ? sortModel[0].field : null;
+            const reverse = sortModel[0] ? sortModel[0].sort === 'desc' : false;
+            const newRowsRes = await getAdminResources('events', rowsState.page + 1, rowsState.pageSize, sort, reverse);
+            if (newRowsRes.status !== 200) {
+                setPopupEvent(createPopupEvent('Error fetching resource', 4));
+                return;
+            }
+
+            setRowsState((prev) => ({ ...prev, loading: false, rows: newRowsRes.data.docs }));
+        })();
+    }, [rowsState.page, rowsState.pageSize]);
 
     return (
         <React.Fragment>
@@ -146,7 +155,9 @@ const ManageResources = () => {
                 aria-labelledby="delete-dialog-title"
                 aria-describedby="delete-dialog-description"
             >
-                <DialogTitle id="delete-dialog-title">Delete {dataToDelete.resource}</DialogTitle>
+                <DialogTitle id="delete-dialog-title">
+                    Delete {capitalize(dataToDelete.resource).replace(/s/g, '')}
+                </DialogTitle>
                 <DialogContent>
                     <DialogContentText id="delete-dialog-description">
                         Are you sure you want to delete {dataToDelete.name}?
@@ -161,53 +172,19 @@ const ManageResources = () => {
                     </Button>
                 </DialogActions>
             </Dialog>
-            <FormWrapper onSubmit={handleSubmit(onSubmit)}>
-                <Box sx={{ display: 'flex', flexDirection: 'row', marginBottom: 1 }}>
-                    <ControlledSelect
-                        control={control}
-                        setValue={setValue}
-                        name="resource"
-                        label="Resource"
-                        variant="standard"
-                        sx={{ marginRight: 1 }}
-                        wrapperSx={{ flexGrow: 1 }}
-                        autoWidth
-                    >
-                        <MenuItem value="events">Events</MenuItem>
-                        <MenuItem value="clubs">Clubs</MenuItem>
-                        <MenuItem value="volunteering">Volunteering</MenuItem>
-                        <MenuItem value="reservations">Reservations</MenuItem>
-                        <MenuItem value="repeating-reservations">Repeating Reservations</MenuItem>
-                    </ControlledSelect>
-                    <ControlledSelect
-                        control={control}
-                        setValue={setValue}
-                        name="field"
-                        label="Field to Search"
-                        variant="standard"
-                        wrapperSx={{ flexGrow: 1 }}
-                    >
-                        <MenuItem value="all">Find All</MenuItem>
-                        <MenuItem value="name">Name</MenuItem>
-                        <MenuItem value="id">ID</MenuItem>
-                    </ControlledSelect>
-                </Box>
-                <Box sx={{ display: 'flex', flexDirection: 'row', marginBottom: 1 }}>
-                    <ControlledTextField
-                        control={control}
-                        setValue={setValue}
-                        value=""
-                        label="Search"
-                        name="search"
-                        variant="standard"
-                        fullWidth
-                    />
-                    <Button type="submit" sx={{ marginLeft: 1 }}>
-                        Submit
-                    </Button>
-                </Box>
-            </FormWrapper>
-            <List sx={{ maxHeight: 500, overflowY: 'auto' }}>{resourceComponentList}</List>
+            <DataGrid
+                columns={columns}
+                {...rowsState}
+                rowCount={rowCount}
+                pagination
+                paginationMode="server"
+                onPageChange={(page) => setRowsState((prev) => ({ ...prev, page }))}
+                onPageSizeChange={(pageSize) => setRowsState((prev) => ({ ...prev, pageSize }))}
+                sortingMode="server"
+                sortModel={sortModel}
+                onSortModelChange={handleSortModelChange}
+                sx={{ marginTop: 2, height: 650 }}
+            />
         </React.Fragment>
     );
 };
