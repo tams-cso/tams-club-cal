@@ -7,6 +7,9 @@ import Typography from '@mui/material/Typography';
 interface UploadBackdropProps {
     /** True if the backdrop is open */
     open: boolean;
+
+    /** Custom text to put on the backdrop */
+    text?: string;
 }
 
 /**
@@ -23,7 +26,7 @@ const UploadBackdrop = (props: UploadBackdropProps) => {
             }}
         >
             <Typography variant="h1" sx={{ marginRight: 2 }}>
-                Uploading...
+                {props.text ? props.text : 'Uploading...'}
             </Typography>
             <CircularProgress color="inherit" />
         </Backdrop>

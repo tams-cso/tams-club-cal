@@ -243,7 +243,7 @@ export interface Feedback {
     time: Number;
 }
 
-export type Resource = 'events' | 'clubs' | 'volunteering' | 'reservations' | 'repeating-reservations';
+export type Resource = 'events' | 'clubs' | 'volunteering';
 
 /** An object containing the information for a single edit to a specific resource */
 export interface History {
@@ -384,3 +384,18 @@ export interface ExternalLinks {
     /** Add Google Calendar link for the current app */
     addCalendar: string;
 }
+
+/** List of resources returned by mongoose-paginate-v2 from the backend */
+export interface AdminResourceList {
+    docs: (Event | Club | Volunteering)[];
+    totalDocs: number;
+    limit: number;
+    totalPages: number;
+    page: number;
+    pagingCounter: number;
+    hasPrevPage: boolean;
+    hasNextPage: boolean;
+    prevPage: number;
+    nextPage: number;
+}
+// TODO: comment this using https://www.npmjs.com/package/mongoose-paginate-v2

@@ -13,49 +13,46 @@ import { EventObject } from '../functions/types';
 const router = express.Router();
 
 /**
- * GET /admin/resoruces/<resource>/<field>/<search>/[page]
+ * GET /admin/resoruces/<resource>?page=<page_num>&limit=<items_per_page>&sort=<sorting_method>&reverse=<true_if_sort_reverse>&filter=<filter>
  *
  * Will retrieve the list of resources based on the resource, field, and search parameters.
  * If the field is 'all', then the search parameter is ignored.
  * If the page field is defined and the field is 'all', then the function will return
  * the specified page of the resource list.
  */
-router.get('/resources/:resource/:field/:search/:page?', async (req: Request, res: Response) => {
-    const getAll = req.params.field === 'all';
-    const pageLength = 50;
-    const page = req.params.page ? parseInt(req.params.page) : 0;
+router.get('/resources/:resource', async (req: Request, res: Response) => {
+    const limit = req.query.limit ? parseInt(req.query.limit as string) : 20;
+    const page = req.query.page ? parseInt(req.query.page as string) : 1;
+    const sort = req.query.sort ? { [req.query.sort as string]: req.query.reverse === 'true' ? -1 : 1 } : null;
+    const filterData = req.query.filter ? JSON.parse(req.query.filter as string) : null;
+    const filter = filterData ? { [filterData.columnField]: new RegExp(`.*${filterData.value}.*`, 'i') } : {};
 
     switch (req.params.resource) {
         case 'events': {
-            const events = getAll
-                ? await Event.find({})
-                      .limit(pageLength)
-                      .skip((page || 0) * pageLength)
-                      .exec()
-                : await Event.find({ [req.params.field]: req.params.search });
+            const events = await Event.paginate(filter, { lean: true, leanWithId: false, page, limit, sort });
             res.send(events);
             break;
         }
-        case 'clubs': {
-            const clubs = getAll
-                ? await Club.find({})
-                      .limit(pageLength)
-                      .skip((page || 0) * pageLength)
-                      .exec()
-                : await Club.find({ [req.params.field]: req.params.search });
-            res.send(clubs);
-            break;
-        }
-        case 'volunteering': {
-            const volunteering = getAll
-                ? await Volunteering.find({})
-                      .limit(pageLength)
-                      .skip((page || 0) * pageLength)
-                      .exec()
-                : await Volunteering.find({ [req.params.field]: req.params.search });
-            res.send(volunteering);
-            break;
-        }
+        // case 'clubs': {
+        //     const clubs = getAll
+        //         ? await Club.find({})
+        //               .limit(pageLength)
+        //               .skip((page || 0) * pageLength)
+        //               .exec()
+        //         : await Club.find({ [req.params.field]: req.params.search });
+        //     res.send(clubs);
+        //     break;
+        // }
+        // case 'volunteering': {
+        //     const volunteering = getAll
+        //         ? await Volunteering.find({})
+        //               .limit(pageLength)
+        //               .skip((page || 0) * pageLength)
+        //               .exec()
+        //         : await Volunteering.find({ [req.params.field]: req.params.search });
+        //     res.send(volunteering);
+        //     break;
+        // }
         default:
             sendError(res, 400, 'Invalid resource field!');
             return;
@@ -94,15 +91,15 @@ router.delete('/resources/:resource/:id', async (req: Request, res: Response) =>
                     sendError(res, 400, 'Invalid ID');
                     return;
                 }
-    
+
                 // Delete event from Google Calendar, History DB, and Events DB
                 if (event.publicEvent) await deleteCalendarEvent(event.eventId);
                 const deleteRes = await Event.deleteOne({ id: req.params.id });
                 await History.deleteMany({ resource: 'events', editId: req.params.id });
-    
+
                 // Also delete any repeating events
                 await Event.deleteMany({ repeatOriginId: req.params.id });
-    
+
                 // Return ok: 1 or error
                 if (deleteRes.deletedCount === 1) res.send({ ok: 1 });
                 else sendError(res, 500, 'Could not delete event');
@@ -111,7 +108,7 @@ router.delete('/resources/:resource/:id', async (req: Request, res: Response) =>
             case 'clubs': {
                 // Get club
                 const club = await Club.findOne({ id: req.params.id });
-                
+
                 // Delete images from AWS
                 await deleteClubImages(club);
 

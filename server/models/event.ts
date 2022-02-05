@@ -1,4 +1,7 @@
 import mongoose from 'mongoose';
+import mongoosePaginate from 'mongoose-paginate-v2';
+import { PaginateModel } from 'mongoose';
+import { EventObject } from '../functions/types';
 
 const eventSchema = new mongoose.Schema(
     {
@@ -19,10 +22,12 @@ const eventSchema = new mongoose.Schema(
         publicEvent: Boolean,
         reservation: Boolean,
         history: [String],
-    },
-    { collection: 'activities' }, // TODO: Change to events when DB is migrated!!!
+    }
 )
+eventSchema.plugin(mongoosePaginate);
 
-const Event = mongoose.model('Event', eventSchema);
+interface EventDocument extends Document, EventObject {}
+
+const Event = mongoose.model<EventDocument, PaginateModel<EventDocument>>('Event', eventSchema, 'activities');
 
 export default Event;
