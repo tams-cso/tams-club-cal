@@ -13,9 +13,17 @@ import DialogContentText from '@mui/material/DialogContentText';
 import DialogTitle from '@mui/material/DialogTitle';
 import DeleteOutlineIcon from '@mui/icons-material/DeleteOutline';
 import VisibilityIcon from '@mui/icons-material/Visibility';
-import { DataGrid, GridColDef, GridSortModel } from '@mui/x-data-grid';
+import {
+    DataGrid,
+    getGridStringOperators,
+    GridColDef,
+    GridFilterItem,
+    GridFilterModel,
+    GridSortModel,
+} from '@mui/x-data-grid';
 import Popup from '../shared/popup';
 import { capitalize } from '@mui/material';
+import UploadBackdrop from '../edit/shared/upload-backdrop';
 
 interface DeleteObject {
     /** Resource type to delete */
@@ -32,8 +40,9 @@ const ManageResources = () => {
     const [dataToDelete, setDataToDelete] = useState<DeleteObject>({ resource: 'events', id: '', name: '' });
     const [deletePrompt, setDeletePrompt] = useState(false);
     const [popupEvent, setPopupEvent] = useState<PopupEvent>(null);
+    const [backdrop, setBackdrop] = useState(false);
     const [rowCount, setRowCount] = useState(0);
-    const [rowsState, setRowsState] = React.useState({
+    const [rowsState, setRowsState] = useState({
         page: 0,
         pageSize: 10,
         rows: [],
@@ -41,18 +50,22 @@ const ManageResources = () => {
     });
     const [sortModel, setSortModel] = useState<GridSortModel>([]);
     const [resource, setResource] = useState<Resource>('events');
+    const [filterValue, setFilterValue] = useState<GridFilterItem>(null);
 
     // Format start/end datetime
     const dts = (params) => formatDate(params.row.start, 'MM/DD/YY, HH:mma');
     const dte = (params) => formatDate(params.row.end, 'MM/DD/YY, HH:mma');
 
+    // Define filters to use
+    const filterOperators = getGridStringOperators().filter((operator) => operator.value === 'contains');
+
     // Define columns to show for events
     const columns: GridColDef[] = [
-        { field: 'name', headerName: 'Name', width: 325 },
-        { field: 'club', headerName: 'Club', width: 150 },
-        { field: 'start', headerName: 'Start', width: 150, valueGetter: dts },
-        { field: 'end', headerName: 'End', width: 150, valueGetter: dte },
-        { field: 'id', headerName: 'ID', width: 225 },
+        { field: 'name', headerName: 'Name', width: 325, filterOperators },
+        { field: 'club', headerName: 'Club', width: 150, filterOperators },
+        { field: 'start', headerName: 'Start', width: 150, valueGetter: dts, filterable: false },
+        { field: 'end', headerName: 'End', width: 150, valueGetter: dte, filterable: false },
+        { field: 'id', headerName: 'ID', width: 225, filterOperators },
         {
             field: 'view',
             headerName: '👁️',
@@ -91,9 +104,16 @@ const ManageResources = () => {
         },
     ];
 
+    // When sorting changes
     const handleSortModelChange = (newModel: GridSortModel) => {
         setSortModel(newModel);
     };
+
+    // When filtering changes
+    const onFilterChange = React.useCallback((filterModel: GridFilterModel) => {
+        console.log(filterModel.items[0]);
+        setFilterValue(filterModel.items[0]);
+    }, []);
 
     // This function will prompt the user first to see if they are sure they want to delete
     const promptDelete = (id: string, name: string) => {
@@ -104,6 +124,7 @@ const ManageResources = () => {
     // Actually delete the resource
     const deleteResource = async () => {
         setDeletePrompt(false);
+        setBackdrop(true);
         const res = await deleteAdminResource(dataToDelete.resource, dataToDelete.id);
         if (res.status === 200) {
             const cookies = new Cookies();
@@ -112,15 +133,22 @@ const ManageResources = () => {
         } else {
             setPopupEvent(createPopupEvent('Error deleting resource', 4));
         }
+        setBackdrop(false);
     };
 
     // On load, get the number of rows
+    // Also trigger this if the filtering or sorting changes
     useEffect(() => {
         (async () => {
+            // Set loading state
             setRowsState((prev) => ({ ...prev, loading: true }));
+
+            // Calculate sort and filters
             const sort = sortModel[0] ? sortModel[0].field : null;
             const reverse = sortModel[0] ? sortModel[0].sort === 'desc' : false;
-            const rowsRes = await getAdminResources('events', 1, rowsState.pageSize, sort, reverse);
+            const filter = filterValue && filterValue.value ? filterValue : null;
+
+            const rowsRes = await getAdminResources('events', 1, rowsState.pageSize, sort, reverse, filter);
             if (rowsRes.status !== 200) {
                 setPopupEvent(createPopupEvent('Error fetching resource', 4));
                 return;
@@ -128,16 +156,28 @@ const ManageResources = () => {
             setRowsState((prev) => ({ ...prev, rows: rowsRes.data.docs, page: 0, loading: false }));
             setRowCount(rowsRes.data.totalPages * 10);
         })();
-    }, [sortModel]);
+    }, [sortModel, filterValue]);
 
     useEffect(() => {
         if (rowCount === 0) return;
 
         (async () => {
+            // Set loading state
             setRowsState((prev) => ({ ...prev, loading: true }));
+
+            // Calculate sort and filters
             const sort = sortModel[0] ? sortModel[0].field : null;
             const reverse = sortModel[0] ? sortModel[0].sort === 'desc' : false;
-            const newRowsRes = await getAdminResources('events', rowsState.page + 1, rowsState.pageSize, sort, reverse);
+            const filter = filterValue && filterValue.value ? filterValue : null;
+
+            const newRowsRes = await getAdminResources(
+                'events',
+                rowsState.page + 1,
+                rowsState.pageSize,
+                sort,
+                reverse,
+                filter
+            );
             if (newRowsRes.status !== 200) {
                 setPopupEvent(createPopupEvent('Error fetching resource', 4));
                 return;
@@ -164,14 +204,15 @@ const ManageResources = () => {
                     </DialogContentText>
                 </DialogContent>
                 <DialogActions>
-                    <Button onClick={setDeletePrompt.bind(this, false)} color="error">
+                    <Button onClick={setDeletePrompt.bind(this, false)} sx={{ color: 'white' }} variant="text">
                         Cancel
                     </Button>
-                    <Button onClick={deleteResource} color="primary">
+                    <Button onClick={deleteResource} color="error">
                         Delete
                     </Button>
                 </DialogActions>
             </Dialog>
+            <UploadBackdrop text="Deleting Resource..." open={backdrop} />
             <DataGrid
                 columns={columns}
                 {...rowsState}
@@ -182,6 +223,8 @@ const ManageResources = () => {
                 onPageSizeChange={(pageSize) => setRowsState((prev) => ({ ...prev, pageSize }))}
                 sortingMode="server"
                 sortModel={sortModel}
+                filterMode="server"
+                onFilterModelChange={onFilterChange}
                 onSortModelChange={handleSortModelChange}
                 sx={{ marginTop: 2, height: 650 }}
             />

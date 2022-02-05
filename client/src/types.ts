@@ -386,8 +386,8 @@ export interface ExternalLinks {
 }
 
 /** List of resources returned by mongoose-paginate-v2 from the backend */
-export interface AdminResourceList<T> {
-    docs: T[];
+export interface AdminResourceList {
+    docs: (Event | Club | Volunteering)[];
     totalDocs: number;
     limit: number;
     totalPages: number;

@@ -1,6 +1,5 @@
 import type {
     Event,
-    AdminResource,
     Club,
     ClubImageBlobs,
     ExternalLinks,
@@ -13,6 +12,7 @@ import type {
     Volunteering,
     AdminResourceList,
 } from './types';
+import type { GridFilterItem } from '@mui/x-data-grid';
 import Cookies from 'universal-cookie';
 
 const BACKEND_URL =
@@ -407,11 +407,13 @@ export async function getAdminResources(
     page: number = 1,
     limit: number = 10,
     sort: string = '',
-    reverse: boolean = false
-): Promise<ResourceFetchResponse<AdminResourceList<Event | Club | Volunteering>>> {
+    reverse: boolean = false,
+    filter: GridFilterItem
+): Promise<ResourceFetchResponse<AdminResourceList>> {
+    const aFilter = filter ? `&filter=${JSON.stringify(filter)}` : null;
     return getRequest(
-        `/admin/resources/${resource}?page=${page}&limit=${limit}&sort=${sort}&reverse=${reverse}`
-    ) as Promise<ResourceFetchResponse<AdminResourceList<Event | Club | Volunteering>>>;
+        `/admin/resources/${resource}?page=${page}&limit=${limit}&sort=${sort}&reverse=${reverse}${aFilter}`
+    ) as Promise<ResourceFetchResponse<AdminResourceList>>;
 }
 
 /**

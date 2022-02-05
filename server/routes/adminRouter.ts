@@ -13,7 +13,7 @@ import { EventObject } from '../functions/types';
 const router = express.Router();
 
 /**
- * GET /admin/resoruces/<resource>?page=<page_num>&limit=<items_per_page>&sort=<sorting_method>&reverse=<true_if_sort_reverse>
+ * GET /admin/resoruces/<resource>?page=<page_num>&limit=<items_per_page>&sort=<sorting_method>&reverse=<true_if_sort_reverse>&filter=<filter>
  *
  * Will retrieve the list of resources based on the resource, field, and search parameters.
  * If the field is 'all', then the search parameter is ignored.
@@ -24,11 +24,12 @@ router.get('/resources/:resource', async (req: Request, res: Response) => {
     const limit = req.query.limit ? parseInt(req.query.limit as string) : 20;
     const page = req.query.page ? parseInt(req.query.page as string) : 1;
     const sort = req.query.sort ? { [req.query.sort as string]: req.query.reverse === 'true' ? -1 : 1 } : null;
+    const filterData = req.query.filter ? JSON.parse(req.query.filter as string) : null;
+    const filter = filterData ? { [filterData.columnField]: new RegExp(`.*${filterData.value}.*`, 'i') } : {};
 
     switch (req.params.resource) {
         case 'events': {
-            // TODO: Is there a way to show repeating events better???
-            const events = await Event.paginate({}, { lean: true, leanWithId: false, page, limit, sort });
+            const events = await Event.paginate(filter, { lean: true, leanWithId: false, page, limit, sort });
             res.send(events);
             break;
         }
