@@ -101,6 +101,13 @@
         }
     ],
     "changelog": [
+	{
+	    "v": "5.1",
+	    "date": "Febuary 6th, 2022",
+	    "changes": [
+		"Fixed 'Manage Resources' table on Admin page to be a cleaner data grid"
+	    ]
+	},
         {
             "v": "5.0",
             "date": "Febuary 1st, 2022",

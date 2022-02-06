@@ -410,7 +410,7 @@ export async function getAdminResources(
     reverse: boolean = false,
     filter: GridFilterItem
 ): Promise<ResourceFetchResponse<AdminResourceList>> {
-    const aFilter = filter ? `&filter=${JSON.stringify(filter)}` : null;
+    const aFilter = filter ? `&filter=${JSON.stringify(filter)}` : '';
     return getRequest(
         `/admin/resources/${resource}?page=${page}&limit=${limit}&sort=${sort}&reverse=${reverse}${aFilter}`
     ) as Promise<ResourceFetchResponse<AdminResourceList>>;

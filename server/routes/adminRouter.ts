@@ -8,7 +8,7 @@ import Club from '../models/club';
 import Volunteering from '../models/volunteering';
 import History from '../models/history';
 import { deleteCalendarEvent } from '../functions/gcal';
-import { EventObject } from '../functions/types';
+import { EventObject, RepeatingStatus } from '../functions/types';
 
 const router = express.Router();
 
@@ -24,6 +24,7 @@ router.get('/resources/:resource', async (req: Request, res: Response) => {
     const limit = req.query.limit ? parseInt(req.query.limit as string) : 20;
     const page = req.query.page ? parseInt(req.query.page as string) : 1;
     const sort = req.query.sort ? { [req.query.sort as string]: req.query.reverse === 'true' ? -1 : 1 } : null;
+    // TODO: The filter querystring should NOT be JSON TT -> change it to be filter-field=[field]&filter-value=[value]
     const filterData = req.query.filter ? JSON.parse(req.query.filter as string) : null;
     const filter = filterData ? { [filterData.columnField]: new RegExp(`.*${filterData.value}.*`, 'i') } : {};
 
@@ -33,26 +34,22 @@ router.get('/resources/:resource', async (req: Request, res: Response) => {
             res.send(events);
             break;
         }
-        // case 'clubs': {
-        //     const clubs = getAll
-        //         ? await Club.find({})
-        //               .limit(pageLength)
-        //               .skip((page || 0) * pageLength)
-        //               .exec()
-        //         : await Club.find({ [req.params.field]: req.params.search });
-        //     res.send(clubs);
-        //     break;
-        // }
-        // case 'volunteering': {
-        //     const volunteering = getAll
-        //         ? await Volunteering.find({})
-        //               .limit(pageLength)
-        //               .skip((page || 0) * pageLength)
-        //               .exec()
-        //         : await Volunteering.find({ [req.params.field]: req.params.search });
-        //     res.send(volunteering);
-        //     break;
-        // }
+        case 'clubs': {
+            const clubs = await Club.paginate(filter, { lean: true, leanWithId: false, page, limit, sort });
+            res.send(clubs);
+            break;
+        }
+        case 'volunteering': {
+            const volunteering = await Volunteering.paginate(filter, {
+                lean: true,
+                leanWithId: false,
+                page,
+                limit,
+                sort,
+            });
+            res.send(volunteering);
+            break;
+        }
         default:
             sendError(res, 400, 'Invalid resource field!');
             return;
@@ -97,8 +94,9 @@ router.delete('/resources/:resource/:id', async (req: Request, res: Response) =>
                 const deleteRes = await Event.deleteOne({ id: req.params.id });
                 await History.deleteMany({ resource: 'events', editId: req.params.id });
 
-                // Also delete any repeating events
-                await Event.deleteMany({ repeatOriginId: req.params.id });
+                // Also delete any repeating events if it is the original repeating event
+                if (event.repeats !== RepeatingStatus.NONE && event.id === event.repeatOriginId)
+                    await Event.deleteMany({ repeatOriginId: req.params.id });
 
                 // Return ok: 1 or error
                 if (deleteRes.deletedCount === 1) res.send({ ok: 1 });
