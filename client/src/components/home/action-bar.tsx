@@ -66,17 +66,17 @@ const ActionBar = () => {
                 >
                     <ToggleButton value="schedule">
                         <Tooltip title="Schedule View">
-                            <FormatListBulletedRoundedIcon />
+                            <FormatListBulletedRoundedIcon width="16" />
                         </Tooltip>
                     </ToggleButton>
                     <ToggleButton value="calendar">
                         <Tooltip title="Calendar View">
-                            <EventNoteRoundedIcon />
+                            <EventNoteRoundedIcon width="16" />
                         </Tooltip>
                     </ToggleButton>
                     <ToggleButton value="reservations">
                         <Tooltip title="Room Reservation Chart">
-                            <MeetingRoomRoundedIcon />
+                            <MeetingRoomRoundedIcon width="16" />
                         </Tooltip>
                     </ToggleButton>
                 </ToggleButtonGroup>
