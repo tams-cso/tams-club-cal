@@ -3,14 +3,7 @@ import type { Theme } from '@mui/material';
 import { GetServerSidePropsContext, InferGetServerSidePropsType } from 'next';
 import { useRouter } from 'next/router';
 import { RepeatingStatus } from '../../src/types';
-import {
-    darkSwitch,
-    darkSwitchGrey,
-    formatEventDate,
-    formatEventTime,
-    formatDate,
-    getParams,
-} from '../../src/util';
+import { darkSwitch, darkSwitchGrey, formatEventDate, formatEventTime, formatDate, getParams } from '../../src/util';
 
 import Container from '@mui/material/Container';
 import Card from '@mui/material/Card';
@@ -28,6 +21,7 @@ import HomeBase from '../../src/components/home/home-base';
 import { getEvent } from '../../src/api';
 
 import data from '../../src/data.json';
+import Link from '../../src/components/shared/Link';
 
 // Coloring for the event type
 const eventTypeStyle = {
@@ -118,6 +112,18 @@ const EventDisplay = ({ event, error }: InferGetServerSidePropsType<typeof getSe
                                         } until ${formatDate(event.repeatsUntil, 'dddd, MMMM D, YYYY')}`}
                                     </Typography>
                                 ) : null}
+                                {event.repeats === RepeatingStatus.NONE ? null : event.repeatOriginId !== event.id ? (
+                                    <Link
+                                        href={`/events/${event.repeatOriginId}`}
+                                        sx={{ marginTop: 1, display: 'block', maxWidth: 'max-content' }}
+                                    >
+                                        Go to original event
+                                    </Link>
+                                ) : (
+                                    <Typography sx={{ marginTop: 1, color: (theme) => darkSwitchGrey(theme) }}>
+                                        This is the original repeating event!
+                                    </Typography>
+                                )}
                                 <Typography
                                     variant="h3"
                                     sx={{
