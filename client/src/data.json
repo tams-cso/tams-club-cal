@@ -101,13 +101,21 @@
         }
     ],
     "changelog": [
-	{
-	    "v": "5.1",
-	    "date": "Febuary 6th, 2022",
-	    "changes": [
-		"Fixed 'Manage Resources' table on Admin page to be a cleaner data grid"
-	    ]
-	},
+        {
+            "v": "5.1",
+            "date": "Febuary 6th, 2022",
+            "changes": [
+                "Fixed 'Manage Resources' table on Admin page to be a cleaner data grid",
+                "Limit events to 100 days long",
+                "Reservation error messages are more clear (notes if the time or location is the issue)",
+                "Fixed weird icon flash when loading page",
+                "Fixed issue where events that end at midnight display as 'All Day'",
+                "Added text next to action bar icon buttons for readability",
+                "Added [no description] to descriptions in volunteering and club cards that have no description",
+                "Added link to original repeating event on repeating events",
+                "Added a button to go to the current week on the reservations calendar"
+            ]
+        },
         {
             "v": "5.0",
             "date": "Febuary 1st, 2022",
