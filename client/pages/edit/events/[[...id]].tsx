@@ -215,6 +215,9 @@ const EditEvents = ({ event, id, error }: InferGetServerSidePropsType<typeof get
             }
         }
 
+        // If the event is repeating, set repeatsUntil value
+        const repeatsUntil = repeats === RepeatingStatus.NONE ? null : data.repeatsUntil.valueOf();
+
         // Create the event object from the data
         const newEvent = createEvent(
             id,
@@ -229,7 +232,7 @@ const EditEvents = ({ event, id, error }: InferGetServerSidePropsType<typeof get
             data.noEnd,
             data.allDay,
             repeats,
-            data.repeatsUntil.valueOf(),
+            repeatsUntil,
             event.repeatOriginId,
             data.publicEvent,
             data.reservation,

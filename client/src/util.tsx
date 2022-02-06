@@ -268,14 +268,14 @@ export function parseDateParams(dates: string[]): Dayjs {
  * Will split up multiple day events to be displayed correctly.
  * This will essentially create a new event for each day of the multi-day event.
  *
- * @param activityList The unparsed activity list
- * @returns The parsed activity list
+ * @param eventList The unparsed event list
+ * @returns The event list with split up events across days
  */
-export function parsePublicActivityList(activityList: Event[]): Event[] {
+export function parsePublicEventList(eventList: Event[]): Event[] {
     const outputList = [];
-    activityList.forEach((a) => {
+    eventList.forEach((a) => {
         // Simply return the event if it does not span across multiple days
-        if (dayjs(a.start).isSame(dayjs(a.end), 'day') || a.allDay) {
+        if (dayjs(a.start).isSame(dayjs(a.end), 'day') || a.allDay || isNotMidnight(a.end) === 0) {
             outputList.push(a);
             return;
         }

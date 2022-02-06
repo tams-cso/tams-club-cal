@@ -3,7 +3,7 @@ import { GetServerSidePropsContext, InferGetServerSidePropsType } from 'next';
 import { useRouter } from 'next/router';
 import { Typography } from '@mui/material';
 import dayjs from 'dayjs';
-import { darkSwitch, parseDateParams, parsePublicActivityList } from '../../../src/util';
+import { darkSwitch, parseDateParams, parsePublicEventList } from '../../../src/util';
 import { getPublicEventListInRange } from '../../../src/api';
 
 import Box from '@mui/material/Box';
@@ -84,7 +84,7 @@ const Calendar = (props: InferGetServerSidePropsType<typeof getServerSideProps>)
         if (props.error) return;
 
         // Parse the fetched events by splitting multi-day events into separate event objects
-        const events = parsePublicActivityList(props.activities);
+        const events = parsePublicEventList(props.activities);
 
         // Create the actual list of calendar days by grouping
         // events into their days and adding it to the components list
