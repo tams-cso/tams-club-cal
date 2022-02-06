@@ -8,6 +8,7 @@ import { getPublicEventListInRange } from '../../../src/api';
 
 import Box from '@mui/material/Box';
 import IconButton from '@mui/material/IconButton';
+import Button from '@mui/material/Button';
 import ArrowBackIosRoundedIcon from '@mui/icons-material/ArrowBackIosRounded';
 import ArrowForwardIosRoundedIcon from '@mui/icons-material/ArrowForwardIosRounded';
 import HomeBase from '../../../src/components/home/home-base';
@@ -127,6 +128,11 @@ const Calendar = (props: InferGetServerSidePropsType<typeof getServerSideProps>)
         router.push(`/events/calendar/${newMonth.format('YYYY/M')}`);
     };
 
+    // Go to the current month when today button is clicked
+    const goToToday = () => {
+        router.push(`/events/calendar/${dayjs().format('YYYY/M')}`);
+    }
+
     // Create the days of the week as the header
     const days = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
     const calendarHeaderList = days.map((date) => (
@@ -144,9 +150,14 @@ const Calendar = (props: InferGetServerSidePropsType<typeof getServerSideProps>)
 
     return (
         <HomeBase unsetHeight>
-            <Box display="flex" flexDirection="column" sx={{ flexGrow: 1 }}>
+            <Box display="flex" flexDirection="column" sx={{ flexGrow: 1, marginBottom: 1 }}>
                 <AddButton color="primary" label="Event" path="/edit/events" />
                 <Box width="100%" display="flex" justifyContent="center" alignItems="center">
+                    <Box sx={{ flex: 1, display: 'flex', justifyContent: 'right' }}>
+                        <Button variant="outlined" sx={{ marginRight: 4 }} onClick={goToToday}>
+                            Today
+                        </Button>
+                    </Box>
                     <IconButton size="small" onClick={offsetMonth.bind(this, false)}>
                         <ArrowBackIosRoundedIcon />
                     </IconButton>
@@ -156,6 +167,7 @@ const Calendar = (props: InferGetServerSidePropsType<typeof getServerSideProps>)
                     <IconButton size="small" onClick={offsetMonth.bind(this, true)}>
                         <ArrowForwardIosRoundedIcon />
                     </IconButton>
+                    <Box sx={{ flex: 1 }}></Box>
                 </Box>
                 <Box width="100%" display="flex" marginTop={1}>
                     {calendarHeaderList}
