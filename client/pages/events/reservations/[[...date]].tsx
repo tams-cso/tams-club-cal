@@ -7,6 +7,7 @@ import { parseDateParams } from '../../../src/util';
 
 import Box from '@mui/material/Box';
 import TextField from '@mui/material/TextField';
+import Button from '@mui/material/Button';
 import DatePicker from '@mui/lab/DatePicker';
 import Loading from '../../../src/components/shared/loading';
 import ReservationDay from '../../../src/components/reservations/reservation-day';
@@ -41,6 +42,11 @@ const Reservations = ({ now, reservationList, error }: InferGetServerSidePropsTy
     const router = useRouter();
     const [reservationComponentList, setReservationComponentList] = useState(null);
     const [week, setWeek] = useState(dayjs(now));
+
+    // Redirect the user to the current week on click
+    const goToToday = () => {
+        setWeek(dayjs());
+    }
 
     // When the list of reservations updates, re-render the reservation components
     // This will create a table of reservations
@@ -179,10 +185,11 @@ const Reservations = ({ now, reservationList, error }: InferGetServerSidePropsTy
                         <TextField
                             {...params}
                             variant="standard"
-                            sx={{ marginRight: 'auto', marginLeft: { lg: 4, xs: 'auto' } }}
+                            sx={{ marginLeft: { sm: 4, xs: 2 } }}
                         />
                     )}
                 />
+                <Button variant="outlined" onClick={goToToday} sx={{ mx: 2 }}>Today</Button>
             </Box>
             <AddButton color="primary" label="Event" path="/edit/events" />
             {reservationComponentList === null ? <Loading /> : reservationComponentList}
