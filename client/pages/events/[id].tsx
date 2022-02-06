@@ -138,7 +138,7 @@ const EventDisplay = ({ event, error }: InferGetServerSidePropsType<typeof getSe
                                 <Divider orientation="horizontal" flexItem sx={{ marginTop: 2 }} />
                             </Hidden>
                             <Paragraph
-                                text={event.description === '' ? '[No Description]' : event.description}
+                                text={event.description}
                                 sx={{
                                     width: { lg: '50%', xs: '100%' },
                                     textAlign: 'left',
