@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import Cookies from 'universal-cookie';
 import { deleteAdminResource, getAdminResources } from '../../api';
-import { Resource, PopupEvent, RepeatingStatus } from '../../types';
+import { Resource, PopupEvent } from '../../types';
 import { createPopupEvent, formatDate } from '../../util';
 
 import Button from '@mui/material/Button';
@@ -13,6 +13,11 @@ import DialogContentText from '@mui/material/DialogContentText';
 import DialogTitle from '@mui/material/DialogTitle';
 import DeleteOutlineIcon from '@mui/icons-material/DeleteOutline';
 import VisibilityIcon from '@mui/icons-material/Visibility';
+import Select, { SelectChangeEvent } from '@mui/material/Select';
+import Box from '@mui/material/Box';
+import InputLabel from '@mui/material/InputLabel';
+import MenuItem from '@mui/material/MenuItem';
+import FormControl from '@mui/material/FormControl';
 import {
     DataGrid,
     getGridStringOperators,
@@ -51,6 +56,7 @@ const ManageResources = () => {
     const [sortModel, setSortModel] = useState<GridSortModel>([]);
     const [resource, setResource] = useState<Resource>('events');
     const [filterValue, setFilterValue] = useState<GridFilterItem>(null);
+    const [colList, setColList] = useState<GridColDef[]>([]);
 
     // Format start/end datetime
     const dts = (params) => formatDate(params.row.start, 'MM/DD/YY, HH:mma');
@@ -59,29 +65,22 @@ const ManageResources = () => {
     // Define filters to use
     const filterOperators = getGridStringOperators().filter((operator) => operator.value === 'contains');
 
-    // Define columns to show for events
-    const columns: GridColDef[] = [
-        { field: 'name', headerName: 'Name', width: 325, filterOperators },
-        { field: 'club', headerName: 'Club', width: 150, filterOperators },
-        { field: 'start', headerName: 'Start', width: 150, valueGetter: dts, filterable: false },
-        { field: 'end', headerName: 'End', width: 150, valueGetter: dte, filterable: false },
-        { field: 'id', headerName: 'ID', width: 225, filterOperators },
+    // Define the 2 columns for the view and delete action buttons
+    const actionColumns: GridColDef[] = [
         {
             field: 'view',
             headerName: '👁️',
             width: 75,
             sortable: false,
             filterable: false,
-            renderCell: (params) => {
-                return (
-                    <IconButton
-                        onClick={window.open.bind(this, `${window.location.origin}/${resource}/${params.row.id}`)}
-                        sx={{ margin: 'auto' }}
-                    >
-                        <VisibilityIcon />
-                    </IconButton>
-                );
-            },
+            renderCell: (params) => (
+                <IconButton
+                    onClick={window.open.bind(this, `${window.location.origin}/${resource}/${params.row.id}`)}
+                    sx={{ margin: 'auto' }}
+                >
+                    <VisibilityIcon />
+                </IconButton>
+            ),
         },
         {
             field: 'delete',
@@ -89,19 +88,41 @@ const ManageResources = () => {
             width: 75,
             sortable: false,
             filterable: false,
-            renderCell: (params) => {
-                if (params.row.repeats !== RepeatingStatus.NONE && params.row.id !== params.row.repeatOriginId)
-                    return null;
-                return (
-                    <IconButton
-                        onClick={promptDelete.bind(this, params.row.id, params.row.name)}
-                        sx={{ margin: 'auto' }}
-                    >
-                        <DeleteOutlineIcon />
-                    </IconButton>
-                );
-            },
+            renderCell: (params) => (
+                <IconButton onClick={promptDelete.bind(this, params.row.id, params.row.name)} sx={{ margin: 'auto' }}>
+                    <DeleteOutlineIcon />
+                </IconButton>
+            ),
         },
+    ];
+
+    // Define columns to show for events
+    const eventColumns: GridColDef[] = [
+        { field: 'name', headerName: 'Name', width: 325, filterOperators },
+        { field: 'club', headerName: 'Club', width: 150, filterOperators },
+        { field: 'start', headerName: 'Start', width: 150, valueGetter: dts, filterable: false },
+        { field: 'end', headerName: 'End', width: 150, valueGetter: dte, filterable: false },
+        { field: 'id', headerName: 'ID', width: 225, filterOperators },
+        ...actionColumns,
+    ];
+
+    // Define columns to show for clubs
+    // TODO: Figure out how to filter by a boolean value -- advised (need to fix adminRouter too)
+    const clubColumns: GridColDef[] = [
+        { field: 'name', headerName: 'Name', width: 325, filterOperators },
+        { field: 'advised', headerName: 'Advised', width: 100, filterOperators, filterable: false },
+        { field: 'description', headerName: 'Description', width: 350, filterable: false },
+        { field: 'id', headerName: 'ID', width: 225, filterOperators },
+        ...actionColumns,
+    ];
+
+    // Define columns to show for volunteering
+    const volunteeringColumns: GridColDef[] = [
+        { field: 'name', headerName: 'Name', width: 325, filterOperators },
+        { field: 'club', headerName: 'Club', width: 150, filterOperators },
+        { field: 'description', headerName: 'Description', width: 300, filterable: false },
+        { field: 'id', headerName: 'ID', width: 225, filterOperators },
+        ...actionColumns,
     ];
 
     // When sorting changes
@@ -121,6 +142,11 @@ const ManageResources = () => {
         setDeletePrompt(true);
     };
 
+    // This function will trigger when the user selects an element
+    const handleResourceChange = (event: SelectChangeEvent) => {
+        setResource(event.target.value as Resource);
+    };
+
     // Actually delete the resource
     const deleteResource = async () => {
         setDeletePrompt(false);
@@ -136,6 +162,13 @@ const ManageResources = () => {
         setBackdrop(false);
     };
 
+    // When the resource changes, change the columns
+    useEffect(() => {
+        if (resource === 'events') setColList(eventColumns);
+        else if (resource === 'clubs') setColList(clubColumns);
+        else if (resource === 'volunteering') setColList(volunteeringColumns);
+    }, [resource]);
+
     // On load, get the number of rows
     // Also trigger this if the filtering or sorting changes
     useEffect(() => {
@@ -148,7 +181,7 @@ const ManageResources = () => {
             const reverse = sortModel[0] ? sortModel[0].sort === 'desc' : false;
             const filter = filterValue && filterValue.value ? filterValue : null;
 
-            const rowsRes = await getAdminResources('events', 1, rowsState.pageSize, sort, reverse, filter);
+            const rowsRes = await getAdminResources(resource, 1, rowsState.pageSize, sort, reverse, filter);
             if (rowsRes.status !== 200) {
                 setPopupEvent(createPopupEvent('Error fetching resource', 4));
                 return;
@@ -156,7 +189,7 @@ const ManageResources = () => {
             setRowsState((prev) => ({ ...prev, rows: rowsRes.data.docs, page: 0, loading: false }));
             setRowCount(rowsRes.data.totalPages * 10);
         })();
-    }, [sortModel, filterValue]);
+    }, [resource, sortModel, filterValue]);
 
     useEffect(() => {
         if (rowCount === 0) return;
@@ -171,7 +204,7 @@ const ManageResources = () => {
             const filter = filterValue && filterValue.value ? filterValue : null;
 
             const newRowsRes = await getAdminResources(
-                'events',
+                resource,
                 rowsState.page + 1,
                 rowsState.pageSize,
                 sort,
@@ -204,17 +237,33 @@ const ManageResources = () => {
                     </DialogContentText>
                 </DialogContent>
                 <DialogActions>
-                    <Button onClick={setDeletePrompt.bind(this, false)} sx={{ color: 'white' }} variant="text">
+                    <Button onClick={setDeletePrompt.bind(this, false)} sx={{ color: '#aaa' }} variant="text">
                         Cancel
                     </Button>
-                    <Button onClick={deleteResource} color="error">
+                    <Button onClick={deleteResource} color="error" variant="contained">
                         Delete
                     </Button>
                 </DialogActions>
             </Dialog>
             <UploadBackdrop text="Deleting Resource..." open={backdrop} />
+            <Box sx={{ display: 'flex', flexDirection: 'row', justifyContent: 'center', marginTop: 2 }}>
+                <FormControl sx={{ maxWidth: 300 }} fullWidth>
+                    <InputLabel id="resource-select-label">Resource</InputLabel>
+                    <Select
+                        labelId="resource-select-label"
+                        id="resource-select"
+                        label="Resource"
+                        value={resource}
+                        onChange={handleResourceChange}
+                    >
+                        <MenuItem value="events">Event</MenuItem>
+                        <MenuItem value="clubs">Clubs</MenuItem>
+                        <MenuItem value="volunteering">Volunteering</MenuItem>
+                    </Select>
+                </FormControl>
+            </Box>
             <DataGrid
-                columns={columns}
+                columns={colList}
                 {...rowsState}
                 rowCount={rowCount}
                 pagination

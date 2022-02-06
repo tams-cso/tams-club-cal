@@ -6,8 +6,8 @@ import Paper from '@mui/material/Paper';
 import Toolbar from '@mui/material/Toolbar';
 import ToggleButtonGroup from '@mui/material/ToggleButtonGroup';
 import ToggleButton from '@mui/material/ToggleButton';
-import Tooltip from '@mui/material/Tooltip';
 import Typography from '@mui/material/Typography';
+import Hidden from '@mui/material/Hidden';
 import FormatListBulletedRoundedIcon from '@mui/icons-material/FormatListBulletedRounded';
 import EventNoteRoundedIcon from '@mui/icons-material/EventNoteRounded';
 import MeetingRoomRoundedIcon from '@mui/icons-material/MeetingRoomRounded';
@@ -65,19 +65,16 @@ const ActionBar = () => {
                     }}
                 >
                     <ToggleButton value="schedule">
-                        <Tooltip title="Schedule View">
-                            <FormatListBulletedRoundedIcon />
-                        </Tooltip>
+                        <FormatListBulletedRoundedIcon width="16" sx={{ marginRight: { xs: 0, md: 1 } }} />
+                        <Hidden mdDown>Schedule</Hidden>
                     </ToggleButton>
                     <ToggleButton value="calendar">
-                        <Tooltip title="Calendar View">
-                            <EventNoteRoundedIcon />
-                        </Tooltip>
+                        <EventNoteRoundedIcon width="16" sx={{ marginRight: { xs: 0, md: 1 } }} />
+                        <Hidden mdDown>Calendar</Hidden>
                     </ToggleButton>
                     <ToggleButton value="reservations">
-                        <Tooltip title="Room Reservation Chart">
-                            <MeetingRoomRoundedIcon />
-                        </Tooltip>
+                        <MeetingRoomRoundedIcon width="16" sx={{ marginRight: { xs: 0, md: 1 } }} />
+                        <Hidden mdDown>Reservations</Hidden>
                     </ToggleButton>
                 </ToggleButtonGroup>
             </Toolbar>

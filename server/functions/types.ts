@@ -161,6 +161,45 @@ export interface ClubImageBlobs {
     profilePictures: Blob[];
 }
 
+/** An object containing the information for a volunteering opportunity */
+export interface VolunteeringObject {
+    /** The unique UUIDv4 for the volunteering opportunity */
+    id: string;
+
+    /** The name of the volunteering opportunity */
+    name: string;
+
+    /** The club name that is offering the volunteering opportunity */
+    club: string;
+
+    /** Description of the volunteering opportunity */
+    description: string;
+
+    /** Object used for filtering volunteering opportunities */
+    filters: Filters;
+
+    /** Edit history list */
+    history: string[];
+}
+
+/** An object with the filters for a volunteering opportunity */
+export interface Filters {
+    /** True if limited volunteering opportunity */
+    limited: boolean;
+
+    /** True if semester long */
+    semester: boolean;
+
+    /** True if set volunteering times */
+    setTimes: boolean;
+
+    /** True if weekly volunteering opportunity */
+    weekly: boolean;
+
+    /** True if open */
+    open: boolean;
+}
+
 export type Resource = 'events' | 'clubs' | 'volunteering';
 
 /** An object containing the information for a single edit to a specific resource */

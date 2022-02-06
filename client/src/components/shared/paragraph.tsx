@@ -14,7 +14,7 @@ interface ParagraphProps {
     /** True if the paragraph should have a smaller margin */
     smallMargin?: boolean;
 
-    /** Style the entire element using the sx prop; this is a Box if there is text, otherwise it is an empty Typography element */
+    /** Style the Box element using the sx prop */
     sx?: object;
 }
 
@@ -26,8 +26,14 @@ interface ParagraphProps {
  * correctly as a link element.
  */
 const Paragraph = (props: ParagraphProps) => {
-    // If there is no text, return an empty Typography element
-    if (props.text === undefined) return <Typography sx={props.sx}></Typography>;
+    // If there is no text, return an empty Box element
+    if (props.text === undefined) return <Box sx={props.sx}></Box>;
+    else if (props.text === '')
+        return (
+            <Box sx={props.sx}>
+                <Typography>[No Description]</Typography>
+            </Box>
+        );
 
     // Split the pararaphs by the newline character
     const paragraphs = props.text.split('\n');

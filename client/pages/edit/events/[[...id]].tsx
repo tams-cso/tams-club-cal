@@ -4,7 +4,7 @@ import { GetServerSidePropsContext, InferGetServerSidePropsType } from 'next';
 import { useForm } from 'react-hook-form';
 import Cookies from 'universal-cookie';
 import dayjs, { Dayjs } from 'dayjs';
-import { createPopupEvent, createEvent, darkSwitch, formatEventTime, formatDate } from '../../../src/util';
+import { createPopupEvent, createEvent, darkSwitch } from '../../../src/util';
 import { PopupEvent, RepeatingStatus } from '../../../src/types';
 import { getEvent, getOverlappingReservations, postEvent, putEvent } from '../../../src/api';
 
@@ -97,6 +97,12 @@ const EditEvents = ({ event, id, error }: InferGetServerSidePropsType<typeof get
         const startTime = data.allDay ? data.date.startOf('day').valueOf() : data.start.valueOf();
         const endTime = data.allDay || data.noEnd ? startTime : data.end.valueOf();
 
+        // Make sure events do not last for more than 100 days
+        if (dayjs(endTime).diff(startTime, 'day') > 100) {
+            setPopupEvent(createPopupEvent('Events cannot last more than 100 days!', 3));
+            return;
+        }
+
         // Check to make sure repeating data is valid and set the variables if true
         let repeats = 0;
         if (data.repeatsWeekly || data.repeatsMonthly) {
@@ -134,14 +140,16 @@ const EditEvents = ({ event, id, error }: InferGetServerSidePropsType<typeof get
 
         // Check for the conditions for creating a reservation
         if (data.reservation) {
-            // If location is "none"/"other" or if there is no end time, return error
-            if (data.location === 'none' || data.location === 'other' || data.noEnd) {
-                setPopupEvent(
-                    createPopupEvent(
-                        'Please select a valid location and time range for the reservation or remove the reservation.',
-                        3
-                    )
-                );
+            // If location is "none"/"other", return error
+            if (data.location === 'none' || data.location === 'other') {
+                setPopupEvent(createPopupEvent('Please select a valid (non-custom) location for the reservation.', 3));
+                setBackdrop(false);
+                return;
+            }
+
+            // If there is no end time, return error
+            if (data.noEnd) {
+                setPopupEvent(createPopupEvent('Reservations must have an end time.', 3));
                 setBackdrop(false);
                 return;
             }
@@ -174,7 +182,11 @@ const EditEvents = ({ event, id, error }: InferGetServerSidePropsType<typeof get
                 let currEnd = dayjs(endTime).add(1, unit);
                 const repEnd = data.repeatsUntil.startOf('day').add(1, 'day');
                 while (currStart.isBefore(repEnd)) {
-                    const repOverlap = await getOverlappingReservations(data.location, currStart.valueOf(), currEnd.valueOf());
+                    const repOverlap = await getOverlappingReservations(
+                        data.location,
+                        currStart.valueOf(),
+                        currEnd.valueOf()
+                    );
                     if (repOverlap.status !== 200) {
                         setPopupEvent(
                             createPopupEvent(
@@ -203,6 +215,9 @@ const EditEvents = ({ event, id, error }: InferGetServerSidePropsType<typeof get
             }
         }
 
+        // If the event is repeating, set repeatsUntil value
+        const repeatsUntil = repeats === RepeatingStatus.NONE ? null : data.repeatsUntil.valueOf();
+
         // Create the event object from the data
         const newEvent = createEvent(
             id,
@@ -217,7 +232,7 @@ const EditEvents = ({ event, id, error }: InferGetServerSidePropsType<typeof get
             data.noEnd,
             data.allDay,
             repeats,
-            data.repeatsUntil.valueOf(),
+            repeatsUntil,
             event.repeatOriginId,
             data.publicEvent,
             data.reservation,
