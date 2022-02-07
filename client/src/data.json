@@ -48,6 +48,10 @@
             "label": "[Room] SAC"
         },
         {
+            "value": "room-computer",
+            "label": "[Room] Computer Lab"
+        },
+        {
             "value": "room-tv",
             "label": "[Room] TV Room"
         },
