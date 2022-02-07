@@ -82,7 +82,7 @@ const Edit = () => {
                 <Button variant="outlined" onClick={add.bind(this, 'volunteering')} sx={{ margin: 1.5 }}>
                     Add a Volunteering Opportunity
                 </Button>
-                <Button variant="outlined" onClick={add.bind(this, 'reservations')} sx={{ margin: 1.5 }}>
+                <Button variant="outlined" onClick={add.bind(this, 'events')} sx={{ margin: 1.5 }}>
                     Add a Reservation
                 </Button>
             </Box>
