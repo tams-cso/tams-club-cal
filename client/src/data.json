@@ -110,6 +110,15 @@
     ],
     "changelog": [
         {
+            "v": "5.2",
+            "date": "Febuary [], 2022",
+            "changes": [
+                "Added computer lab as a reservable room",
+                "Removed redundant 'Add Reservation' button on the edit page",
+                "Fixed random icon flash on page load (again)"
+            ]
+        },
+        {
             "v": "5.1",
             "date": "Febuary 6th, 2022",
             "changes": [

@@ -86,6 +86,7 @@ const DesktopMenu = (props: DesktopMenuProps) => {
                                         : darkSwitch(theme, theme.palette.grey[700], theme.palette.grey[400]),
                                 fontSize: '2rem',
                             }}
+                            width="16"
                         />
                     </MenuIcon>
                     <MenuIcon

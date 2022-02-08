@@ -63,11 +63,11 @@ const AddButton = (props: AddButtonProps) => {
                 }}
             >
                 {props.editHistory ? (
-                    <AccessTimeRoundedIcon sx={{ marginRight: 1 }} />
+                    <AccessTimeRoundedIcon sx={{ marginRight: 1 }} width="16" />
                 ) : props.edit ? (
-                    <EditIcon />
+                    <EditIcon width="16" />
                 ) : (
-                    <AddIcon htmlColor="white" />
+                    <AddIcon htmlColor="white" width="16" />
                 )}
                 {props.editHistory ? 'Show Edit History' : null}
             </Fab>

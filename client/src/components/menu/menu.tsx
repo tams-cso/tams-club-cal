@@ -35,9 +35,9 @@ const Menu = (props: MenuProps) => {
     useEffect(() => {
         setCurrentDarkThemeIcon(
             props.dark ? (
-                <Brightness2RoundedIcon sx={iconStyle}></Brightness2RoundedIcon>
+                <Brightness2RoundedIcon sx={iconStyle} width="16"></Brightness2RoundedIcon>
             ) : (
-                <WbSunnyRoundedIcon sx={iconStyle}></WbSunnyRoundedIcon>
+                <WbSunnyRoundedIcon sx={iconStyle} width="16"></WbSunnyRoundedIcon>
             )
         );
     }, [props]);
