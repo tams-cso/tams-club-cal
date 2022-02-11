@@ -35,7 +35,7 @@ const ResourceMeta = (props: ResourceMetaProps) => {
 
     useEffect(() => {
         if (!props.imgSrc) return null;
-        const url = props.imgSrc ? `${getCdnUrl()}/${props.imgSrc}` : `${getCdnUrl()}/default-cover.webp`;
+        const url = `${getCdnUrl()}/${props.imgSrc}`;
         setImage([
             <meta key={0} property="og:image" content={url} />,
             <meta key={1} property="og:image:width" content="1800" />,
