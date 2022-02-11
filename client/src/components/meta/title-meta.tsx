@@ -1,12 +1,12 @@
 import React from 'react';
-import { Helmet } from 'react-helmet';
+import Head from 'next/head';
 
 interface TitleMetaProps {
     /** Title of the list */
     title: string;
 
     /** Full path of the page, including the '/' */
-    path: string;
+    path?: string;
 }
 
 /**
@@ -15,12 +15,12 @@ interface TitleMetaProps {
  */
 const TitleMeta = (props: TitleMetaProps) => {
     return (
-        <Helmet>
+        <Head>
             <title>{props.title} - TAMS Club Calendar</title>
-            <meta property="og:title" content={`${props.title} - TAMS Club Calendar`} />
-            <meta name="twitter:title" content={`${props.title} - TAMS Club Calendar`} />
-            <meta property="og:url" content={`https://tams.club${props.path}`} />
-        </Helmet>
+            <meta key="title" property="og:title" content={`${props.title} - TAMS Club Calendar`} />
+            <meta key="title-1" name="twitter:title" content={`${props.title} - TAMS Club Calendar`} />
+            {props.path ? <meta key="url" property="og:url" content={`https://tams.club${props.path}`} /> : null}
+        </Head>
     );
 };
 
