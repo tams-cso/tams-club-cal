@@ -22,6 +22,9 @@ import { getEvent } from '../../src/api';
 
 import data from '../../src/data.json';
 import Link from '../../src/components/shared/Link';
+import ResourceMeta from '../../src/components/meta/resource-meta';
+import TitleMeta from '../../src/components/meta/title-meta';
+import RobotBlockMeta from '../../src/components/meta/robot-block-meta';
 
 // Coloring for the event type
 const eventTypeStyle = {
@@ -53,7 +56,9 @@ const EventDisplay = ({ event, error }: InferGetServerSidePropsType<typeof getSe
     // TODO: Differentiate between invalid ID error and could not connect error
     if (error) {
         return (
-            <HomeBase title={`Events`}>
+            <HomeBase>
+                <TitleMeta title="Events" path={'/events'} />
+                <RobotBlockMeta />
                 <Loading error sx={{ marginBottom: 4 }}>
                     Could not get event data. Make sure the ID you have is valid and reload the page.
                 </Loading>
@@ -65,7 +70,13 @@ const EventDisplay = ({ event, error }: InferGetServerSidePropsType<typeof getSe
     const reserved = event.reservation ? ' (Reserved)' : '';
 
     return (
-        <HomeBase title={`${event.name} | Events`} noActionBar>
+        <HomeBase noActionBar>
+            <ResourceMeta
+                resource="events"
+                name={event.name}
+                path={`/events/${event.id}`}
+                description={event.description}
+            />
             <Container maxWidth={false} sx={{ maxWidth: { lg: '60%', md: '75%', xs: '100%' } }}>
                 <AddButton color="secondary" label="Event" path={`/edit/events/${event.id}`} edit />
                 <Card sx={{ marginBottom: 3 }}>

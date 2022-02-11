@@ -43,7 +43,6 @@ const PageWrapper = (props: PageWrapperProps) => {
             {props.title ? (
                 <Helmet>
                     <title>{`${props.title} - TAMS Club Calendar`}</title>
-                    {/* TODO: Add more page wrapper head mod content */}
                 </Helmet>
             ) : null}
             {props.children}

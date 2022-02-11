@@ -17,8 +17,10 @@ import Loading from '../../src/components/shared/loading';
 import FilterList from '../../src/components/volunteering/filter-list';
 import Paragraph from '../../src/components/shared/paragraph';
 import AddButton from '../../src/components/shared/add-button';
-import Title from '../../src/components/shared/title';
 import PageWrapper from '../../src/components/shared/page-wrapper';
+import ResourceMeta from '../../src/components/meta/resource-meta';
+import TitleMeta from '../../src/components/meta/title-meta';
+import RobotBlockMeta from '../../src/components/meta/robot-block-meta';
 
 // Server-side Rendering
 export const getServerSideProps = async (ctx: GetServerSidePropsContext) => {
@@ -46,6 +48,8 @@ const VolunteeringDisplay = ({ volunteering, error }: InferGetServerSidePropsTyp
     if (error) {
         return (
             <PageWrapper>
+                <TitleMeta title="Volunteering" path={'/volunteering'} />
+                <RobotBlockMeta />
                 <Loading error sx={{ marginBottom: 4 }}>
                     Could not get club data. Please reload the page or contact the site manager to fix this issue.
                 </Loading>
@@ -55,14 +59,14 @@ const VolunteeringDisplay = ({ volunteering, error }: InferGetServerSidePropsTyp
 
     return (
         <PageWrapper>
+            <ResourceMeta
+                resource="volunteering"
+                name={volunteering.name}
+                path={`/volunteering/${volunteering.id}`}
+                description={volunteering.description}
+            />
             <Container sx={{ maxWidth: { xl: '50%', md: '75%', xs: '100%' } }}>
-                <Title resource="volunteering" name={volunteering.name} />
-                <AddButton
-                    color="secondary"
-                    label="Volunteering"
-                    path={`/edit/volunteering/${volunteering.id}`}
-                    edit
-                />
+                <AddButton color="secondary" label="Volunteering" path={`/edit/volunteering/${volunteering.id}`} edit />
                 <Card>
                     <CardContent>
                         <Box

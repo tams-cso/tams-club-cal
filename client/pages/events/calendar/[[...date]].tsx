@@ -14,6 +14,7 @@ import HomeBase from '../../../src/components/home/home-base';
 import CalendarDay from '../../../src/components/calendar/calendar-day';
 import Loading from '../../../src/components/shared/loading';
 import AddButton from '../../../src/components/shared/add-button';
+import TitleMeta from '../../../src/components/meta/title-meta';
 
 // Template rows for each number of possible calendar rows
 const rowStyles = {
@@ -144,6 +145,7 @@ const Calendar = (props: InferGetServerSidePropsType<typeof getServerSideProps>)
 
     return (
         <HomeBase unsetHeight>
+            <TitleMeta title="Calendar" path="/events/calendar" /> 
             <Box display="flex" flexDirection="column" sx={{ flexGrow: 1 }}>
                 <AddButton color="primary" label="Event" path="/edit/events" />
                 <Box width="100%" display="flex" justifyContent="center" alignItems="center">

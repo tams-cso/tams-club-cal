@@ -21,9 +21,11 @@ import Paragraph from '../../src/components/shared/paragraph';
 import ExecCard from '../../src/components/clubs/exec-card';
 import CommitteeCard from '../../src/components/clubs/committee-card';
 import AddButton from '../../src/components/shared/add-button';
-import Title from '../../src/components/shared/title';
 import PageWrapper from '../../src/components/shared/page-wrapper';
 import Loading from '../../src/components/shared/loading';
+import ResourceMeta from '../../src/components/meta/resource-meta';
+import TitleMeta from '../../src/components/meta/title-meta';
+import RobotBlockMeta from '../../src/components/meta/robot-block-meta';
 
 // Style for "No resource" text
 const emptyTextStyle: object = {
@@ -91,6 +93,8 @@ const ClubDisplay = ({ club, error }: InferGetServerSidePropsType<typeof getServ
     if (error) {
         return (
             <PageWrapper>
+            <TitleMeta title="Clubs" path={'/clubs'} />
+            <RobotBlockMeta />
                 <Loading error sx={{ marginBottom: 4 }}>
                     Could not get club data. Please reload the page or contact the site manager to fix this issue.
                 </Loading>
@@ -100,8 +104,15 @@ const ClubDisplay = ({ club, error }: InferGetServerSidePropsType<typeof getServ
 
     return (
         <PageWrapper>
+            <ResourceMeta
+                resource="clubs"
+                name={club.name}
+                path={`/clubs/${club.id}`}
+                description={club.description}
+                imgSrc={club.coverImg}
+            />
+            <RobotBlockMeta />
             <Container sx={{ maxWidth: { xl: '50%', md: '75%', xs: '100%' } }}>
-                <Title resource="clubs" name={club.name} />
                 <AddButton color="secondary" label="Club" path={`/edit/clubs/${club.id}`} edit />
                 <Card sx={{ marginBottom: 4 }}>
                     <CardMedia
@@ -124,7 +135,7 @@ const ClubDisplay = ({ club, error }: InferGetServerSidePropsType<typeof getServ
                         <Typography variant="h1">{club.name}</Typography>
                         <Paragraph
                             text={club.description}
-                            sx={{ marginTop: 2, color: (theme) => darkSwitchGrey(theme) }}
+                            sx={{ marginTop: 2, color: (theme: Theme) => darkSwitchGrey(theme) }}
                         />
                         <Typography variant="h6">Links</Typography>
                         {links}

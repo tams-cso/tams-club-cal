@@ -10,6 +10,7 @@ import FeedbackForm from '../../src/components/about/feedback-form';
 import Changelog from '../../src/components/about/changelog';
 
 import data from '../../src/data.json';
+import TitleMeta from '../../src/components/meta/title-meta';
 
 // Format for a section title
 const sectionTitle = {
@@ -25,7 +26,8 @@ const sectionTitle = {
  */
 const About = () => {
     return (
-        <PageWrapper title="About">
+        <PageWrapper>
+            <TitleMeta title="About" path="/about" />
             <Container>
                 <CustomImage
                     src="/logo-banner.png"
