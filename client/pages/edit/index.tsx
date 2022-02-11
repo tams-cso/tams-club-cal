@@ -15,6 +15,7 @@ import TableHead from '@mui/material/TableHead';
 import TableRow from '@mui/material/TableRow';
 import Loading from '../../src/components/shared/loading';
 import EditWrapper from '../../src/components/edit/shared/edit-wrapper';
+import TitleMeta from '../../src/components/meta/title-meta';
 
 const Edit = () => {
     const [historyList, setHistoryList] = useState(null);
@@ -66,6 +67,7 @@ const Edit = () => {
 
     return (
         <EditWrapper>
+            <TitleMeta title="Edit" path="/edit" />
             <Box
                 sx={{
                     display: 'flex',

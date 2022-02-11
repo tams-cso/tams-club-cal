@@ -19,7 +19,6 @@ import TwoButtonBox from '../../../src/components/shared/two-button-box';
 import LocationSelect from '../../../src/components/edit/events/location-select';
 import DateInput from '../../../src/components/edit/events/date-input';
 import AddButton from '../../../src/components/shared/add-button';
-import Title from '../../../src/components/shared/title';
 import FormWrapper from '../../../src/components/edit/shared/form-wrapper';
 import Spacer from '../../../src/components/shared/spacer';
 import Popup from '../../../src/components/shared/popup';
@@ -27,6 +26,8 @@ import EditWrapper from '../../../src/components/edit/shared/edit-wrapper';
 import Link from '../../../src/components/shared/Link';
 
 import data from '../../../src/data.json';
+import TitleMeta from '../../../src/components/meta/title-meta';
+import RobotBlockMeta from '../../../src/components/meta/robot-block-meta';
 
 type SubmitData = {
     type: string;
@@ -320,7 +321,8 @@ const EditEvents = ({ event, id, error }: InferGetServerSidePropsType<typeof get
 
     return (
         <EditWrapper>
-            <Title title={`${id ? 'Edit' : 'Add'} Event`} />
+            <TitleMeta title={`${id ? 'Edit' : 'Add'} Event`} path={`/edit/events/${id ? id : ''}`} />
+            <RobotBlockMeta />
             <UploadBackdrop open={backdrop} />
             <Popup event={popupEvent} />
             <Typography variant="h1" sx={{ textAlign: 'center', fontSize: '3rem' }}>

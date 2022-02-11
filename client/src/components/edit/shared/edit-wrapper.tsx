@@ -11,7 +11,7 @@ import EditLogin from './edit-login';
  */
 const EditWrapper = (props: React.HTMLProps<HTMLDivElement>) => {
     return (
-        <PageWrapper title="Edit">
+        <PageWrapper>
             <Container>
                 <Paper sx={{ paddingBottom: 3, marginBottom: 4 }}>
                     <EditLogin />

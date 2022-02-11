@@ -9,6 +9,8 @@ import List from '@mui/material/List';
 import PageWrapper from '../../src/components/shared/page-wrapper';
 import Loading from '../../src/components/shared/loading';
 import ManageResources from '../../src/components/admin/manage-resources';
+import TitleMeta from '../../src/components/meta/title-meta';
+import RobotBlockMeta from '../../src/components/meta/robot-block-meta';
 
 // Server-side Rendering to check for token
 export const getServerSideProps = async (ctx: GetServerSidePropsContext) => {
@@ -52,6 +54,8 @@ const Admin = ({ authorized, error }: InferGetServerSidePropsType<typeof getServ
 
     return (
         <PageWrapper>
+            <TitleMeta title="Admin Dashboard" path="/profile/admin" />
+            <RobotBlockMeta />
             <Container>
                 <Typography variant="h2" component="h1" sx={{ textAlign: 'center', padding: 2 }}>
                     Admin Dashboard

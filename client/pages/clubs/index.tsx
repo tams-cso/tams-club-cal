@@ -12,6 +12,7 @@ import AddButton from '../../src/components/shared/add-button';
 import ViewSwitcher from '../../src/components/shared/view-switcher';
 import SortSelect from '../../src/components/shared/sort-select';
 import PageWrapper from '../../src/components/shared/page-wrapper';
+import TitleMeta from '../../src/components/meta/title-meta';
 
 // Server-side Rendering
 export const getServerSideProps = async () => {
@@ -67,6 +68,7 @@ const ClubList = ({ clubList, error }: InferGetServerSidePropsType<typeof getSer
 
     return (
         <PageWrapper>
+            <TitleMeta title="Clubs" path="/clubs" />
             <Container maxWidth={false} sx={{ maxWidth: 1280 }}>
                 <Box
                     width="100%"

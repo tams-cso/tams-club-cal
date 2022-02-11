@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { GetServerSidePropsContext, InferGetServerSidePropsType } from 'next';
 import { useRouter } from 'next/router';
-import { calculateEditDate, darkSwitch, getParams, parseEditor, redirect } from '../../../../src/util';
+import { calculateEditDate, darkSwitch, getParams, parseEditor } from '../../../../src/util';
 import { getHistory } from '../../../../src/api';
 import type { History, Resource } from '../../../../src/types';
 
@@ -15,9 +15,10 @@ import Typography from '@mui/material/Typography';
 import Button from '@mui/material/Button';
 import Loading from '../../../../src/components/shared/loading';
 import HistoryPopup from '../../../../src/components/edit/history/history-popup';
-import Title from '../../../../src/components/shared/title';
 import EditWrapper from '../../../../src/components/edit/shared/edit-wrapper';
 import Link from '../../../../src/components/shared/Link';
+import ResourceMeta from '../../../../src/components/meta/resource-meta';
+import RobotBlockMeta from '../../../../src/components/meta/robot-block-meta';
 
 // Server-side Rendering
 export const getServerSideProps = async (ctx: GetServerSidePropsContext) => {
@@ -30,7 +31,7 @@ export const getServerSideProps = async (ctx: GetServerSidePropsContext) => {
     return {
         props: {
             historyList: error ? [] : sortedHistory,
-            name: error ? '' : historyRes.data.name as string,
+            name: error ? '' : (historyRes.data.name as string),
             error,
             resource,
             id,
@@ -107,6 +108,14 @@ const HistoryDisplay = ({
 
     return (
         <EditWrapper>
+            <ResourceMeta
+                resource={resource}
+                name={name}
+                path={`/edit/${resource}/${id}`}
+                description={`Edit history for ${name} (${resource})`}
+                editHistory
+            />
+            <RobotBlockMeta />
             <TableContainer>
                 {components === null ? (
                     error ? (
@@ -120,7 +129,6 @@ const HistoryDisplay = ({
                     )
                 ) : (
                     <React.Fragment>
-                        <Title editHistory resource={resource} name={name} />
                         <Typography
                             variant="h1"
                             sx={{

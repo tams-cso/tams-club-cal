@@ -11,6 +11,7 @@ import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
 import Typography from '@mui/material/Typography';
 import PageWrapper from '../../src/components/shared/page-wrapper';
+import TitleMeta from '../../src/components/meta/title-meta';
 
 // Server-side Rendering to check for token
 // TODO: This block can be cleaned up
@@ -64,6 +65,7 @@ const Login = ({ authorized, error }: InferGetServerSidePropsType<typeof getServ
 
     return (
         <PageWrapper>
+            <TitleMeta title="Login" path="/profile" />
             <Card sx={{ maxWidth: 500, mx: 'auto', height: 'max-content' }}>
                 <CardContent>
                     <Typography variant="h2" component="h1" sx={{ textAlign: 'center' }}>

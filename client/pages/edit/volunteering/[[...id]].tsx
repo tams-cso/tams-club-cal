@@ -18,11 +18,11 @@ import UploadBackdrop from '../../../src/components/edit/shared/upload-backdrop'
 import TwoButtonBox from '../../../src/components/shared/two-button-box';
 import ControlledFilterCheckbox from '../../../src/components/edit/volunteering/controlled-filter-checkbox';
 import AddButton from '../../../src/components/shared/add-button';
-import Title from '../../../src/components/shared/title';
 import FormWrapper from '../../../src/components/edit/shared/form-wrapper';
 import Spacer from '../../../src/components/shared/spacer';
 import Popup from '../../../src/components/shared/popup';
 import EditWrapper from '../../../src/components/edit/shared/edit-wrapper';
+import TitleMeta from '../../../src/components/meta/title-meta';
 
 // Server-side Rendering
 export const getServerSideProps = async (ctx: GetServerSidePropsContext) => {
@@ -99,7 +99,7 @@ const EditVolunteering = ({ volunteering, id, error }: InferGetServerSidePropsTy
 
     return (
         <EditWrapper>
-            <Title title={`${id ? 'Edit' : 'Add'} Volunteering`} />
+            <TitleMeta title={`${id ? 'Edit' : 'Add'} Volunteering`} path={`/edit/volunteering/${id ? id : ''}`} />
             <UploadBackdrop open={backdrop} />
             <Popup event={popupEvent} />
             <Typography variant="h1" sx={{ textAlign: 'center', fontSize: '3rem' }}>

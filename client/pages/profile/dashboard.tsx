@@ -18,6 +18,7 @@ import Box from '@mui/material/Box';
 import Container from '@mui/material/Container';
 import PageWrapper from '../../src/components/shared/page-wrapper';
 import Loading from '../../src/components/shared/loading';
+import TitleMeta from '../../src/components/meta/title-meta';
 
 // Server-side Rendering to check for token and get data
 export const getServerSideProps = async (ctx: GetServerSidePropsContext) => {
@@ -84,6 +85,7 @@ const Dashboard = ({ authorized, error, isAdmin, info }: InferGetServerSideProps
 
     return (
         <PageWrapper>
+            <TitleMeta title="Profile" path="/profile/dashboard" />
             <Container>
                 <Card>
                     <CardContent>

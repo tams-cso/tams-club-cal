@@ -5,6 +5,8 @@ import Cookies from 'universal-cookie';
 
 import PageWrapper from '../../src/components/shared/page-wrapper';
 import Loading from '../../src/components/shared/loading';
+import TitleMeta from '../../src/components/meta/title-meta';
+import RobotBlockMeta from '../../src/components/meta/robot-block-meta';
 
 // Server-side Rendering
 export const getServerSideProps = async (ctx: GetServerSidePropsContext) => {
@@ -47,6 +49,8 @@ const Auth = ({ token, error }: InferGetServerSidePropsType<typeof getServerSide
 
     return (
         <PageWrapper>
+            <TitleMeta title="Authenticating" path="/auth" />
+            <RobotBlockMeta />
             <Loading error={error}>
                 Error logging in. Please check your internet and allow cookies then try again. Redirecting you to the
                 login page in 3 seconds...

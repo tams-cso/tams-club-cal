@@ -23,6 +23,7 @@ import ViewSwitcher from '../../src/components/shared/view-switcher';
 import VolunteeringTable from '../../src/components/volunteering/volunteering-table';
 import SortSelect from '../../src/components/shared/sort-select';
 import PageWrapper from '../../src/components/shared/page-wrapper';
+import TitleMeta from '../../src/components/meta/title-meta';
 
 // Server-side Rendering
 export const getServerSideProps = async () => {
@@ -133,6 +134,7 @@ const Volunteering = ({ volunteeringList, error }: InferGetServerSidePropsType<t
 
     return (
         <PageWrapper>
+            <TitleMeta title="Volunteering" path="/volunteering" />
             <Container maxWidth={false} sx={{ maxWidth: 1280 }}>
                 <AddButton color="primary" label="Volunteering" path="/edit/volunteering" />
                 <Box width="100%" marginBottom={2} display="flex" alignItems="center">

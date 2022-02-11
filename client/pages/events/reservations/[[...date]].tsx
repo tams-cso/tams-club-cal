@@ -14,6 +14,7 @@ import ReservationDay from '../../../src/components/reservations/reservation-day
 import AddButton from '../../../src/components/shared/add-button';
 import { useRouter } from 'next/router';
 import HomeBase from '../../../src/components/home/home-base';
+import TitleMeta from '../../../src/components/meta/title-meta';
 
 // Server-side Rendering
 export const getServerSideProps = async (ctx: GetServerSidePropsContext) => {
@@ -175,6 +176,7 @@ const Reservations = ({ now, reservationList, error }: InferGetServerSidePropsTy
 
     return (
         <HomeBase noDrawer>
+            <TitleMeta title="Reservations" path="/events/reservations" />
             <Box display="flex">
                 <DatePicker
                     inputFormat="[Week of] MMM D, YYYY"
