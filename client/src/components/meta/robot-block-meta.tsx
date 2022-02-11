@@ -1,5 +1,5 @@
 import React from 'react';
-import { Helmet } from 'react-helmet';
+import Head from 'next/head';
 
 /**
  * Robot blocking meta tag that tells search engines to not display this page in search results.
@@ -8,9 +8,9 @@ import { Helmet } from 'react-helmet';
  */
 const RobotBlockMeta = () => {
     return (
-        <Helmet>
-            <meta name="robots" content="noindex" />
-        </Helmet>
+        <Head>
+            <meta key="robots" name="robots" content="noindex" />
+        </Head>
     );
 };
 

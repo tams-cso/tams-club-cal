@@ -1,6 +1,6 @@
-import { capitalize } from '@mui/material';
 import React, { useEffect, useState } from 'react';
-import { Helmet } from 'react-helmet';
+import { capitalize } from '@mui/material';
+import Head from 'next/head';
 import { getCdnUrl } from '../../api';
 import { Resource } from '../../types';
 
@@ -37,23 +37,23 @@ const ResourceMeta = (props: ResourceMetaProps) => {
         if (!props.imgSrc) return null;
         const url = `${getCdnUrl()}/${props.imgSrc}`;
         setImage([
-            <meta key={0} property="og:image" content={url} />,
-            <meta key={1} property="og:image:width" content="1800" />,
-            <meta key={2} property="og:image:height" content="750" />,
-            <meta key={3} name="twitter:image" content={url} />,
+            <meta key="image-0" property="og:image" content={url} />,
+            <meta key="image-1" property="og:image:width" content="1800" />,
+            <meta key="image-2" property="og:image:height" content="750" />,
+            <meta key="image-3" name="twitter:image" content={url} />,
         ]);
     }, [props.imgSrc]);
 
     return (
-        <Helmet>
+        <Head>
             <title>{title}</title>
-            <meta name="description" content={props.description} />
-            <meta property="og:title" content={title} />
-            <meta property="og:url" content={`https://tams.club${props.path}`} />
+            <meta key="description" name="description" content={props.description} />
+            <meta key="title" property="og:title" content={title} />
+            <meta key="url" property="og:url" content={`https://tams.club${props.path}`} />
             {image}
-            <meta name="twitter:title" content={title} />
-            <meta name="twitter:description" content={props.description} />
-        </Helmet>
+            <meta key="title-1" name="twitter:title" content={title} />
+            <meta key="description-1" name="twitter:description" content={props.description} />
+        </Head>
     );
 };
 

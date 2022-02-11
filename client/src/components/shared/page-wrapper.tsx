@@ -2,9 +2,10 @@ import React, { useEffect } from 'react';
 import { useRouter } from 'next/router';
 import { darkSwitch } from '../../util';
 
-import { Helmet } from 'react-helmet';
+import Head from 'next/head';
 import Box from '@mui/material/Box';
 import Popup from './popup';
+import TitleMeta from '../meta/title-meta';
 
 interface PageWrapperProps extends React.HTMLProps<HTMLDivElement> {
     /** If true, page will not have a bottom padding */
@@ -41,9 +42,7 @@ const PageWrapper = (props: PageWrapperProps) => {
         >
             <Popup cookieCheck />
             {props.title ? (
-                <Helmet>
-                    <title>{`${props.title} - TAMS Club Calendar`}</title>
-                </Helmet>
+                <TitleMeta title={props.title} />
             ) : null}
             {props.children}
         </Box>
