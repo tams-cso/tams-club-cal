@@ -1,0 +1,7 @@
+{
+    "entryPoints": ["client/src"],
+    "entryPointStrategy": "expand",
+    "name": "TAMS Club Calendar",
+    "out": "docs",
+    "tsconfig": "client/tsconfig.json"
+}
