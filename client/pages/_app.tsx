@@ -52,9 +52,30 @@ export default function MyApp(props: MyAppProps) {
     return (
         <CacheProvider value={emotionCache}>
             <Head>
-                <link rel="icon" href="/favicon.ico" />
                 <meta name="viewport" content="initial-scale=1, width=device-width" />
                 <title>TAMS Club Calendar</title>
+                <meta
+                    key="description"
+                    name="description"
+                    content="The TAMS Club Calendar is a fully contained event tracker, club/volunteering database, and general resource center. This is the unofficial club event calendar for the Texas Academy of Mathematics and Science!"
+                />
+                <meta key="title" property="og:title" content="TAMS Club Calendar" />
+                <meta key="type" property="og:type" content="website" />
+                <meta key="url" property="og:url" content="https://tams.club/" />
+                <meta key="image-0" property="og:image" content="https://cdn.tams.club/social-cover.webp" />
+                <meta key="image-1" property="og:image:width" content="1200" />
+                <meta key="image-2" property="og:image:height" content="630" />
+                <meta key="site-name" property="og:site_name" content="TAMS Club Calendar" />
+                <meta key="card" name="twitter:card" content="summary" />
+                <meta key="title-1" name="twitter:title" content="TAMS Club Calendar" />
+                <meta
+                    key="description-1"
+                    name="twitter:description"
+                    content="The TAMS Club Calendar is a fully contained event tracker, club/volunteering database, and general resource center. This is the unofficial club event calendar for the Texas Academy of Mathematics and Science!"
+                />
+                <meta key="image-3" name="twitter:image" content="https://cdn.tams.club/social-cover.webp" />
+
+                <meta key="theme-color" name="theme-color" content={theme.palette.primary.main} />
             </Head>
             <StyledEngineProvider injectFirst>
                 <ThemeProvider theme={dark ? darkTheme : theme}>
