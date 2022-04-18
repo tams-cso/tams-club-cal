@@ -31,7 +31,7 @@ export default class MyDocument extends Document {
                     <meta key="image-3" name="twitter:image" content="https://cdn.tams.club/social-cover.webp" />
 
                     <meta key="theme-color" name="theme-color" content={theme.palette.primary.main} />
-                    <link rel="shortcut icon" href="/static/favicon.ico" />
+                    <link rel="shortcut icon" href="/favicon.ico" />
                     <link rel="apple-touch-icon" href="/android-chrome-192x192.png" />
                     <link rel="manifest" href="/manifest.json" />
                     <link rel="preconnect" href="https://fonts.gstatic.com" />
