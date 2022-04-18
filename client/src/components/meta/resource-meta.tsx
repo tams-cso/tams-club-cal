@@ -31,18 +31,16 @@ const ResourceMeta = (props: ResourceMetaProps) => {
     const title =
         (props.editHistory ? '[Edit History] ' : '') +
         `${props.name} | ${capitalize(props.resource)} - TAMS Club Calendar`;
-    const [image, setImage] = useState(null);
 
-    useEffect(() => {
-        if (!props.imgSrc) return null;
-        const url = `${getCdnUrl()}/${props.imgSrc}`;
-        setImage([
-            <meta key="image-0" property="og:image" content={url} />,
-            <meta key="image-1" property="og:image:width" content="1800" />,
-            <meta key="image-2" property="og:image:height" content="750" />,
-            <meta key="image-3" name="twitter:image" content={url} />,
-        ]);
-    }, [props.imgSrc]);
+    const url = props.imgSrc ? `${getCdnUrl()}/${props.imgSrc}` : null;
+    const image = props.imgSrc
+        ? [
+              <meta key="image-0" property="og:image" content={url} />,
+              <meta key="image-1" property="og:image:width" content="1800" />,
+              <meta key="image-2" property="og:image:height" content="750" />,
+              <meta key="image-3" name="twitter:image" content={url} />,
+          ]
+        : null;
 
     return (
         <Head>

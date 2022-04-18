@@ -93,8 +93,8 @@ const ClubDisplay = ({ club, error }: InferGetServerSidePropsType<typeof getServ
     if (error) {
         return (
             <PageWrapper>
-            <TitleMeta title="Clubs" path={'/clubs'} />
-            <RobotBlockMeta />
+                <TitleMeta title="Clubs" path={'/clubs'} />
+                <RobotBlockMeta />
                 <Loading error sx={{ marginBottom: 4 }}>
                     Could not get club data. Please reload the page or contact the site manager to fix this issue.
                 </Loading>
