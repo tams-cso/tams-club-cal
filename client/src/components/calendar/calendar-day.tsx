@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import type { Dayjs } from 'dayjs';
+import { alpha } from '@mui/material/styles';
 import { darkSwitch, darkSwitchGrey } from '../../util';
 import type { Event } from '../../types';
 
@@ -7,7 +8,6 @@ import Box from '@mui/material/Box';
 import List from '@mui/material/List';
 import ListItem from '@mui/material/ListItem';
 import Typography from '@mui/material/Typography';
-import Button from '@mui/material/Button';
 import CalendarEvent from './calendar-event';
 import CalendarPopup from './calendar-popup';
 
@@ -58,10 +58,15 @@ const CalendarDay = (props: CalendarDayPopup) => {
                     props.noRight
                         ? 'none'
                         : `1px solid ${darkSwitch(theme, theme.palette.grey[300], theme.palette.grey[700])}`,
+                cursor: 'pointer',
+                transition: '0.2s',
+                '&:hover': {
+                    backgroundColor: (theme) => darkSwitch(theme, alpha(theme.palette.grey[200], 0.9), theme.palette.grey[800]),
+                },
             }}
+            onClick={togglePopup.bind(this, true)}
         >
-            <Button
-                onClick={togglePopup.bind(this, true)}
+            <Typography
                 sx={{
                     margin: 0.5,
                     padding: 0.5,
@@ -77,7 +82,7 @@ const CalendarDay = (props: CalendarDayPopup) => {
                 }}
             >
                 {props.date.date()}
-            </Button>
+            </Typography>
             <List sx={{ paddingTop: 0 }}>
                 {activities.map((a) => (
                     <CalendarEvent activity={a} key={a.id} />
