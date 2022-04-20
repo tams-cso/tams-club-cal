@@ -30,13 +30,13 @@ const CalendarPopup = (props: CalendarPopupProps) => {
         <Dialog
             aria-labelledby="calendar-popup-title"
             open={props.open}
-            onClose={(event: {}, reason) => {
+            onClose={() => {
                 props.close();
             }}
             fullWidth
         >
             <DialogTitle id="calendar-popup-title">{`Events for ${props.date.format('MMM DD, YYYY')}`}</DialogTitle>
-            <List>
+            <List sx={{ paddingBottom: '1rem' }}>
                 {props.activities.map((e) => (
                     <CalendarEvent activity={e} key={e.id} lighter />
                 ))}
