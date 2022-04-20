@@ -111,11 +111,12 @@
     "changelog": [
         {
             "v": "5.2",
-            "date": "Febuary [], 2022",
+            "date": "March 9, 2022",
             "changes": [
-                "Added computer lab as a reservable room",
+                "Added computer lab as a reservable room, as well as a reservation for tabling in Mac",
                 "Removed redundant 'Add Reservation' button on the edit page",
-                "Fixed random icon flash on page load (again)"
+                "Fixed random icon flash on page load (again)",
+                "Created new documentation page, still hosted at https://docs.tams.club"
             ]
         },
         {
@@ -213,6 +214,103 @@
                 "Fixed edit form submission issues",
                 "Added catch for invalid edit history entires so it no longer crashes the site",
                 "Changing volunteering from closed to open actually works now"
+            ]
+        },
+        {
+            "v": "2.3",
+            "date": "August 29, 2021",
+            "changes": [
+                "Fixed location that images were stored in the staging app",
+                "Fixed issue where scroll bar appears illegally on the reservation calendar"
+            ]
+        },
+        {
+            "v": "2.2",
+            "date": "August 13, 2021",
+            "changes": [
+                "Added social media meta tags -- better links for social media!",
+                "Created documentation site (https://docs.tams.club)",
+                "Fixed issues with reservations and events displaying incorrectly",
+                "Adding sorting functionality to list views"
+            ]
+        },
+        {
+            "v": "2.1",
+            "date": "August 6, 2021",
+            "changes": [
+                "General improvements to user interface",
+                "Created list views and filters for resource lists",
+                "Added the ability to reserve rooms for reservations",
+                "Added ability to schedule repeating reservations",
+                "Added React Helmet to dynamically change page title/descriptions",
+                "Fixed issue where edit history does not show logged in user's name",
+                "Created /edit page where a log of all edits are displayed",
+                "Added the ability to view individual resource's edit histories",
+                "History diff now recursively shows arrays and objects that are changed"
+            ]
+        },
+        {
+            "v": "2.0",
+            "date": "July 30, 2021",
+            "changes": [
+                "Completely rewrote the entire user interface with a modern framework library (Material UI)",
+                "Cleaned up backend with routers and mongoose",
+                "Serve images from Amazon S3 at https://cdn.tams.club",
+                "Create production builds with a combination of Netlify and Docker"
+            ]
+        },
+        {
+            "v": "1.4",
+            "date": "March 29, 2021",
+            "changes": [
+                "Add text on staging app denoting its non-production status",
+                "Set default signup time to 11:59pm",
+                "Changing start time for events now perserves the previous time interval",
+                "Add button no longer expands weirdly on mobile",
+                "Fixed the width of club cover photo uploads",
+                "Added ability to edit clubs on mobile",
+                "Set dark theme automatically for first-time users who have dark theme enabled globally"
+            ]
+        },
+        {
+            "v": "1.3",
+            "date": "March 26, 2021",
+            "changes": [
+                "Dark theme added!",
+                "Wrap long event names on event display",
+                "Added a max height to event popups to prevent clipping beyond bottom of the popup"
+            ]
+        },
+        {
+            "v": "1.2",
+            "date": "March 21, 2021",
+            "changes": [
+                "Fixed info on left side of events popup",
+                "Added a minimum height for event popups",
+                "Changed media queries so that it works on mobile",
+                "Added transitions and border-radii to calendar events on hover",
+                "Cleaned up CSS code"
+            ]
+        },
+        {
+            "v": "1.1",
+            "date": "Narch 19, 2021",
+            "changes": [
+                "Fixed layering on the home page",
+                "Fix background tasks to run only once every day",
+                "Fix issue where volunteering cards are clipped and overlaid strangely",
+                "Set logo banner of clubs to 100% so they don't overflow",
+                "Fixed issue where Google account logins do not work"
+            ]
+        },
+        {
+            "v": "1.0",
+            "date": "March 7, 2021",
+            "changes": [
+                "Use set timezone of America/Chicago (for simplicity)",
+                "Added link to Google Calendar",
+                "Catch invalid ips for users and log them out automatically",
+                "Fix padding issues with club displays"
             ]
         }
     ]
