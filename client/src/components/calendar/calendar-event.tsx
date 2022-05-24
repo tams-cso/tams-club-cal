@@ -23,6 +23,9 @@ const CalendarEvent = (props: CalendarEventProps) => {
         <ListItem sx={{ overflow: 'hidden', padding: 0 }}>
             <Link
                 href={`/events/${props.activity.id}?view=calendar`}
+                onClick={(e) => {
+                    e.stopPropagation();
+                }}
                 sx={{
                     width: '100%',
                     padding: '2px 8px',
@@ -33,9 +36,7 @@ const CalendarEvent = (props: CalendarEventProps) => {
                     transition: '0.2s',
                     '&:hover': {
                         backgroundColor: (theme: Theme) =>
-                            props.lighter
-                                ? darkSwitch(theme, theme.palette.grey[300], theme.palette.grey[700])
-                                : darkSwitch(theme, theme.palette.grey[200], theme.palette.grey[800]),
+                            darkSwitch(theme, theme.palette.grey[300], theme.palette.grey[700]),
                     },
                 }}
             >
