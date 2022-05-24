@@ -10,9 +10,6 @@ import Link from '../shared/Link';
 interface CalendarEventProps {
     /** Event object to display */
     activity: Event;
-
-    /** True if you want the highlight color to be lighter */
-    lighter?: boolean;
 }
 
 /**
