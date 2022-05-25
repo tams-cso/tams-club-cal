@@ -30,8 +30,9 @@ const CalendarPopup = (props: CalendarPopupProps) => {
         <Dialog
             aria-labelledby="calendar-popup-title"
             open={props.open}
-            onClose={() => {
+            onClose={(e: React.MouseEvent<HTMLDivElement, MouseEvent>) => {
                 props.close();
+                e.stopPropagation();
             }}
             fullWidth
         >
