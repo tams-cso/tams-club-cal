@@ -11,7 +11,7 @@ jobs:
             issues: write
         steps:
             - name: Change issue labels
-              uses: andymckay/labeler
+              uses: andymckay/labeler@master
               with:
                   remove-labels: 'Status: Needs Triage'
                   add-labels: 'Status: In Progress'
