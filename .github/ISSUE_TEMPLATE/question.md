@@ -1,7 +1,7 @@
 ---
 name: Question
 about: Ask a question about a feature or get feedback on ideas
-labels: question
+labels: "Type: Question"
 assignees: ''
 
 ---
