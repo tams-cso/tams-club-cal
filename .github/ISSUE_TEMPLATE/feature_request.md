@@ -1,9 +1,8 @@
 ---
 name: Feature request
 about: Suggest an idea for this project
-labels: new feature
+labels: ['Type: New Feature', 'Status: Needs Triage']
 assignees: ''
-
 ---
 
 ### Is your feature request related to a problem? Please describe.
