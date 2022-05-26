@@ -7,7 +7,7 @@ on:
 jobs:
     untriage:
         runs-on: ubuntu-latest
-        premissions:
+        permissions:
             issues: write
         steps:
             - name: Change issue labels
