@@ -1,0 +1,17 @@
+name: Remove issue statuses
+on:
+    issues:
+        types:
+            - closed
+
+jobs:
+    untriage:
+        runs-on: ubuntu-latest
+        permissions:
+            issues: write
+        steps:
+            - name: Remove all status labels
+              uses: andymckay/labeler@master
+              with:
+                  remove-labels: 'Status: Needs Triage, Status: In Progress'
+                  repo-token: ${{ secrets.GITHUB_TOKEN }}
