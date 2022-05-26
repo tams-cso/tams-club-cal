@@ -7,10 +7,10 @@ build
 dist
 
 # Generated files
-*/.docusaurus
 */.cache-loader
 **/*/*.swp
 .next
+docs
 
 # misc
 .DS_Store
