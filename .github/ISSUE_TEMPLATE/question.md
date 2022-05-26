@@ -1,9 +1,8 @@
 ---
 name: Question
 about: Ask a question about a feature or get feedback on ideas
-labels: "Type: Question"
+labels: ['Type: Question', 'Status: Needs Triage']
 assignees: ''
-
 ---
 
 ### What is your question? Describe in detail.

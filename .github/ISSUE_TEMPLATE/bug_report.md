@@ -1,10 +1,9 @@
 ---
 name: Bug report
 about: Create a report to help us improve
-title: "[BUG] "
-labels: "Type: Bug"
+title: '[BUG] '
+labels: ['Type: Bug', 'Status: Needs Triage']
 assignees: ''
-
 ---
 
 ### Describe the bug
@@ -30,9 +29,9 @@ If applicable, add screenshots or links to other media to help explain your prob
 
 ### Environment
 
- - OS: [e.g. Linux, iOS 14]
- - Browser: [e.g. Chrome, Safari]
- - Browser Version: [e.g. 22]
+-   OS: [e.g. Linux, iOS 14]
+-   Browser: [e.g. Chrome, Safari]
+-   Browser Version: [e.g. 22]
 
 ### Additional context
 
