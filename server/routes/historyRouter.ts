@@ -37,7 +37,11 @@ router.get('/', async (req: Request, res: Response) => {
         history = await History.find({}).sort({ time: -1, _id: 1 }).limit(50).exec();
     }
 
+    // TODO: Do we need to do this sort or can it be ignored because we already sorted it before?
     const sortedHistory = history.sort((a: HistoryObject, b: HistoryObject) => b.time - a.time);
+
+    // Fetch the names of the items in the history list
+    // Also fetch the names of the editors
     const dataList = await Promise.all(
         sortedHistory.map(async (h: HistoryObject) => {
             let resourceObj = null;
@@ -45,11 +49,14 @@ router.get('/', async (req: Request, res: Response) => {
             else if (h.resource === 'clubs') resourceObj = await Club.findOne({ id: h.editId });
             else if (h.resource === 'volunteering') resourceObj = await Volunteering.findOne({ id: h.editId });
             const name = !resourceObj ? 'N/A' : resourceObj.name;
-            const first = !resourceObj ? false : resourceObj.history[0] === h.id;
             const editor = await parseEditor(h.editor);
-            return { name, editor, first };
+            return { name, editor };
         })
     );
+
+    // Send the final 2 lists to the user
+    // TODO: Add something here to tell the frontend if there are more elements in the list
+    // (though this might not needed because there are thousands of history entries)
     res.send({ historyList: sortedHistory, dataList });
 });
 
@@ -64,6 +71,7 @@ router.get('/:resource/:id', async (req: Request, res: Response) => {
     const id = req.params.id;
 
     // Get the resource object based on the passed in resource name
+    // This also checks to make sure the resource param is valid
     let resourceObj = null;
     if (req.params.resource === 'events') resourceObj = await Event.findOne({ id });
     else if (req.params.resource === 'clubs') resourceObj = await Club.findOne({ id });
@@ -73,13 +81,14 @@ router.get('/:resource/:id', async (req: Request, res: Response) => {
         return;
     }
 
-    // If there is no valid ID defined throw error
+    // If the id is invalid for the given resource, throw error
+    // This means that the resource with such an id does not exist
     if (!resourceObj) {
         sendError(res, 400, 'Invalid resource ID.');
         return;
     }
 
-    // Otherwise, return the history object based on the ID of the resource
+    // Return the history object based on the ID of the resource
     const history = await History.find({ id: { $in: resourceObj.history } });
     if (history) res.send({ history, name: resourceObj.name });
     else sendError(res, 500, 'Could not fetch history list for the given resource');

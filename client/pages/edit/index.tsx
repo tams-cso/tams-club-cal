@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useRouter } from 'next/router';
-import type { History, Resource } from '../../src/types';
+import type { History, Resource, HistoryData } from '../../src/types';
 import { calculateEditDate, darkSwitch, redirect } from '../../src/util';
 import { getHistoryList } from '../../src/api';
 
@@ -19,7 +19,7 @@ import TitleMeta from '../../src/components/meta/title-meta';
 
 const Edit = () => {
     const [historyList, setHistoryList] = useState(null);
-    const [dataList, setDataList] = useState(null);
+    const [dataList, setDataList] = useState<HistoryData[]>(null);
     const [noMore, setNoMore] = useState(true);
     const [error, setError] = useState(false);
     const router = useRouter();
@@ -46,6 +46,18 @@ const Edit = () => {
         // This is less likely than the events to hit the end of the list as there will be lots of edits,
         // so the issue of having a total history list that's a multiple of 50 is not a big concern.
         setNoMore(newHistory.data.historyList.length !== 50);
+    };
+
+    // Returns either "Resource created" if first event or returns # of updated fields
+    const getEdits = (h: History): string => {
+        // If the edit content contains the name and the oldName was null, that means it's the initial edit
+        const name = h.fields.find((hk) => hk.key === 'name');
+        if (name && name.oldValue === null) {
+            return 'Resource created';
+        }
+
+        // Otherwise, return the number of updated fields
+        return `${h.fields.length} fields were updated`;
     };
 
     // On mount, load the history and data lists
@@ -121,11 +133,7 @@ const Edit = () => {
                                     <TableCell>{calculateEditDate(h.time)}</TableCell>
                                     <TableCell>{h.resource}</TableCell>
                                     <TableCell>{dataList[i].name}</TableCell>
-                                    <TableCell>
-                                        {dataList[i].first
-                                            ? 'Resource created'
-                                            : `${h.fields.length} fields were updated`}
-                                    </TableCell>
+                                    <TableCell>{getEdits(h)}</TableCell>
                                     <TableCell>{dataList[i].editor}</TableCell>
                                 </TableRow>
                             ))}
