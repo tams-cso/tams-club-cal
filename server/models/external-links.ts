@@ -1,17 +1,13 @@
 import mongoose from 'mongoose';
 
-const externalLinksSchema = new mongoose.Schema(
+const textDataSchema = new mongoose.Schema(
     {
-        examCalendar: String,
-        academicsGuide: String,
-        clubLeaderResources: String,
-        tamsWiki: String,
-        addCalendar: String,
-        addStagingCalendar: String,
+        type: String,
+        data: Object,
     },
-    { collection: 'external-links' }
+    { collection: 'text-data' }
 );
 
-const ExternalLinks = mongoose.model('External Links', externalLinksSchema);
+const TextData = mongoose.model('Text Data', textDataSchema);
 
-export default ExternalLinks;
+export default TextData;

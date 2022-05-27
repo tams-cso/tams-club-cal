@@ -10,7 +10,7 @@ import CreateRoundedIcon from '@mui/icons-material/CreateRounded';
 import EmojiPeopleRoundedIcon from '@mui/icons-material/EmojiPeopleRounded';
 import PublicRoundedIcon from '@mui/icons-material/PublicRounded';
 import EventAvailableRoundedIcon from '@mui/icons-material/EventAvailableRounded';
-import { getExternalLinks } from '../../api';
+import { getExternalLinks as getExternalLinks } from '../../api';
 import Popup from '../shared/popup';
 import { createPopupEvent, darkSwitchGrey } from '../../util';
 
