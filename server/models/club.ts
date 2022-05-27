@@ -27,7 +27,6 @@ const clubSchema = new mongoose.Schema({
             links: [String],
         },
     ],
-    history: [String],
 });
 clubSchema.plugin(mongoosePaginate);
 

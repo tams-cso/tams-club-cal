@@ -15,7 +15,6 @@ const volunteeringSchema = new mongoose.Schema({
         setTimes: Boolean,
         weekly: Boolean,
     },
-    history: [String],
 });
 volunteeringSchema.plugin(mongoosePaginate);
 

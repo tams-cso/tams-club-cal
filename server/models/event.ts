@@ -20,7 +20,6 @@ const eventSchema = new mongoose.Schema({
     repeatOriginId: String,
     publicEvent: Boolean,
     reservation: Boolean,
-    history: [String],
 });
 eventSchema.plugin(mongoosePaginate);
 

@@ -89,7 +89,7 @@ router.get('/:resource/:id', async (req: Request, res: Response) => {
     }
 
     // Return the history object based on the ID of the resource
-    const history = await History.find({ id: { $in: resourceObj.history } });
+    const history = await History.find({ editId: resourceObj.id });
     if (history) res.send({ history, name: resourceObj.name });
     else sendError(res, 500, 'Could not fetch history list for the given resource');
 });
