@@ -49,7 +49,6 @@ export async function addRepeatingEvents(
         repeatOriginId: originalId,
         publicEvent: originalEvent.publicEvent,
         reservation: originalEvent.reservation,
-        history: [],
     }));
     return extraRepeatingEvents;
 }
@@ -79,5 +78,4 @@ export async function updateRepeatingEvents(originalId: string, updateData: Even
             },
         }
     );
-    await Event.updateOne({ id: originalId }, { $set: { history: updateData.history } });
 }

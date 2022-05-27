@@ -170,7 +170,6 @@ router.post('/', async (req: Request, res: Response) => {
             repeatOriginId: repeats === RepeatingStatus.NONE ? null : id,
             publicEvent: req.body.publicEvent,
             reservation: req.body.reservation,
-            history: [historyId],
         });
 
         // Create repeating events if the event is repeating
@@ -247,7 +246,6 @@ router.put('/:id', async (req: Request, res: Response) => {
             repeatOriginId: req.body.repeatOriginId,
             publicEvent: req.body.publicEvent,
             reservation: req.body.reservation,
-            history: [...req.body.history, historyId],
         };
 
         // Check if any time has changed

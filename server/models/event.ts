@@ -20,12 +20,11 @@ const eventSchema = new mongoose.Schema({
     repeatOriginId: String,
     publicEvent: Boolean,
     reservation: Boolean,
-    history: [String],
 });
 eventSchema.plugin(mongoosePaginate);
 
 interface EventDocument extends Document, EventObject {}
 
-const Event = mongoose.model<EventDocument, PaginateModel<EventDocument>>('Event', eventSchema, 'activities');
+const Event = mongoose.model<EventDocument, PaginateModel<EventDocument>>('Event', eventSchema, 'events');
 
 export default Event;

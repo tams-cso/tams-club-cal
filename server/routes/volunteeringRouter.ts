@@ -42,7 +42,6 @@ router.post('/', async (req: Request, res: Response) => {
         club: req.body.club,
         description: req.body.description,
         filters: req.body.filters,
-        history: [historyId],
     });
     const newHistory = await createHistory(req, newVolunteering.toObject(), 'volunteering', id, historyId);
 
@@ -73,7 +72,6 @@ router.put('/:id', async (req: Request, res: Response) => {
                 club: req.body.club,
                 description: req.body.description,
                 filters: req.body.filters,
-                history: [...req.body.history, historyId],
             },
         }
     );

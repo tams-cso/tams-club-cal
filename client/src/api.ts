@@ -393,7 +393,7 @@ export async function getIsAdmin(token: string): Promise<ResourceFetchResponse<I
 }
 
 export async function getExternalLinks(): Promise<ResourceFetchResponse<ExternalLinks>> {
-    return getRequest('/external-links') as Promise<ResourceFetchResponse<ExternalLinks>>;
+    return getRequest('/text-data/external-links') as Promise<ResourceFetchResponse<ExternalLinks>>;
 }
 
 /**

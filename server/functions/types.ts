@@ -80,9 +80,6 @@ export interface EventObject {
 
     /** True to show on reservation calendar/check for overlaps */
     reservation: boolean;
-
-    /** Edit history list */
-    history: string[];
 }
 
 // Type for club image upload
@@ -117,9 +114,6 @@ export interface ClubObject {
 
     /** Array of committee objects */
     committees: Committee[];
-
-    /** Edit history list */
-    history: string[];
 }
 
 /** An object containing the information of an exec */
@@ -177,9 +171,6 @@ export interface VolunteeringObject {
 
     /** Object used for filtering volunteering opportunities */
     filters: Filters;
-
-    /** Edit history list */
-    history: string[];
 }
 
 /** An object with the filters for a volunteering opportunity */

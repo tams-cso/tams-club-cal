@@ -273,9 +273,6 @@ export interface HistoryData {
 
     /** Name of the editor of the resource */
     editor: string;
-
-    /** True if it was the first edit */
-    first: boolean;
 }
 
 /** The data that is passed when GET /history is called */
@@ -289,7 +286,7 @@ export interface HistoryListData {
 
 /** The data that is passed when GET /history/[resource]/[id] is called */
 export interface HistoryItemData {
-    /** List of history items to get */
+    /** List of history items */
     history: History[];
 
     /** Name of the resource */

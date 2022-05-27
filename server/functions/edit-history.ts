@@ -109,8 +109,6 @@ function getDiff(prevData: HistoryData, data: HistoryData): Field[] {
             output.push(...getDiffArray(prevData[key], value, key));
             return;
         }
-        console.log(value);
-        console.log(typeof value);
         if (typeof value === 'object' && value !== null) {
             const obj = getDiff(prevData[key], value);
             output.push(...obj.map((o) => ({ ...o, key: `${key}.${o.key}` })));

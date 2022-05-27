@@ -67,7 +67,6 @@ router.post('/', imageUpload, async (req: Request, res: Response) => {
             coverImg,
             execs,
             committees: club.committees,
-            history: [historyId],
         });
         const newHistory = await createHistory(req, newClub.toObject(), 'clubs', id, historyId, true, club);
 
@@ -116,7 +115,6 @@ router.put('/:id', imageUpload, async (req: Request, res: Response) => {
                     coverImg,
                     execs,
                     committees: club.committees,
-                    history: [...club.history, historyId],
                 },
             }
         );
