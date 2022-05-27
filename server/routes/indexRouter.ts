@@ -1,6 +1,6 @@
 import express, { Request, Response } from 'express';
 import { sendError } from '../functions/util';
-import TextData from '../models/external-links';
+import TextData from '../models/text-data';
 const router = express.Router();
 
 /**
