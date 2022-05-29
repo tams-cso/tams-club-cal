@@ -11,6 +11,8 @@ import Loading from '../../src/components/shared/loading';
 import ManageResources from '../../src/components/admin/manage-resources';
 import TitleMeta from '../../src/components/meta/title-meta';
 import RobotBlockMeta from '../../src/components/meta/robot-block-meta';
+import EditLinkList from '../../src/components/admin/edit-link-list';
+import Link from '../../src/components/shared/Link';
 
 // Server-side Rendering to check for token
 export const getServerSideProps = async (ctx: GetServerSidePropsContext) => {
@@ -61,12 +63,20 @@ const Admin = ({ authorized, error }: InferGetServerSidePropsType<typeof getServ
                     Admin Dashboard
                 </Typography>
                 <Typography variant="h3" sx={{ textAlign: 'center', marginTop: 3 }}>
+                    Edit External Links
+                </Typography>
+                <Typography sx={{ textAlign: 'center', marginTop: '0.5rem', marginBottom: '1.5rem' }}>
+                    All icon names are found from{' '}
+                    <Link href="https://fonts.google.com/icons?icon.style=Rounded" target="_blank">
+                        Google Material Symbols
+                    </Link>
+                    . Type the icon name as shown on the icon list with underscore case.
+                </Typography>
+                <EditLinkList />
+                <Typography variant="h3" sx={{ textAlign: 'center', marginTop: 3 }}>
                     Manage Resources
                 </Typography>
                 <ManageResources />
-                <Typography variant="h3" sx={{ textAlign: 'center', marginTop: 3 }}>
-                    Edit External Links
-                </Typography>
                 <Typography sx={{ textAlign: 'center', color: '#888', paddingTop: 2 }}>To be added</Typography>
                 <Typography variant="h3" sx={{ textAlign: 'center', marginTop: 3 }}>
                     Change User Permissions

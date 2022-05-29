@@ -5,12 +5,13 @@ import { useForm } from 'react-hook-form';
 import Cookies from 'universal-cookie';
 import dayjs, { Dayjs } from 'dayjs';
 import { createPopupEvent, createEvent, darkSwitch } from '../../../src/util';
-import { PopupEvent, RepeatingStatus } from '../../../src/types';
 import { getEvent, getOverlappingReservations, postEvent, putEvent } from '../../../src/api';
+import { PopupEvent, RepeatingStatus } from '../../../src/types';
 
 import Typography from '@mui/material/Typography';
 import Box from '@mui/material/Box';
 import Alert from '@mui/material/Alert';
+
 import DateTimeInput from '../../../src/components/edit/events/date-time-input';
 import ControlledCheckbox from '../../../src/components/edit/events/controlled-checkbox';
 import ControlledTextField from '../../../src/components/edit/shared/controlled-text-field';
@@ -24,10 +25,10 @@ import Spacer from '../../../src/components/shared/spacer';
 import Popup from '../../../src/components/shared/popup';
 import EditWrapper from '../../../src/components/edit/shared/edit-wrapper';
 import Link from '../../../src/components/shared/Link';
-
-import data from '../../../src/data.json';
 import TitleMeta from '../../../src/components/meta/title-meta';
 import RobotBlockMeta from '../../../src/components/meta/robot-block-meta';
+
+import data from '../../../src/data.json';
 
 type SubmitData = {
     type: string;

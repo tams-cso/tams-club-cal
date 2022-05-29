@@ -12,6 +12,7 @@ import type {
     Volunteering,
     AdminResourceList,
     User,
+    TextData,
 } from './types';
 import type { GridFilterItem } from '@mui/x-data-grid';
 import Cookies from 'universal-cookie';
@@ -85,10 +86,10 @@ async function postRequest(
 }
 
 /**
- * Performs a POST request to the given endpoint.
+ * Performs a PUT request to the given endpoint.
  * This function will wrap the data in a StatusResponse object.
  *
- * @param url API endpoint to POST
+ * @param url API endpoint to PUT
  * @param body POST body content
  * @param json Adds a JSON content type header if true
  * @param auth True if adding token
@@ -145,17 +146,17 @@ function createHeaders(auth: boolean, json: boolean): Headers {
     return headers;
 }
 
-/* ########## ACTIVITIES API ########### */
+/* ########## EVENTS API ########### */
 
 /**
- * Gets the list of public activities.
+ * Gets the list of public events.
  */
 export async function getPublicEventList(): Promise<ListFetchResponse<Event>> {
     return getRequest('/events') as Promise<ListFetchResponse<Event>>;
 }
 
 /**
- * Returns a list of public activities between two dates
+ * Returns a list of public events between two dates
  *
  * @param start Starting time to get events from
  * @param end Ending time to get events to
@@ -165,7 +166,7 @@ export async function getPublicEventListInRange(start: number, end: number): Pro
 }
 
 /**
- * Gets a specific activity by ID.
+ * Gets a specific event by ID.
  *
  * @param id ID of the event to get
  */
@@ -216,8 +217,6 @@ export async function getOverlappingReservations(
 ): Promise<ListFetchResponse<Event>> {
     return getRequest(`/events/reservations/search/${location}/${start}/${end}`) as Promise<ListFetchResponse<Event>>;
 }
-
-/* ########## EVENTS/RESERVATIONS API ########### */
 
 /* ########## CLUBS API ########### */
 
@@ -326,11 +325,30 @@ export async function getHistoryList(start?: string): Promise<ResourceFetchRespo
 
 /**
  * Gets the list of edit histories for a specific resource with the given ID.
+ * 
  * @param resource The resource to get
  * @param id The ID to get the history of
  */
 export async function getHistory(resource: string, id: string): Promise<ResourceFetchResponse<HistoryItemData>> {
     return getRequest(`/history/${resource}/${id}`) as Promise<ResourceFetchResponse<HistoryItemData>>;
+}
+
+/* ########## TEXT DATA API ########## */
+
+/**
+ * Gets a list of external links
+ */
+export async function getExternalLinks(): Promise<ListFetchResponse<ExternalLink>> {
+    return getRequest('/text-data/external-links') as Promise<ListFetchResponse<ExternalLink>>;
+}
+
+/**
+ * Updates an the list of external links
+ * 
+ * @param textData TextData object with list of external links
+ */
+export async function putExternalLinks(textData: TextData<ExternalLink[]>): Promise<StatusResponse> {
+    return putRequest('/text-data/external-links', JSON.stringify(textData));
 }
 
 /* ########## MISC API ########### */
@@ -388,10 +406,6 @@ export type IsAdmin = { admin: boolean };
  */
 export async function getIsAdmin(token: string): Promise<ResourceFetchResponse<IsAdmin>> {
     return getRequest(`/auth/admin/${token}`) as Promise<ResourceFetchResponse<IsAdmin>>;
-}
-
-export async function getExternalLinks(): Promise<ListFetchResponse<ExternalLink>> {
-    return getRequest('/text-data/external-links') as Promise<ListFetchResponse<ExternalLink>>;
 }
 
 /**

@@ -10,6 +10,8 @@ import type {
     Exec,
     Committee,
     ClubImageBlobs,
+    ExternalLink,
+    TextData,
 } from './types';
 import { RepeatingStatus } from './types';
 import type { Theme } from '@mui/material';
@@ -474,4 +476,14 @@ export function createEvent(
         reservation,
         history,
     };
+}
+
+/** Creates a TextData object */
+export function createTextData<T>(type: string = '', data: T): TextData<T> {
+    return { type, data };
+}
+
+/** Creates an ExternalLink object */
+export function createExternalLink(name: string = '', url: string = '', icon: string = ''): ExternalLink {
+    return { name, url, icon };
 }

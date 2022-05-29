@@ -373,6 +373,15 @@ export interface User {
     email: string;
 }
 
+/** Wrapper interface for any text data, such as external-links. This will mostly be from the admin dashboard */
+export interface TextData<T> {
+    /** Type value of the text data (eg. external-links) */
+    type: string;
+
+    /** Data to store */
+    data: T;
+}
+
 /** List of external links for the site */
 export interface ExternalLink {
     /** Display name of the external link */
