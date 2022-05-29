@@ -119,6 +119,65 @@ Most of the standard JS formatting will be taken care of by the extension (such 
 - All functions outside of React components **must** have TSDoc written, describing in detail what the function does, its parameters, and the return methods. See the [TSDoc website](https://tsdoc.org/) for more information. A great example of this is the [Paragraph component](https://github.com/MichaelZhao21/tams-club-cal/blob/master/client/src/components/shared/paragraph.tsx), which has a great block comment describing the function, as well as an interface with comments describing the props that are passed in
 - As shown in the point above, [Interfaces](https://www.typescriptlang.org/docs/handbook/interfaces.html) are used to describe the `props` object that can be passed into each React component. Since documentation is generated from these comments and IntelliSense uses these comments for coding hints, it is **imperative** you have well-written comments for all components!
 
+**Imports** should be grouped together in the following order:
+
+1. At the top, you should `import React from 'react'`, along with all other **function** imports
+2. In the second group, put all Material UI components -- this can optionally be combined with **group 3** if there are not many components
+3. In the third group, all **components** should be imported
+4. In the fourth group, JSON and image file imports -- this can be optionally combined with **group 3** if there are not many links
+
+Note that all external libraries should be imported before local libraries (see the first group in the example below).
+
+See the example below from the [EditEvents component](https://github.com/MichaelZhao21/tams-club-cal/blob/master/client/pages/edit/events/%5B%5B...id%5D%5D.tsx):
+
+```js
+import React, { useEffect, useState } from 'react';
+import { useRouter } from 'next/router';
+import { GetServerSidePropsContext, InferGetServerSidePropsType } from 'next';
+import { useForm } from 'react-hook-form';
+import Cookies from 'universal-cookie';
+import dayjs, { Dayjs } from 'dayjs';
+import { createPopupEvent, createEvent, darkSwitch } from '../../../src/util';
+import { getEvent, getOverlappingReservations, postEvent, putEvent } from '../../../src/api';
+import type { PopupEvent, RepeatingStatus } from '../../../src/types';
+
+import Typography from '@mui/material/Typography';
+import Box from '@mui/material/Box';
+import Alert from '@mui/material/Alert';
+
+import DateTimeInput from '../../../src/components/edit/events/date-time-input';
+import ControlledCheckbox from '../../../src/components/edit/events/controlled-checkbox';
+import ControlledTextField from '../../../src/components/edit/shared/controlled-text-field';
+import UploadBackdrop from '../../../src/components/edit/shared/upload-backdrop';
+import TwoButtonBox from '../../../src/components/shared/two-button-box';
+import LocationSelect from '../../../src/components/edit/events/location-select';
+import DateInput from '../../../src/components/edit/events/date-input';
+import AddButton from '../../../src/components/shared/add-button';
+import FormWrapper from '../../../src/components/edit/shared/form-wrapper';
+import Spacer from '../../../src/components/shared/spacer';
+import Popup from '../../../src/components/shared/popup';
+import EditWrapper from '../../../src/components/edit/shared/edit-wrapper';
+import Link from '../../../src/components/shared/Link';
+import TitleMeta from '../../../src/components/meta/title-meta';
+import RobotBlockMeta from '../../../src/components/meta/robot-block-meta';
+
+import data from '../../../src/data.json';
+```
+
+Special note for **Material UI Component Imports**: Instead of importing from the entire `@mui/material` library, it is better practice to import a specific subpackage within that library.
+
+Instead of:
+
+```js
+import { [component] } from '@mui/material';
+```
+
+**Do this**:
+
+```js
+import [component] from '@mui/material/[component]'; 
+```
+
 ### CSS Formatting
 
 Well, this isn't the CSS you might be used to, but CSS-in-JS is a *LOT* easier, in my opinion. I won't explain it here, but the [Material UI documentation](https://mui.com/system/the-sx-prop/) has a great explanation. Essentially, we embed the CSS in the JSX code as an object. All CSS properties are therefore keys, and their string values are the property values. In this way, we simply need to follow the formatting rules for JS!
