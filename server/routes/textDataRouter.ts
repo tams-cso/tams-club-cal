@@ -8,8 +8,7 @@ const router = express.Router();
  *
  * Gets the list of external links
  */
-router.get('/text-data/external-links', async (req: Request, res: Response) => {
-    // TODO: Remove this from the index router and put it into its own router file
+router.get('/external-links', async (req: Request, res: Response) => {
     try {
         const dataRes = await TextData.findOne({ type: 'external-links' });
         res.send(dataRes.data);
@@ -24,7 +23,7 @@ router.get('/text-data/external-links', async (req: Request, res: Response) => {
  *
  * Updates the list of external links with new data
  */
-router.put('/text-data/external-links', async (req: Request, res: Response) => {
+router.put('/external-links', async (req: Request, res: Response) => {
     try {
         const linkRes = await TextData.updateOne({ id: 1 }, JSON.parse(req.body), { upsert: true });
         if (linkRes.acknowledged) res.status(204);

@@ -22,6 +22,8 @@ import TitleMeta from '../../src/components/meta/title-meta';
 
 // Server-side Rendering to check for token and get data
 export const getServerSideProps = async (ctx: GetServerSidePropsContext) => {
+    // TODO: Remove nested if statements by replacing it with if-false-return structure
+
     // Get the token from cookies
     const token = ctx.req.cookies.token;
     if (token !== undefined) {

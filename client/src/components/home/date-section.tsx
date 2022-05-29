@@ -4,13 +4,15 @@ import { darkSwitch, formatTime } from '../../util';
 
 import Typography from '@mui/material/Typography';
 
+interface DateSectionProps {
+    /** Starting time of the first event of the day */
+    time: number;
+}
+
 /**
- * Displays a date heading, in the format dddd M/D/YYYY
- *
- * @param {object} props React props object
- * @param {string} props.time Starting time of the first event of the day
+ * Displays a date heading, in the format dddd M/D/YYYY.
  */
-const DateSection = (props) => {
+const DateSection = (props: DateSectionProps) => {
     return (
         <Typography
             variant="h6"

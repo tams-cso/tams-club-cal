@@ -20,7 +20,7 @@ import volunteeringRouter from './routes/volunteeringRouter';
 import historyRouter from './routes/historyRouter';
 import feedbackRouter from './routes/feedbackRouter';
 import adminRouter from './routes/adminRouter';
-import indexRouter from './routes/indexRouter';
+import textDataRouter from './routes/textDataRouter';
 
 // Check for the correct environmental variables
 if (process.env.NODE_ENV !== 'production') checkEnv();
@@ -83,7 +83,7 @@ app.use('/volunteering', volunteeringRouter);
 app.use('/history', historyRouter);
 app.use('/feedback', feedbackRouter);
 app.use('/admin', adminRouter);
-app.use('/', indexRouter);
+app.use('/text-data', textDataRouter);
 
 // Start express server
 app.listen(process.env.PORT || 5000, () => console.log(`Listening on port ${process.env.PORT || 5000}`));
