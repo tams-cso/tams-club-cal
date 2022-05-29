@@ -17,6 +17,7 @@ import TitleMeta from '../../src/components/meta/title-meta';
 // Server-side Rendering
 export const getServerSideProps = async () => {
     const clubRes = await getClubList();
+    console.log(clubRes);
     return {
         props: { clubList: clubRes.data, error: clubRes.status !== 200 },
     };

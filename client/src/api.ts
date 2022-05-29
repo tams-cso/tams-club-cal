@@ -2,7 +2,7 @@ import type {
     Event,
     Club,
     ClubImageBlobs,
-    ExternalLinks,
+    ExternalLink,
     Feedback,
     FetchResponse,
     StatusResponse,
@@ -11,6 +11,8 @@ import type {
     Resource,
     Volunteering,
     AdminResourceList,
+    User,
+    TextData,
 } from './types';
 import type { GridFilterItem } from '@mui/x-data-grid';
 import Cookies from 'universal-cookie';
@@ -27,13 +29,6 @@ const CDN_URL =
         ? 'https://staging.cdn.tams.club'
         : 'https://cdn.tams.club';
 
-interface UserFetchResponse extends FetchResponse {
-    data: {
-        name: string;
-        email: string;
-    };
-}
-
 interface ListFetchResponse<T> extends FetchResponse {
     data: T[];
 }
@@ -44,6 +39,7 @@ interface ResourceFetchResponse<T extends object> extends FetchResponse {
 
 /**
  * Performs a GET request to the given endpoint.
+ * This function will wrap the data in a FetchResponse object.
  *
  * @param url API endpoint to GET
  * @param auth True if adding token
@@ -61,6 +57,7 @@ async function getRequest(url: string, auth: boolean = false): Promise<FetchResp
 
 /**
  * Performs a POST request to the given endpoint.
+ * This function will wrap the data in a StatusResponse object.
  *
  * @param url API endpoint to POST
  * @param body POST body content
@@ -89,9 +86,10 @@ async function postRequest(
 }
 
 /**
- * Performs a POST request to the given endpoint.
+ * Performs a PUT request to the given endpoint.
+ * This function will wrap the data in a StatusResponse object.
  *
- * @param url API endpoint to POST
+ * @param url API endpoint to PUT
  * @param body POST body content
  * @param json Adds a JSON content type header if true
  * @param auth True if adding token
@@ -115,6 +113,7 @@ async function putRequest(
 
 /**
  * Performs a DELETE request to the given endpoint.
+ * This function will wrap the data in a FetchResponse object.
  *
  * @param url API endpoint to GET
  * @param auth True if adding token
@@ -147,17 +146,17 @@ function createHeaders(auth: boolean, json: boolean): Headers {
     return headers;
 }
 
-/* ########## ACTIVITIES API ########### */
+/* ########## EVENTS API ########### */
 
 /**
- * Gets the list of public activities.
+ * Gets the list of public events.
  */
 export async function getPublicEventList(): Promise<ListFetchResponse<Event>> {
     return getRequest('/events') as Promise<ListFetchResponse<Event>>;
 }
 
 /**
- * Returns a list of public activities between two dates
+ * Returns a list of public events between two dates
  *
  * @param start Starting time to get events from
  * @param end Ending time to get events to
@@ -167,7 +166,7 @@ export async function getPublicEventListInRange(start: number, end: number): Pro
 }
 
 /**
- * Gets a specific activity by ID.
+ * Gets a specific event by ID.
  *
  * @param id ID of the event to get
  */
@@ -218,8 +217,6 @@ export async function getOverlappingReservations(
 ): Promise<ListFetchResponse<Event>> {
     return getRequest(`/events/reservations/search/${location}/${start}/${end}`) as Promise<ListFetchResponse<Event>>;
 }
-
-/* ########## EVENTS/RESERVATIONS API ########### */
 
 /* ########## CLUBS API ########### */
 
@@ -328,11 +325,30 @@ export async function getHistoryList(start?: string): Promise<ResourceFetchRespo
 
 /**
  * Gets the list of edit histories for a specific resource with the given ID.
+ * 
  * @param resource The resource to get
  * @param id The ID to get the history of
  */
 export async function getHistory(resource: string, id: string): Promise<ResourceFetchResponse<HistoryItemData>> {
     return getRequest(`/history/${resource}/${id}`) as Promise<ResourceFetchResponse<HistoryItemData>>;
+}
+
+/* ########## TEXT DATA API ########## */
+
+/**
+ * Gets a list of external links
+ */
+export async function getExternalLinks(): Promise<ListFetchResponse<ExternalLink>> {
+    return getRequest('/text-data/external-links') as Promise<ListFetchResponse<ExternalLink>>;
+}
+
+/**
+ * Updates an the list of external links
+ * 
+ * @param textData TextData object with list of external links
+ */
+export async function putExternalLinks(textData: TextData<ExternalLink[]>): Promise<StatusResponse> {
+    return putRequest('/text-data/external-links', JSON.stringify(textData));
 }
 
 /* ########## MISC API ########### */
@@ -369,16 +385,16 @@ export async function getLoggedIn(token: string): Promise<ResourceFetchResponse<
  * Gets the name and email of the logged in user
  * @param token User auth token
  */
-export async function getUserInfo(token: string): Promise<UserFetchResponse> {
-    return getRequest(`/auth/user/${token}`) as Promise<UserFetchResponse>;
+export async function getUserInfo(token: string): Promise<ResourceFetchResponse<User>> {
+    return getRequest(`/auth/user/${token}`) as Promise<ResourceFetchResponse<User>>;
 }
 
 /**
  * Gets the name of the user with the provided ID
  * @param id User ID
  */
-export async function getUserById(id: string): Promise<UserFetchResponse> {
-    return getRequest(`/auth/user/id/${id}`) as Promise<UserFetchResponse>;
+export async function getUserById(id: string): Promise<ResourceFetchResponse<User>> {
+    return getRequest(`/auth/user/id/${id}`) as Promise<ResourceFetchResponse<User>>;
 }
 
 // TODO: Should we change the field to "isAdmin"?
@@ -390,10 +406,6 @@ export type IsAdmin = { admin: boolean };
  */
 export async function getIsAdmin(token: string): Promise<ResourceFetchResponse<IsAdmin>> {
     return getRequest(`/auth/admin/${token}`) as Promise<ResourceFetchResponse<IsAdmin>>;
-}
-
-export async function getExternalLinks(): Promise<ResourceFetchResponse<ExternalLinks>> {
-    return getRequest('/text-data/external-links') as Promise<ResourceFetchResponse<ExternalLinks>>;
 }
 
 /**

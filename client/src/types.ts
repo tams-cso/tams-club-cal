@@ -364,22 +364,34 @@ export interface PopupEvent {
     time: number;
 }
 
+/** Logged in user data */
+export interface User {
+    /** Display name of the user */
+    name: string;
+
+    /** Email of the user */
+    email: string;
+}
+
+/** Wrapper interface for any text data, such as external-links. This will mostly be from the admin dashboard */
+export interface TextData<T> {
+    /** Type value of the text data (eg. external-links) */
+    type: string;
+
+    /** Data to store */
+    data: T;
+}
+
 /** List of external links for the site */
-export interface ExternalLinks {
-    /** Exam calendar current link */
-    examCalendar: string;
+export interface ExternalLink {
+    /** Display name of the external link */
+    name: string;
 
-    /** Link for current academic guide */
-    academicsGuide: string;
+    /** URL it links to */
+    url: string;
 
-    /** Club leader resources link */
-    clubLeaderResources: string;
-
-    /** tamswiki.org link */
-    tamsWiki: string;
-
-    /** Add Google Calendar link for the current app */
-    addCalendar: string;
+    /** ID of the icon to display; see https://fonts.google.com/icons?icon.style=Rounded */
+    icon: string;
 }
 
 /** List of resources returned by mongoose-paginate-v2 from the backend */
