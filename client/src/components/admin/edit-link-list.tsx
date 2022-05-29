@@ -111,7 +111,7 @@ const EditLinkList = () => {
             <FormWrapper onSubmit={handleSubmit(onSubmit)}>
                 <List>{listItems}</List>
                 <Button color="secondary" onClick={addItem} sx={{ margin: '6px auto 24px', display: 'block' }}>
-                    Add Edit Link
+                    Add External Link
                 </Button>
                 <TwoButtonBox success="Submit" onCancel={reset} submit right />
             </FormWrapper>
