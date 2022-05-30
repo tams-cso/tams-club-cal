@@ -3,7 +3,7 @@ import { useRouter } from 'next/router';
 import Cookies from 'universal-cookie';
 import type { PopupEvent } from '../../../types';
 import { createConnectionErrorPopup, darkSwitch, darkSwitchGrey } from '../../../util';
-import { getIp, getLoggedIn, getUserInfo } from '../../../api';
+import { getIp, getAuthInfo, getUserInfo } from '../../../api';
 
 import Button from '@mui/material/Button';
 import Box from '@mui/material/Box';
@@ -29,7 +29,7 @@ const EditLogin = () => {
 
             // Check if valid token and compare with database
             if (token !== undefined) {
-                const res = await getLoggedIn(token);
+                const res = await getAuthInfo(token);
                 if (res.status === 200 && res.data.loggedIn) {
                     // If all is good, display the logged in prompt!
                     // However, if the username cannot be gotten, also show an error

@@ -105,7 +105,7 @@ const EditLinkList = () => {
     return linkList === null ? (
         <Loading />
     ) : (
-        <Paper sx={{ paddingBottom: 3, marginBottom: 4 }}>
+        <Paper sx={{ marginBottom: 4 }}>
             <UploadBackdrop open={backdrop} />
             <Popup event={popupEvent} />
             <FormWrapper onSubmit={handleSubmit(onSubmit)}>

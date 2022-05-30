@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { useRouter } from 'next/router';
 import { GetServerSidePropsContext, InferGetServerSidePropsType } from 'next';
 import Cookies from 'universal-cookie';
-import { getBackendUrl, getLoggedIn } from '../../src/api';
+import { getBackendUrl, getAuthInfo } from '../../src/api';
 import { darkSwitchGrey } from '../../src/util';
 
 import Card from '@mui/material/Card';
@@ -21,7 +21,7 @@ export const getServerSideProps = async (ctx: GetServerSidePropsContext) => {
     if (token === undefined) return { props: { authorized: false } };
 
     // Check if valid token and compare with database
-    const res = await getLoggedIn(token);
+    const res = await getAuthInfo(token);
     if (res.status === 200 && res.data.loggedIn) {
         return { props: { authorized: true } };
     } else {

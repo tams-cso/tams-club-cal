@@ -9,6 +9,13 @@ export enum RepeatingStatus {
     MONTHLY,
 }
 
+/** Access levels for users */
+export enum AccessLevel {
+    STANDARD = 0,
+    CLUBS,
+    ADMIN,
+}
+
 /** An object containing the information for events */
 export interface Event {
     /** The unique UUIDv4 for the event */
@@ -373,6 +380,23 @@ export interface User {
     email: string;
 }
 
+export interface AdminUser extends User {
+    /** ID of the user */
+    id: string;
+
+    /** Access level of the user */
+    level: AccessLevel;
+}
+
+/** Object storing whether a user is logged in and their access level */
+export interface AuthInfo {
+    /** True if token is valid and stored in backend */
+    loggedIn: boolean;
+
+    /** Access level of the user; not defined if loggedIn is false */
+    level: AccessLevel;
+}
+
 /** Wrapper interface for any text data, such as external-links. This will mostly be from the admin dashboard */
 export interface TextData<T> {
     /** Type value of the text data (eg. external-links) */
@@ -408,3 +432,15 @@ export interface AdminResourceList {
     nextPage: number;
 }
 // TODO: comment this using https://www.npmjs.com/package/mongoose-paginate-v2
+
+/** Object that stores data for resource to delete */
+export interface DeleteObject {
+    /** Resource type to delete */
+    resource: Resource;
+
+    /** ID of resource to delete */
+    id: string;
+
+    /** Name of resource to delete */
+    name: string;
+}

@@ -1,7 +1,8 @@
 import React, { useEffect } from 'react';
 import { useRouter } from 'next/router';
 import { GetServerSidePropsContext, InferGetServerSidePropsType } from 'next';
-import { getIsAdmin, getLoggedIn } from '../../src/api';
+import { getAuthInfo } from '../../src/api';
+import { AccessLevel } from '../../src/types';
 
 import Typography from '@mui/material/Typography';
 import Container from '@mui/material/Container';
@@ -13,6 +14,7 @@ import TitleMeta from '../../src/components/meta/title-meta';
 import RobotBlockMeta from '../../src/components/meta/robot-block-meta';
 import EditLinkList from '../../src/components/admin/edit-link-list';
 import Link from '../../src/components/shared/Link';
+import ChangeUserPermissions from '../../src/components/admin/change-user-permissions';
 
 // Server-side Rendering to check for token
 export const getServerSideProps = async (ctx: GetServerSidePropsContext) => {
@@ -21,12 +23,11 @@ export const getServerSideProps = async (ctx: GetServerSidePropsContext) => {
     if (token === undefined) return { props: { authorized: false, error: false } };
 
     // Check if valid token and compare with database
-    const res = await getLoggedIn(token);
-    const adminRes = await getIsAdmin(token);
-    if (res.status !== 200 || adminRes.status !== 200) return { props: { authorized: false, error: true } };
+    const res = await getAuthInfo(token);
+    if (res.status !== 200) return { props: { authorized: false, error: true } };
 
     // If there is no issue with the authorization, authorize user!
-    return { props: { authorized: res.data.loggedIn && adminRes.data.admin, error: false } };
+    return { props: { authorized: res.data.loggedIn && res.data.level === AccessLevel.ADMIN, error: false } };
 };
 
 /**
@@ -77,11 +78,10 @@ const Admin = ({ authorized, error }: InferGetServerSidePropsType<typeof getServ
                     Manage Resources
                 </Typography>
                 <ManageResources />
-                <Typography sx={{ textAlign: 'center', color: '#888', paddingTop: 2 }}>To be added</Typography>
                 <Typography variant="h3" sx={{ textAlign: 'center', marginTop: 3 }}>
                     Change User Permissions
                 </Typography>
-                <Typography sx={{ textAlign: 'center', color: '#888', paddingTop: 2 }}>To be added</Typography>
+                <ChangeUserPermissions />
                 <Typography variant="h3" sx={{ textAlign: 'center', marginTop: 3 }}>
                     Feedback
                 </Typography>

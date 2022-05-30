@@ -2,7 +2,8 @@ import React, { useEffect } from 'react';
 import { useRouter } from 'next/router';
 import { GetServerSidePropsContext, InferGetServerSidePropsType } from 'next';
 import Cookies from 'universal-cookie';
-import { getLoggedIn, getUserInfo, getIsAdmin } from '../../src/api';
+import { getAuthInfo, getUserInfo } from '../../src/api';
+import { AccessLevel } from '../../src/types';
 
 import Card from '@mui/material/Card';
 import CardContent from '@mui/material/CardContent';
@@ -22,34 +23,37 @@ import TitleMeta from '../../src/components/meta/title-meta';
 
 // Server-side Rendering to check for token and get data
 export const getServerSideProps = async (ctx: GetServerSidePropsContext) => {
-    // TODO: Remove nested if statements by replacing it with if-false-return structure
+    // Error object to return if outside conditions fails
+    const error = { props: { authorized: false, isAdmin: false, info: null, error: false } };
 
     // Get the token from cookies
     const token = ctx.req.cookies.token;
-    if (token !== undefined) {
-        // Check if valid token and compare with database
-        const res = await getLoggedIn(token);
-        if (res.status === 200 && res.data.loggedIn) {
-            // Token is valid, get user info
-            const userRes = await getUserInfo(token);
-            if (userRes.status === 200) {
-                // Check to see if user is an admin and show button if so
-                const adminRes = await getIsAdmin(token);
-                return {
-                    props: {
-                        authorized: true,
-                        isAdmin: adminRes.data && adminRes.data.admin,
-                        info: userRes.data,
-                        error: true,
-                    },
-                };
-            }
-            // Show error if user info cannot be gotten
-            return { props: { authorized: true, isAdmin: false, info: null, error: false } };
-        }
+    if (!token) {
+        return error;
     }
-    // Return not authorized if token is missing/bad
-    return { props: { authorized: false, isAdmin: false, info: null, error: false } };
+
+    // Check if valid token and compare with database
+    const res = await getAuthInfo(token);
+    if (res.status !== 200 || !res.data.loggedIn) {
+        return error;
+    }
+
+    // Token is valid, get user info
+    const userRes = await getUserInfo(token);
+    if (userRes.status !== 200) {
+        return { props: { authorized: true, isAdmin: false, info: null, error: false } };
+    }
+
+    // Check to see if user is an admin and show button if so
+    const authRes = await getAuthInfo(token);
+    return {
+        props: {
+            authorized: true,
+            isAdmin: authRes.data && authRes.data.level === AccessLevel.ADMIN,
+            info: userRes.data,
+            error: false,
+        },
+    };
 };
 
 /**

@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import Cookies from 'universal-cookie';
 import { deleteAdminResource, getAdminResources } from '../../api';
-import { Resource, PopupEvent } from '../../types';
+import type { Resource, PopupEvent, DeleteObject } from '../../types';
 import { createPopupEvent, formatDate } from '../../util';
 
 import Button from '@mui/material/Button';
@@ -26,20 +26,10 @@ import {
     GridFilterModel,
     GridSortModel,
 } from '@mui/x-data-grid';
-import Popup from '../shared/popup';
 import { capitalize } from '@mui/material';
+
+import Popup from '../shared/popup';
 import UploadBackdrop from '../edit/shared/upload-backdrop';
-
-interface DeleteObject {
-    /** Resource type to delete */
-    resource: Resource;
-
-    /** ID of resource to delete */
-    id: string;
-
-    /** Name of resource to delete */
-    name: string;
-}
 
 const ManageResources = () => {
     const [dataToDelete, setDataToDelete] = useState<DeleteObject>({ resource: 'events', id: '', name: '' });
@@ -132,7 +122,6 @@ const ManageResources = () => {
 
     // When filtering changes
     const onFilterChange = React.useCallback((filterModel: GridFilterModel) => {
-        console.log(filterModel.items[0]);
         setFilterValue(filterModel.items[0]);
     }, []);
 
@@ -142,7 +131,7 @@ const ManageResources = () => {
         setDeletePrompt(true);
     };
 
-    // This function will trigger when the user selects an element
+    // This function will trigger when the user selects a new resource
     const handleResourceChange = (event: SelectChangeEvent) => {
         setResource(event.target.value as Resource);
     };
@@ -191,6 +180,7 @@ const ManageResources = () => {
         })();
     }, [resource, sortModel, filterValue]);
 
+    // Whenever the user scrolls to another page or changes the size of pages, load more content
     useEffect(() => {
         if (rowCount === 0) return;
 

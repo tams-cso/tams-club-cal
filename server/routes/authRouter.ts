@@ -1,6 +1,6 @@
 import express from 'express';
 import type { Request, Response } from 'express';
-import { verifyToken, upsertUser, isAdmin } from '../functions/auth';
+import { verifyToken, upsertUser } from '../functions/auth';
 import { getIp, sendError } from '../functions/util';
 import User from '../models/user';
 
@@ -17,54 +17,16 @@ router.get('/ip', (req: Request, res: Response) => {
 });
 
 /**
- * GET /auth/user/<token>
- *
- * Sends the user email and name to the client given the token.
- * Used to display the logged in user on the edit pages.
- */
-router.get('/user/:token', async (req: Request, res: Response) => {
-    if (!req.params.token) {
-        sendError(res, 400, 'Missing token parameter');
-        return;
-    }
-    const user = await User.findOne({ token: req.params.token }).exec();
-    if (user) res.send({ email: user.email, name: user.name });
-    else sendError(res, 400, 'User not found in database');
-});
-
-/**
- * GET /auth/user/id/<id>
- *
- * Sends the user name given their ID.
- * Used to find the user from the ID when showing edit history.
- */
-router.get('/user/id/:id', async (req: Request, res: Response) => {
-    const user = await User.findOne({ id: req.params.id });
-    if (user) res.send({ name: user.name });
-    else sendError(res, 400, 'User not found in database with that ID');
-});
-
-/**
  * GET /auth/<token>
  *
  * Given a token in the body request, determine if that user is logged in.
  * If invalid token or missing token, return false.
+ * This function will also return the user's level if they are logged in.
  */
 router.get('/:token', async (req: Request, res: Response) => {
     const user = await User.findOne({ token: req.params.token }).exec();
-    if (user) res.send({ loggedIn: true });
-    else res.send({ loggedIn: false });
-});
-
-/**
- * GET /auth/admin/<token>
- *
- * Given a token in the body request, determine if that user is logged in.
- * If invalid token or missing token, return false.
- */
-router.get('/admin/:token', async (req: Request, res: Response) => {
-    if (await isAdmin(req.params.token)) res.send({ admin: true });
-    else res.send({ admin: false });
+    if (user) res.send({ loggedIn: true, level: user.level });
+    else res.send({ loggedIn: false, level: null });
 });
 
 /**

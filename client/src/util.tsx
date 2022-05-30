@@ -12,6 +12,7 @@ import type {
     ClubImageBlobs,
     ExternalLink,
     TextData,
+    AccessLevel,
 } from './types';
 import { RepeatingStatus } from './types';
 import type { Theme } from '@mui/material';
@@ -89,6 +90,15 @@ export function redirect(path: string): void {
 export function processLinkObjectList(list: LinkInputData[]): string[] {
     if (!list) return [];
     return list.filter((l) => !l.deleted && l.value.trim() !== '').map((l) => l.value);
+}
+
+/**
+ * Converts the access level enum to a string
+ * @param level Access level
+ */
+export function accessLevelToString(level: AccessLevel): string {
+    const levelMap = ['Standard', 'Clubs', 'Admin'];
+    return levelMap[level];
 }
 
 // ================== CSS AND MUI FUNCTIONS =================== //
