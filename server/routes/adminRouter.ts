@@ -1,14 +1,14 @@
 import express from 'express';
 import type { Request, Response } from 'express';
 import { sendError } from '../functions/util';
-import { validateHeader } from '../functions/auth';
+import { isAuthenticated, isValidToken } from '../functions/auth';
 import { deleteClubImages } from '../functions/images';
 import Event from '../models/event';
 import Club from '../models/club';
 import Volunteering from '../models/volunteering';
 import History from '../models/history';
 import { deleteCalendarEvent } from '../functions/gcal';
-import { EventObject, RepeatingStatus } from '../functions/types';
+import { AccessLevel, EventObject, RepeatingStatus } from '../functions/types';
 
 const router = express.Router();
 
@@ -65,18 +65,8 @@ router.get('/resources/:resource', async (req: Request, res: Response) => {
 router.delete('/resources/:resource/:id', async (req: Request, res: Response) => {
     // TODO: This is honestly also a spaghetti pile but idk if it can actually be cleaned up LMAO
 
-    // Check to see if header is there
-    if (!req.headers.authorization || !req.headers.authorization.startsWith('Bearer ')) {
-        sendError(res, 401, 'Missing authorization token');
-        return;
-    }
-
-    // Make sure the token is valid
-    const validHeader = await validateHeader(req.headers.authorization.substring(7));
-    if (!validHeader) {
-        sendError(res, 401, 'Invalid authorization token');
-        return;
-    }
+    // Check if user is authenticated
+    if (!isAuthenticated(req, res, AccessLevel.ADMIN)) return;
 
     // If everything is good, delete the resource
     try {

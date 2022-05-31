@@ -7,6 +7,13 @@ export enum RepeatingStatus {
     MONTHLY,
 }
 
+/** Access levels for users */
+export enum AccessLevel {
+    STANDARD = 0,
+    CLUBS,
+    ADMIN,
+}
+
 /**
  * An object containing the information for an editor.
  * Either the id or ip will contain data, but the id will take precedence.
@@ -212,4 +219,25 @@ export interface HistoryObject {
 
     /** List of fields that were edited */
     fields: Field[];
+}
+
+/** An object containing the information for a single user */
+export interface UserObject {
+    /** ID of the user */
+    id: string;
+
+    /** Google Auth unique ID for the user */
+    googleId: string;
+
+    /** Email address of the user */
+    email: string;
+
+    /** Display name of the user */
+    name: string;
+
+    /** Authentication token for this app */
+    token: string;
+
+    /** Access level of the user */
+    level: AccessLevel;
 }

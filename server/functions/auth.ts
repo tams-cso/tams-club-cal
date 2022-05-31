@@ -1,10 +1,12 @@
 import { OAuth2Client, TokenPayload } from 'google-auth-library';
+import type { Request, Response } from 'express';
 import crypto from 'crypto';
 import User from '../models/user';
-import { newId } from './util';
+import { newId, sendError } from './util';
+import { AccessLevel } from './types';
 
 // Instantiate Google Auth client
-const client = new OAuth2Client(process.env.G_CLIENT_ID);
+const client = new OAuth2Client(process.env.G_CLIENT_ID, process.env.G_CLIENT_SECRET);
 
 /**
  * Checks for the Cross-Site Request Forgery (CSRF) token.
@@ -55,15 +57,15 @@ export async function upsertUser(payload: TokenPayload): Promise<string> {
     const token = crypto.randomBytes(32).toString('hex');
     const id = newId();
     const res = await User.updateOne(
-        { sub: payload.sub },
+        { googleId: payload.sub },
         {
             $set: {
-                sub: payload.sub,
+                googleId: payload.sub,
                 email: payload.email,
                 name: payload.name,
                 token,
             },
-            $setOnInsert: { id, admin: false },
+            $setOnInsert: { id, level: AccessLevel.STANDARD },
         },
         { upsert: true }
     );
@@ -72,23 +74,37 @@ export async function upsertUser(payload: TokenPayload): Promise<string> {
 }
 
 /**
- * Checks to see if a user is an admin, given their login token
+ * Checks to see if there is a user with the given token. This function
+ * will also check for a minimum user level if specified
  *
- * @param token The string token of the user
- */
-export async function isAdmin(token: string): Promise<boolean> {
-    const user = await User.findOne({ token }).exec();
-    return user.admin;
-}
-
-/**
- * Checks to see if there is a user with the given token
- * 
  * @param token Authorization token for the given user
+ * @param level Minimum user level to check for
  * @returns True if the user exists
  */
-export async function validateHeader(token: string): Promise<boolean> {
+export async function isValidToken(token: string, level: AccessLevel = AccessLevel.STANDARD): Promise<boolean> {
     const user = await User.findOne({ token }).exec();
-    if (user !== null && user.admin) return true;
+    if (user !== null && user.level >= level) return true;
     return false;
+}
+
+export async function isAuthenticated(
+    req: Request,
+    res: Response,
+    level: AccessLevel = AccessLevel.STANDARD
+): Promise<boolean> {
+    // Check to see if header is there
+    if (!req.headers.authorization || !req.headers.authorization.startsWith('Bearer ')) {
+        sendError(res, 401, 'Missing authorization token');
+        return false;
+    }
+
+    // Make sure the token is valid
+    const validHeader = await isValidToken(req.headers.authorization.substring(7), level);
+    if (!validHeader) {
+        sendError(res, 401, 'Invalid authorization token');
+        return false;
+    }
+
+    // Return true if authenticated
+    return true;
 }

@@ -13,6 +13,8 @@ import type {
     AdminResourceList,
     User,
     TextData,
+    AuthInfo,
+    AccessLevel,
 } from './types';
 import type { GridFilterItem } from '@mui/x-data-grid';
 import Cookies from 'universal-cookie';
@@ -63,13 +65,15 @@ async function getRequest(url: string, auth: boolean = false): Promise<FetchResp
  * @param body POST body content
  * @param json Adds a JSON content type header if true
  * @param auth True if adding token
+ * @param fetchRes True if the endpoint returns data
  */
 async function postRequest(
     url: string,
     body: BodyInit,
     json: boolean = true,
-    auth: boolean = true
-): Promise<StatusResponse> {
+    auth: boolean = true,
+    fetchRes: boolean = false
+): Promise<StatusResponse | FetchResponse> {
     try {
         const options: RequestInit = {
             method: 'POST',
@@ -78,10 +82,12 @@ async function postRequest(
         };
 
         const res = await fetch(`${BACKEND_URL}${url}`, options);
-        return <StatusResponse>{ status: res.status };
+        return fetchRes
+            ? <FetchResponse>{ status: res.status, data: await res.json() }
+            : <StatusResponse>{ status: res.status };
     } catch (error) {
         console.dir(error);
-        return <StatusResponse>{ status: 404 };
+        return fetchRes ? <FetchResponse>{ status: 404, data: null } : <StatusResponse>{ status: 404 };
     }
 }
 
@@ -325,7 +331,7 @@ export async function getHistoryList(start?: string): Promise<ResourceFetchRespo
 
 /**
  * Gets the list of edit histories for a specific resource with the given ID.
- * 
+ *
  * @param resource The resource to get
  * @param id The ID to get the history of
  */
@@ -344,7 +350,7 @@ export async function getExternalLinks(): Promise<ListFetchResponse<ExternalLink
 
 /**
  * Updates an the list of external links
- * 
+ *
  * @param textData TextData object with list of external links
  */
 export async function putExternalLinks(textData: TextData<ExternalLink[]>): Promise<StatusResponse> {
@@ -371,14 +377,27 @@ export async function getIp(): Promise<ResourceFetchResponse<ipData>> {
     return getRequest('/auth/ip') as Promise<ResourceFetchResponse<ipData>>;
 }
 
-export type LoggedIn = { loggedIn: boolean };
+/**
+ * Performs a token exchange/login request after the Google auth flow returns tokens
+ * @param googleId Google ID
+ * @param accessCode Google Auth access code
+ */
+export async function postLogin(tokenId: string): Promise<FetchResponse> {
+    return postRequest(
+        '/auth/login',
+        JSON.stringify({ tokenId }),
+        true,
+        true,
+        true
+    ) as Promise<FetchResponse>;
+}
 
 /**
- * Checks if a user's token is in the database
+ * Checks if a user's token is in the database; also fetches their authentication level
  * @param token User auth token
  */
-export async function getLoggedIn(token: string): Promise<ResourceFetchResponse<LoggedIn>> {
-    return getRequest(`/auth/${token}`) as Promise<ResourceFetchResponse<LoggedIn>>;
+export async function getAuthInfo(token: string): Promise<ResourceFetchResponse<AuthInfo>> {
+    return getRequest(`/auth/${token}`) as Promise<ResourceFetchResponse<AuthInfo>>;
 }
 
 /**
@@ -386,7 +405,7 @@ export async function getLoggedIn(token: string): Promise<ResourceFetchResponse<
  * @param token User auth token
  */
 export async function getUserInfo(token: string): Promise<ResourceFetchResponse<User>> {
-    return getRequest(`/auth/user/${token}`) as Promise<ResourceFetchResponse<User>>;
+    return getRequest(`/users/${token}`) as Promise<ResourceFetchResponse<User>>;
 }
 
 /**
@@ -394,18 +413,37 @@ export async function getUserInfo(token: string): Promise<ResourceFetchResponse<
  * @param id User ID
  */
 export async function getUserById(id: string): Promise<ResourceFetchResponse<User>> {
-    return getRequest(`/auth/user/id/${id}`) as Promise<ResourceFetchResponse<User>>;
+    return getRequest(`/users/id/${id}`) as Promise<ResourceFetchResponse<User>>;
 }
 
-// TODO: Should we change the field to "isAdmin"?
-export type IsAdmin = { admin: boolean };
+/**
+ * Updates the level of a single user with the provided ID
+ * @param id User ID
+ * @param level New level of the user
+ */
+export async function putUserLevel(id: string, level: AccessLevel): Promise<StatusResponse> {
+    return putRequest(`/users/level/${id}`, JSON.stringify({ level }));
+}
 
 /**
- * Checks to see if a user is an admin or not
- * @param token User auth token
+ * Gets a list of users based on search terms
+ * @param page Page number to get
+ * @param limit Number of items per page
+ * @param sort Sorting method used
+ * @param reverse True if reverse sort
+ * @param filter Filter object
  */
-export async function getIsAdmin(token: string): Promise<ResourceFetchResponse<IsAdmin>> {
-    return getRequest(`/auth/admin/${token}`) as Promise<ResourceFetchResponse<IsAdmin>>;
+export async function getUserList(
+    page: number = 1,
+    limit: number = 10,
+    sort: string = '',
+    reverse: boolean = false,
+    filter: GridFilterItem
+): Promise<ResourceFetchResponse<AdminResourceList>> {
+    const aFilter = filter ? `&filter=${JSON.stringify(filter)}` : '';
+    return getRequest(`/users?page=${page}&limit=${limit}&sort=${sort}&reverse=${reverse}${aFilter}`) as Promise<
+        ResourceFetchResponse<AdminResourceList>
+    >;
 }
 
 /**
@@ -413,6 +451,9 @@ export async function getIsAdmin(token: string): Promise<ResourceFetchResponse<I
  * @param resource Resource type to get
  * @param page Page number to get
  * @param limit Number of items per page
+ * @param sort Sorting method used
+ * @param reverse True if reverse sort
+ * @param filter Filter object
  */
 export async function getAdminResources(
     resource: Resource,
