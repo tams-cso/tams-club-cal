@@ -141,7 +141,7 @@ const MobileMenu = (props: MobileMenuProps) => {
                         </ListItemIcon>
                         <ListItemText primary="Edit" />
                     </ListItemButton>
-                    <ListItemButton component={Link} href="/profile" onClick={toggleDrawer.bind(this, false)}>
+                    <ListItemButton component={Link} href="/profile/dashboard" onClick={toggleDrawer.bind(this, false)}>
                         <ListItemIcon>
                             <AccountCircleIcon />
                         </ListItemIcon>
