@@ -25,6 +25,7 @@ router.get('/ip', (req: Request, res: Response) => {
  */
 router.get('/:token', async (req: Request, res: Response) => {
     const user = await User.findOne({ token: req.params.token }).exec();
+    console.log(user);
     if (user) res.send({ loggedIn: true, level: user.level });
     else res.send({ loggedIn: false, level: null });
 });
@@ -36,21 +37,15 @@ router.get('/:token', async (req: Request, res: Response) => {
  * to either return an auth code or an error
  */
 router.post('/login', async (req: Request, res: Response) => {
-    let error = '';
-    // Verify credentials
-    const payload = await verifyToken(req.body['credential']);
-    if (payload !== null) {
-        // Add or check for user in database
-        const newToken = await upsertUser(payload);
-        if (newToken !== null) {
-            // Add token to redirect querystring and redirect user
-            res.redirect(`${process.env.ORIGIN}/auth?token=${newToken}`);
-            return;
-        } else error = 'newToken';
-    } else error = 'payload';
+    // Check for valid token
+    const payload = await verifyToken(req.body.tokenId);
+    if (!payload) {
+        sendError(res, 403, 'Unable to verify token');
+        return;
+    }
 
-    // Redirect to error if failed verification
-    res.redirect(`${process.env.ORIGIN}/auth?error=${error}`);
+    const token = await upsertUser(payload);
+    res.send({ token });
 });
 
 export default router;

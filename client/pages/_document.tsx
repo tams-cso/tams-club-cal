@@ -18,7 +18,6 @@ export default class MyDocument extends Document {
                     />
                     <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet" />
                     <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Rounded" rel="stylesheet" />
-                    <script src="https://accounts.google.com/gsi/client" async defer></script>
 
                     {/* Inject MUI styles first to match with the prepend: true configuration. */}
                     {(this.props as any).emotionStyleTags}

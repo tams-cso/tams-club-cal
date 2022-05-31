@@ -6,7 +6,7 @@ import { newId, sendError } from './util';
 import { AccessLevel } from './types';
 
 // Instantiate Google Auth client
-const client = new OAuth2Client(process.env.G_CLIENT_ID);
+const client = new OAuth2Client(process.env.G_CLIENT_ID, process.env.G_CLIENT_SECRET);
 
 /**
  * Checks for the Cross-Site Request Forgery (CSRF) token.
@@ -57,10 +57,10 @@ export async function upsertUser(payload: TokenPayload): Promise<string> {
     const token = crypto.randomBytes(32).toString('hex');
     const id = newId();
     const res = await User.updateOne(
-        { sub: payload.sub },
+        { googleId: payload.sub },
         {
             $set: {
-                sub: payload.sub,
+                googleId: payload.sub,
                 email: payload.email,
                 name: payload.name,
                 token,

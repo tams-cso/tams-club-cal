@@ -226,8 +226,8 @@ export interface UserObject {
     /** ID of the user */
     id: string;
 
-    /** Google Auth unique string for the user */
-    sub: string;
+    /** Google Auth unique ID for the user */
+    googleId: string;
 
     /** Email address of the user */
     email: string;

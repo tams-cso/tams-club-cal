@@ -6,7 +6,7 @@ import type { UserObject } from '../functions/types';
 // User levels: 0 - standard, 1 - clubs, 2 - admin
 const userSchema = new mongoose.Schema({
     id: String,
-    sub: String,
+    googleId: String,
     email: String,
     name: String,
     token: String,

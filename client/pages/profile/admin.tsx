@@ -19,8 +19,9 @@ import ChangeUserPermissions from '../../src/components/admin/change-user-permis
 // Server-side Rendering to check for token
 export const getServerSideProps = async (ctx: GetServerSidePropsContext) => {
     // Get the token from cookies
-    const token = ctx.req.cookies.token;
-    if (token === undefined) return { props: { authorized: false, error: false } };
+    const tokenCookie = ctx.req.cookies.token;
+    if (tokenCookie === undefined) return { props: { authorized: false, error: false } };
+    const token = JSON.parse(tokenCookie).token as string;
 
     // Check if valid token and compare with database
     const res = await getAuthInfo(token);

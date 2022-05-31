@@ -2,16 +2,19 @@ import React, { useEffect, useState } from 'react';
 import { useRouter } from 'next/router';
 import { GetServerSidePropsContext, InferGetServerSidePropsType } from 'next';
 import Cookies from 'universal-cookie';
-import { getBackendUrl, getAuthInfo } from '../../src/api';
-import { darkSwitchGrey } from '../../src/util';
+import { getBackendUrl, getAuthInfo, postLogin } from '../../src/api';
+import { createPopupEvent, darkSwitchGrey } from '../../src/util';
+import type { PopupEvent } from '../../src/types';
 
 import Card from '@mui/material/Card';
 import CardContent from '@mui/material/CardContent';
 import Box from '@mui/material/Box';
-import Button from '@mui/material/Button';
 import Typography from '@mui/material/Typography';
+import GoogleLogin from 'react-google-login';
 import PageWrapper from '../../src/components/shared/page-wrapper';
 import TitleMeta from '../../src/components/meta/title-meta';
+import Popup from '../../src/components/shared/popup';
+import UploadBackdrop from '../../src/components/edit/shared/upload-backdrop';
 
 // Server-side Rendering to check for token
 // TODO: This block can be cleaned up
@@ -29,6 +32,13 @@ export const getServerSideProps = async (ctx: GetServerSidePropsContext) => {
     }
 };
 
+// Text to show on the login screen
+// TODO: Move this to the data JSON file
+const loginText =
+    'You can securely login with Google to add and edit your own events across the site. All resources are publically avaliable for anyone to read. Clubs may have higher permissions to add and edit clubs and volunteering, but must be added by an existing admin.';
+
+const CLIENT_ID = '629507270355-bgs4cj26r91979g5of4ko4j8opd2jsvk.apps.googleusercontent.com';
+
 /**
  * The main login screen for the profile page. This will display the Login with Google button.
  * If the user has already logged in, they will be redirected to the dashboard or to the edit page they were on before.
@@ -36,65 +46,66 @@ export const getServerSideProps = async (ctx: GetServerSidePropsContext) => {
  * the user will be redirected to the specified path.
  */
 const Login = ({ authorized, error }: InferGetServerSidePropsType<typeof getServerSideProps>) => {
+    const [popupEvent, setPopupEvent] = useState<PopupEvent>(null);
+    const [backdrop, setBackdrop] = useState(false);
     const router = useRouter();
     const cookies = new Cookies();
-    const [loadScreen, setLoadScreen] = useState(true); // TODO: What is this
 
-    // Gets backend URL, which is determined by the environmental variables
-    const backend = `${getBackendUrl()}/auth/login`;
+    // On login success, send googleId and accessToken to the backend server
+    // and do token exchange
+    const responseGoogle = async (response) => {
+        // Login backdrop
+        setBackdrop(true);
+
+        // Token exchange
+        const token = await postLogin(response.tokenId);
+        if (token.status !== 200) {
+            setPopupEvent(createPopupEvent('Could not log in. Please check your connection and try again.', 4));
+            return;
+        }
+
+        // Save token on frontend
+        const cookies = new Cookies();
+        cookies.set('token', token.data, { sameSite: 'strict', path: '/' });
+
+        // Remove backdrop
+        setBackdrop(false);
+
+        // Send user to dashboard
+        router.push('/profile/dashboard');
+    };
+
+    const errorMessage = (response) => {
+        setPopupEvent(createPopupEvent(`Could not log in: ${response.error}`, 3));
+    };
 
     // Redirect user if they are logged in
     useEffect(() => {
         if (authorized) router.push('/profile/dashboard');
-    });
-
-    // Reload the page to create the login button component
-    // This will use a cookie to determine if the page has been refreshed for the first time
-    // This is due to the Google login limitation of rendering the button on page load,
-    // which can only be done with a page refresh after routing
-    useEffect(() => {
-        const created = cookies.get('login_button_creation_check');
-        if (created) {
-            cookies.remove('login_button_creation_check');
-            setLoadScreen(false);
-            return;
-        }
-        cookies.set('login_button_creation_check', true, { path: '/' });
-        window.location.reload();
     }, []);
 
     return (
         <PageWrapper>
             <TitleMeta title="Login" path="/profile" />
+            <Popup event={popupEvent} />
+            <UploadBackdrop open={backdrop} text="Logging in..." />
             <Card sx={{ maxWidth: 500, mx: 'auto', height: 'max-content' }}>
                 <CardContent>
                     <Typography variant="h2" component="h1" sx={{ textAlign: 'center' }}>
                         Login
                     </Typography>
                     <Box sx={{ justifyContent: 'center', display: 'flex', marginTop: 3, marginBottom: 3 }}>
-                        <div
-                            id="g_id_onload"
-                            data-client_id="629507270355-bgs4cj26r91979g5of4ko4j8opd2jsvk.apps.googleusercontent.com"
-                            data-context="signin"
-                            data-ux_mode="redirect"
-                            data-login_uri={backend}
-                            data-auto_prompt="false"
-                        ></div>
-                        <Button
-                            className="g_id_signin"
-                            data-type="standard"
-                            data-shape="rectangular"
-                            data-theme="filled_blue"
-                            data-text="signin_with"
-                            data-size="large"
-                            data-logo_alignment="left"
-                            sx={{ padding: 1 }}
-                        ></Button>
+                        <GoogleLogin
+                            clientId={CLIENT_ID}
+                            buttonText="Login with Google"
+                            onSuccess={responseGoogle}
+                            onFailure={errorMessage}
+                            cookiePolicy={'single_host_origin'}
+                            theme="dark"
+                        ></GoogleLogin>
                     </Box>
                     <Typography sx={{ color: (theme) => darkSwitchGrey(theme) }}>
-                        {error
-                            ? 'Error getting login page! Please check your internet and try again!'
-                            : 'You can securely login with Google to track your edits across this site. You may edit resources without logging in, but edits will be made under your IP address instead.'}
+                        {error ? 'Error getting login page! Please check your internet and try again!' : loginText}
                     </Typography>
                 </CardContent>
             </Card>

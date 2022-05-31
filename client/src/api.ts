@@ -65,13 +65,15 @@ async function getRequest(url: string, auth: boolean = false): Promise<FetchResp
  * @param body POST body content
  * @param json Adds a JSON content type header if true
  * @param auth True if adding token
+ * @param fetchRes True if the endpoint returns data
  */
 async function postRequest(
     url: string,
     body: BodyInit,
     json: boolean = true,
-    auth: boolean = true
-): Promise<StatusResponse> {
+    auth: boolean = true,
+    fetchRes: boolean = false
+): Promise<StatusResponse | FetchResponse> {
     try {
         const options: RequestInit = {
             method: 'POST',
@@ -80,10 +82,12 @@ async function postRequest(
         };
 
         const res = await fetch(`${BACKEND_URL}${url}`, options);
-        return <StatusResponse>{ status: res.status };
+        return fetchRes
+            ? <FetchResponse>{ status: res.status, data: await res.json() }
+            : <StatusResponse>{ status: res.status };
     } catch (error) {
         console.dir(error);
-        return <StatusResponse>{ status: 404 };
+        return fetchRes ? <FetchResponse>{ status: 404, data: null } : <StatusResponse>{ status: 404 };
     }
 }
 
@@ -374,6 +378,21 @@ export async function getIp(): Promise<ResourceFetchResponse<ipData>> {
 }
 
 /**
+ * Performs a token exchange/login request after the Google auth flow returns tokens
+ * @param googleId Google ID
+ * @param accessCode Google Auth access code
+ */
+export async function postLogin(tokenId: string): Promise<FetchResponse> {
+    return postRequest(
+        '/auth/login',
+        JSON.stringify({ tokenId }),
+        true,
+        true,
+        true
+    ) as Promise<FetchResponse>;
+}
+
+/**
  * Checks if a user's token is in the database; also fetches their authentication level
  * @param token User auth token
  */
@@ -422,9 +441,9 @@ export async function getUserList(
     filter: GridFilterItem
 ): Promise<ResourceFetchResponse<AdminResourceList>> {
     const aFilter = filter ? `&filter=${JSON.stringify(filter)}` : '';
-    return getRequest(
-        `/users?page=${page}&limit=${limit}&sort=${sort}&reverse=${reverse}${aFilter}`
-    ) as Promise<ResourceFetchResponse<AdminResourceList>>;
+    return getRequest(`/users?page=${page}&limit=${limit}&sort=${sort}&reverse=${reverse}${aFilter}`) as Promise<
+        ResourceFetchResponse<AdminResourceList>
+    >;
 }
 
 /**
