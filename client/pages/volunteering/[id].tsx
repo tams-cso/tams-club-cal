@@ -2,7 +2,7 @@ import React from 'react';
 import { GetServerSidePropsContext, InferGetServerSidePropsType } from 'next';
 import { useRouter } from 'next/router';
 import { getVolunteering } from '../../src/api';
-import { darkSwitchGrey, getParams } from '../../src/util';
+import { darkSwitchGrey, getAccessLevel, getParams } from '../../src/util';
 
 import Container from '@mui/material/Container';
 import Card from '@mui/material/Card';
@@ -21,12 +21,14 @@ import PageWrapper from '../../src/components/shared/page-wrapper';
 import ResourceMeta from '../../src/components/meta/resource-meta';
 import TitleMeta from '../../src/components/meta/title-meta';
 import RobotBlockMeta from '../../src/components/meta/robot-block-meta';
+import { AccessLevel } from '../../src/types';
 
 // Server-side Rendering
 export const getServerSideProps = async (ctx: GetServerSidePropsContext) => {
     const volRes = await getVolunteering(ctx.params.id as string);
+    const level = await getAccessLevel(ctx);
     return {
-        props: { volunteering: volRes.data, error: volRes.status !== 200 },
+        props: { volunteering: volRes.data, error: volRes.status !== 200, level },
     };
 };
 
@@ -34,7 +36,11 @@ export const getServerSideProps = async (ctx: GetServerSidePropsContext) => {
  * Displays a single volunteering opportunity.
  * This component takes in the event ID as a parameter.
  */
-const VolunteeringDisplay = ({ volunteering, error }: InferGetServerSidePropsType<typeof getServerSideProps>) => {
+const VolunteeringDisplay = ({
+    volunteering,
+    error,
+    level,
+}: InferGetServerSidePropsType<typeof getServerSideProps>) => {
     const router = useRouter();
 
     // Return to the previous page, but preserve the view
@@ -66,7 +72,13 @@ const VolunteeringDisplay = ({ volunteering, error }: InferGetServerSidePropsTyp
                 description={volunteering.description}
             />
             <Container sx={{ maxWidth: { xl: '50%', md: '75%', xs: '100%' } }}>
-                <AddButton color="secondary" label="Volunteering" path={`/edit/volunteering/${volunteering.id}`} edit />
+                <AddButton
+                    color="secondary"
+                    label="Volunteering"
+                    path={`/edit/volunteering/${volunteering.id}`}
+                    edit
+                    disabled={level < AccessLevel.CLUBS}
+                />
                 <Card>
                     <CardContent>
                         <Box

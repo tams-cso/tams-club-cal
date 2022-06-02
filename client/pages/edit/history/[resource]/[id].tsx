@@ -24,7 +24,6 @@ import RobotBlockMeta from '../../../../src/components/meta/robot-block-meta';
 export const getServerSideProps = async (ctx: GetServerSidePropsContext) => {
     const id = ctx.params.id as string;
     const resource = ctx.params.resource as Resource;
-    console.log('?');
     const historyRes = await getHistory(resource, id);
     const sortedHistory = historyRes.status === 200 ? historyRes.data.history.sort((a, b) => b.time - a.time) : null;
     const error = historyRes.status !== 200;

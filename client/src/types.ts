@@ -11,9 +11,10 @@ export enum RepeatingStatus {
 
 /** Access levels for users */
 export enum AccessLevel {
+    NONE = -1,
     STANDARD = 0,
-    CLUBS,
-    ADMIN,
+    CLUBS = 1,
+    ADMIN = 2,
 }
 
 /** An object containing the information for events */

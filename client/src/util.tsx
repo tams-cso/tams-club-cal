@@ -1,4 +1,4 @@
-import type {
+import {
     Event,
     Editor,
     LinkInputData,
@@ -23,7 +23,9 @@ import timezone from 'dayjs/plugin/timezone';
 import isLeapYear from 'dayjs/plugin/isLeapYear';
 import customParseFormat from 'dayjs/plugin/customParseFormat';
 import Link from './components/shared/Link';
-import { getUserById } from './api';
+import { getAuthInfo, getUserById } from './api';
+import Cookies from 'universal-cookie';
+import { GetServerSidePropsContext } from 'next';
 
 // Plugins for dayjs base library
 dayjs.extend(utc);
@@ -99,6 +101,22 @@ export function processLinkObjectList(list: LinkInputData[]): string[] {
 export function accessLevelToString(level: AccessLevel): string {
     const levelMap = ['Standard', 'Clubs', 'Admin'];
     return levelMap[level];
+}
+
+/**
+ * Gets the access level of the user
+ */
+export async function getAccessLevel(ctx: GetServerSidePropsContext): Promise<AccessLevel> {
+    // Get token cookie from SSR props context
+    const tokenCookie = ctx.req.cookies.token;
+    if (tokenCookie === undefined) return AccessLevel.NONE;
+    const token = JSON.parse(tokenCookie).token as string;
+
+    // Check if valid token and compare with database
+    const res = await getAuthInfo(token);
+    if (res.status !== 200 || !res.data.loggedIn) return AccessLevel.NONE;
+
+    return res.data.level;
 }
 
 // ================== CSS AND MUI FUNCTIONS =================== //
