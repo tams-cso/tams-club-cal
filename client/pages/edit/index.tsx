@@ -128,7 +128,7 @@ const Edit = () => {
                                                 darkSwitch(theme, theme.palette.grey[200], theme.palette.grey[700]),
                                         },
                                     }}
-                                    onClick={redirect.bind(this, `/edit/history/${h.resource}/${h.editId}?view=list`)}
+                                    onClick={redirect.bind(this, `/edit/history/${h.resource}/${h.resourceId}?view=list`)}
                                 >
                                     <TableCell>{calculateEditDate(h.time)}</TableCell>
                                     <TableCell>{h.resource}</TableCell>

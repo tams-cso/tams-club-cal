@@ -1,8 +1,8 @@
 import React, { useState, useEffect } from 'react';
-import { InferGetServerSidePropsType } from 'next';
+import { GetServerSidePropsContext, InferGetServerSidePropsType } from 'next';
 import dayjs from 'dayjs';
 import { getPublicEventList } from '../src/api';
-import { darkSwitchGrey, parsePublicEventList, isSameDate } from '../src/util';
+import { darkSwitchGrey, parsePublicEventList, isSameDate, getAccessLevel } from '../src/util';
 import type { SxProps, Theme } from '@mui/material';
 
 import Container from '@mui/material/Container';
@@ -11,6 +11,7 @@ import HomeBase from '../src/components/home/home-base';
 import Loading from '../src/components/shared/loading';
 import AddButton from '../src/components/shared/add-button';
 import EventListSection from '../src/components/home/event-list-section';
+import { AccessLevel } from '../src/types';
 
 // Format the no events/add more events text on the event list
 const listTextFormat = {
@@ -21,11 +22,12 @@ const listTextFormat = {
 } as SxProps<Theme>;
 
 // Server-side Rendering
-export const getServerSideProps = async () => {
+export const getServerSideProps = async (ctx: GetServerSidePropsContext) => {
     const eventRes = await getPublicEventList();
+    const level = await getAccessLevel(ctx);
 
     // Return error if bad data
-    if (eventRes.status !== 200) return { props: { eventList: null, error: true } };
+    if (eventRes.status !== 200) return { props: { eventList: null, error: true, level: AccessLevel.STANDARD } };
 
     // Sort the events by date and filter out all elements
     // that do not start on or after the current date
@@ -33,11 +35,11 @@ export const getServerSideProps = async () => {
     const filteredList = eventRes.data.sort((a, b) => a.start - b.start).filter((e) => e.start >= startOfToday);
     const parsedEventList = parsePublicEventList(filteredList);
     return {
-        props: { eventList: parsedEventList, error: false },
+        props: { eventList: parsedEventList, error: false, level },
     };
 };
 
-const Home = ({ eventList, error }: InferGetServerSidePropsType<typeof getServerSideProps>) => {
+const Home = ({ eventList, error, level }: InferGetServerSidePropsType<typeof getServerSideProps>) => {
     const [eventComponentList, setEventComponentList] = useState<JSX.Element | JSX.Element[]>(
         <Loading sx={{ marginBottom: 4 }} />
     );
@@ -61,7 +63,7 @@ const Home = ({ eventList, error }: InferGetServerSidePropsType<typeof getServer
         }
 
         // Split the events into groups by date
-        // TODO: Put this in a util function
+        // TODO: Put this in a util function or not idk
         const eventGroupList = [];
         let tempList = [];
         eventList.forEach((event, index) => {
@@ -110,7 +112,7 @@ const Home = ({ eventList, error }: InferGetServerSidePropsType<typeof getServer
                     overflowX: 'hidden',
                 }}
             >
-                <AddButton color="primary" label="Event" path="/edit/events" />
+                <AddButton color="primary" label="Event" path="/edit/events" disabled={level < AccessLevel.STANDARD} />
                 {eventComponentList}
             </Container>
         </HomeBase>

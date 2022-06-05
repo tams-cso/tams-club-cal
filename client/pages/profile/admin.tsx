@@ -1,8 +1,8 @@
 import React, { useEffect } from 'react';
 import { useRouter } from 'next/router';
 import { GetServerSidePropsContext, InferGetServerSidePropsType } from 'next';
-import { getAuthInfo } from '../../src/api';
 import { AccessLevel } from '../../src/types';
+import { getUserInfo } from '../../src/api';
 
 import Typography from '@mui/material/Typography';
 import Container from '@mui/material/Container';
@@ -24,11 +24,11 @@ export const getServerSideProps = async (ctx: GetServerSidePropsContext) => {
     const token = JSON.parse(tokenCookie).token as string;
 
     // Check if valid token and compare with database
-    const res = await getAuthInfo(token);
+    const res = await getUserInfo(token);
     if (res.status !== 200) return { props: { authorized: false, error: true } };
 
     // If there is no issue with the authorization, authorize user!
-    return { props: { authorized: res.data.loggedIn && res.data.level === AccessLevel.ADMIN, error: false } };
+    return { props: { authorized: res.data.level === AccessLevel.ADMIN, error: false } };
 };
 
 /**

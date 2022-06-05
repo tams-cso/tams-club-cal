@@ -2,21 +2,24 @@ import { Request } from 'express';
 import { Document } from 'mongoose';
 import History from '../models/history';
 import User from '../models/user';
-import type { Editor, Field, ClubObject } from './types';
-import { getIp } from './util';
+import type { Field, ClubObject } from './types';
 
 /**
- * Creates the editor object, where it will first save the ID, and if not avaliable, then it
- * will save the ip address of the client that edited the resource.
+ * Creates the editor object and finds the user ID from the token passed in.
+ * Returns null if the authorization token or user is invalid
  *
  * @param {Request} req Express request object
- * @returns {Promise<object>} Returns { id, ip } with only one of them null, where id takes priority
+ * @returns {Promise<object>} Returns token string from database
  */
-async function getEditor(req: Request): Promise<Editor> {
+async function getEditor(req: Request): Promise<string> {
+    // Make sure header exists
     const authorization = req.headers['authorization'];
-    const token = authorization ? await User.findOne({ token: authorization.substring(7) }) : null;
-    if (token) return { id: token.id, ip: null };
-    else return { id: null, ip: getIp(req) };
+    if (!authorization) return null;
+    
+    // Make sure user exists
+    const user = await User.findOne({ token: authorization.substring(7) });
+    if (!user) return null;
+    return user.id;
 }
 
 /**
@@ -42,12 +45,17 @@ export async function createHistory(
     isNew: boolean = true,
     club?: ClubObject
 ): Promise<Document> {
+    // Make sure editor is valid user
+    const editorId = await getEditor(req);
+    if (!editorId) return null;
+
+    // Return history object
     return new History({
         id: historyId,
         resource,
-        editId: id,
+        resourceId: id,
         time: new Date().valueOf(),
-        editor: await getEditor(req),
+        editorId,
         fields: isNew ? objectToHistoryObject(data) : getDiff(data, club || req.body),
     });
 }
@@ -160,17 +168,4 @@ function getDiffArray(prevData: HistoryArrayData, data: HistoryArrayData, key: s
         }
     }
     return output;
-}
-
-/**
- * Will parse the editor object into a readable string depending
- * on the stored values. Will also display "N/A" for invalid objects or values
- */
-export async function parseEditor(editor: Editor): Promise<string> {
-    if (!editor) return 'N/A';
-    if (editor.id === null) return editor.ip;
-
-    const editorRes = await User.findOne({ id: editor.id });
-    if (!editorRes) return 'N/A';
-    return editorRes.name;
 }

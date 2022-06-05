@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { GetServerSidePropsContext, InferGetServerSidePropsType } from 'next';
 import { useRouter } from 'next/router';
-import { calculateEditDate, darkSwitch, getParams, parseEditor } from '../../../../src/util';
+import { calculateEditDate, darkSwitch, getParams } from '../../../../src/util';
 import { getHistory } from '../../../../src/api';
 import type { History, Resource } from '../../../../src/types';
 
@@ -25,12 +25,13 @@ export const getServerSideProps = async (ctx: GetServerSidePropsContext) => {
     const id = ctx.params.id as string;
     const resource = ctx.params.resource as Resource;
     const historyRes = await getHistory(resource, id);
-    const sortedHistory = historyRes.status === 200 ? historyRes.data.history.sort((a, b) => b.time - a.time) : null;
+    const historyList = historyRes.status === 200 ? historyRes.data.history : null;
     const error = historyRes.status !== 200;
     return {
         props: {
-            historyList: error ? [] : sortedHistory,
+            historyList: error ? [] : historyList,
             name: error ? '' : (historyRes.data.name as string),
+            editorList: error ? [] : historyRes.data.editorList,
             error,
             resource,
             id,
@@ -44,10 +45,11 @@ export const getServerSideProps = async (ctx: GetServerSidePropsContext) => {
  */
 const HistoryDisplay = ({
     historyList,
+    name,
+    editorList,
     error,
     resource,
     id,
-    name,
 }: InferGetServerSidePropsType<typeof getServerSideProps>) => {
     const router = useRouter();
     const [components, setComponents] = useState(null);
@@ -60,33 +62,29 @@ const HistoryDisplay = ({
             if (error) return;
 
             // Create the table rows and set the component list to the state variable
-            // We use Promise.all here because the parseEditor api call is asynchronous
-            // The Promise.all function will resolve the map of promises to actual values before setting the state
             setComponents(
-                await Promise.all(
-                    historyList.map(async (history: History, i: number) => (
-                        <TableRow
-                            onClick={openPopup.bind(this, i)}
-                            key={i}
-                            sx={{
-                                transition: '0.3s',
-                                cursor: 'pointer',
-                                '&:hover': {
-                                    backgroundColor: (theme) =>
-                                        darkSwitch(theme, theme.palette.grey[200], theme.palette.grey[700]),
-                                },
-                            }}
-                        >
-                            <TableCell>{calculateEditDate(history.time)}</TableCell>
-                            <TableCell>
-                                {i === historyList.length - 1
-                                    ? 'Resource created'
-                                    : `${history.fields.length} fields were updated`}
-                            </TableCell>
-                            <TableCell>{await parseEditor(history.editor)}</TableCell>
-                        </TableRow>
-                    ))
-                )
+                historyList.map((history: History, i: number) => (
+                    <TableRow
+                        onClick={openPopup.bind(this, i)}
+                        key={i}
+                        sx={{
+                            transition: '0.3s',
+                            cursor: 'pointer',
+                            '&:hover': {
+                                backgroundColor: (theme) =>
+                                    darkSwitch(theme, theme.palette.grey[200], theme.palette.grey[700]),
+                            },
+                        }}
+                    >
+                        <TableCell>{calculateEditDate(history.time)}</TableCell>
+                        <TableCell>
+                            {i === historyList.length - 1
+                                ? 'Resource created'
+                                : `${history.fields.length} fields were updated`}
+                        </TableCell>
+                        <TableCell>{editorList[i]}</TableCell>
+                    </TableRow>
+                ))
             );
         })();
     }, [historyList]);

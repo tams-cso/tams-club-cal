@@ -25,6 +25,9 @@ export interface Event {
     /** The ID assigned by the Google Calendar API to the calendar event */
     eventId: string;
 
+    /** The ID of the user who creates this event */
+    editorId: string;
+
     /** The ID of the reservation associated with the event */
     reservationId?: string | number;
 
@@ -74,43 +77,10 @@ export interface Event {
     history: string[];
 }
 
-/** An object containing the information for reservations */
-export interface Reservation {
-    /** The unique UUIDv4 for the reservation */
-    id: string;
-
-    /** The ID of the related event; this will be null if not related to an event */
-    eventId: string;
-
-    /** The name of the reservation */
-    name: string;
-
-    /** The name of the club that made the reservation */
-    club: string;
-
-    /** The description of the reservation */
-    description: string;
-
-    /** The time in UTC milliseconds that the reservation starts (rounds to hours) */
-    start: number;
-
-    /** The time in UTC milliseconds that the reservation ends (rounds to hours) */
-    end: number;
-
-    /** The location that is reserved */
-    location: string;
-
-    /** If true, the event will last the entire day, will ignore start/end datetime */
-    allDay: boolean;
-
-    /** The date in UTC milliseconds that the repeating reservation will end; if null then the reservation does not repeat */
-    repeatEnd: number;
-
-    /** Edit history list; this will be null if related to an event */
-    history: string[];
-}
-
-/** Object to hold data for the reservation view temporarily */
+/**
+ * Object to hold data for the reservation view temporarily. This is used
+ * when we are displaying reservations on the reservation calendar. 
+ */
 export interface BrokenReservation {
     /** Start time of the reservation block */
     start: Dayjs;
@@ -251,6 +221,7 @@ export interface Feedback {
     time: Number;
 }
 
+/** Valid resource types, used in the edit history object */
 export type Resource = 'events' | 'clubs' | 'volunteering';
 
 /** An object containing the information for a single edit to a specific resource */
@@ -262,13 +233,13 @@ export interface History {
     resource: Resource;
 
     /** The ID of the original resource */
-    editId: string;
+    resourceId: string;
 
     /** The time in UTC milliseconds that this edit was made */
     time: number;
 
     /** The editor of this specific resource */
-    editor: Editor;
+    editorId: string;
 
     /** List of fields that were edited */
     fields: Field[];
@@ -299,19 +270,9 @@ export interface HistoryItemData {
 
     /** Name of the resource */
     name: string;
-    // TODO: WHY THE FRICK DO WE NEED THIS???????????
-}
-
-/**
- * An object containing the information for an editor.
- * Either the id or ip will contain data, but the id will take precedence.
- */
-export interface Editor {
-    /** The unique UUIDv4 for the user */
-    id?: string;
-
-    /** The ip address of the editor */
-    ip?: string;
+    
+    /** List of editors' names */
+    editorList: string[];
 }
 
 /** An object containing a specific edited field */
@@ -374,27 +335,16 @@ export interface PopupEvent {
 
 /** Logged in user data */
 export interface User {
+    /** ID of the user */
+    id: string;
+
     /** Display name of the user */
     name: string;
 
     /** Email of the user */
     email: string;
-}
-
-export interface AdminUser extends User {
-    /** ID of the user */
-    id: string;
 
     /** Access level of the user */
-    level: AccessLevel;
-}
-
-/** Object storing whether a user is logged in and their access level */
-export interface AuthInfo {
-    /** True if token is valid and stored in backend */
-    loggedIn: boolean;
-
-    /** Access level of the user; not defined if loggedIn is false */
     level: AccessLevel;
 }
 

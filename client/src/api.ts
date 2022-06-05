@@ -13,7 +13,6 @@ import type {
     AdminResourceList,
     User,
     TextData,
-    AuthInfo,
     AccessLevel,
 } from './types';
 import type { GridFilterItem } from '@mui/x-data-grid';
@@ -143,7 +142,8 @@ async function deleteRequest(url: string, auth: boolean = false): Promise<FetchR
  */
 function createHeaders(auth: boolean, json: boolean): Headers {
     const cookies = new Cookies();
-    const token = cookies.get('token');
+    const tokenCookies = cookies.get('token');
+    const token = tokenCookies ? tokenCookies['token'] : null;
 
     let headers = new Headers();
     if (auth && token) headers.set('Authorization', `Bearer ${token}`);
@@ -383,25 +383,13 @@ export async function getIp(): Promise<ResourceFetchResponse<ipData>> {
  * @param accessCode Google Auth access code
  */
 export async function postLogin(tokenId: string): Promise<FetchResponse> {
-    return postRequest(
-        '/auth/login',
-        JSON.stringify({ tokenId }),
-        true,
-        true,
-        true
-    ) as Promise<FetchResponse>;
+    return postRequest('/auth/login', JSON.stringify({ tokenId }), true, true, true) as Promise<FetchResponse>;
 }
 
 /**
- * Checks if a user's token is in the database; also fetches their authentication level
- * @param token User auth token
- */
-export async function getAuthInfo(token: string): Promise<ResourceFetchResponse<AuthInfo>> {
-    return getRequest(`/auth/${token}`) as Promise<ResourceFetchResponse<AuthInfo>>;
-}
-
-/**
- * Gets the name and email of the logged in user
+ * Gets the information of a logged in user, will return a 403 error
+ * if the user is not logged in.
+ *
  * @param token User auth token
  */
 export async function getUserInfo(token: string): Promise<ResourceFetchResponse<User>> {
@@ -409,7 +397,9 @@ export async function getUserInfo(token: string): Promise<ResourceFetchResponse<
 }
 
 /**
- * Gets the name of the user with the provided ID
+ * Gets the name of the user with the provided ID. This will only be used
+ * on the history list page.
+ *
  * @param id User ID
  */
 export async function getUserById(id: string): Promise<ResourceFetchResponse<User>> {

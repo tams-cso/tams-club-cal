@@ -2,7 +2,7 @@ import React, { useEffect } from 'react';
 import { useRouter } from 'next/router';
 import { GetServerSidePropsContext, InferGetServerSidePropsType } from 'next';
 import Cookies from 'universal-cookie';
-import { getAuthInfo, getUserInfo } from '../../src/api';
+import { getUserInfo } from '../../src/api';
 import { AccessLevel } from '../../src/types';
 
 import Card from '@mui/material/Card';
@@ -20,7 +20,7 @@ import Container from '@mui/material/Container';
 import PageWrapper from '../../src/components/shared/page-wrapper';
 import Loading from '../../src/components/shared/loading';
 import TitleMeta from '../../src/components/meta/title-meta';
-import { accessLevelToString } from '../../src/util';
+import { accessLevelToString, getTokenFromCookies } from '../../src/util';
 
 // Server-side Rendering to check for token and get data
 export const getServerSideProps = async (ctx: GetServerSidePropsContext) => {
@@ -28,31 +28,18 @@ export const getServerSideProps = async (ctx: GetServerSidePropsContext) => {
     const error = { props: { authorized: false, level: AccessLevel.STANDARD, info: null, error: false } };
 
     // Get the token from cookies
-    const tokenCookie = ctx.req.cookies.token;
-    if (!tokenCookie) {
-        return error;
-    }
-
-    // Parse the token
-    const token = JSON.parse(tokenCookie).token as string;
+    const token = getTokenFromCookies(ctx);
+    if (!token) return error;
 
     // Check if valid token and compare with database
-    const authRes = await getAuthInfo(token);
-    if (authRes.status !== 200 || !authRes.data.loggedIn) {
-        return error;
-    }
-
-    // Token is valid, get user info
     const userRes = await getUserInfo(token);
-    if (userRes.status !== 200) {
-        return { props: { authorized: true, level: AccessLevel.STANDARD, info: null, error: false } };
-    }
+    if (userRes.status !== 200) return error;
 
     // Check to see if user is an admin and show button if so
     return {
         props: {
             authorized: true,
-            level: authRes.data.level,
+            level: userRes.data.level,
             info: userRes.data,
             error: false,
         },

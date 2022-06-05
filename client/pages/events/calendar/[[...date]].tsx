@@ -3,7 +3,7 @@ import { GetServerSidePropsContext, InferGetServerSidePropsType } from 'next';
 import { useRouter } from 'next/router';
 import { Typography } from '@mui/material';
 import dayjs from 'dayjs';
-import { darkSwitch, parseDateParams, parsePublicEventList } from '../../../src/util';
+import { darkSwitch, getAccessLevel, parseDateParams, parsePublicEventList } from '../../../src/util';
 import { getPublicEventListInRange } from '../../../src/api';
 
 import Box from '@mui/material/Box';
@@ -15,6 +15,7 @@ import CalendarDay from '../../../src/components/calendar/calendar-day';
 import Loading from '../../../src/components/shared/loading';
 import AddButton from '../../../src/components/shared/add-button';
 import TitleMeta from '../../../src/components/meta/title-meta';
+import { AccessLevel } from '../../../src/types';
 
 // Template rows for each number of possible calendar rows
 const rowStyles = {
@@ -55,6 +56,7 @@ export const getServerSideProps = async (ctx: GetServerSidePropsContext) => {
     // If there is an error, show an error popup and don't continue
     let res = await getPublicEventListInRange(startOfPrevMonth.valueOf(), endOfNextMonth.valueOf());
     const error = res.status !== 200;
+    const level = await getAccessLevel(ctx);
     return {
         props: {
             activities: res.data,
@@ -63,6 +65,7 @@ export const getServerSideProps = async (ctx: GetServerSidePropsContext) => {
             numRows,
             totalDays,
             now: now.valueOf(),
+            level,
         },
     };
 };
@@ -145,9 +148,14 @@ const Calendar = (props: InferGetServerSidePropsType<typeof getServerSideProps>)
 
     return (
         <HomeBase unsetHeight>
-            <TitleMeta title="Calendar" path="/events/calendar" /> 
+            <TitleMeta title="Calendar" path="/events/calendar" />
             <Box display="flex" flexDirection="column" sx={{ flexGrow: 1 }}>
-                <AddButton color="primary" label="Event" path="/edit/events" />
+                <AddButton
+                    color="primary"
+                    label="Event"
+                    path="/edit/events"
+                    disabled={props.level < AccessLevel.STANDARD}
+                />
                 <Box width="100%" display="flex" justifyContent="center" alignItems="center">
                     <IconButton size="small" onClick={offsetMonth.bind(this, false)}>
                         <ArrowBackIosRoundedIcon />
