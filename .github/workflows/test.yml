@@ -1,0 +1,31 @@
+name: 'Run Tests and Checks'
+
+on:
+    pull_request:
+        types: [opened, synchronize]
+
+jobs:
+    types:
+        name: Perform Type Checks
+        runs-on: ubuntu-latest
+        steps:
+            - name: Checkout
+              uses: actions/checkout@v2
+
+            - name: Use NodeJS 16
+              uses: actions/setup-node@v2
+              with:
+                  node-version: '16'
+
+            - name: Setup repo
+              env:
+                  ENV: ${{ secrets.STAGING_ENV }}
+              run: |
+                  cd $GITHUB_WORKSPACE/server && echo "$ENV" >| .env
+                  cd .. && yarn install --frozen-lockfile
+
+            - name: Client type check
+              run: cd $GITHUB_WORKSPACE && yarn type
+              
+            - name: Server type check
+              run: cd $GITHUB_WORKSPACE && yarn type:server
