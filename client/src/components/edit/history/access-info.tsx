@@ -55,8 +55,8 @@ const AccessInfo = (props: AccessInfoProps) => {
                             </TableRow>
                         </TableHead>
                         <TableBody>
-                            {accessInfo.map((level) => (
-                                <TableRow>
+                            {accessInfo.map((level, ind) => (
+                                <TableRow key={ind}>
                                     <TableCell key="hi">{level.l}</TableCell>
                                     {level.p.map((entry, i) => (
                                         <TableCell align="center" key={i}>

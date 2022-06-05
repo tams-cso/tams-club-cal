@@ -128,7 +128,7 @@ const Edit = ({ level }: InferGetServerSidePropsType<typeof getServerSideProps>)
                 </Button>
             </Box>
             <Box sx={{ display: 'flex', justifyContent: 'center' }}>
-                <Button variant="text" onClick={setInfoOpen.bind(this, true)}>
+                <Button variant="text" onClick={setInfoOpen.bind(this, true)} sx={{ marginBottom: 1 }}>
                     Why can I not add/modify a resource?
                 </Button>
             </Box>
