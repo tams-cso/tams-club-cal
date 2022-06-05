@@ -1,8 +1,9 @@
 import React, { useState, useEffect } from 'react';
 import { useRouter } from 'next/router';
-import type { History, Resource, HistoryData } from '../../src/types';
-import { calculateEditDate, darkSwitch, redirect } from '../../src/util';
-import { getHistoryList } from '../../src/api';
+import { GetServerSidePropsContext, InferGetServerSidePropsType } from 'next';
+import { History, Resource, HistoryData, AccessLevel } from '../../src/types';
+import { calculateEditDate, darkSwitch, getTokenFromCookies, redirect } from '../../src/util';
+import { getHistoryList, getUserInfo } from '../../src/api';
 
 import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
@@ -17,7 +18,14 @@ import Loading from '../../src/components/shared/loading';
 import EditWrapper from '../../src/components/edit/shared/edit-wrapper';
 import TitleMeta from '../../src/components/meta/title-meta';
 
-const Edit = () => {
+// Server-side Rendering
+export const getServerSideProps = async (ctx: GetServerSidePropsContext) => {
+    const token = getTokenFromCookies(ctx);
+    const userRes = await getUserInfo(token);
+    return { props: { level: userRes.status === 200 ? userRes.data.level : AccessLevel.NONE } };
+};
+
+const Edit = ({ level }: InferGetServerSidePropsType<typeof getServerSideProps>) => {
     const [historyList, setHistoryList] = useState(null);
     const [dataList, setDataList] = useState<HistoryData[]>(null);
     const [noMore, setNoMore] = useState(true);
@@ -87,13 +95,29 @@ const Edit = () => {
                     flexDirection: { lg: 'row', xs: 'column' },
                 }}
             >
-                <Button variant="outlined" onClick={add.bind(this, 'events')} sx={{ margin: 1.5 }}>
+                {/* TODO: Convert these buttons to a simple component (with the add function) */}
+                <Button
+                    variant="outlined"
+                    onClick={add.bind(this, 'events')}
+                    sx={{ margin: 1.5 }}
+                    disabled={level < AccessLevel.STANDARD}
+                >
                     Add an Event
                 </Button>
-                <Button variant="outlined" onClick={add.bind(this, 'clubs')} sx={{ margin: 1.5 }}>
+                <Button
+                    variant="outlined"
+                    onClick={add.bind(this, 'clubs')}
+                    sx={{ margin: 1.5 }}
+                    disabled={level < AccessLevel.ADMIN}
+                >
                     Add a Club
                 </Button>
-                <Button variant="outlined" onClick={add.bind(this, 'volunteering')} sx={{ margin: 1.5 }}>
+                <Button
+                    variant="outlined"
+                    onClick={add.bind(this, 'volunteering')}
+                    sx={{ margin: 1.5 }}
+                    disabled={level < AccessLevel.CLUBS}
+                >
                     Add a Volunteering Opportunity
                 </Button>
             </Box>
@@ -128,7 +152,10 @@ const Edit = () => {
                                                 darkSwitch(theme, theme.palette.grey[200], theme.palette.grey[700]),
                                         },
                                     }}
-                                    onClick={redirect.bind(this, `/edit/history/${h.resource}/${h.resourceId}?view=list`)}
+                                    onClick={redirect.bind(
+                                        this,
+                                        `/edit/history/${h.resource}/${h.resourceId}?view=list`
+                                    )}
                                 >
                                     <TableCell>{calculateEditDate(h.time)}</TableCell>
                                     <TableCell>{h.resource}</TableCell>
