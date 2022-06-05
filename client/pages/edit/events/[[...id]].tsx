@@ -4,9 +4,9 @@ import { GetServerSidePropsContext, InferGetServerSidePropsType } from 'next';
 import { useForm } from 'react-hook-form';
 import Cookies from 'universal-cookie';
 import dayjs, { Dayjs } from 'dayjs';
-import { createPopupEvent, createEvent, darkSwitch } from '../../../src/util';
-import { getEvent, getOverlappingReservations, postEvent, putEvent } from '../../../src/api';
-import { PopupEvent, RepeatingStatus } from '../../../src/types';
+import { createPopupEvent, createEvent, darkSwitch, getTokenFromCookies } from '../../../src/util';
+import { getEvent, getOverlappingReservations, getUserInfo, postEvent, putEvent } from '../../../src/api';
+import { AccessLevel, PopupEvent, RepeatingStatus } from '../../../src/types';
 
 import Typography from '@mui/material/Typography';
 import Box from '@mui/material/Box';
@@ -29,6 +29,7 @@ import TitleMeta from '../../../src/components/meta/title-meta';
 import RobotBlockMeta from '../../../src/components/meta/robot-block-meta';
 
 import data from '../../../src/data.json';
+import UnauthorizedAlert from '../../../src/components/edit/shared/unauthorized-alert';
 
 type SubmitData = {
     type: string;
@@ -51,20 +52,27 @@ type SubmitData = {
 
 // Server-side Rendering
 export const getServerSideProps = async (ctx: GetServerSidePropsContext) => {
+    // Get editor information
+    const token = getTokenFromCookies(ctx);
+    const userRes = await getUserInfo(token);
+    const userId = userRes.status === 200 ? userRes.data.id : null;
+    const level = userId ? userRes.data.level : AccessLevel.NONE;
+
+    // Check if adding event
     const id = ctx.params.id as string;
-    if (!id) return { props: { event: createEvent(), id: null, error: false } };
+    if (!id) return { props: { event: createEvent(), id: null, error: false, userId, level } };
+
+    // Get event info
     const eventRes = await getEvent(id);
     const error = eventRes.status !== 200;
     const event = error ? createEvent() : eventRes.data;
-    return {
-        props: { event, error, id: error ? null : id },
-    };
+    return { props: { event, error, id: error ? null : id, userId, level } };
 };
 
 /**
  * Main form for editing and adding events
  */
-const EditEvents = ({ event, id, error }: InferGetServerSidePropsType<typeof getServerSideProps>) => {
+const EditEvents = ({ event, id, error, userId, level }: InferGetServerSidePropsType<typeof getServerSideProps>) => {
     const router = useRouter();
     const [backdrop, setBackdrop] = useState(false);
     const [prevStart, setPrevStart] = useState(null);
@@ -224,6 +232,7 @@ const EditEvents = ({ event, id, error }: InferGetServerSidePropsType<typeof get
         const newEvent = createEvent(
             id,
             event.eventId,
+            userId,
             data.type,
             data.name,
             data.club,
@@ -320,6 +329,8 @@ const EditEvents = ({ event, id, error }: InferGetServerSidePropsType<typeof get
             : event.location
         : 'none';
 
+    const unauthorized = level < AccessLevel.STANDARD || (!id ? false : event.editorId !== userId);
+
     return (
         <EditWrapper>
             <TitleMeta title={`${id ? 'Edit' : 'Add'} Event`} path={`/edit/events/${id ? id : ''}`} />
@@ -329,6 +340,7 @@ const EditEvents = ({ event, id, error }: InferGetServerSidePropsType<typeof get
             <Typography variant="h1" sx={{ textAlign: 'center', fontSize: '3rem' }}>
                 {id ? 'Edit Event' : 'Add Event'}
             </Typography>
+            <UnauthorizedAlert show={unauthorized} resource="event" />
             {id ? <AddButton editHistory path={`/edit/history/events/${id}`} /> : null}
             <FormWrapper onSubmit={handleSubmit(onSubmit)}>
                 <Box sx={{ marginBottom: 3, display: 'flex', flexDirection: { lg: 'row', xs: 'column' } }}>
@@ -536,7 +548,7 @@ const EditEvents = ({ event, id, error }: InferGetServerSidePropsType<typeof get
                         repeating behavior is changed, repeated events will be recreated.
                     </Alert>
                 ) : null}
-                <TwoButtonBox success="Submit" onCancel={back} submit right />
+                <TwoButtonBox success="Submit" onCancel={back} submit right disabled={unauthorized} />
             </FormWrapper>
         </EditWrapper>
     );

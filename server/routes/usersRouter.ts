@@ -24,8 +24,7 @@ router.get('/', async (req: Request, res: Response) => {
 /**
  * GET /users/<token>
  *
- * Sends the user email and name to the client given the token.
- * Used to display the logged in user on the edit pages.
+ * Sends the user info to the client given the token.
  */
 router.get('/:token', async (req: Request, res: Response) => {
     if (!req.params.token) {
@@ -33,7 +32,7 @@ router.get('/:token', async (req: Request, res: Response) => {
         return;
     }
     const user = await User.findOne({ token: req.params.token }).exec();
-    if (user) res.send({ email: user.email, name: user.name });
+    if (user) res.send({ id: user.id, email: user.email, name: user.name, level: user.level });
     else sendError(res, 400, 'User not found in database');
 });
 

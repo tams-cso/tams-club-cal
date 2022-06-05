@@ -1,12 +1,13 @@
 import React from 'react';
 import { useRouter } from 'next/router';
-import { redirect } from '../../util';
+import { accessLevelToString, redirect } from '../../util';
 
 import Fab from '@mui/material/Fab';
 import AddIcon from '@mui/icons-material/Add';
 import EditIcon from '@mui/icons-material/Edit';
 import AccessTimeRoundedIcon from '@mui/icons-material/AccessTimeRounded';
 import { Tooltip, useMediaQuery, useTheme } from '@mui/material';
+import { AccessLevel } from '../../types';
 
 interface AddButtonProps {
     /** Path to redirect to on click */
@@ -23,6 +24,12 @@ interface AddButtonProps {
 
     /** Shows the edit history button and will override all other options if true */
     editHistory?: boolean;
+
+    /** True if button should be disabled */
+    disabled?: boolean;
+
+    /** True if button should be hidden */
+    hidden?: boolean;
 }
 
 /**
@@ -40,20 +47,22 @@ const AddButton = (props: AddButtonProps) => {
     // Change position of button to the left side if it's the edit history button
     const leftOrRight = props.editHistory ? { left: { lg: 32, xs: 12 } } : { right: { lg: 32, xs: 12 } };
 
+    // Calculate title of tooltip
+    const tooltipTitle = props.editHistory
+        ? 'Show Edit History'
+        : `${props.edit ? 'Edit' : 'Add'} ${props.label || 'resource'}`;
+
     return (
-        <Tooltip
-            title={
-                props.editHistory ? 'Show Edit History' : `${props.edit ? 'Edit' : 'Add'} ${props.label || 'resource'}`
-            }
-        >
+        <Tooltip title={tooltipTitle}>
             <Fab
                 variant={props.editHistory ? 'extended' : 'circular'}
                 size={matches ? 'small' : 'large'}
                 color={props.editHistory ? 'primary' : props.color || 'default'}
                 aria-label={props.editHistory ? 'edit history' : props.edit ? 'edit' : 'add'}
                 onClick={redirectTo}
+                disabled={props.disabled}
                 sx={{
-                    display: 'flex',
+                    display: props.hidden ? 'none' : 'flex',
                     margin: props.editHistory ? '12px auto' : 'auto',
                     position: 'fixed',
                     bottom: { lg: 32, xs: 12 },

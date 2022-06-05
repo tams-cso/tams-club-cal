@@ -3,7 +3,7 @@ import type { Theme } from '@mui/material';
 import { GetServerSidePropsContext, InferGetServerSidePropsType } from 'next';
 import { useRouter } from 'next/router';
 import { getClub } from '../../src/api';
-import { darkSwitchGrey, getParams } from '../../src/util';
+import { darkSwitchGrey, getAccessLevel, getParams } from '../../src/util';
 
 import Container from '@mui/material/Container';
 import Paper from '@mui/material/Paper';
@@ -26,6 +26,7 @@ import Loading from '../../src/components/shared/loading';
 import ResourceMeta from '../../src/components/meta/resource-meta';
 import TitleMeta from '../../src/components/meta/title-meta';
 import RobotBlockMeta from '../../src/components/meta/robot-block-meta';
+import { AccessLevel } from '../../src/types';
 
 // Style for "No resource" text
 const emptyTextStyle: object = {
@@ -37,15 +38,16 @@ const emptyTextStyle: object = {
 // Server-side Rendering
 export const getServerSideProps = async (ctx: GetServerSidePropsContext) => {
     const clubRes = await getClub(ctx.params.id as string);
+    const level = await getAccessLevel(ctx);
     return {
-        props: { club: clubRes.data, error: clubRes.status !== 200 },
+        props: { club: clubRes.data, error: clubRes.status !== 200, level },
     };
 };
 
 /**
  * Displays a single club.
  */
-const ClubDisplay = ({ club, error }: InferGetServerSidePropsType<typeof getServerSideProps>) => {
+const ClubDisplay = ({ club, error, level }: InferGetServerSidePropsType<typeof getServerSideProps>) => {
     const router = useRouter();
     const [links, setLinks] = useState(null);
     const [tabValue, setTabValue] = useState(0);
@@ -113,7 +115,13 @@ const ClubDisplay = ({ club, error }: InferGetServerSidePropsType<typeof getServ
             />
             <RobotBlockMeta />
             <Container sx={{ maxWidth: { xl: '50%', md: '75%', xs: '100%' } }}>
-                <AddButton color="secondary" label="Club" path={`/edit/clubs/${club.id}`} edit />
+                <AddButton
+                    color="secondary"
+                    label="Club"
+                    path={`/edit/clubs/${club.id}`}
+                    edit
+                    disabled={level < AccessLevel.CLUBS}
+                />
                 <Card sx={{ marginBottom: 4 }}>
                     <CardMedia
                         sx={{

@@ -6,6 +6,7 @@ import { EventObject } from '../functions/types';
 const eventSchema = new mongoose.Schema({
     id: String,
     eventId: String,
+    editorId: String,
     type: String,
     name: String,
     club: String,

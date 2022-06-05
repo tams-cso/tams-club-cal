@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { useRouter } from 'next/router';
 import { GetServerSidePropsContext, InferGetServerSidePropsType } from 'next';
 import Cookies from 'universal-cookie';
-import { getBackendUrl, getAuthInfo, postLogin } from '../../src/api';
+import { getBackendUrl, getUserInfo, postLogin } from '../../src/api';
 import { createPopupEvent, darkSwitchGrey } from '../../src/util';
 import type { PopupEvent } from '../../src/types';
 
@@ -24,8 +24,8 @@ export const getServerSideProps = async (ctx: GetServerSidePropsContext) => {
     if (token === undefined) return { props: { authorized: false } };
 
     // Check if valid token and compare with database
-    const res = await getAuthInfo(token);
-    if (res.status === 200 && res.data.loggedIn) {
+    const res = await getUserInfo(token);
+    if (res.status === 200) {
         return { props: { authorized: true } };
     } else {
         return { props: { authorized: false, error: res.status !== 200 } };

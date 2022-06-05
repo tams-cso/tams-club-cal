@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { InferGetServerSidePropsType } from 'next';
+import { GetServerSidePropsContext, InferGetServerSidePropsType } from 'next';
 import { getClubList } from '../../src/api';
 
 import Container from '@mui/material/Container';
@@ -13,13 +13,15 @@ import ViewSwitcher from '../../src/components/shared/view-switcher';
 import SortSelect from '../../src/components/shared/sort-select';
 import PageWrapper from '../../src/components/shared/page-wrapper';
 import TitleMeta from '../../src/components/meta/title-meta';
+import { getAccessLevel } from '../../src/util';
+import { AccessLevel } from '../../src/types';
 
 // Server-side Rendering
-export const getServerSideProps = async () => {
+export const getServerSideProps = async (ctx: GetServerSidePropsContext) => {
     const clubRes = await getClubList();
-    console.log(clubRes);
+    const level = await getAccessLevel(ctx);
     return {
-        props: { clubList: clubRes.data, error: clubRes.status !== 200 },
+        props: { clubList: clubRes.data, error: clubRes.status !== 200, level },
     };
 };
 
@@ -27,7 +29,7 @@ export const getServerSideProps = async () => {
  * The ClubList component displays a list of cards, each of which
  * contains a summary of each club and links to that specific club.
  */
-const ClubList = ({ clubList, error }: InferGetServerSidePropsType<typeof getServerSideProps>) => {
+const ClubList = ({ clubList, error, level }: InferGetServerSidePropsType<typeof getServerSideProps>) => {
     const [clubCardList, setClubCardList] = useState(<Loading />);
     const [tableView, setTableView] = useState(false);
     const [sort, setSort] = useState('name');
@@ -88,7 +90,7 @@ const ClubList = ({ clubList, error }: InferGetServerSidePropsType<typeof getSer
                     />
                     <ViewSwitcher tableView={tableView} setTableView={setTableView} />
                 </Box>
-                <AddButton color="primary" label="Club" path="/edit/clubs" />
+                <AddButton color="primary" label="Club" path="/edit/clubs" hidden={level < AccessLevel.ADMIN} />
                 {tableView ? <ClubTable clubs={clubList} /> : clubCardList}
             </Container>
         </PageWrapper>

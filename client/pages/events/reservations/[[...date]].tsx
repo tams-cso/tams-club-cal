@@ -2,8 +2,8 @@ import React, { useEffect, useState } from 'react';
 import { GetServerSidePropsContext, InferGetServerSidePropsType } from 'next';
 import dayjs from 'dayjs';
 import { getReservationList } from '../../../src/api';
-import type { BrokenReservation } from '../../../src/types';
-import { parseDateParams } from '../../../src/util';
+import { AccessLevel, BrokenReservation } from '../../../src/types';
+import { getAccessLevel, parseDateParams } from '../../../src/util';
 
 import Box from '@mui/material/Box';
 import TextField from '@mui/material/TextField';
@@ -24,11 +24,13 @@ export const getServerSideProps = async (ctx: GetServerSidePropsContext) => {
     // Get the reservation for the given week
     // and send an error if either fails to retrieve
     const reservations = await getReservationList(now.valueOf());
+    const level = await getAccessLevel(ctx);
     return {
         props: {
             now: now.valueOf(),
             reservationList: reservations.data,
             error: reservations.status !== 200,
+            level,
         },
     };
 };
@@ -39,7 +41,12 @@ export const getServerSideProps = async (ctx: GetServerSidePropsContext) => {
  * split them by day, and display them in a table by hour.
  * There is also a Date Picker that allows the user to select a different week.
  */
-const Reservations = ({ now, reservationList, error }: InferGetServerSidePropsType<typeof getServerSideProps>) => {
+const Reservations = ({
+    now,
+    reservationList,
+    error,
+    level,
+}: InferGetServerSidePropsType<typeof getServerSideProps>) => {
     const router = useRouter();
     const [reservationComponentList, setReservationComponentList] = useState(null);
     const [week, setWeek] = useState(dayjs(now));
@@ -47,7 +54,7 @@ const Reservations = ({ now, reservationList, error }: InferGetServerSidePropsTy
     // Redirect the user to the current week on click
     const goToToday = () => {
         setWeek(dayjs());
-    }
+    };
 
     // When the list of reservations updates, re-render the reservation components
     // This will create a table of reservations
@@ -184,16 +191,14 @@ const Reservations = ({ now, reservationList, error }: InferGetServerSidePropsTy
                     value={week}
                     onChange={setWeek}
                     renderInput={(params) => (
-                        <TextField
-                            {...params}
-                            variant="standard"
-                            sx={{ marginLeft: { sm: 4, xs: 2 } }}
-                        />
+                        <TextField {...params} variant="standard" sx={{ marginLeft: { sm: 4, xs: 2 } }} />
                     )}
                 />
-                <Button variant="outlined" onClick={goToToday} sx={{ mx: 2 }}>Today</Button>
+                <Button variant="outlined" onClick={goToToday} sx={{ mx: 2 }}>
+                    Today
+                </Button>
             </Box>
-            <AddButton color="primary" label="Event" path="/edit/events" />
+            <AddButton color="primary" label="Event" path="/edit/events" disabled={level < AccessLevel.STANDARD} />
             {reservationComponentList === null ? <Loading /> : reservationComponentList}
         </HomeBase>
     );

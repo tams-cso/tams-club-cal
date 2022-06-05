@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
-import { InferGetServerSidePropsType } from 'next';
+import { GetServerSidePropsContext, InferGetServerSidePropsType } from 'next';
 import { getVolunteeringList } from '../../src/api';
-import { darkSwitchGrey } from '../../src/util';
+import { darkSwitchGrey, getAccessLevel } from '../../src/util';
 
 import Grid from '@mui/material/Grid';
 import Container from '@mui/material/Container';
@@ -24,12 +24,14 @@ import VolunteeringTable from '../../src/components/volunteering/volunteering-ta
 import SortSelect from '../../src/components/shared/sort-select';
 import PageWrapper from '../../src/components/shared/page-wrapper';
 import TitleMeta from '../../src/components/meta/title-meta';
+import { AccessLevel } from '../../src/types';
 
 // Server-side Rendering
-export const getServerSideProps = async () => {
+export const getServerSideProps = async (ctx: GetServerSidePropsContext) => {
     const volRes = await getVolunteeringList();
+    const level = await getAccessLevel(ctx);
     return {
-        props: { volunteeringList: volRes.data, error: volRes.status !== 200 },
+        props: { volunteeringList: volRes.data, error: volRes.status !== 200, level },
     };
 };
 
@@ -37,7 +39,7 @@ export const getServerSideProps = async () => {
  * The VolunteeringList component displays a list of cards, each of which
  * contains a summary of each volunteering opportunity and links to that specific volunteering opportunity.
  */
-const Volunteering = ({ volunteeringList, error }: InferGetServerSidePropsType<typeof getServerSideProps>) => {
+const Volunteering = ({ volunteeringList, error, level }: InferGetServerSidePropsType<typeof getServerSideProps>) => {
     const [filteredList, setFilteredList] = useState([]);
     const [volunteeringCardList, setVolunteeringCardList] = useState(<Loading />);
     const [anchorEl, setAnchorEl] = useState(null);
@@ -136,7 +138,12 @@ const Volunteering = ({ volunteeringList, error }: InferGetServerSidePropsType<t
         <PageWrapper>
             <TitleMeta title="Volunteering" path="/volunteering" />
             <Container maxWidth={false} sx={{ maxWidth: 1280 }}>
-                <AddButton color="primary" label="Volunteering" path="/edit/volunteering" />
+                <AddButton
+                    color="primary"
+                    label="Volunteering"
+                    path="/edit/volunteering"
+                    disabled={level < AccessLevel.CLUBS}
+                />
                 <Box width="100%" marginBottom={2} display="flex" alignItems="center">
                     <Tooltip title="Filters">
                         <IconButton onClick={openFilters} size="large">

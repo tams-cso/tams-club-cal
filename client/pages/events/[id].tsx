@@ -2,8 +2,17 @@ import React from 'react';
 import type { Theme } from '@mui/material';
 import { GetServerSidePropsContext, InferGetServerSidePropsType } from 'next';
 import { useRouter } from 'next/router';
-import { RepeatingStatus } from '../../src/types';
-import { darkSwitch, darkSwitchGrey, formatEventDate, formatEventTime, formatDate, getParams } from '../../src/util';
+import { AccessLevel, RepeatingStatus } from '../../src/types';
+import {
+    darkSwitch,
+    darkSwitchGrey,
+    formatEventDate,
+    formatEventTime,
+    formatDate,
+    getParams,
+    getAccessLevel,
+    getTokenFromCookies,
+} from '../../src/util';
 
 import Container from '@mui/material/Container';
 import Card from '@mui/material/Card';
@@ -18,7 +27,7 @@ import Paragraph from '../../src/components/shared/paragraph';
 import AddButton from '../../src/components/shared/add-button';
 import Loading from '../../src/components/shared/loading';
 import HomeBase from '../../src/components/home/home-base';
-import { getEvent } from '../../src/api';
+import { getEvent, getUserInfo } from '../../src/api';
 
 import data from '../../src/data.json';
 import Link from '../../src/components/shared/Link';
@@ -34,15 +43,23 @@ const eventTypeStyle = {
 // Server-side Rendering
 export const getServerSideProps = async (ctx: GetServerSidePropsContext) => {
     const eventRes = await getEvent(ctx.params.id as string);
+    const level = await getAccessLevel(ctx);
+    const token = getTokenFromCookies(ctx);
+    const userRes = await getUserInfo(token);
     return {
-        props: { event: eventRes.data, error: eventRes.status !== 200 },
+        props: {
+            event: eventRes.data,
+            error: eventRes.status !== 200,
+            level,
+            userId: userRes.status === 200 ? userRes.data.id : '',
+        },
     };
 };
 
 /**
  * Displays a single event in a card view
  */
-const EventDisplay = ({ event, error }: InferGetServerSidePropsType<typeof getServerSideProps>) => {
+const EventDisplay = ({ event, error, level, userId }: InferGetServerSidePropsType<typeof getServerSideProps>) => {
     const router = useRouter();
 
     // Go back to the previous screen that took the user here
@@ -78,7 +95,13 @@ const EventDisplay = ({ event, error }: InferGetServerSidePropsType<typeof getSe
                 description={event.description}
             />
             <Container maxWidth={false} sx={{ maxWidth: { lg: '60%', md: '75%', xs: '100%' } }}>
-                <AddButton color="secondary" label="Event" path={`/edit/events/${event.id}`} edit />
+                <AddButton
+                    color="secondary"
+                    label="Event"
+                    path={`/edit/events/${event.id}`}
+                    edit
+                    hidden={level < AccessLevel.STANDARD || userId !== event.editorId}
+                />
                 <Card sx={{ marginBottom: 3 }}>
                     <CardContent>
                         <Box

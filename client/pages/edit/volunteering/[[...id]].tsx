@@ -3,9 +3,9 @@ import { useRouter } from 'next/router';
 import { GetServerSidePropsContext, InferGetServerSidePropsType } from 'next';
 import { useForm } from 'react-hook-form';
 import Cookies from 'universal-cookie';
-import { createPopupEvent, createVolunteering, createFilters } from '../../../src/util';
-import type { PopupEvent } from '../../../src/types';
-import { getVolunteering, postVolunteering, putVolunteering } from '../../../src/api';
+import { createPopupEvent, createVolunteering, createFilters, getTokenFromCookies } from '../../../src/util';
+import { AccessLevel, PopupEvent } from '../../../src/types';
+import { getUserInfo, getVolunteering, postVolunteering, putVolunteering } from '../../../src/api';
 
 import { Controller } from 'react-hook-form';
 import Typography from '@mui/material/Typography';
@@ -23,23 +23,36 @@ import Spacer from '../../../src/components/shared/spacer';
 import Popup from '../../../src/components/shared/popup';
 import EditWrapper from '../../../src/components/edit/shared/edit-wrapper';
 import TitleMeta from '../../../src/components/meta/title-meta';
+import UnauthorizedAlert from '../../../src/components/edit/shared/unauthorized-alert';
 
 // Server-side Rendering
 export const getServerSideProps = async (ctx: GetServerSidePropsContext) => {
+    // Get editor information
+    const token = getTokenFromCookies(ctx);
+    const userRes = await getUserInfo(token);
+    const userId = userRes.status === 200 ? userRes.data.id : null;
+    const level = userId ? userRes.data.level : AccessLevel.NONE;
+
+    // Check if adding volunteering
     const id = ctx.params.id as string;
-    if (!id) return { props: { volunteering: createVolunteering(), id: null, error: false } };
+    if (!id) return { props: { volunteering: createVolunteering(), id: null, error: false, level } };
+
+    // Get volunteering info
     const volRes = await getVolunteering(id);
     const error = volRes.status !== 200;
     const volunteering = error ? createVolunteering() : volRes.data;
-    return {
-        props: { volunteering, error, id: error ? null : id },
-    };
+    return { props: { volunteering, error, id: error ? null : id, level } };
 };
 
 /**
  * Main form for editing and adding volunteering
  */
-const EditVolunteering = ({ volunteering, id, error }: InferGetServerSidePropsType<typeof getServerSideProps>) => {
+const EditVolunteering = ({
+    volunteering,
+    id,
+    error,
+    level,
+}: InferGetServerSidePropsType<typeof getServerSideProps>) => {
     const router = useRouter();
     const [backdrop, setBackdrop] = useState(false);
     const [popupEvent, setPopupEvent] = useState<PopupEvent>(null);
@@ -97,6 +110,8 @@ const EditVolunteering = ({ volunteering, id, error }: InferGetServerSidePropsTy
         setValue('open', volunteering.filters.open);
     }, []);
 
+    const unauthorized = level < AccessLevel.CLUBS;
+
     return (
         <EditWrapper>
             <TitleMeta title={`${id ? 'Edit' : 'Add'} Volunteering`} path={`/edit/volunteering/${id ? id : ''}`} />
@@ -105,6 +120,7 @@ const EditVolunteering = ({ volunteering, id, error }: InferGetServerSidePropsTy
             <Typography variant="h1" sx={{ textAlign: 'center', fontSize: '3rem' }}>
                 {id ? 'Edit Volunteering' : 'Add Volunteering'}
             </Typography>
+            <UnauthorizedAlert show={unauthorized} resource="volunteering" />
             {id ? <AddButton editHistory path={`/edit/history/volunteering/${id}`} /> : null}
             <FormWrapper onSubmit={handleSubmit(onSubmit)}>
                 {/* TODO: Make a BoxWrapper component as this css is repeated so much across all forms */}
@@ -196,7 +212,14 @@ const EditVolunteering = ({ volunteering, id, error }: InferGetServerSidePropsTy
                     area
                     sx={{ marginTop: 2 }}
                 />
-                <TwoButtonBox success="Submit" onCancel={back} onSuccess={onSubmit} submit right />
+                <TwoButtonBox
+                    success="Submit"
+                    onCancel={back}
+                    onSuccess={onSubmit}
+                    submit
+                    right
+                    disabled={unauthorized}
+                />
             </FormWrapper>
         </EditWrapper>
     );

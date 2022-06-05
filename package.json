@@ -12,6 +12,8 @@
         "build": "next build",
         "build:staging": "NEXT_PUBLIC_BACKEND=staging next build ./client",
         "build:backend": "node esbuild.js",
+        "type": "tsc --noEmit -p client",
+        "type:server": "tsc --noEmit -p server",
         "start": "next start",
         "docker": "docker build --no-cache --progress=plain --build-arg NEXT_PUBLIC_BACKEND=staging -t tams-club-cal .",
         "docs": "typedoc --options typedoc.json"

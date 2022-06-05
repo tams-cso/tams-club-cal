@@ -1,8 +1,6 @@
-import type {
+import {
     Event,
-    Editor,
     LinkInputData,
-    Reservation,
     PopupEvent,
     Volunteering,
     Filters,
@@ -23,7 +21,8 @@ import timezone from 'dayjs/plugin/timezone';
 import isLeapYear from 'dayjs/plugin/isLeapYear';
 import customParseFormat from 'dayjs/plugin/customParseFormat';
 import Link from './components/shared/Link';
-import { getUserById } from './api';
+import { getUserById, getUserInfo } from './api';
+import { GetServerSidePropsContext } from 'next';
 
 // Plugins for dayjs base library
 dayjs.extend(utc);
@@ -99,6 +98,30 @@ export function processLinkObjectList(list: LinkInputData[]): string[] {
 export function accessLevelToString(level: AccessLevel): string {
     const levelMap = ['Standard', 'Clubs', 'Admin'];
     return levelMap[level];
+}
+
+/**
+ * Gets the access level of the user
+ */
+export async function getAccessLevel(ctx: GetServerSidePropsContext): Promise<AccessLevel> {
+    // Get token cookie from SSR props context
+    const token = getTokenFromCookies(ctx);
+    if (!token) return AccessLevel.NONE;
+
+    // Check if valid token and compare with database
+    const res = await getUserInfo(token);
+    if (res.status !== 200) return AccessLevel.NONE;
+
+    return res.data.level;
+}
+
+/**
+ * Extracts the user login token from the cookies
+ */
+export function getTokenFromCookies(ctx: GetServerSidePropsContext): string {
+    const tokenCookie = ctx.req.cookies.token;
+    if (tokenCookie === undefined) return null;
+    return JSON.parse(tokenCookie).token as string;
 }
 
 // ================== CSS AND MUI FUNCTIONS =================== //
@@ -315,22 +338,6 @@ export function parsePublicEventList(eventList: Event[]): Event[] {
     return outputList.sort((a, b) => a.start - b.start);
 }
 
-/**
- * Will parse the editor object into a readable string depending
- * on the stored values. Will also display "N/A" for invalid objects or values
- *
- * @param editor The editor object
- * @returns The parsed editor to display
- */
-export async function parseEditor(editor: Editor): Promise<string> {
-    if (!editor) return 'N/A';
-    if (editor.id === null) return editor.ip;
-
-    const editorRes = await getUserById(editor.id);
-    if (editorRes.status !== 200) return 'N/A';
-    return editorRes.data.name;
-}
-
 // ================== OBJECT CONSTRUCTORS =================== //
 
 /**
@@ -427,30 +434,12 @@ export function createFilters(
 }
 
 /**
- * Creates a Reservation object
- */
-export function createReservation(
-    id: string = null,
-    eventId: string = null,
-    name: string = '',
-    club: string = '',
-    description: string = '',
-    start: number = 0,
-    end: number = 0,
-    location: string = 'none',
-    allDay: boolean = false,
-    repeatEnd: number = null,
-    history: string[] = null
-): Reservation {
-    return { id, eventId, name, club, description, start, end, location, allDay, repeatEnd, history };
-}
-
-/**
  * Creates an Event object
  */
 export function createEvent(
     id: string = null,
     eventId: string = null,
+    editorId: string = null,
     type: string = 'Event',
     name: string = '',
     club: string = '',
@@ -470,6 +459,7 @@ export function createEvent(
     return {
         id,
         eventId,
+        editorId,
         type,
         name,
         club,

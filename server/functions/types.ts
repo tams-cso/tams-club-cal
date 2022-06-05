@@ -14,18 +14,6 @@ export enum AccessLevel {
     ADMIN,
 }
 
-/**
- * An object containing the information for an editor.
- * Either the id or ip will contain data, but the id will take precedence.
- */
-export interface Editor {
-    /** The unique UUIDv4 for the user */
-    id?: string;
-
-    /** The ip address of the editor */
-    ip?: string;
-}
-
 /** An object containing a specific edited field */
 export interface Field {
     /** The key for the field (eg. 'name') */
@@ -209,13 +197,13 @@ export interface HistoryObject {
     resource: Resource;
 
     /** The ID of the original resource */
-    editId: string;
+    resourceId: string;
 
     /** The time in UTC milliseconds that this edit was made */
     time: number;
 
     /** The editor of this specific resource */
-    editor: Editor;
+    editorId: string;
 
     /** List of fields that were edited */
     fields: Field[];

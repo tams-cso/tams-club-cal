@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import Cookies from 'universal-cookie';
 import { getUserList, putUserLevel } from '../../api';
-import { PopupEvent, AdminUser, AccessLevel } from '../../types';
+import { PopupEvent, User, AccessLevel } from '../../types';
 import { accessLevelToString, createPopupEvent } from '../../util';
 
 import Button from '@mui/material/Button';
@@ -29,7 +29,7 @@ import Popup from '../shared/popup';
 import UploadBackdrop from '../edit/shared/upload-backdrop';
 
 const ChangeUserPermissions = () => {
-    const [user, setUser] = useState<AdminUser>({ id: '0', level: AccessLevel.STANDARD, name: '', email: '' });
+    const [user, setUser] = useState<User>({ id: '0', level: AccessLevel.STANDARD, name: '', email: '' });
     const [editLevelPrompt, setEditLevelPrompt] = useState(false);
     const [popupEvent, setPopupEvent] = useState<PopupEvent>(null);
     const [backdrop, setBackdrop] = useState(false);

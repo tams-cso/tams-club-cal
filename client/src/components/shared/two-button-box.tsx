@@ -19,6 +19,9 @@ interface TwoButtonBoxProps {
     /** True if align button right */
     right?: boolean;
 
+    /** True if success button is disabled */
+    disabled?: boolean;
+
     /** Format the Box component */
     sx?: object;
 }
@@ -50,6 +53,7 @@ const TwoButtonBox = (props: TwoButtonBoxProps) => {
                 color="primary"
                 size="large"
                 onClick={props.onSuccess}
+                disabled={props.disabled}
                 sx={{ marginLeft: 2, marginRight: 2 }}
             >
                 {props.success || 'Submit'}

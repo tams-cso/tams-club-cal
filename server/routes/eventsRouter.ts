@@ -228,6 +228,8 @@ router.put('/:id', async (req: Request, res: Response) => {
         // Extract info from req.body
         const repeats = Number(req.body.repeats);
 
+        // Get editor information
+
         // Create Event to update
         const toUpdate = {
             id,

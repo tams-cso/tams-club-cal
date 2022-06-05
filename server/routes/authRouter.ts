@@ -25,7 +25,6 @@ router.get('/ip', (req: Request, res: Response) => {
  */
 router.get('/:token', async (req: Request, res: Response) => {
     const user = await User.findOne({ token: req.params.token }).exec();
-    console.log(user);
     if (user) res.send({ loggedIn: true, level: user.level });
     else res.send({ loggedIn: false, level: null });
 });

@@ -1,12 +1,12 @@
 import express from 'express';
 import type { Request, Response } from 'express';
 import { sendError } from '../functions/util';
-import { parseEditor } from '../functions/edit-history';
 import History from '../models/history';
 import Club from '../models/club';
 import Volunteering from '../models/volunteering';
 import { HistoryObject } from '../functions/types';
 import Event from '../models/event';
+import User from '../models/user';
 const router = express.Router();
 
 /**
@@ -45,12 +45,12 @@ router.get('/', async (req: Request, res: Response) => {
     const dataList = await Promise.all(
         sortedHistory.map(async (h: HistoryObject) => {
             let resourceObj = null;
-            if (h.resource === 'events') resourceObj = await Event.findOne({ id: h.editId });
-            else if (h.resource === 'clubs') resourceObj = await Club.findOne({ id: h.editId });
-            else if (h.resource === 'volunteering') resourceObj = await Volunteering.findOne({ id: h.editId });
+            if (h.resource === 'events') resourceObj = await Event.findOne({ id: h.resourceId });
+            else if (h.resource === 'clubs') resourceObj = await Club.findOne({ id: h.resourceId });
+            else if (h.resource === 'volunteering') resourceObj = await Volunteering.findOne({ id: h.resourceId });
             const name = !resourceObj ? 'N/A' : resourceObj.name;
-            const editor = await parseEditor(h.editor);
-            return { name, editor };
+            const editorRes = h.editorId ? await User.findOne({ id: h.editorId }) : null;
+            return { name, editor: editorRes ? editorRes.name : 'N/A' };
         })
     );
 
@@ -88,10 +88,25 @@ router.get('/:resource/:id', async (req: Request, res: Response) => {
         return;
     }
 
-    // Return the history object based on the ID of the resource
-    const history = await History.find({ editId: resourceObj.id });
-    if (history) res.send({ history, name: resourceObj.name });
-    else sendError(res, 500, 'Could not fetch history list for the given resource');
+    // Get the history object and the list of editor names
+    // If invalid, return error
+    const history = await History.find({ resource: req.params.resource, resourceId: resourceObj.id }).exec();
+    if (history) {
+        // Sort history object
+        const sortedHistory = history.sort((a, b) => b.time - a.time);
+
+        // Fetch the names of the items in the history list
+        // Also fetch the names of the editors
+        // TODO: (maybe) Create some sort of map for editors because honestly the editor of a resource
+        // for most are only going to be admins or the person who made it. This would reduce
+        const editorList = await Promise.all(
+            sortedHistory.map(async (h: HistoryObject) => {
+                const editorRes = h.editorId ? await User.findOne({ id: h.editorId }) : null;
+                return editorRes ? editorRes.name : 'N/A';
+            })
+        );
+        res.send({ history: sortedHistory, name: resourceObj.name, editorList });
+    } else sendError(res, 500, 'Could not fetch history list for the given resource');
 });
 
 export default router;
