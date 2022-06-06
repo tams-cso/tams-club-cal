@@ -17,6 +17,7 @@ import TableRow from '@mui/material/TableRow';
 import Loading from '../../src/components/shared/loading';
 import EditWrapper from '../../src/components/edit/shared/edit-wrapper';
 import TitleMeta from '../../src/components/meta/title-meta';
+import AccessInfo from '../../src/components/edit/history/access-info';
 
 // Server-side Rendering
 export const getServerSideProps = async (ctx: GetServerSidePropsContext) => {
@@ -30,6 +31,7 @@ const Edit = ({ level }: InferGetServerSidePropsType<typeof getServerSideProps>)
     const [dataList, setDataList] = useState<HistoryData[]>(null);
     const [noMore, setNoMore] = useState(true);
     const [error, setError] = useState(false);
+    const [infoOpen, setInfoOpen] = useState(false);
     const router = useRouter();
 
     // Redirect user to an add resource page
@@ -88,6 +90,10 @@ const Edit = ({ level }: InferGetServerSidePropsType<typeof getServerSideProps>)
     return (
         <EditWrapper>
             <TitleMeta title="Edit" path="/edit" />
+            <AccessInfo open={infoOpen} setOpen={setInfoOpen} />
+            <Typography variant="h1" component="h2" sx={{ margin: 2, textAlign: 'center' }}>
+                Edit History
+            </Typography>
             <Box
                 sx={{
                     display: 'flex',
@@ -121,9 +127,11 @@ const Edit = ({ level }: InferGetServerSidePropsType<typeof getServerSideProps>)
                     Add a Volunteering Opportunity
                 </Button>
             </Box>
-            <Typography variant="h1" component="h2" sx={{ margin: 2, textAlign: 'center' }}>
-                Edit History
-            </Typography>
+            <Box sx={{ display: 'flex', justifyContent: 'center' }}>
+                <Button variant="text" onClick={setInfoOpen.bind(this, true)} sx={{ marginBottom: 1 }}>
+                    Why can I not add/modify a resource?
+                </Button>
+            </Box>
             {!historyList ? (
                 <Loading error={error}>
                     Could not get history list. Please check your internet and reload the page.
