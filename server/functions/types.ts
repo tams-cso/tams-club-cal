@@ -34,6 +34,9 @@ export interface EventObject {
     /** The ID assigned by the Google Calendar API to the calendar event */
     eventId: string;
 
+    /** The ID of the user who creates this event */
+    editorId: string;
+
     /** The type of the event */
     type: string;
 

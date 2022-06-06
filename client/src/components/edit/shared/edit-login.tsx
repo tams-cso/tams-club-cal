@@ -31,7 +31,7 @@ const EditLogin = () => {
 
             // Get user information and return not valid token
             const userRes = await getUserInfo(tokenCookie['token']);
-            if (userRes.status === 403) {
+            if (userRes.status === 401) {
                 setMessage('You are not logged in');
                 return;
             } else if (userRes.status !== 200) {

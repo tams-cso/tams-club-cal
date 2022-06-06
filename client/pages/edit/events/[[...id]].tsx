@@ -30,6 +30,7 @@ import RobotBlockMeta from '../../../src/components/meta/robot-block-meta';
 
 import data from '../../../src/data.json';
 import UnauthorizedAlert from '../../../src/components/edit/shared/unauthorized-alert';
+import DeleteButton from '../../../src/components/shared/delete-button';
 
 type SubmitData = {
     type: string;
@@ -341,7 +342,12 @@ const EditEvents = ({ event, id, error, userId, level }: InferGetServerSideProps
                 {id ? 'Edit Event' : 'Add Event'}
             </Typography>
             <UnauthorizedAlert show={unauthorized} resource="event" />
-            {id ? <AddButton editHistory path={`/edit/history/events/${id}`} /> : null}
+            {id ? (
+                <React.Fragment>
+                    <AddButton editHistory path={`/edit/history/events/${id}`} />
+                    <DeleteButton resource="events" id={id} name={event.name} hidden={unauthorized} />
+                </React.Fragment>
+            ) : null}
             <FormWrapper onSubmit={handleSubmit(onSubmit)}>
                 <Box sx={{ marginBottom: 3, display: 'flex', flexDirection: { lg: 'row', xs: 'column' } }}>
                     <ControlledTextField

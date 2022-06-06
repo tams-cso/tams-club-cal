@@ -79,18 +79,35 @@ export async function upsertUser(payload: TokenPayload): Promise<string> {
  *
  * @param token Authorization token for the given user
  * @param level Minimum user level to check for
+ * @param id User ID to check, doesn't check if not defined
  * @returns True if the user exists
  */
-export async function isValidToken(token: string, level: AccessLevel = AccessLevel.STANDARD): Promise<boolean> {
+export async function isValidToken(
+    token: string,
+    level: AccessLevel = AccessLevel.STANDARD,
+    id?: string
+): Promise<boolean> {
     const user = await User.findOne({ token }).exec();
-    if (user !== null && user.level >= level) return true;
+    if (user !== null && user.level >= level) {
+        if (!id || user.level === AccessLevel.ADMIN) return true;
+        console.log(user.id);
+        return id === user.id;
+    }
     return false;
 }
 
+/**
+ *
+ * @param req Express request object
+ * @param res Express response object
+ * @param level Level to check for; STANDARD if not defined
+ * @param id User ID to check, doesn't check if not defined
+ */
 export async function isAuthenticated(
     req: Request,
     res: Response,
-    level: AccessLevel = AccessLevel.STANDARD
+    level: AccessLevel = AccessLevel.STANDARD,
+    id?: string
 ): Promise<boolean> {
     // Check to see if header is there
     if (!req.headers.authorization || !req.headers.authorization.startsWith('Bearer ')) {
@@ -99,7 +116,7 @@ export async function isAuthenticated(
     }
 
     // Make sure the token is valid
-    const validHeader = await isValidToken(req.headers.authorization.substring(7), level);
+    const validHeader = await isValidToken(req.headers.authorization.substring(7), level, id);
     if (!validHeader) {
         sendError(res, 401, 'Invalid authorization token');
         return false;

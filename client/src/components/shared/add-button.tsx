@@ -1,13 +1,12 @@
 import React from 'react';
 import { useRouter } from 'next/router';
-import { accessLevelToString, redirect } from '../../util';
+import { useMediaQuery, useTheme } from '@mui/material';
 
 import Fab from '@mui/material/Fab';
 import AddIcon from '@mui/icons-material/Add';
 import EditIcon from '@mui/icons-material/Edit';
+import Tooltip from '@mui/material/Tooltip';
 import AccessTimeRoundedIcon from '@mui/icons-material/AccessTimeRounded';
-import { Tooltip, useMediaQuery, useTheme } from '@mui/material';
-import { AccessLevel } from '../../types';
 
 interface AddButtonProps {
     /** Path to redirect to on click */

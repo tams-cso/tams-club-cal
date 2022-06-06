@@ -123,14 +123,13 @@ async function putRequest(
  * @param url API endpoint to GET
  * @param auth True if adding token
  */
-async function deleteRequest(url: string, auth: boolean = false): Promise<FetchResponse> {
+async function deleteRequest(url: string, auth: boolean = true): Promise<StatusResponse> {
     try {
         const res = await fetch(`${BACKEND_URL}${url}`, { method: 'DELETE', headers: createHeaders(auth, false) });
-        const data = await res.json();
-        return <FetchResponse>{ status: res.status, data };
+        return <StatusResponse>{ status: res.status };
     } catch (error) {
         console.dir(error);
-        return <FetchResponse>{ status: 404, data: null };
+        return <StatusResponse>{ status: 404 };
     }
 }
 
@@ -224,6 +223,15 @@ export async function getOverlappingReservations(
     return getRequest(`/events/reservations/search/${location}/${start}/${end}`) as Promise<ListFetchResponse<Event>>;
 }
 
+/**
+ * Deletes a given event by ID
+ *
+ * @param id ID of event to delete
+ */
+export async function deleteEvent(id: string): Promise<StatusResponse> {
+    return deleteRequest(`/events/${id}`);
+}
+
 /* ########## CLUBS API ########### */
 
 /**
@@ -282,6 +290,15 @@ export async function putClub(
     return putRequest(`/clubs/${id}`, data, false);
 }
 
+/**
+ * Deletes a given club by ID
+ *
+ * @param id ID of club to delete
+ */
+export async function deleteClub(id: string): Promise<StatusResponse> {
+    return deleteRequest(`/clubs/${id}`);
+}
+
 /* ########## VOLUNTEERING API ########### */
 
 /**
@@ -315,6 +332,15 @@ export async function postVolunteering(volunteering: Volunteering): Promise<Stat
  */
 export async function putVolunteering(volunteering: Volunteering, id: string): Promise<StatusResponse> {
     return putRequest(`/volunteering/${id}`, JSON.stringify(volunteering));
+}
+
+/**
+ * Deletes a given volunteering opportunity by ID
+ *
+ * @param id ID of event to delete
+ */
+export async function deleteVolunteering(id: string): Promise<StatusResponse> {
+    return deleteRequest(`/volunteering/${id}`);
 }
 
 /* ########## HISTORY API ########## */
@@ -387,7 +413,7 @@ export async function postLogin(tokenId: string): Promise<FetchResponse> {
 }
 
 /**
- * Gets the information of a logged in user, will return a 403 error
+ * Gets the information of a logged in user, will return a 401 error
  * if the user is not logged in.
  *
  * @param token User auth token
@@ -464,8 +490,8 @@ export async function getAdminResources(
  * @param resource Resource to delete
  * @param id ID of the resource to delete
  */
-export async function deleteAdminResource(resource: string, id: string): Promise<FetchResponse> {
-    return deleteRequest(`/admin/resources/${resource}/${id}`, true);
+export async function deleteAdminResource(resource: string, id: string): Promise<StatusResponse> {
+    return deleteRequest(`/admin/resources/${resource}/${id}`);
 }
 
 export function getBackendUrl(): string {

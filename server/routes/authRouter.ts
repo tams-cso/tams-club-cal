@@ -39,7 +39,7 @@ router.post('/login', async (req: Request, res: Response) => {
     // Check for valid token
     const payload = await verifyToken(req.body.tokenId);
     if (!payload) {
-        sendError(res, 403, 'Unable to verify token');
+        sendError(res, 401, 'Unable to verify token');
         return;
     }
 

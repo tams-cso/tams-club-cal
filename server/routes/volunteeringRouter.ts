@@ -3,6 +3,9 @@ import type { Request, Response } from 'express';
 import { sendError, newId } from '../functions/util';
 import { createHistory } from '../functions/edit-history';
 import Volunteering from '../models/volunteering';
+import { isAuthenticated } from '../functions/auth';
+import { AccessLevel } from '../functions/types';
+import History from '../models/history';
 const router = express.Router();
 
 /**
@@ -79,6 +82,22 @@ router.put('/:id', async (req: Request, res: Response) => {
 
     if (volunteeringRes.acknowledged && historyRes === newHistory) res.sendStatus(204);
     else sendError(res, 500, 'Unable to update volunteering opportunity in database.');
+});
+
+/**
+ * DELETE /volunteering/<id>
+ */
+router.delete('/:id', async (req: Request, res: Response) => {
+    // Check for authentication and access level
+    if (!isAuthenticated(req, res, AccessLevel.CLUBS)) return;
+
+    // Delete volunteering and history
+    const deleteRes = await Volunteering.deleteOne({ id: req.params.id });
+    await History.deleteMany({ resource: 'volunteering', editId: req.params.id });
+
+    // Return ok or error
+    if (deleteRes.deletedCount === 1) res.status(204);
+    else sendError(res, 500, 'Could not delete volunteering');
 });
 
 export default router;

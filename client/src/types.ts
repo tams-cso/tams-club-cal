@@ -28,9 +28,6 @@ export interface Event {
     /** The ID of the user who creates this event */
     editorId: string;
 
-    /** The ID of the reservation associated with the event */
-    reservationId?: string | number;
-
     /** The type of the event */
     type: string;
 
