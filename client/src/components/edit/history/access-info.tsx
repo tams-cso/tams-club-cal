@@ -30,7 +30,7 @@ const AccessInfo = (props: AccessInfoProps) => {
     const accessInfo = [
         { l: 'Public', p: [1, 0, 0, 0, 0, 0, 0] },
         { l: 'Standard', p: [1, 1, 2, 0, 0, 0, 0] },
-        { l: 'Clubs', p: [1, 1, 2, 1, 1, 0, 1] },
+        { l: 'Clubs', p: [1, 1, 2, 1, 1, 0, 2] },
         { l: 'Admin', p: [1, 1, 1, 1, 1, 1, 1] },
     ];
 
@@ -70,6 +70,9 @@ const AccessInfo = (props: AccessInfoProps) => {
                 </TableContainer>
                 <Typography sx={{ marginTop: 3, textAlign: 'center' }}>
                     ⚠️ Events may only be modified by the users that created them ⚠️
+                </Typography>
+                <Typography sx={{ marginTop: 3, textAlign: 'center' }}>
+                    ⚠️ Clubs can only be DELETED by admins ⚠️
                 </Typography>
             </DialogContent>
         </Dialog>
