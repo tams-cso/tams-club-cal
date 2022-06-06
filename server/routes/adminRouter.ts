@@ -88,8 +88,8 @@ router.delete('/resources/:resource/:id', async (req: Request, res: Response) =>
                 if (event.repeats !== RepeatingStatus.NONE && event.id === event.repeatOriginId)
                     await Event.deleteMany({ repeatOriginId: req.params.id });
 
-                // Return ok: 1 or error
-                if (deleteRes.deletedCount === 1) res.send({ ok: 1 });
+                // Return ok or error
+                if (deleteRes.deletedCount === 1) res.status(204);
                 else sendError(res, 500, 'Could not delete event');
                 break;
             }
@@ -104,15 +104,18 @@ router.delete('/resources/:resource/:id', async (req: Request, res: Response) =>
                 const deleteRes = await Club.deleteOne({ id: req.params.id });
                 await History.deleteMany({ resource: 'clubs', editId: req.params.id });
 
-                // Return ok: 1 or error
-                if (deleteRes.deletedCount === 1) res.send({ ok: 1 });
+                // Return ok or error
+                if (deleteRes.deletedCount === 1) res.status(204);
                 else sendError(res, 500, 'Could not delete club');
                 break;
             }
             case 'volunteering': {
+                // Delete volunteering and history
                 const deleteRes = await Volunteering.deleteOne({ id: req.params.id });
                 await History.deleteMany({ resource: 'volunteering', editId: req.params.id });
-                if (deleteRes.deletedCount === 1) res.send({ ok: 1 });
+
+                // Return ok or error
+                if (deleteRes.deletedCount === 1) res.status(204);
                 else sendError(res, 500, 'Could not delete volunteering');
                 break;
             }

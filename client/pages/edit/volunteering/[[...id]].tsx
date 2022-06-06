@@ -24,6 +24,7 @@ import Popup from '../../../src/components/shared/popup';
 import EditWrapper from '../../../src/components/edit/shared/edit-wrapper';
 import TitleMeta from '../../../src/components/meta/title-meta';
 import UnauthorizedAlert from '../../../src/components/edit/shared/unauthorized-alert';
+import DeleteButton from '../../../src/components/shared/delete-button';
 
 // Server-side Rendering
 export const getServerSideProps = async (ctx: GetServerSidePropsContext) => {
@@ -121,7 +122,17 @@ const EditVolunteering = ({
                 {id ? 'Edit Volunteering' : 'Add Volunteering'}
             </Typography>
             <UnauthorizedAlert show={unauthorized} resource="volunteering" />
-            {id ? <AddButton editHistory path={`/edit/history/volunteering/${id}`} /> : null}
+            {id ? (
+                <React.Fragment>
+                    <AddButton editHistory path={`/edit/history/volunteering/${id}`} />
+                    <DeleteButton
+                        resource="volunteering"
+                        id={volunteering.id}
+                        name={volunteering.name}
+                        hidden={unauthorized}
+                    />
+                </React.Fragment>
+            ) : null}
             <FormWrapper onSubmit={handleSubmit(onSubmit)}>
                 {/* TODO: Make a BoxWrapper component as this css is repeated so much across all forms */}
                 <Box sx={{ marginBottom: 3, display: 'flex', flexDirection: { lg: 'row', xs: 'column' } }}>

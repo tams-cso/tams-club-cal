@@ -35,6 +35,7 @@ export async function addRepeatingEvents(
     const extraRepeatingEvents = repeatDates.map((d) => ({
         id: newId(),
         eventId: null,
+        editorId: originalEvent.editorId,
         type: originalEvent.type,
         name: originalEvent.name,
         club: originalEvent.club,

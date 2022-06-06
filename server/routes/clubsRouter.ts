@@ -1,11 +1,13 @@
 import express from 'express';
 import type { Request, Response } from 'express';
 import multer from 'multer';
-import { processClubUpload } from '../functions/images';
+import { deleteClubImages, processClubUpload } from '../functions/images';
 import { newId, sendError } from '../functions/util';
 import { createHistory } from '../functions/edit-history';
 import Club from '../models/club';
-import { RequestWithClubFiles } from '../functions/types';
+import { AccessLevel, RequestWithClubFiles } from '../functions/types';
+import { isAuthenticated } from '../functions/auth';
+import History from '../models/history';
 
 const router = express.Router();
 const upload = multer({ storage: multer.memoryStorage() });
@@ -126,6 +128,30 @@ router.put('/:id', imageUpload, async (req: Request, res: Response) => {
         console.error(error);
         sendError(res, 500, 'Internal server error');
     }
+});
+
+/**
+ * DELETE /clubs/<id>
+ *
+ * Deletes a club by ID
+ */
+router.delete('/:id', async (req: Request, res: Response) => {
+    // Check if user is authenticated
+    if (!isAuthenticated(req, res, AccessLevel.ADMIN)) return;
+
+    // Get club
+    const club = await Club.findOne({ id: req.params.id });
+
+    // Delete images from AWS
+    await deleteClubImages(club);
+
+    // Delete club and history
+    const deleteRes = await Club.deleteOne({ id: req.params.id });
+    await History.deleteMany({ resource: 'clubs', editId: req.params.id });
+
+    // Return ok: 1 or error
+    if (deleteRes.deletedCount === 1) res.sendStatus(204);
+    else sendError(res, 500, 'Could not delete club');
 });
 
 export default router;

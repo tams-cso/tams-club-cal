@@ -1,17 +1,15 @@
 import express from 'express';
 import type { Request, Response } from 'express';
 import dayjs from 'dayjs';
-import {
-    addRecurringToCalendar,
-    addToCalendar,
-    deleteCalendarEvent,
-    updateCalendar,
-} from '../functions/gcal';
+import { addRecurringToCalendar, addToCalendar, deleteCalendarEvent, updateCalendar } from '../functions/gcal';
 import { sendError, newId } from '../functions/util';
 import { createHistory } from '../functions/edit-history';
 import Event from '../models/event';
-import { EventObject, RepeatingStatus } from '../functions/types';
+import { AccessLevel, EventObject, RepeatingStatus } from '../functions/types';
 import { addRepeatingEvents, updateRepeatingEvents } from '../functions/repeating-events';
+import { isAuthenticated } from '../functions/auth';
+import History from '../models/history';
+import User from '../models/user';
 
 const router = express.Router();
 
@@ -145,6 +143,12 @@ router.get('/reservations/search/:location/:start/:end', async (req: Request, re
  */
 router.post('/', async (req: Request, res: Response) => {
     try {
+        // Check if user is authenticated
+        if (!isAuthenticated(req, res, AccessLevel.STANDARD)) return;
+
+        const user = await User.findOne({ token: req.headers.authorization.substring(7) });
+        console.log(user.id);
+
         // Create unique IDs for history and event
         const historyId = newId();
         const id = newId();
@@ -156,6 +160,7 @@ router.post('/', async (req: Request, res: Response) => {
         const newEvent = new Event({
             id,
             eventId: null,
+            editorId: user.id,
             type: req.body.type,
             name: req.body.name,
             club: req.body.club,
@@ -222,6 +227,9 @@ router.put('/:id', async (req: Request, res: Response) => {
             return;
         }
 
+        // Check if user is authenticated
+        if (!isAuthenticated(req, res, AccessLevel.STANDARD, prev.editorId)) return;
+
         // Create new ID for edit history
         const historyId = newId();
 
@@ -234,6 +242,7 @@ router.put('/:id', async (req: Request, res: Response) => {
         const toUpdate = {
             id,
             eventId: req.body.eventId,
+            editorId: prev.editorId,
             type: req.body.type,
             name: req.body.name,
             club: req.body.club,
@@ -279,7 +288,7 @@ router.put('/:id', async (req: Request, res: Response) => {
         //         console.log(5);
         //     else console.log(6);
         // }
-        // 
+        //
         // #############################################################################################################################
 
         // ### Do things based on the repeating status of the updated event and the previous event ###
@@ -430,6 +439,37 @@ router.put('/:id', async (req: Request, res: Response) => {
         console.error(error);
         sendError(res, 500, 'Unable to update event to database');
     }
+});
+
+/**
+ * DELETE /events/<id>
+ *
+ * Deletes an event by id, needs an authorization token that is valid and has user
+ */
+router.delete('/:id', async (req: Request, res: Response) => {
+    // Get the previous event
+    const event: EventObject = await Event.findOne({ id: req.params.id });
+    if (!event) {
+        sendError(res, 400, 'Invalid event ID');
+        return;
+    }
+
+    // Check if user is authenticated
+    if (!isAuthenticated(req, res, AccessLevel.STANDARD, event.editorId)) return;
+
+    // Delete event from Google Calendar, History DB, and Events DB
+    if (event.publicEvent) await deleteCalendarEvent(event.eventId);
+    const deleteRes = await Event.deleteOne({ id: req.params.id });
+    await History.deleteMany({ resource: 'events', editId: req.params.id });
+
+    // Also delete any repeating events if it is the original repeating event
+    // TODO: Get rid of!!!
+    if (event.repeats !== RepeatingStatus.NONE && event.id === event.repeatOriginId)
+        await Event.deleteMany({ repeatOriginId: req.params.id });
+
+    // Return ok status or error
+    if (deleteRes.deletedCount === 1) res.sendStatus(204);
+    else sendError(res, 500, 'Could not delete event');
 });
 
 export default router;

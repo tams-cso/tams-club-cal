@@ -56,7 +56,7 @@ app.use(function (req: Request, res: Response, next) {
         req.path !== '/auth/login'
     ) {
         if (req.headers.referer === undefined || req.headers.referer.indexOf(process.env.ORIGIN) === -1) {
-            sendError(res, 403, 'Invalid request origin.');
+            sendError(res, 401, 'Invalid request origin.');
             return;
         }
     }

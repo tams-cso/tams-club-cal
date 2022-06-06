@@ -3,9 +3,15 @@ import { useRouter } from 'next/router';
 import { GetServerSidePropsContext, InferGetServerSidePropsType } from 'next';
 import { useForm } from 'react-hook-form';
 import Cookies from 'universal-cookie';
-import { processLinkObjectList, createPopupEvent, createClub, createClubImageBlobs } from '../../../src/util';
-import type { Exec, PopupEvent } from '../../../src/types';
-import { getClub, postClub, putClub } from '../../../src/api';
+import {
+    processLinkObjectList,
+    createPopupEvent,
+    createClub,
+    createClubImageBlobs,
+    getTokenFromCookies,
+} from '../../../src/util';
+import { AccessLevel, Exec, PopupEvent } from '../../../src/types';
+import { getClub, getUserInfo, postClub, putClub } from '../../../src/api';
 
 import Typography from '@mui/material/Typography';
 import Box from '@mui/material/Box';
@@ -25,23 +31,34 @@ import Popup from '../../../src/components/shared/popup';
 import EditWrapper from '../../../src/components/edit/shared/edit-wrapper';
 import TitleMeta from '../../../src/components/meta/title-meta';
 import RobotBlockMeta from '../../../src/components/meta/robot-block-meta';
+import DeleteButton from '../../../src/components/shared/delete-button';
+import UnauthorizedAlert from '../../../src/components/edit/shared/unauthorized-alert';
 
 // Server-side Rendering
 export const getServerSideProps = async (ctx: GetServerSidePropsContext) => {
+    // Get editor information
+    const token = getTokenFromCookies(ctx);
+    const userRes = await getUserInfo(token);
+    const userId = userRes.status === 200 ? userRes.data.id : null;
+    const level = userId ? userRes.data.level : AccessLevel.NONE;
+
+    // Check if adding club
     const id = ctx.params.id as string;
-    if (!id) return { props: { club: createClub(), id: null, error: false } };
+    if (!id) return { props: { club: createClub(), id: null, error: false, level } };
+
+    // Get club info
     const clubRes = await getClub(id);
     const error = clubRes.status !== 200;
     const club = error ? createClub() : clubRes.data;
     return {
-        props: { club, error, id: error ? null : id },
+        props: { club, error, id: error ? null : id, level },
     };
 };
 
 /**
  * Main form for editing and adding clubs
  */
-const EditClubs = ({ club, id, error }: InferGetServerSidePropsType<typeof getServerSideProps>) => {
+const EditClubs = ({ club, id, error, level }: InferGetServerSidePropsType<typeof getServerSideProps>) => {
     const router = useRouter();
     const [backdrop, setBackdrop] = useState(false);
     const [cover, setCover] = useState<Blob>(null);
@@ -153,7 +170,13 @@ const EditClubs = ({ club, id, error }: InferGetServerSidePropsType<typeof getSe
             <Typography variant="h1" sx={{ textAlign: 'center', fontSize: '3rem' }}>
                 {id ? 'Edit Club' : 'Add Club'}
             </Typography>
-            {id ? <AddButton editHistory path={`/edit/history/clubs/${id}`} /> : null}
+            <UnauthorizedAlert show={level < AccessLevel.CLUBS} resource="club" />
+            {id ? (
+                <React.Fragment>
+                    <AddButton editHistory path={`/edit/history/clubs/${id}`} />
+                    <DeleteButton resource="clubs" id={id} name={club.name} hidden={level < AccessLevel.ADMIN} />
+                </React.Fragment>
+            ) : null}
             <FormWrapper onSubmit={handleSubmit(onSubmit)}>
                 <Box sx={{ marginBottom: 3, display: 'flex', flexDirection: { lg: 'row', xs: 'column' } }}>
                     <ControlledSelect
@@ -228,7 +251,14 @@ const EditClubs = ({ club, id, error }: InferGetServerSidePropsType<typeof getSe
                     errors={errors}
                     committeeList={club.committees}
                 />
-                <TwoButtonBox success="Submit" onCancel={back} onSuccess={onSubmit} submit right />
+                <TwoButtonBox
+                    success="Submit"
+                    onCancel={back}
+                    onSuccess={onSubmit}
+                    submit
+                    right
+                    disabled={level < AccessLevel.CLUBS}
+                />
             </FormWrapper>
         </EditWrapper>
     );

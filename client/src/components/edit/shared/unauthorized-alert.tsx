@@ -25,7 +25,8 @@ const UnauthorizedAlert = (props: UnauthorizedAlertProps) => {
                 display: props.show ? 'flex' : 'none',
             }}
         >
-            Please log in to make edits to this {props.resource}!
+            Please log in to make edits to this {props.resource}! If you are already logged in, you may not have the
+            proper access level to edit this resource.
         </Alert>
     );
 };
