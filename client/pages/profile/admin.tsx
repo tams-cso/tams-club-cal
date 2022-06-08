@@ -6,15 +6,15 @@ import { getUserInfo } from '../../src/api';
 
 import Typography from '@mui/material/Typography';
 import Container from '@mui/material/Container';
-import List from '@mui/material/List';
 import PageWrapper from '../../src/components/shared/page-wrapper';
 import Loading from '../../src/components/shared/loading';
-import ManageResources from '../../src/components/admin/manage-resources';
 import TitleMeta from '../../src/components/meta/title-meta';
 import RobotBlockMeta from '../../src/components/meta/robot-block-meta';
-import EditLinkList from '../../src/components/admin/edit-link-list';
 import Link from '../../src/components/shared/Link';
+import ManageResources from '../../src/components/admin/manage-resources';
+import EditLinkList from '../../src/components/admin/edit-link-list';
 import ChangeUserPermissions from '../../src/components/admin/change-user-permissions';
+import ViewFeedback from '../../src/components/admin/view-feedback';
 
 // Server-side Rendering to check for token
 export const getServerSideProps = async (ctx: GetServerSidePropsContext) => {
@@ -86,8 +86,7 @@ const Admin = ({ authorized, error }: InferGetServerSidePropsType<typeof getServ
                 <Typography variant="h3" sx={{ textAlign: 'center', marginTop: 3 }}>
                     Feedback
                 </Typography>
-                <Typography sx={{ textAlign: 'center', color: '#888', paddingTop: 2 }}>To be added</Typography>
-                <List></List>
+                <ViewFeedback />
             </Container>
         </PageWrapper>
     );

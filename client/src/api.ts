@@ -151,7 +151,7 @@ function createHeaders(auth: boolean, json: boolean): Headers {
     return headers;
 }
 
-/* ########## EVENTS API ########### */
+/* #################### EVENTS API ##################### */
 
 /**
  * Gets the list of public events.
@@ -232,7 +232,7 @@ export async function deleteEvent(id: string): Promise<StatusResponse> {
     return deleteRequest(`/events/${id}`);
 }
 
-/* ########## CLUBS API ########### */
+/* #################### CLUBS API ##################### */
 
 /**
  * Gets the list of all clubs.
@@ -299,7 +299,7 @@ export async function deleteClub(id: string): Promise<StatusResponse> {
     return deleteRequest(`/clubs/${id}`);
 }
 
-/* ########## VOLUNTEERING API ########### */
+/* #################### VOLUNTEERING API ##################### */
 
 /**
  * Gets the list of all volunteering opportunities.
@@ -343,7 +343,7 @@ export async function deleteVolunteering(id: string): Promise<StatusResponse> {
     return deleteRequest(`/volunteering/${id}`);
 }
 
-/* ########## HISTORY API ########## */
+/* #################### HISTORY API #################### */
 
 /**
  * Gets the list of history objects starting from the start ID.
@@ -365,7 +365,7 @@ export async function getHistory(resource: string, id: string): Promise<Resource
     return getRequest(`/history/${resource}/${id}`) as Promise<ResourceFetchResponse<HistoryItemData>>;
 }
 
-/* ########## TEXT DATA API ########## */
+/* #################### TEXT DATA API #################### */
 
 /**
  * Gets a list of external links
@@ -383,7 +383,14 @@ export async function putExternalLinks(textData: TextData<ExternalLink[]>): Prom
     return putRequest('/text-data/external-links', JSON.stringify(textData));
 }
 
-/* ########## MISC API ########### */
+/* #################### FEEDBACK API #################### */
+
+/**
+ * Gets the list of all feedback
+ */
+export async function getFeedback(): Promise<ListFetchResponse<Feedback>> {
+    return getRequest('/feedback') as Promise<ListFetchResponse<Feedback>>;
+}
 
 /**
  * Submits a new feedback object.
@@ -394,14 +401,7 @@ export async function postFeedback(feedback: Feedback): Promise<StatusResponse> 
     return postRequest('/feedback', JSON.stringify(feedback), true, false);
 }
 
-export type ipData = { ip: string };
-
-/**
- * Fetches the current client's IP address.
- */
-export async function getIp(): Promise<ResourceFetchResponse<ipData>> {
-    return getRequest('/auth/ip') as Promise<ResourceFetchResponse<ipData>>;
-}
+/* #################### AUTH AND USER API #################### */
 
 /**
  * Performs a token exchange/login request after the Google auth flow returns tokens
@@ -462,6 +462,8 @@ export async function getUserList(
     >;
 }
 
+/** #################### ADMIN API #################### */
+
 /**
  * Gets a list of resources based on search terms
  * @param resource Resource type to get
@@ -493,6 +495,8 @@ export async function getAdminResources(
 export async function deleteAdminResource(resource: string, id: string): Promise<StatusResponse> {
     return deleteRequest(`/admin/resources/${resource}/${id}`);
 }
+
+/** #################### URL APIS #################### */
 
 export function getBackendUrl(): string {
     return BACKEND_URL;

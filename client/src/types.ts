@@ -212,10 +212,10 @@ export interface Feedback {
     feedback: string;
 
     /** The name of the user who submitted the feedback (optional) */
-    name: String;
+    name: string;
 
     /** The time that the feedback was submitted */
-    time: Number;
+    time: number;
 }
 
 /** Valid resource types, used in the edit history object */
