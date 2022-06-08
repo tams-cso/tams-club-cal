@@ -5,6 +5,14 @@ import Feedback from '../models/feedback';
 const router = express.Router();
 
 /**
+ * GET /feedback
+ */
+router.get('/', async (req: Request, res: Response) => {
+    const feedback = await Feedback.find({});
+    res.send(feedback);
+});
+
+/**
  * POST /feedback
  */
 router.post('/', async (req: Request, res: Response) => {
