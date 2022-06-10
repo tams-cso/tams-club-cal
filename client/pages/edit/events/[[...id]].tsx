@@ -247,8 +247,7 @@ const EditEvents = ({ event, id, error, userId, level }: InferGetServerSideProps
             repeatsUntil,
             event.repeatOriginId,
             data.publicEvent,
-            data.reservation,
-            event.history
+            data.reservation
         );
 
         // If the event ID is null, create the event, otherwise update it
