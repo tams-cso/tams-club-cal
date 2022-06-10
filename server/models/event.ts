@@ -7,7 +7,6 @@ const eventSchema = new mongoose.Schema({
     id: String,
     eventId: String,
     editorId: String,
-    type: String,
     name: String,
     club: String,
     description: String,
@@ -15,10 +14,6 @@ const eventSchema = new mongoose.Schema({
     end: Number,
     location: String,
     noEnd: Boolean,
-    allDay: Boolean,
-    repeats: Number,
-    repeatsUntil: Number,
-    repeatOriginId: String,
     publicEvent: Boolean,
     reservation: Boolean,
 });

@@ -1,12 +1,5 @@
 import type { Request } from 'express';
 
-/** Status representing how an event repeats */
-export enum RepeatingStatus {
-    NONE,
-    WEEKLY,
-    MONTHLY,
-}
-
 /** Access levels for users */
 export enum AccessLevel {
     STANDARD = 0,
@@ -37,9 +30,6 @@ export interface EventObject {
     /** The ID of the user who creates this event */
     editorId: string;
 
-    /** The type of the event */
-    type: string;
-
     /** The name of the event */
     name: string;
 
@@ -60,18 +50,6 @@ export interface EventObject {
 
     /** If true, the event will not have an end time */
     noEnd: boolean;
-
-    /** If true, the event will last the entire day, will ignore start/end datetime */
-    allDay: boolean;
-
-    /** RepeatingStatus enum # */
-    repeats: RepeatingStatus;
-
-    /** UTC milliscond date that event stops repeating */
-    repeatsUntil: number;
-
-    /** ID of the original repeating event */
-    repeatOriginId: string;
 
     /** True to show on schedule view/calendar/Google Calendar */
     publicEvent: boolean;
