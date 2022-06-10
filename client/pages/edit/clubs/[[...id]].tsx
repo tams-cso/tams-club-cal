@@ -108,8 +108,7 @@ const EditClubs = ({ club, id, error, level }: InferGetServerSidePropsType<typeo
             club.coverImgThumbnail,
             club.coverImg,
             execs,
-            committees,
-            club.history
+            committees
         );
 
         // Create the club image object containing cover and exec profile picture blobs

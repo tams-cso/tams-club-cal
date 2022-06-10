@@ -69,14 +69,11 @@ export interface Event {
 
     /** True to show on reservation calendar/check for overlaps */
     reservation: boolean;
-
-    /** Edit history list */
-    history: string[];
 }
 
 /**
  * Object to hold data for the reservation view temporarily. This is used
- * when we are displaying reservations on the reservation calendar. 
+ * when we are displaying reservations on the reservation calendar.
  */
 export interface BrokenReservation {
     /** Start time of the reservation block */
@@ -120,9 +117,6 @@ export interface Club {
 
     /** Array of committee objects */
     committees: Committee[];
-
-    /** Edit history list */
-    history: string[];
 }
 
 /** An object containing the information of an exec */
@@ -180,9 +174,6 @@ export interface Volunteering {
 
     /** Object used for filtering volunteering opportunities */
     filters: Filters;
-
-    /** Edit history list */
-    history: string[];
 }
 
 /** An object with the filters for a volunteering opportunity */
@@ -267,7 +258,7 @@ export interface HistoryItemData {
 
     /** Name of the resource */
     name: string;
-    
+
     /** List of editors' names */
     editorList: string[];
 }
@@ -293,12 +284,12 @@ export interface FetchResponse {
     data: object | null;
 }
 
-// TODO: Apply this to all POST/PUT requests and change responses to 204! 
+// TODO: Apply this to all POST/PUT requests and change responses to 204!
 /** Return object for fetch requests that only have a status */
 export type StatusResponse = {
     /** The HTTP status code */
     status: number;
-}
+};
 
 /** Link data from forms; the deleted field is for lazy deletion of input fields to simplify forms */
 export interface LinkInputData {

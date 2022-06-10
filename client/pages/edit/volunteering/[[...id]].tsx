@@ -70,8 +70,7 @@ const EditVolunteering = ({
             data.name,
             data.club,
             data.description,
-            createFilters(data.limited, data.semester, data.setTimes, data.weekly, data.open),
-            volunteering.history
+            createFilters(data.limited, data.semester, data.setTimes, data.weekly, data.open)
         );
 
         // Start the upload process

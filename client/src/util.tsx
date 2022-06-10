@@ -365,10 +365,9 @@ export function createVolunteering(
     name: string = '',
     club: string = '',
     description: string = '',
-    filters: Filters = createFilters(),
-    history: string[] = null
+    filters: Filters = createFilters()
 ): Volunteering {
-    return { id, name, club, description, filters, history };
+    return { id, name, club, description, filters };
 }
 
 /**
@@ -383,10 +382,9 @@ export function createClub(
     coverImgThumbnail: string = '',
     coverImg: string = '',
     execs: Exec[] = [],
-    committees: Committee[] = [],
-    history: string[] = null
+    committees: Committee[] = []
 ): Club {
-    return { id, name, advised, links, description, coverImgThumbnail, coverImg, execs, committees, history };
+    return { id, name, advised, links, description, coverImgThumbnail, coverImg, execs, committees };
 }
 
 /**
@@ -453,8 +451,7 @@ export function createEvent(
     repeatsUntil: number = null,
     repeatOriginId: string = null,
     publicEvent: boolean = true,
-    reservation: boolean = false,
-    history: string[] = null
+    reservation: boolean = false
 ): Event {
     return {
         id,
@@ -474,7 +471,6 @@ export function createEvent(
         repeatOriginId,
         publicEvent,
         reservation,
-        history,
     };
 }
 
