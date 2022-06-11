@@ -2,13 +2,6 @@ import type { Dayjs } from 'dayjs';
 
 // TODO: Formalize a type of union of constants for location from the data file
 
-/** Status representing how an event repeats */
-export enum RepeatingStatus {
-    NONE,
-    WEEKLY,
-    MONTHLY,
-}
-
 /** Access levels for users */
 export enum AccessLevel {
     NONE = -1,
@@ -27,9 +20,6 @@ export interface Event {
 
     /** The ID of the user who creates this event */
     editorId: string;
-
-    /** The type of the event */
-    type: string;
 
     /** The name of the event */
     name: string;
@@ -51,18 +41,6 @@ export interface Event {
 
     /** If true, the event will not have an end time */
     noEnd?: boolean;
-
-    /** If true, the event will last the entire day, will ignore start/end datetime */
-    allDay?: boolean;
-
-    /** RepeatingStatus enum # */
-    repeats: RepeatingStatus;
-
-    /** UTC milliscond date that event stops repeating */
-    repeatsUntil: number;
-
-    /** ID of the original repeating event */
-    repeatOriginId: string;
 
     /** True to show on schedule view/calendar/Google Calendar */
     publicEvent: boolean;

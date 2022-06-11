@@ -12,7 +12,6 @@ import {
     TextData,
     AccessLevel,
 } from './types';
-import { RepeatingStatus } from './types';
 import type { Theme } from '@mui/material';
 import React from 'react';
 import dayjs, { Dayjs } from 'dayjs';
@@ -229,7 +228,6 @@ export function formatEventDate(event: Event): string {
  * @returns The formatted time for the event in the format [h:mma - h:mma]
  */
 export function formatEventTime(event: Event, noEnd: boolean = false, checkSame: boolean = false): string {
-    if (event.allDay) return 'Full Day';
     if (checkSame && !toTz(event.start).isSame(toTz(event.end), 'day'))
         return formatTime(event.end, 'dddd, MMMM D, YYYY h:mma');
 
@@ -310,7 +308,7 @@ export function parsePublicEventList(eventList: Event[]): Event[] {
     const outputList = [];
     eventList.forEach((a) => {
         // Simply return the event if it does not span across multiple days
-        if (dayjs(a.start).isSame(dayjs(a.end), 'day') || a.allDay || isNotMidnight(a.end) === 0) {
+        if (dayjs(a.start).isSame(dayjs(a.end), 'day') || isNotMidnight(a.end) === 0) {
             outputList.push(a);
             return;
         }
@@ -438,7 +436,6 @@ export function createEvent(
     id: string = null,
     eventId: string = null,
     editorId: string = null,
-    type: string = 'Event',
     name: string = '',
     club: string = '',
     description: string = '',
@@ -446,10 +443,6 @@ export function createEvent(
     end: number = dayjs().startOf('hour').add(2, 'hour').valueOf(),
     location: string = 'none',
     noEnd: boolean = false,
-    allDay: boolean = false,
-    repeats: RepeatingStatus = RepeatingStatus.NONE,
-    repeatsUntil: number = null,
-    repeatOriginId: string = null,
     publicEvent: boolean = true,
     reservation: boolean = false
 ): Event {
@@ -457,7 +450,6 @@ export function createEvent(
         id,
         eventId,
         editorId,
-        type,
         name,
         club,
         description,
@@ -465,10 +457,6 @@ export function createEvent(
         end,
         location,
         noEnd,
-        allDay,
-        repeats,
-        repeatsUntil,
-        repeatOriginId,
         publicEvent,
         reservation,
     };

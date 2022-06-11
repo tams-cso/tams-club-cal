@@ -128,7 +128,7 @@ const EditVolunteering = ({
                         resource="volunteering"
                         id={volunteering.id}
                         name={volunteering.name}
-                        hidden={unauthorized}
+                        hidden={!id || unauthorized}
                     />
                 </React.Fragment>
             ) : null}

@@ -173,7 +173,7 @@ const EditClubs = ({ club, id, error, level }: InferGetServerSidePropsType<typeo
             {id ? (
                 <React.Fragment>
                     <AddButton editHistory path={`/edit/history/clubs/${id}`} />
-                    <DeleteButton resource="clubs" id={id} name={club.name} hidden={level < AccessLevel.ADMIN} />
+                    <DeleteButton resource="clubs" id={id} name={club.name} hidden={!id || level < AccessLevel.ADMIN} />
                 </React.Fragment>
             ) : null}
             <FormWrapper onSubmit={handleSubmit(onSubmit)}>

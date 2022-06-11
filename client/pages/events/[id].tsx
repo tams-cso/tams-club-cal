@@ -2,7 +2,7 @@ import React from 'react';
 import type { Theme } from '@mui/material';
 import { GetServerSidePropsContext, InferGetServerSidePropsType } from 'next';
 import { useRouter } from 'next/router';
-import { AccessLevel, RepeatingStatus } from '../../src/types';
+import { AccessLevel } from '../../src/types';
 import {
     darkSwitch,
     darkSwitchGrey,
@@ -38,6 +38,7 @@ import RobotBlockMeta from '../../src/components/meta/robot-block-meta';
 // Coloring for the event type
 const eventTypeStyle = {
     color: (theme: Theme) => darkSwitch(theme, theme.palette.grey[600], theme.palette.secondary.main),
+    fontSize: '1.5rem',
 };
 
 // Server-side Rendering
@@ -119,16 +120,9 @@ const EventDisplay = ({ event, error, level, userId }: InferGetServerSidePropsTy
                                     padding: { lg: 1, xs: 0 },
                                 }}
                             >
-                                <Typography sx={eventTypeStyle}>{event.type}</Typography>
-                                <Typography variant="h2" component="h1">
+                                <Typography sx={eventTypeStyle}>{event.club}</Typography>
+                                <Typography variant="h2" component="h1" sx={{ marginBottom: 4 }}>
                                     {event.name}
-                                </Typography>
-                                <Typography
-                                    variant="subtitle1"
-                                    component="p"
-                                    sx={{ marginBottom: 4, color: (theme) => darkSwitchGrey(theme) }}
-                                >
-                                    {event.club}
                                 </Typography>
                                 <Typography variant="h3" gutterBottom sx={{ fontWeight: 400 }}>
                                     {formatEventDate(event)}
@@ -136,28 +130,6 @@ const EventDisplay = ({ event, error, level, userId }: InferGetServerSidePropsTy
                                 <Typography variant="h3" gutterBottom sx={{ fontWeight: 400 }}>
                                     {formatEventTime(event, event.noEnd, true)}
                                 </Typography>
-                                {event.repeats !== RepeatingStatus.NONE ? (
-                                    <Typography
-                                        variant="h3"
-                                        sx={{ color: (theme) => darkSwitchGrey(theme), fontWeight: 400, marginTop: 2 }}
-                                    >
-                                        {`Repeats ${
-                                            event.repeats === RepeatingStatus.WEEKLY ? 'weekly' : 'monthly'
-                                        } until ${formatDate(event.repeatsUntil, 'dddd, MMMM D, YYYY')}`}
-                                    </Typography>
-                                ) : null}
-                                {event.repeats === RepeatingStatus.NONE ? null : event.repeatOriginId !== event.id ? (
-                                    <Link
-                                        href={`/events/${event.repeatOriginId}`}
-                                        sx={{ marginTop: 1, display: 'block', maxWidth: 'max-content' }}
-                                    >
-                                        Go to original event
-                                    </Link>
-                                ) : (
-                                    <Typography sx={{ marginTop: 1, color: (theme) => darkSwitchGrey(theme) }}>
-                                        This is the original repeating event!
-                                    </Typography>
-                                )}
                                 <Typography
                                     variant="h3"
                                     sx={{
