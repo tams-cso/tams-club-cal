@@ -235,7 +235,9 @@ const EditEvents = ({
 
     // If the location is a custom one, replace with "other" in form
     const defaultLocation = id
-        ? data.rooms.findIndex((r) => r.value === event.location) === -1
+        ? event.location === 'none'
+            ? 'none'
+            : data.rooms.findIndex((r) => r.value === event.location) === -1
             ? 'other'
             : event.location
         : 'none';
