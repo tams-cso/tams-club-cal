@@ -68,19 +68,6 @@ const Reservations = ({
             // Use variable to track the current day that we are working on
             let curr = dayjs(r.start);
 
-            // If the reservation lasts all day, simply create one day-long entry and return
-            // The span attribute corresponds to the number of hours the reservation lasts
-            // This will start at 6am and end at midnight the next day, spanning 18 hours
-            if (r.allDay) {
-                brokenUpReservationList.push({
-                    start: curr.startOf('day').add(6, 'hour'),
-                    end: curr.startOf('day').add(1, 'day'),
-                    span: 18,
-                    data: r,
-                });
-                return;
-            }
-
             // Iterate through the days until we reach the end of the reservation
             // This is useful for splitting up reservations that span multiple days
             while (!curr.isSame(dayjs(r.end), 'day')) {

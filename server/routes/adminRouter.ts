@@ -8,7 +8,7 @@ import Club from '../models/club';
 import Volunteering from '../models/volunteering';
 import History from '../models/history';
 import { deleteCalendarEvent } from '../functions/gcal';
-import { AccessLevel, EventObject, RepeatingStatus } from '../functions/types';
+import { AccessLevel, EventObject } from '../functions/types';
 
 const router = express.Router();
 
@@ -83,10 +83,6 @@ router.delete('/resources/:resource/:id', async (req: Request, res: Response) =>
                 if (event.publicEvent) await deleteCalendarEvent(event.eventId);
                 const deleteRes = await Event.deleteOne({ id: req.params.id });
                 await History.deleteMany({ resource: 'events', editId: req.params.id });
-
-                // Also delete any repeating events if it is the original repeating event
-                if (event.repeats !== RepeatingStatus.NONE && event.id === event.repeatOriginId)
-                    await Event.deleteMany({ repeatOriginId: req.params.id });
 
                 // Return ok or error
                 if (deleteRes.deletedCount === 1) res.status(204);

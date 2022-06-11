@@ -1,6 +1,6 @@
 import React from 'react';
 import type { Theme } from '@mui/material';
-import { Event, RepeatingStatus } from '../../types';
+import { Event } from '../../types';
 import { darkSwitch, formatEventTime } from '../../util';
 
 import Box from '@mui/material/Box';
@@ -60,7 +60,7 @@ const EventEntry = (props: EventEntryProps) => {
                             fontSize: { lg: '1.25rem', xs: '1rem' },
                         }}
                     >
-                        {`${props.event.name}${props.event.repeats !== RepeatingStatus.NONE ? ' [Repeating]' : ''}`}
+                        {props.event.name}
                     </Typography>
                     <Typography
                         sx={{

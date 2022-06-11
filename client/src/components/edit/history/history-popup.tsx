@@ -1,6 +1,6 @@
 import React from 'react';
 import { formatTime } from '../../../util';
-import { History, RepeatingStatus } from '../../../types';
+import { History } from '../../../types';
 
 import Dialog from '@mui/material/Dialog';
 import DialogTitle from '@mui/material/DialogTitle';
@@ -13,6 +13,8 @@ import TableContainer from '@mui/material/TableContainer';
 import TableHead from '@mui/material/TableHead';
 import TableRow from '@mui/material/TableRow';
 import dayjs from 'dayjs';
+
+import data from '../../../data.json';
 
 interface HistoryPopupProps {
     /** History object to display */
@@ -35,19 +37,13 @@ interface HistoryPopupProps {
 const HistoryPopup = (props: HistoryPopupProps) => {
     // Function to parse certain values from the history object
     const showValue = (key: string, value: boolean | object | number | string) => {
-        if (key === 'repeats') {
-            switch (value) {
-                case RepeatingStatus.NONE:
-                    return 'Not Repeating';
-                case RepeatingStatus.WEEKLY:
-                    return 'Weekly';
-                case RepeatingStatus.MONTHLY:
-                    return 'Monthly';
-                default:
-                    return '[no value]';
-            }
+        // If location, parse it or return None/name of other location
+        // TODO: Add check for bad location name
+        if (key === 'location') {
+            if (value === 'none') return 'None';
+            else if (value === 'other') return value;
+            else return data.rooms.find((x) => x.value === value).label;
         }
-        
         switch (typeof value) {
             case 'boolean':
                 return value ? 'True' : 'False';
