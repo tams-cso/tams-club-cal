@@ -110,6 +110,40 @@
     ],
     "changelog": [
         {
+            "v": "6.0",
+            "date": "June 13, 2022",
+            "changes": [
+                "Updated icons on external links",
+                "Added ability to edit external links on the admin dashboard",
+                "Fixed spelling mistake on the add button",
+                "Added access level system for all users",
+                "Added ability to edit access levels on the admin dashboard",
+                "Fixed glitches with the login button",
+                "Profile button now links to /profile/dashboard",
+                "Added delete buttons to resource edit pages",
+                "Added dialog explaining access levels on the edit main page",
+                "Added ability to view feedback on the admin dashboard",
+                "Removed repeating events",
+                "Added the ability to create duplicates of existing events",
+                "Location names now display nicely on the edit history"
+            ]
+        },
+        {
+            "v": "5.4",
+            "date": "May 27, 2022",
+            "changes": ["Created new Github workflows", "Updated many internal components"]
+        },
+        {
+            "v": "5.3",
+            "date": "May 24, 2022",
+            "changes": [
+                "Fixed issue where favicon was not displaying",
+                "Fixed issue where meta tags did not update correctly",
+                "Calendar popup now shows when clicking anywhere on a calendar day",
+                "Fixed issue where calendar events were not highlighted correctly"
+            ]
+        },
+        {
             "v": "5.2",
             "date": "March 9, 2022",
             "changes": [

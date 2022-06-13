@@ -1,7 +1,7 @@
 {
     "name": "tams-club-calendar",
     "description": "The TAMS Club Calendar is a fully contained event tracker, club/volunteering database, and general resource center. This is the unofficial club event calendar for the Texas Academy of Mathematics and Science!",
-    "version": "5.2.0",
+    "version": "6.0.0",
     "private": true,
     "author": "Michael Zhao <michaelzhao314@gmail.com> (https://michaelzhao.xyz/)",
     "scripts": {
