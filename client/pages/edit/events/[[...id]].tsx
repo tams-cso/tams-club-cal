@@ -242,7 +242,8 @@ const EditEvents = ({
             : event.location
         : 'none';
 
-    const unauthorized = level < AccessLevel.STANDARD || (!id ? false : event.editorId !== userId);
+    const unauthorized =
+        (level < AccessLevel.STANDARD || (!id ? false : event.editorId !== userId)) && level !== AccessLevel.ADMIN;
 
     return (
         <EditWrapper>

@@ -40,7 +40,8 @@ const HistoryPopup = (props: HistoryPopupProps) => {
         // If location, parse it or return None/name of other location
         // TODO: Add check for bad location name
         if (key === 'location') {
-            if (value === 'none') return 'None';
+            if (!value) return '[no value]';
+            else if (value === 'none') return 'None';
             else if (value === 'other') return value;
             else return data.rooms.find((x) => x.value === value).label;
         }

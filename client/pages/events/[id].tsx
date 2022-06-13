@@ -86,6 +86,7 @@ const EventDisplay = ({ event, error, level, userId }: InferGetServerSidePropsTy
 
     const location = data.rooms.find((d) => d.value === event.location);
     const reserved = event.reservation ? ' (Reserved)' : '';
+    const unauthorized = (level < AccessLevel.STANDARD || userId !== event.editorId) && level !== AccessLevel.ADMIN;
 
     return (
         <HomeBase noActionBar>
@@ -101,7 +102,7 @@ const EventDisplay = ({ event, error, level, userId }: InferGetServerSidePropsTy
                     label="Event"
                     path={`/edit/events/${event.id}`}
                     edit
-                    hidden={level < AccessLevel.STANDARD || userId !== event.editorId}
+                    hidden={unauthorized}
                 />
                 <Card sx={{ marginBottom: 3 }}>
                     <CardContent>
