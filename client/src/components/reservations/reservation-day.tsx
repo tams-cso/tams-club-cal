@@ -1,25 +1,27 @@
 import React, { useEffect, useState } from 'react';
-import dayjs, { Dayjs } from 'dayjs';
-import type { Theme } from '@mui/material';
+import type { Dayjs } from 'dayjs';
+import { Theme } from '@mui/material';
 import { darkSwitch } from '../../util';
 import type { BrokenReservation } from '../../types';
 
-import Table from '@mui/material/Table';
-import TableBody from '@mui/material/TableBody';
-import TableCell from '@mui/material/TableCell';
-import TableContainer from '@mui/material/TableContainer';
-import TableHead from '@mui/material/TableHead';
-import TableRow from '@mui/material/TableRow';
+import Box from '@mui/material/Box';
+import Typography from '@mui/material/Typography';
 import ReservationEntry from './reservation-entry';
 
 import data from '../../data.json';
+
+// Border color
+const borderColor = (theme: Theme) => darkSwitch(theme, theme.palette.grey[300], theme.palette.grey[800]);
 
 // Style for a single table cell
 const cellStyle = {
     padding: 0.5,
     overflow: 'hidden',
     borderRight: '1px solid',
-    borderRightColor: (theme: Theme) => darkSwitch(theme, theme.palette.grey[200], theme.palette.grey[800]),
+    borderRightColor: borderColor,
+    borderBottom: '1px solid',
+    borderBottomColor: borderColor,
+    fontSize: '0.875rem',
 };
 
 interface ReservationDayProps {
@@ -46,42 +48,30 @@ const ReservationDay = (props: ReservationDayProps) => {
         data.rooms.forEach((room) => {
             // Create the labels for each row, which is the room name
             const row = [
-                <TableCell key={room.value} sx={cellStyle}>
+                <Box key={room.value} sx={{ width: '10%', ...cellStyle }}>
                     {room.label}
-                </TableCell>,
+                </Box>,
             ];
 
-            // Get the current date to start finding reservations from
-            let currTime = props.date.startOf('day').add(6, 'hour');
+            // Get the reservations for the current room
+            const currRoomRes = props.reservationList.filter((r) => r.data.location === room.value);
 
-            // Iterate through all the hours in a day (starting from 6am)
-            for (let hour = 6; hour < 24; hour++) {
-                // Find the first reservation that starts at the current time and is in the current room
-                // THIS SHOULD BE UNIQUE!!! (As long as the adding system prevents users from overlapping)
-                const curr = props.reservationList.find(
-                    (r) => dayjs(r.start).isSame(currTime, 'hour') && r.data.location === room.value
-                );
+            // Iterate through the list of reservations for the current room
+            currRoomRes.forEach((res) => {
+                row.push(<ReservationEntry res={res} key={res.data.name} />);
+            });
 
-                // If there is no reservation at this time, add a blank cell
-                // Otherwise, add a ReservationEntry component and increment the
-                // current time and the hour variables by the length of the event
-                let increment = 1;
-                if (!curr || dayjs(curr.start).isSame(curr.end))
-                    row.push(<TableCell key={`${room.value}-${hour}`} sx={cellStyle} />);
-                else {
-                    row.push(
-                        <ReservationEntry reservation={curr.data} span={curr.span} key={curr.data.id} sx={cellStyle} />
-                    );
-                    increment = Math.max(1, curr.span);
-                    hour += increment - 1;
-                }
-
-                // TODO: remove the increment variable (why does it exist); just increment by hours or smth
-                currTime = currTime.add(increment, 'hour');
+            // Add 18 empty divs to draw the empty grid
+            for (let i = 0; i < 18; i++) {
+                row.push(<Box key={i} sx={{ width: '5%', ...cellStyle }} />);
             }
 
             // Add the row to the table
-            table.push(<TableRow key={room.value}>{row}</TableRow>);
+            table.push(
+                <Box key={room.value} sx={{ display: 'flex' }}>
+                    {row}
+                </Box>
+            );
         });
 
         // Set the state variable to the list of components (which forms the table)
@@ -89,30 +79,66 @@ const ReservationDay = (props: ReservationDayProps) => {
     }, []);
 
     return (
-        <TableContainer sx={{ marginTop: 3, overflowX: { lg: 'hidden', xs: 'scroll' } }}>
-            <Table sx={{ tableLayout: 'fixed', width: { lg: '100%', xs: '300%' } }}>
-                <TableHead>
-                    <TableRow>
-                        <TableCell
-                            sx={{
-                                width: 150,
-                                padding: 1,
-                                textAlign: 'center',
-                                color: (theme) => theme.palette.primary.main,
-                            }}
-                        >
-                            {props.date.format('ddd, MMM DD, YYYY')}
-                        </TableCell>
-                        {data.hours.map((hour, i) => (
-                            <TableCell key={i} sx={{ padding: 1, textAlign: 'center' }}>
-                                {hour}
-                            </TableCell>
-                        ))}
-                    </TableRow>
-                </TableHead>
-                <TableBody>{componentList}</TableBody>
-            </Table>
-        </TableContainer>
+        <Box sx={{ marginTop: 4, overflowX: { lg: 'hidden', xs: 'scroll' }, width: { lg: '100%', xs: '400%' } }}>
+            <Box sx={{ display: 'flex' }}>
+                <Typography
+                    variant="h1"
+                    id={props.date.format('YYYY-MM-DD')}
+                    sx={{
+                        ...cellStyle,
+                        width: '10%',
+                        margin: 0,
+                        textAlign: 'left',
+                        paddingLeft: '0.5rem',
+                        fontWeight: 500,
+                        borderRight: '0px transparent',
+                        color: (theme) => theme.palette.primary.main,
+                    }}
+                >
+                    {props.date.format('ddd, MMM DD, YYYY')}
+                </Typography>
+                {data.hours.map((hour, i) => (
+                    <Box
+                        key={i}
+                        sx={{
+                            ...cellStyle,
+                            width: '5%',
+                            textAlign: 'left',
+                            paddingLeft: '0.5rem',
+                            fontWeight: 500,
+                            borderRight: '0px transparent',
+                        }}
+                    >
+                        {hour}
+                    </Box>
+                ))}
+            </Box>
+            <Box sx={{ display: 'flex', flexDirection: 'column' }}>{componentList}</Box>
+        </Box>
+        // <TableContainer sx={{ marginTop: 3, overflowX: { lg: 'hidden', xs: 'scroll' } }}>
+        //     <Table sx={{ tableLayout: 'fixed', width: { lg: '100%', xs: '300%' } }}>
+        //         <TableHead>
+        //             <TableRow>
+        //                 <TableCell
+        //                     sx={{
+        //                         width: 150,
+        //                         padding: 1,
+        //                         textAlign: 'center',
+        //                         color: (theme) => theme.palette.primary.main,
+        //                     }}
+        //                 >
+        //                     {props.date.format('ddd, MMM DD, YYYY')}
+        //                 </TableCell>
+        //                 {data.hours.map((hour, i) => (
+        //                     <TableCell key={i} sx={{ padding: 1, textAlign: 'center' }}>
+        //                         {hour}
+        //                     </TableCell>
+        //                 ))}
+        //             </TableRow>
+        //         </TableHead>
+        //         <TableBody>{componentList}</TableBody>
+        //     </Table>
+        // </TableContainer>
     );
 };
 
