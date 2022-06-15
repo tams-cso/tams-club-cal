@@ -108,21 +108,14 @@ router.get('/reservations/search/:location/:start/:end', async (req: Request, re
             return;
         }
 
-        // Adjust start time to be the start of the hour.
-        // For the end time, if it falls exactly on an hour, use that;
-        // otherwise, set the end time to the beginning of the next hour.
-        const startAdjusted = dayjs(start).startOf('hour').valueOf();
-        const endRoundedDown = dayjs(end).startOf('hour').valueOf();
-        const endAdjusted = end === endRoundedDown ? end : dayjs(endRoundedDown).add(1, 'hour');
-
         // Get reservation data that overlaps with the time range
         // If an event ends right on the start time or start right on the end time, it does NOT overlap
         const data = await Event.find({
             reservation: true,
             $or: [
-                { $and: [{ start: { $gte: startAdjusted } }, { start: { $lt: endAdjusted } }] },
-                { $and: [{ end: { $gt: startAdjusted } }, { end: { $lte: endAdjusted } }] },
-                { $and: [{ start: { $lte: startAdjusted } }, { end: { $gte: endAdjusted } }] },
+                { $and: [{ start: { $gte: start } }, { start: { $lt: end } }] },
+                { $and: [{ end: { $gt: start } }, { end: { $lte: end } }] },
+                { $and: [{ start: { $lte: start } }, { end: { $gte: end } }] },
             ],
             location: req.params.location,
         });
