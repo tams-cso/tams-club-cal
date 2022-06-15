@@ -9,6 +9,9 @@ import Box from '@mui/material/Box';
 import TextField from '@mui/material/TextField';
 import Button from '@mui/material/Button';
 import DatePicker from '@mui/lab/DatePicker';
+import IconButton from '@mui/material/IconButton';
+import ArrowBackIosRounded from '@mui/icons-material/ArrowBackIosRounded';
+import ArrowForwardIosRounded from '@mui/icons-material/ArrowForwardIosRounded';
 import Loading from '../../../src/components/shared/loading';
 import ReservationDay from '../../../src/components/reservations/reservation-day';
 import AddButton from '../../../src/components/shared/add-button';
@@ -54,6 +57,19 @@ const Reservations = ({
     // Redirect the user to the current week on click
     const goToToday = () => {
         setWeek(dayjs());
+    };
+
+    // Adjust the offset of month when user clicks on the arrow buttons
+    // The change that is passed in will be +1 or -1 depending on which arrow button was clicked
+    const offsetMonth = (forward: boolean) => {
+        const newWeek = forward ? dayjs(now).add(1, 'week') : dayjs(now).subtract(1, 'week');
+        setWeek(newWeek);
+    };
+
+    // Scroll down to the requested day
+    // Index refers to the day of the week where Sunday = 0, Monday = 1, ..., Saturday = 6
+    const goToDay = (index) => {
+        window.scrollTo(0, 180 + 630 * index);
     };
 
     // When the list of reservations updates, re-render the reservation components
@@ -168,10 +184,17 @@ const Reservations = ({
         );
     }
 
+    // Create the list of buttons for the current week
+    const weekButtonList = [];
+    const start = week.startOf('week');
+    for (let i = 0; i < 7; i++) {
+        weekButtonList.push(start.add(i, 'day').format('ddd M/D'));
+    }
+
     return (
         <HomeBase noDrawer>
             <TitleMeta title="Reservations" path="/events/reservations" />
-            <Box display="flex">
+            <Box width="100%" display="flex" justifyContent="left" alignItems="center">
                 <DatePicker
                     inputFormat="[Week of] MMM D, YYYY"
                     label="Select week to show"
@@ -181,9 +204,25 @@ const Reservations = ({
                         <TextField {...params} variant="standard" sx={{ marginLeft: { sm: 4, xs: 2 } }} />
                     )}
                 />
-                <Button variant="outlined" onClick={goToToday} sx={{ mx: 2 }}>
+                <IconButton size="small" onClick={offsetMonth.bind(this, false)} sx={{ marginLeft: 3 }}>
+                    <ArrowBackIosRounded />
+                </IconButton>
+                <IconButton size="small" onClick={offsetMonth.bind(this, true)} sx={{ marginLeft: 1 }}>
+                    <ArrowForwardIosRounded />
+                </IconButton>
+                <Button variant="outlined" onClick={goToToday} sx={{ mx: 3 }}>
                     Today
                 </Button>
+                {weekButtonList.map((day, i) => (
+                    <Button
+                        variant="text"
+                        onClick={goToDay.bind(this, i)}
+                        sx={{ mx: 2, display: { lg: 'flex', md: 'none' } }}
+                        key={day}
+                    >
+                        {day}
+                    </Button>
+                ))}
             </Box>
             <AddButton color="primary" label="Event" path="/edit/events" disabled={level < AccessLevel.STANDARD} />
             {reservationComponentList === null ? <Loading /> : reservationComponentList}
