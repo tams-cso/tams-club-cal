@@ -39,7 +39,7 @@ const CalendarPopup = (props: CalendarPopupProps) => {
             <DialogTitle id="calendar-popup-title">{`Events for ${props.date.format('MMM DD, YYYY')}`}</DialogTitle>
             <List sx={{ paddingBottom: '1rem' }}>
                 {props.activities.map((e) => (
-                    <CalendarEvent activity={e} key={e.id} />
+                    <CalendarEvent event={e} key={e.id} />
                 ))}
             </List>
         </Dialog>

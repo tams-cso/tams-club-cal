@@ -85,7 +85,7 @@ const CalendarDay = (props: CalendarDayPopup) => {
             </Typography>
             <List sx={{ paddingTop: 0 }}>
                 {activities.map((a) => (
-                    <CalendarEvent activity={a} key={a.id} />
+                    <CalendarEvent event={a} key={a.id} />
                 ))}
                 {extraActivities === 0 ? null : (
                     <ListItem sx={{ padding: 0 }}>

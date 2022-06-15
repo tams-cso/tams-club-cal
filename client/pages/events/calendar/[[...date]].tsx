@@ -171,7 +171,7 @@ const Calendar = (props: InferGetServerSidePropsType<typeof getServerSideProps>)
                     {calendarHeaderList}
                 </Box>
                 {calendarDays === null ? (
-                    <Loading />
+                    <Loading sx={{ marginTop: 3 }} />
                 ) : (
                     <Box
                         sx={{

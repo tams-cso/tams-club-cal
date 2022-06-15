@@ -1,5 +1,6 @@
 import React from 'react';
 import type { Theme } from '@mui/material';
+import dayjs from 'dayjs';
 import { darkSwitch, darkSwitchGrey, formatEventTime } from '../../util';
 import type { Event } from '../../types';
 
@@ -9,17 +10,20 @@ import Link from '../shared/Link';
 
 interface CalendarEventProps {
     /** Event object to display */
-    activity: Event;
+    event: Event;
 }
 
 /**
  * Displays a single event in the calendar view
  */
 const CalendarEvent = (props: CalendarEventProps) => {
+    // Format the current date for url
+    const urlDate = dayjs(props.event.start).format('/YYYY/MM/DD');
+
     return (
         <ListItem sx={{ overflow: 'hidden', padding: 0 }}>
             <Link
-                href={`/events/${props.activity.id}?view=calendar`}
+                href={`/events/${props.event.id}?view=calendar${urlDate}`}
                 onClick={(e) => {
                     e.stopPropagation();
                 }}
@@ -45,7 +49,7 @@ const CalendarEvent = (props: CalendarEventProps) => {
                         fontSize: '0.65rem',
                     }}
                 >
-                    {formatEventTime(props.activity, true)}
+                    {formatEventTime(props.event, true)}
                 </Typography>
                 <Typography
                     sx={{
@@ -57,7 +61,7 @@ const CalendarEvent = (props: CalendarEventProps) => {
                         fontSize: { lg: '0.85rem', xs: '0.65rem' },
                     }}
                 >
-                    {props.activity.name}
+                    {props.event.name}
                 </Typography>
             </Link>
         </ListItem>
