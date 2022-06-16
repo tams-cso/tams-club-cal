@@ -1,8 +1,8 @@
 import React, { useEffect, useState } from 'react';
 import { GetServerSidePropsContext, InferGetServerSidePropsType } from 'next';
-import dayjs from 'dayjs';
+import dayjs, { Dayjs } from 'dayjs';
 import { getReservationList } from '../../../src/api';
-import { AccessLevel, BrokenReservation } from '../../../src/types';
+import { AccessLevel } from '../../../src/types';
 import { getAccessLevel, parseDateParams, parseReservations } from '../../../src/util';
 
 import Box from '@mui/material/Box';
@@ -13,7 +13,6 @@ import IconButton from '@mui/material/IconButton';
 import ArrowBackIosRounded from '@mui/icons-material/ArrowBackIosRounded';
 import ArrowForwardIosRounded from '@mui/icons-material/ArrowForwardIosRounded';
 import Loading from '../../../src/components/shared/loading';
-import ReservationDay from '../../../src/components/reservations/reservation-day';
 import AddButton from '../../../src/components/shared/add-button';
 import { useRouter } from 'next/router';
 import HomeBase from '../../../src/components/home/home-base';
@@ -52,21 +51,32 @@ const Reservations = ({
 }: InferGetServerSidePropsType<typeof getServerSideProps>) => {
     const router = useRouter();
     const [reservationComponentList, setReservationComponentList] = useState(null);
-    const [week, setWeek] = useState(dayjs(now));
-
-    // Redirect the user to the current week on click
-    const goToToday = () => {
-        setWeek(dayjs());
-    };
 
     // Adjust the offset of week when user clicks on the arrow buttons
     // The change that is passed in will be +1 or -1 depending on which arrow button was clicked
     const offsetWeek = (forward: boolean) => {
         // Increment week
-        const newWeek = forward ? dayjs(week).add(1, 'week') : dayjs(week).subtract(1, 'week');
+        const newWeek = forward ? dayjs(now).add(1, 'week') : dayjs(now).subtract(1, 'week');
         router.push(`/events/reservations/${newWeek.format('YYYY/M/D')}`);
     };
+    
+    // Redirect the user to the new week if it changes and is not the same as the current
+    const changeWeek = (date: Dayjs) => {
+        // If the week is invalid (ie. user manually changed the text input), do nothing
+        if (isNaN(date.valueOf())) return;
 
+        // If the week is the same as before, don't do anything either
+        if (date.isSame(now, 'week')) return;
+
+        // Otherwise, redirect the user to the new week
+        router.push(`/events/reservations/${date.format('YYYY/M/D')}`);
+    }
+
+    // Redirect the user to the current week on click
+    const goToToday = () => {
+        changeWeek(dayjs());
+    };
+    
     // Scroll down to the requested day
     // Index refers to the day of the week where Sunday = 0, Monday = 1, ..., Saturday = 6
     const goToDay = (index) => {
@@ -80,7 +90,7 @@ const Reservations = ({
         if (error) return;
 
         // Parse the reservations by breaking up reservations and splitting them into days
-        const components = parseReservations(reservationList, week);
+        const components = parseReservations(reservationList, dayjs(now));
 
         // Update the state variable with the list of reservations
         setReservationComponentList(
@@ -89,18 +99,6 @@ const Reservations = ({
             </Box>
         );
     }, [reservationList]);
-
-    // Redirect the user to the new week if it changes and is not the same as the current
-    useEffect(() => {
-        // If the week is invalid (ie. user manually changed the text input), do nothing
-        if (isNaN(week.valueOf())) return;
-
-        // If the week is the same as before, don't do anything either
-        if (week.isSame(now, 'week')) return;
-
-        // Otherwise, redirect the user to the new week
-        router.push(`/events/reservations/${week.format('YYYY/M/D')}`);
-    }, [week]);
 
     // Send error if cannot get data
     if (error) {
@@ -116,7 +114,7 @@ const Reservations = ({
 
     // Create the list of buttons for the current week
     const weekButtonList = [];
-    const start = week.startOf('week');
+    const start = dayjs(now).startOf('week');
     for (let i = 0; i < 7; i++) {
         weekButtonList.push(start.add(i, 'day').format('ddd M/D'));
     }
@@ -128,8 +126,8 @@ const Reservations = ({
                 <DatePicker
                     inputFormat="[Week of] MMM D, YYYY"
                     label="Select week to show"
-                    value={week}
-                    onChange={setWeek}
+                    value={now}
+                    onChange={changeWeek}
                     renderInput={(params) => (
                         <TextField {...params} variant="standard" sx={{ marginLeft: { sm: 4, xs: 2 } }} />
                     )}
