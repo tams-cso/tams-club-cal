@@ -1,7 +1,7 @@
 import React from 'react';
 import { alpha, Tooltip } from '@mui/material';
 import { darkSwitch, formatTime } from '../../util';
-import type { BrokenReservation } from '../../types';
+import type { BrokenReservation, Room } from '../../types';
 
 import Box from '@mui/material/Box';
 import Link from '../shared/Link';
@@ -12,6 +12,9 @@ interface ReservationEntryProps {
 
     /** Style the TableCell component */
     sx?: object;
+
+    /** If from the room page, include room object */
+    room?: Room;
 }
 
 /**
@@ -34,8 +37,9 @@ const ReservationEntry = (props: ReservationEntryProps) => {
     const endFormatted = formatTime(props.res.end.valueOf(), 'h:mma', true);
     const tooltipTitle = `${props.res.data.name} (${startFormatted} - ${endFormatted})`;
 
-    // Format the current date for url
+    // Format the current date for url and add room if defined
     const urlDate = props.res.start.format('/YYYY/MM/DD');
+    const fullUrl = props.room ? `/room/${props.room.value}/${urlDate}` : urlDate;
 
     return (
         <Box
@@ -43,7 +47,7 @@ const ReservationEntry = (props: ReservationEntryProps) => {
         >
             <Tooltip title={tooltipTitle}>
                 <Link
-                    href={`/events/${props.res.data.id}?view=reservations${urlDate}`}
+                    href={`/events/${props.res.data.id}?view=reservations${fullUrl}`}
                     sx={{
                         display: 'block',
                         fontSize: '0.75rem',

@@ -3,7 +3,7 @@ import { GetServerSidePropsContext, InferGetServerSidePropsType } from 'next';
 import dayjs from 'dayjs';
 import { getReservationList } from '../../../src/api';
 import { AccessLevel, BrokenReservation } from '../../../src/types';
-import { getAccessLevel, parseDateParams } from '../../../src/util';
+import { getAccessLevel, parseDateParams, parseReservations } from '../../../src/util';
 
 import Box from '@mui/material/Box';
 import TextField from '@mui/material/TextField';
@@ -59,11 +59,12 @@ const Reservations = ({
         setWeek(dayjs());
     };
 
-    // Adjust the offset of month when user clicks on the arrow buttons
+    // Adjust the offset of week when user clicks on the arrow buttons
     // The change that is passed in will be +1 or -1 depending on which arrow button was clicked
-    const offsetMonth = (forward: boolean) => {
-        const newWeek = forward ? dayjs(now).add(1, 'week') : dayjs(now).subtract(1, 'week');
-        setWeek(newWeek);
+    const offsetWeek = (forward: boolean) => {
+        // Increment week
+        const newWeek = forward ? dayjs(week).add(1, 'week') : dayjs(week).subtract(1, 'week');
+        router.push(`/events/reservations/${newWeek.format('YYYY/M/D')}`);
     };
 
     // Scroll down to the requested day
@@ -78,79 +79,8 @@ const Reservations = ({
         // If the reservation list is null, do nothing
         if (error) return;
 
-        // Break up reservations into days and sort the reservations
-        const brokenUpReservationList: BrokenReservation[] = [];
-        reservationList.forEach((r) => {
-            // Use variable to track the current day that we are working on
-            let curr = dayjs(r.start);
-
-            // Iterate through the days until we reach the end of the reservation
-            // This is useful for splitting up reservations that span multiple days
-            while (!curr.isSame(dayjs(r.end), 'day')) {
-                // If the current hour is 23 and the "end" of the event is within the next hour, break
-                // This is to prevent events that end at midnight from appearing on the next day
-                if (curr.hour() === 23 && curr.add(1, 'hour').isSame(dayjs(r.end), 'hour')) break;
-
-                // Calculate the number of hours between the current hour and the end of the day
-                const currEnd = curr.add(1, 'day').startOf('day');
-                const currSpan = currEnd.diff(curr, 'hour');
-
-                // Create an entry for the section of the event that spans this day
-                // This entry will span the entire length of the day if it crosses over the entire day
-                // However, the span will be less than 24 if it is less than the entire day
-                brokenUpReservationList.push({ start: curr, end: currEnd, span: currSpan, data: r });
-                curr = currEnd;
-            }
-
-            // Now we calculate the number of hours between the current hour and the end of the reservation
-            // This is because the while loop will break on the last day of the reservation and we must
-            // push the last segment on manually
-            const span = dayjs(r.end).diff(curr, 'hour');
-            brokenUpReservationList.push({ start: curr, end: dayjs(r.end), span, data: r });
-        });
-
-        // The reservation list is sorted by start date
-        const sortedReservationList = brokenUpReservationList.sort((a, b) => a.start.valueOf() - b.start.valueOf());
-
-        // Create a cut reservation list that only contains reservation blocks that
-        // start at 6am or after -> this will remove all blocks between 12am and 6am
-        // and truncate blocks that start within this interval but end after
-        const cutReservationList = [];
-        sortedReservationList.forEach((r) => {
-            // If the reservation starts outside of the interval, simply add it to the list
-            if (r.start.hour() >= 6) {
-                cutReservationList.push(r);
-            } else {
-                // If the reservation starts within the 6am-12am interval,
-                // and ends after this interval, keep the block but truncate the start
-                // Otherwise we will simply ignore the block and remove it from the list
-                if (r.end.hour() >= 6 || r.end.day() !== r.start.day()) {
-                    const diff = 6 - r.start.hour();
-                    cutReservationList.push({ ...r, start: r.start.hour(6), span: r.span - diff });
-                }
-            }
-        });
-
-        // Calculate start/end dates for list
-        const start = week.startOf('week');
-        const end = start.add(7, 'day');
-
-        // Create the actual reservation components by iterating through the sorted list
-        // and incrementing days when the next event in the sorted list is on the next day
-        // This will continue to increment until the last day of the week
-        // TODO: Add a catch for an infinite loop
-        const components = [];
-        let currTime = start;
-        while (currTime.isBefore(end, 'day')) {
-            components.push(
-                <ReservationDay
-                    reservationList={cutReservationList.filter((r) => currTime.isSame(dayjs(r.start), 'day'))}
-                    date={currTime}
-                    key={currTime.valueOf()}
-                />
-            );
-            currTime = currTime.add(1, 'day');
-        }
+        // Parse the reservations by breaking up reservations and splitting them into days
+        const components = parseReservations(reservationList, week);
 
         // Update the state variable with the list of reservations
         setReservationComponentList(
@@ -204,10 +134,10 @@ const Reservations = ({
                         <TextField {...params} variant="standard" sx={{ marginLeft: { sm: 4, xs: 2 } }} />
                     )}
                 />
-                <IconButton size="small" onClick={offsetMonth.bind(this, false)} sx={{ marginLeft: 3 }}>
+                <IconButton size="small" onClick={offsetWeek.bind(this, false)} sx={{ marginLeft: 3 }}>
                     <ArrowBackIosRounded />
                 </IconButton>
-                <IconButton size="small" onClick={offsetMonth.bind(this, true)} sx={{ marginLeft: 1 }}>
+                <IconButton size="small" onClick={offsetWeek.bind(this, true)} sx={{ marginLeft: 1 }}>
                     <ArrowForwardIosRounded />
                 </IconButton>
                 <Button variant="outlined" onClick={goToToday} sx={{ mx: 3 }}>

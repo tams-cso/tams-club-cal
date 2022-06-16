@@ -78,6 +78,34 @@ router.get('/reservations/:week?', async (req: Request, res: Response) => {
 });
 
 /**
+ * GET /events/reservations/room/<room>/[month]
+ * 
+ * Sends a list of reservations for a specific room in a given month
+ * 
+ * Query parameters:
+ * - Room:  Name of room to get the event from (event.location)
+ * - Month: Month to get reservations of, should be a UTC date number
+ *          This can be any time within the month
+ */
+router.get('/reservations/room/:room/:month?', async (req: Request, res: Response) => {
+    const month = req.params.month ? dayjs(Number(req.params.month)) : dayjs();
+    try {
+        const reservations = await Event.find({
+            reservation: true,
+            location: req.params.room,
+            start: {
+                $gte: month.startOf('month').subtract(1, 'week').valueOf(),
+                $lte: month.endOf('month').add(1, 'week').valueOf(),
+            },
+        });
+        res.send(reservations);
+    } catch (error) {
+        console.error(error);
+        sendError(res, 500, 'Could not get list of reservations');
+    }
+});
+
+/**
  * GET /events/<id>
  *
  * Gets an event by id
