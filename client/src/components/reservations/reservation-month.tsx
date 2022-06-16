@@ -1,15 +1,14 @@
 import React, { useEffect, useState } from 'react';
 import type { Dayjs } from 'dayjs';
 import { Theme } from '@mui/material';
-import { darkSwitch } from '../../util';
-import type { BrokenReservation } from '../../types';
+import { darkSwitch, getParams } from '../../util';
+import type { BrokenReservation, Room } from '../../types';
 
 import Box from '@mui/material/Box';
 import Typography from '@mui/material/Typography';
 import ReservationEntry from './reservation-entry';
 
 import data from '../../data.json';
-import Link from '../shared/Link';
 
 // Border color
 const borderColor = (theme: Theme) => darkSwitch(theme, theme.palette.grey[300], theme.palette.grey[800]);
@@ -25,12 +24,15 @@ const cellStyle = {
     fontSize: '0.875rem',
 };
 
-interface ReservationDayProps {
+interface ReservationMonthProps {
     /** List of all reservations for the current day */
     reservationList: BrokenReservation[];
 
     /** The current date */
     date: Dayjs;
+
+    /** Room object */
+    room: Room;
 }
 
 /**
@@ -38,39 +40,30 @@ interface ReservationDayProps {
  * This grid is essentially a table with the hours as the columns and each
  * different possible reservation location as the rows.
  */
-const ReservationDay = (props: ReservationDayProps) => {
+const ReservationMonth = (props: ReservationMonthProps) => {
     const [componentList, setComponentList] = useState(null);
 
     // When the component mounts, create the list of components from the passed in reservationList
     useEffect(() => {
         const table = [];
 
-        // Iterate through all the rooms
-        data.rooms.forEach((room) => {
-            // Create the labels for each row, which is the room name
+        // Iterate through every day in the month
+        const month = props.date.startOf('month');
+        let curr = month;
+        while (curr.isSame(month, 'month')) {
+            // Create the labels for each row, which is the date
             const row = [
-                <Box key={room.value} sx={{ width: '10%', ...cellStyle }}>
-                    <Link
-                        href={`/events/reservations/room/${room.value}/${props.date.format('YYYY/MM/DD')}`}
-                        sx={{
-                            textDecoration: 'none',
-                            color: 'inherit',
-                            '&:hover': {
-                                textDecoration: 'underline',
-                            },
-                        }}
-                    >
-                        {room.label}
-                    </Link>
+                <Box key={curr.valueOf()} sx={{ width: '10%', ...cellStyle }}>
+                    {curr.format('ddd, MMM DD, YYYY')}
                 </Box>,
             ];
 
-            // Get the reservations for the current room
-            const currRoomRes = props.reservationList.filter((r) => r.data.location === room.value);
+            // Get the reservations for the current date
+            const currDateRes = props.reservationList.filter((r) => r.start.isSame(curr, 'day'));
 
-            // Iterate through the list of reservations for the current room
-            currRoomRes.forEach((res) => {
-                row.push(<ReservationEntry res={res} key={res.data.name} />);
+            // Iterate through the list of reservations for the current day
+            currDateRes.forEach((res) => {
+                row.push(<ReservationEntry res={res} key={res.data.name} room={props.room} />);
             });
 
             // Add 18 empty divs to draw the empty grid
@@ -80,11 +73,14 @@ const ReservationDay = (props: ReservationDayProps) => {
 
             // Add the row to the table
             table.push(
-                <Box key={room.value} sx={{ display: 'flex' }}>
+                <Box key={curr.valueOf()} sx={{ display: 'flex' }}>
                     {row}
                 </Box>
             );
-        });
+
+            // Next day
+            curr = curr.add(1, 'day');
+        }
 
         // Set the state variable to the list of components (which forms the table)
         setComponentList(table);
@@ -107,7 +103,7 @@ const ReservationDay = (props: ReservationDayProps) => {
                         color: (theme) => theme.palette.primary.main,
                     }}
                 >
-                    {props.date.format('ddd, MMM DD, YYYY')}
+                    {props.room.label}
                 </Typography>
                 {data.hours.map((hour, i) => (
                     <Box
@@ -130,4 +126,4 @@ const ReservationDay = (props: ReservationDayProps) => {
     );
 };
 
-export default ReservationDay;
+export default ReservationMonth;

@@ -67,6 +67,18 @@ export interface BrokenReservation {
     data: Event;
 }
 
+/**
+ * Object to hold information for a room; this is stored
+ * in client/src/data.json
+ */
+export interface Room {
+    /** Internal id of the room */
+    value: string;
+
+    /** User-friendly label of the room */
+    label: string;
+}
+
 /** An object containing the information for a club */
 export interface Club {
     /** The unique UUIDv4 for the club */

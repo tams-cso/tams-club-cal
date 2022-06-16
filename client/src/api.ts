@@ -189,6 +189,10 @@ export async function getReservationList(week: number = null): Promise<ListFetch
     return getRequest(`/events/reservations/${week ? week : ''}`) as Promise<ListFetchResponse<Event>>;
 }
 
+export async function getRoomReservationList(room: string, week: number = null): Promise<ListFetchResponse<Event>> {
+    return getRequest(`/events/reservations/room/${room}/${week ? week : ''}`) as Promise<ListFetchResponse<Event>>;
+}
+
 /**
  * Creates a new event
  *
