@@ -82,6 +82,13 @@ const Calendar = (props: InferGetServerSidePropsType<typeof getServerSideProps>)
     const [rows, setRows] = useState(0);
     const now = dayjs(props.now);
 
+    // Adjust the offset of month when user clicks on the arrow buttons
+    // The change that is passed in will be +1 or -1 depending on which arrow button was clicked
+    const offsetMonth = (forward: boolean) => {
+        const newMonth = forward ? now.add(1, 'month') : now.subtract(1, 'month');
+        router.push(`/events/calendar/${newMonth.format('YYYY/M')}`);
+    };
+
     // Once the events are fetched, they are parsed by splitting multi-day events
     // These events are then grouped by date and each calendar day is created
     useEffect(() => {
@@ -123,13 +130,6 @@ const Calendar = (props: InferGetServerSidePropsType<typeof getServerSideProps>)
         setRows(props.numRows);
         setMonth(now.format('MMMM YYYY'));
     }, [props.activities]);
-
-    // Adjust the offset of month when user clicks on the arrow buttons
-    // The change that is passed in will be +1 or -1 depending on which arrow button was clicked
-    const offsetMonth = (forward: boolean) => {
-        const newMonth = forward ? now.add(1, 'month') : now.subtract(1, 'month');
-        router.push(`/events/calendar/${newMonth.format('YYYY/M')}`);
-    };
 
     // Create the days of the week as the header
     const days = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
