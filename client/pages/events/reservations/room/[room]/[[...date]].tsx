@@ -15,6 +15,7 @@ import ArrowBackIosRoundedIcon from '@mui/icons-material/ArrowBackIosRounded';
 import ArrowForwardIosRoundedIcon from '@mui/icons-material/ArrowForwardIosRounded';
 
 import data from '../../../../../src/data.json';
+import Loading from '../../../../../src/components/shared/loading';
 
 // Server-side Rendering
 export const getServerSideProps = async (ctx: GetServerSidePropsContext) => {
@@ -26,7 +27,7 @@ export const getServerSideProps = async (ctx: GetServerSidePropsContext) => {
     const roomObj = data.rooms.find((r) => r.value === room);
     if (!roomObj) {
         return {
-            props: { now: now.valueOf(), reservationList: [], error: true },
+            props: { now: now.valueOf(), reservationList: [], error: true, room: { label: '', value: '' } },
         };
     }
 
@@ -72,6 +73,20 @@ const ReservationRoom = ({
         // Parse the reservations and save to state variable
         setResMonthComponent(parseReservations(reservationList, month, true, room)[0]);
     }, [reservationList]);
+
+    // Send error if cannot get data
+    if (error) {
+        return (
+            <HomeBase noDrawer noActionBar>
+                <Loading error sx={{ marginBottom: 4 }}>
+                    Invalid room name! Please navigate back here through the reservation calendar
+                    <Button size="small" onClick={back} sx={{ margin: 'auto', marginTop: 1, display: 'block' }}>
+                        Back
+                    </Button>
+                </Loading>
+            </HomeBase>
+        );
+    }
 
     return (
         <HomeBase noDrawer noActionBar>
