@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import Head from 'next/head';
 
 interface TitleMetaProps {
@@ -14,9 +14,15 @@ interface TitleMetaProps {
  * are not resource displays: [resource lists and utility pages]
  */
 const TitleMeta = (props: TitleMetaProps) => {
+    const [prod, setProd] = useState(false);
+
+    useEffect(() => {
+        setProd(window.location.origin === 'https://tams.club');
+    }, []);
+
     return (
         <Head>
-            <title>{props.title} - TAMS Club Calendar</title>
+            <title>{prod ? '' : '[Staging] '}{props.title} - TAMS Club Calendar</title>
             <meta key="title" property="og:title" content={`${props.title} - TAMS Club Calendar`} />
             <meta key="title-1" name="twitter:title" content={`${props.title} - TAMS Club Calendar`} />
             {props.path ? <meta key="url" property="og:url" content={`https://tams.club${props.path}`} /> : null}
