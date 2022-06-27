@@ -12,6 +12,7 @@ import Loading from '../src/components/shared/loading';
 import AddButton from '../src/components/shared/add-button';
 import EventListSection from '../src/components/home/event-list-section';
 import { AccessLevel } from '../src/types';
+import TitleMeta from '../src/components/meta/title-meta';
 
 // Format the no events/add more events text on the event list
 const listTextFormat = {
@@ -105,6 +106,7 @@ const Home = ({ eventList, error, level }: InferGetServerSidePropsType<typeof ge
 
     return (
         <HomeBase>
+            <TitleMeta />
             <Container
                 maxWidth="lg"
                 sx={{

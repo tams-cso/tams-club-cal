@@ -28,7 +28,14 @@ interface ResourceMetaProps {
  * Creates meta tags for pages that display a single resource object
  */
 const ResourceMeta = (props: ResourceMetaProps) => {
+    const [prod, setProd] = useState(false);
+
+    useEffect(() => {
+        setProd(window.location.origin === 'https://tams.club');
+    }, []);
+
     const title =
+        (prod ? '' : '[Staging] ') +
         (props.editHistory ? '[Edit History] ' : '') +
         `${props.name} | ${capitalize(props.resource)} - TAMS Club Calendar`;
 
@@ -51,6 +58,7 @@ const ResourceMeta = (props: ResourceMetaProps) => {
             {image}
             <meta key="title-1" name="twitter:title" content={title} />
             <meta key="description-1" name="twitter:description" content={props.description} />
+            {prod ? null : <meta key="robots" name="robots" content="noindex" />}
         </Head>
     );
 };
