@@ -3,7 +3,7 @@ import Head from 'next/head';
 
 interface TitleMetaProps {
     /** Title of the list */
-    title: string;
+    title?: string;
 
     /** Full path of the page, including the '/' */
     path?: string;
@@ -20,12 +20,16 @@ const TitleMeta = (props: TitleMetaProps) => {
         setProd(window.location.origin === 'https://tams.club');
     }, []);
 
+    const title =
+        (prod ? '' : '[Staging] ') + (props.title ? `${props.title} - TAMS Club Calendar` : 'TAMS Club Calendar');
+
     return (
         <Head>
-            <title>{prod ? '' : '[Staging] '}{props.title} - TAMS Club Calendar</title>
-            <meta key="title" property="og:title" content={`${props.title} - TAMS Club Calendar`} />
-            <meta key="title-1" name="twitter:title" content={`${props.title} - TAMS Club Calendar`} />
+            <title>{title}</title>
+            <meta key="title" property="og:title" content={title} />
+            <meta key="title-1" name="twitter:title" content={title} />
             {props.path ? <meta key="url" property="og:url" content={`https://tams.club${props.path}`} /> : null}
+            {prod ? null : <meta key="robots" name="robots" content="noindex" />}
         </Head>
     );
 };

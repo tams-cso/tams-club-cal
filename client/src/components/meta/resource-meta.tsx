@@ -35,6 +35,7 @@ const ResourceMeta = (props: ResourceMetaProps) => {
     }, []);
 
     const title =
+        (prod ? '' : '[Staging] ') +
         (props.editHistory ? '[Edit History] ' : '') +
         `${props.name} | ${capitalize(props.resource)} - TAMS Club Calendar`;
 
@@ -50,13 +51,14 @@ const ResourceMeta = (props: ResourceMetaProps) => {
 
     return (
         <Head>
-            <title>{prod ? '' : '[Staging] '}{title}</title>
+            <title>{title}</title>
             <meta key="description" name="description" content={props.description} />
             <meta key="title" property="og:title" content={title} />
             <meta key="url" property="og:url" content={`https://tams.club${props.path}`} />
             {image}
             <meta key="title-1" name="twitter:title" content={title} />
             <meta key="description-1" name="twitter:description" content={props.description} />
+            {prod ? null : <meta key="robots" name="robots" content="noindex" />}
         </Head>
     );
 };
