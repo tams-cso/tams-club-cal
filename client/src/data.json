@@ -1,10 +1,4 @@
 {
-    "examCalendar": "https://docs.google.com/presentation/d/1FYK_1kiuwi-DXkO8jpfcd_NLNIx3Er5pjq8dbGj1cS4/edit#slide=id.p",
-    "academicsGuide": "https://docs.google.com/document/d/1gi7-K81MN4KLEBPCF9bv-nVxg2HMnH8ub5IXKeFM7fc/edit?usp=sharing",
-    "clubLeaderResources": "https://tams.unt.edu/studentlife/clubs#clubresources",
-    "tamsWiki": "https://tamswiki.org/wiki/Main_Page",
-    "addCalendar": "https://calendar.google.com/calendar/u/7?cid=ODlicWE0c3FpOTRxMG9ocmtoOW5raWtvN2dAZ3JvdXAuY2FsZW5kYXIuZ29vZ2xlLmNvbQ",
-    "addStagingCalendar": "https://calendar.google.com/calendar/u/7?cid=dmQxaGdjMGNnOTNvaGtlazRyczJuOXIwNDRAZ3JvdXAuY2FsZW5kYXIuZ29vZ2xlLmNvbQ",
     "daysOfTheWeek": ["Sun", "Mon", "Tues", "Wed", "Thu", "Fri", "Sat"],
     "charsOfTheWeek": ["S", "M", "T", "W", "T", "F", "S"],
     "githubLink": "https://github.com/MichaelZhao21/tams-club-cal",
