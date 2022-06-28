@@ -8,12 +8,15 @@ import type { SxProps, Theme } from '@mui/material';
 import Container from '@mui/material/Container';
 import Typography from '@mui/material/Typography';
 import Box from '@mui/material/Box';
+import IconButton from '@mui/material/IconButton';
+import Tooltip from '@mui/material/Tooltip';
 import Popover from '@mui/material/Popover';
 import FormControl from '@mui/material/FormControl';
 import FormLabel from '@mui/material/FormLabel';
 import FormControlLabel from '@mui/material/FormControlLabel';
 import FormGroup from '@mui/material/FormGroup';
 import Checkbox from '@mui/material/Checkbox';
+import FilterListIcon from '@mui/icons-material/FilterList';
 import HomeBase from '../src/components/home/home-base';
 import Loading from '../src/components/shared/loading';
 import AddButton from '../src/components/shared/add-button';
@@ -81,11 +84,20 @@ const Home = ({ eventList, error, level }: InferGetServerSidePropsType<typeof ge
         // Filter the event list
         const filteredEventList = eventList.filter((event) => {
             // If no filters selected, return true
-            if (!(filters.event || filters.ga || filters.meeting || filters.volunteering || filters.other))
-                return true;
+            if (!(filters.event || filters.ga || filters.meeting || filters.volunteering || filters.other)) return true;
 
             return filters[event.type];
         });
+
+        // Return if the list is empty
+        if (filteredEventList.length === 0) {
+            setEventComponentList([
+                <Typography key="nomore" sx={listTextFormat}>
+                    No events match the event type filter! Broaden your search or create a new event with the '+'!
+                </Typography>,
+            ]);
+            return;
+        }
 
         // Split the events into groups by date
         // TODO: Put this in a util function or not idk
@@ -155,6 +167,23 @@ const Home = ({ eventList, error, level }: InferGetServerSidePropsType<typeof ge
                 }}
             >
                 <AddButton color="primary" label="Event" path="/edit/events" disabled={level < AccessLevel.STANDARD} />
+                <Box width="100%" marginBottom={2} display="flex" alignItems="center">
+                    <Tooltip title="Filters">
+                        <IconButton onClick={openFilters} size="large">
+                            <FilterListIcon />
+                        </IconButton>
+                    </Tooltip>
+                    <Typography
+                        sx={{
+                            marginLeft: 2,
+                            flexGrow: 1,
+                            fontWeight: 500,
+                            color: (theme) => darkSwitchGrey(theme),
+                        }}
+                    >
+                        Filter Events by Type
+                    </Typography>
+                </Box>
                 {eventComponentList}
             </Container>
             <Popover
@@ -169,7 +198,7 @@ const Home = ({ eventList, error, level }: InferGetServerSidePropsType<typeof ge
                 <Box padding={3}>
                     <FormControl component="fieldset">
                         <FormLabel component="legend" sx={{ marginBottom: 1 }}>
-                            Filter Volunteering
+                            Filter Events by Type
                         </FormLabel>
                         <FormGroup>
                             <FormControlLabel
@@ -181,14 +210,16 @@ const Home = ({ eventList, error, level }: InferGetServerSidePropsType<typeof ge
                                 label="GA"
                             />
                             <FormControlLabel
-                                control={
-                                    <Checkbox checked={filters.meeting} onChange={handleChange} name="meeting" />
-                                }
+                                control={<Checkbox checked={filters.meeting} onChange={handleChange} name="meeting" />}
                                 label="Meeting"
                             />
                             <FormControlLabel
                                 control={
-                                    <Checkbox checked={filters.volunteering} onChange={handleChange} name="volunteering" />
+                                    <Checkbox
+                                        checked={filters.volunteering}
+                                        onChange={handleChange}
+                                        name="volunteering"
+                                    />
                                 }
                                 label="Volunteering"
                             />
