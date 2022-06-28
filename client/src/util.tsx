@@ -13,6 +13,7 @@ import {
     AccessLevel,
     BrokenReservation,
     Room,
+    EventType,
 } from './types';
 import type { Theme } from '@mui/material';
 import React from 'react';
@@ -125,6 +126,27 @@ export function getTokenFromCookies(ctx: GetServerSidePropsContext): string {
     const tokenCookie = ctx.req.cookies.token;
     if (tokenCookie === undefined) return null;
     return JSON.parse(tokenCookie).token as string;
+}
+
+/**
+ * Converts the event type to a capitalized string
+ * 
+ * @param type Event type
+ * @returns Capitalized string
+ */
+export function eventTypeToString(type: EventType): string {
+    switch (type) {
+        case 'event':
+            return 'Event';
+        case 'ga':
+            return 'GA';
+        case 'meeting':
+            return 'Meeting';
+        case 'volunteering':
+            return 'Volunteering';
+        default:
+            return 'Other';
+    }
 }
 
 // ================== CSS AND MUI FUNCTIONS =================== //
@@ -542,6 +564,7 @@ export function createEvent(
     eventId: string = null,
     editorId: string = null,
     name: string = '',
+    type: EventType = 'event',
     club: string = '',
     description: string = '',
     start: number = dayjs().startOf('hour').add(1, 'hour').valueOf(),
@@ -556,6 +579,7 @@ export function createEvent(
         eventId,
         editorId,
         name,
+        type,
         club,
         description,
         start,

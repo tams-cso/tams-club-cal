@@ -79,9 +79,9 @@ router.get('/reservations/:week?', async (req: Request, res: Response) => {
 
 /**
  * GET /events/reservations/room/<room>/[month]
- * 
+ *
  * Sends a list of reservations for a specific room in a given month
- * 
+ *
  * Query parameters:
  * - Room:  Name of room to get the event from (event.location)
  * - Month: Month to get reservations of, should be a UTC date number
@@ -179,6 +179,7 @@ router.post('/', async (req: Request, res: Response) => {
             eventId: null,
             editorId: user.id,
             name: req.body.name,
+            type: req.body.type,
             club: req.body.club,
             description: req.body.description,
             start: Number(req.body.start),
@@ -237,6 +238,7 @@ router.put('/:id', async (req: Request, res: Response) => {
             eventId: req.body.eventId,
             editorId: user.id,
             name: req.body.name,
+            type: req.body.type,
             club: req.body.club,
             description: req.body.description,
             start: Number(req.body.start),

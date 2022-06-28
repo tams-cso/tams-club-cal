@@ -7,6 +7,16 @@ import type { SxProps, Theme } from '@mui/material';
 
 import Container from '@mui/material/Container';
 import Typography from '@mui/material/Typography';
+import Box from '@mui/material/Box';
+import IconButton from '@mui/material/IconButton';
+import Tooltip from '@mui/material/Tooltip';
+import Popover from '@mui/material/Popover';
+import FormControl from '@mui/material/FormControl';
+import FormLabel from '@mui/material/FormLabel';
+import FormControlLabel from '@mui/material/FormControlLabel';
+import FormGroup from '@mui/material/FormGroup';
+import Checkbox from '@mui/material/Checkbox';
+import FilterListIcon from '@mui/icons-material/FilterList';
 import HomeBase from '../src/components/home/home-base';
 import Loading from '../src/components/shared/loading';
 import AddButton from '../src/components/shared/add-button';
@@ -44,6 +54,14 @@ const Home = ({ eventList, error, level }: InferGetServerSidePropsType<typeof ge
     const [eventComponentList, setEventComponentList] = useState<JSX.Element | JSX.Element[]>(
         <Loading sx={{ marginBottom: 4 }} />
     );
+    const [anchorEl, setAnchorEl] = useState(null);
+    const [filters, setFilters] = useState({
+        event: false,
+        ga: false,
+        meeting: false,
+        volunteering: false,
+        other: false,
+    });
 
     // This hook will first make sure the event list is not empty/null,
     // then it will call a util function to split up multi-day events,
@@ -51,7 +69,7 @@ const Home = ({ eventList, error, level }: InferGetServerSidePropsType<typeof ge
     // each containing a list of events for that day.
     useEffect(() => {
         // Make sure event list is not null
-        if (eventList === null) return;
+        if (error || eventList === null) return;
 
         // Set text to the end of the events list if empty
         if (eventList.length === 0) {
@@ -63,11 +81,29 @@ const Home = ({ eventList, error, level }: InferGetServerSidePropsType<typeof ge
             return;
         }
 
+        // Filter the event list
+        const filteredEventList = eventList.filter((event) => {
+            // If no filters selected, return true
+            if (!(filters.event || filters.ga || filters.meeting || filters.volunteering || filters.other)) return true;
+
+            return filters[event.type];
+        });
+
+        // Return if the list is empty
+        if (filteredEventList.length === 0) {
+            setEventComponentList([
+                <Typography key="nomore" sx={listTextFormat}>
+                    No events match the event type filter! Broaden your search or create a new event with the '+'!
+                </Typography>,
+            ]);
+            return;
+        }
+
         // Split the events into groups by date
         // TODO: Put this in a util function or not idk
         const eventGroupList = [];
         let tempList = [];
-        eventList.forEach((event, index) => {
+        filteredEventList.forEach((event, index) => {
             if (tempList.length > 0 && isSameDate(tempList[tempList.length - 1].start, event.start)) {
                 tempList.push(event);
             } else {
@@ -91,7 +127,23 @@ const Home = ({ eventList, error, level }: InferGetServerSidePropsType<typeof ge
 
         // Display list
         setEventComponentList(groupedComponents);
-    }, [eventList]);
+    }, [eventList, filters]);
+
+    // Open the popup element on click
+    // The setAchorEl is used for the Popover component
+    const openFilters = (event) => {
+        setAnchorEl(event.currentTarget);
+    };
+
+    // Close the popup element by setting the anchor element to null
+    const closeFilters = () => {
+        setAnchorEl(null);
+    };
+
+    // Toggle the filters open/closed when clicked
+    const handleChange = (event) => {
+        setFilters({ ...filters, [event.target.name]: event.target.checked });
+    };
 
     // Show error message if errored
     if (error) {
@@ -115,8 +167,70 @@ const Home = ({ eventList, error, level }: InferGetServerSidePropsType<typeof ge
                 }}
             >
                 <AddButton color="primary" label="Event" path="/edit/events" disabled={level < AccessLevel.STANDARD} />
+                <Box width="100%" marginBottom={2} display="flex" alignItems="center">
+                    <Tooltip title="Filters">
+                        <IconButton onClick={openFilters} size="large">
+                            <FilterListIcon />
+                        </IconButton>
+                    </Tooltip>
+                    <Typography
+                        sx={{
+                            marginLeft: 2,
+                            flexGrow: 1,
+                            fontWeight: 500,
+                            color: (theme) => darkSwitchGrey(theme),
+                        }}
+                    >
+                        Filter Events by Type
+                    </Typography>
+                </Box>
                 {eventComponentList}
             </Container>
+            <Popover
+                open={anchorEl !== null}
+                anchorEl={anchorEl}
+                onClose={closeFilters}
+                anchorOrigin={{
+                    vertical: 'bottom',
+                    horizontal: 'center',
+                }}
+            >
+                <Box padding={3}>
+                    <FormControl component="fieldset">
+                        <FormLabel component="legend" sx={{ marginBottom: 1 }}>
+                            Filter Events by Type
+                        </FormLabel>
+                        <FormGroup>
+                            <FormControlLabel
+                                control={<Checkbox checked={filters.event} onChange={handleChange} name="event" />}
+                                label="Event"
+                            />
+                            <FormControlLabel
+                                control={<Checkbox checked={filters.ga} onChange={handleChange} name="ga" />}
+                                label="GA"
+                            />
+                            <FormControlLabel
+                                control={<Checkbox checked={filters.meeting} onChange={handleChange} name="meeting" />}
+                                label="Meeting"
+                            />
+                            <FormControlLabel
+                                control={
+                                    <Checkbox
+                                        checked={filters.volunteering}
+                                        onChange={handleChange}
+                                        name="volunteering"
+                                    />
+                                }
+                                label="Volunteering"
+                            />
+                            <FormControlLabel
+                                control={<Checkbox checked={filters.other} onChange={handleChange} name="other" />}
+                                label="Other"
+                            />
+                        </FormGroup>
+                    </FormControl>
+                </Box>
+            </Popover>
         </HomeBase>
     );
 };

@@ -1,7 +1,7 @@
 import React from 'react';
 import type { Theme } from '@mui/material';
 import { Event } from '../../types';
-import { darkSwitch, formatEventTime } from '../../util';
+import { darkSwitch, eventTypeToString, formatEventTime } from '../../util';
 
 import Box from '@mui/material/Box';
 import ListItem from '@mui/material/ListItem';
@@ -19,7 +19,7 @@ interface EventEntryProps {
  */
 const EventEntry = (props: EventEntryProps) => {
     // Replace all the newlines in the description with a pipe
-    const description = props.event.description.replace(/\n/g, ' | ');
+    const description = `[${eventTypeToString(props.event.type)}] ` + props.event.description.replace(/\n/g, ' | ');
 
     return (
         <ListItem
@@ -80,7 +80,7 @@ const EventEntry = (props: EventEntryProps) => {
                         >
                             {props.event.club}
                         </StyledSpan>
-                        {props.event.description ? ` - ${description}` : ''}
+                        {props.event.description ? ` - ${description}` : ` - [${eventTypeToString(props.event.type)}]`}
                     </Typography>
                 </Box>
             </Link>
