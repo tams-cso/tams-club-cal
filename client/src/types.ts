@@ -24,6 +24,9 @@ export interface Event {
     /** The name of the event */
     name: string;
 
+    /** Type of the event */
+    type: EventType;
+
     /** The name of the club that is hosting the event */
     club: string;
 
@@ -48,6 +51,9 @@ export interface Event {
     /** True to show on reservation calendar/check for overlaps */
     reservation: boolean;
 }
+
+/** Type of the event, can be used as filter on the event list */
+export type EventType = 'event' | 'ga' | 'meeting' | 'volunteering' | 'other';
 
 /**
  * Object to hold data for the reservation view temporarily. This is used

@@ -8,6 +8,7 @@ const eventSchema = new mongoose.Schema({
     eventId: String,
     editorId: String,
     name: String,
+    type: String,
     club: String,
     description: String,
     start: Number,

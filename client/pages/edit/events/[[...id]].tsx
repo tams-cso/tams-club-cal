@@ -6,7 +6,7 @@ import Cookies from 'universal-cookie';
 import dayjs, { Dayjs } from 'dayjs';
 import { createPopupEvent, createEvent, darkSwitch, getTokenFromCookies } from '../../../src/util';
 import { getEvent, getOverlappingReservations, getUserInfo, postEvent, putEvent } from '../../../src/api';
-import { AccessLevel, PopupEvent } from '../../../src/types';
+import { AccessLevel, EventType, PopupEvent } from '../../../src/types';
 
 import Typography from '@mui/material/Typography';
 import Box from '@mui/material/Box';
@@ -30,10 +30,13 @@ import RobotBlockMeta from '../../../src/components/meta/robot-block-meta';
 import data from '../../../src/data.json';
 import UnauthorizedAlert from '../../../src/components/edit/shared/unauthorized-alert';
 import DeleteButton from '../../../src/components/shared/delete-button';
+import ControlledSelect from '../../../src/components/edit/shared/controlled-select';
+import { MenuItem } from '@mui/material';
 
 // Object for holding form data
 type SubmitData = {
     name: string;
+    type: EventType;
     club: string;
     location: string;
     otherLocation: string;
@@ -151,6 +154,7 @@ const EditEvents = ({
             event.eventId,
             userId,
             data.name,
+            data.type,
             data.club,
             data.description,
             startTime,
@@ -287,18 +291,35 @@ const EditEvents = ({
                         </Link>
                     </Alert>
                 ) : null}
-                <ControlledTextField
-                    control={control}
-                    setValue={setValue}
-                    value={event.name}
-                    label="Event Name"
-                    name="name"
-                    variant="outlined"
-                    required
-                    errorMessage="Please enter a name"
-                    fullWidth
-                    sx={{ marginBottom: 3 }}
-                />
+                <Box sx={{ marginBottom: 3, display: 'flex', flexDirection: { lg: 'row', xs: 'column' } }}>
+                    <ControlledSelect
+                        control={control}
+                        setValue={setValue}
+                        value={event.type}
+                        name="type"
+                        label="Event Type"
+                        variant="outlined"
+                        sx={{ minWidth: 150 }}
+                    >
+                        <MenuItem value="event">Event</MenuItem>
+                        <MenuItem value="ga">GA</MenuItem>
+                        <MenuItem value="meeting">Meeting</MenuItem>
+                        <MenuItem value="volunteering">Volunteering</MenuItem>
+                        <MenuItem value="other">Other</MenuItem>
+                    </ControlledSelect>
+                    <Spacer />
+                    <ControlledTextField
+                        control={control}
+                        setValue={setValue}
+                        value={event.name}
+                        label="Event Name"
+                        name="name"
+                        variant="outlined"
+                        required
+                        grow
+                        errorMessage="Please enter a name"
+                    />
+                </Box>
                 <Box sx={{ marginBottom: 3, display: 'flex', flexDirection: { lg: 'row', xs: 'column' } }}>
                     <ControlledTextField
                         control={control}

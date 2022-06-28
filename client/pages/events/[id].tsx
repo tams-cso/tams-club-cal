@@ -12,6 +12,7 @@ import {
     getParams,
     getAccessLevel,
     getTokenFromCookies,
+    eventTypeToString,
 } from '../../src/util';
 
 import Container from '@mui/material/Container';
@@ -121,9 +122,16 @@ const EventDisplay = ({ event, error, level, userId }: InferGetServerSidePropsTy
                                     padding: { lg: 1, xs: 0 },
                                 }}
                             >
-                                <Typography sx={eventTypeStyle}>{event.club}</Typography>
-                                <Typography variant="h2" component="h1" sx={{ marginBottom: 4 }}>
+                                <Typography sx={eventTypeStyle}>{eventTypeToString(event.type)}</Typography>
+                                <Typography variant="h2" component="h1">
                                     {event.name}
+                                </Typography>
+                                <Typography
+                                    variant="subtitle1"
+                                    component="p"
+                                    sx={{ marginBottom: 4, color: (theme) => darkSwitchGrey(theme) }}
+                                >
+                                    {event.club}
                                 </Typography>
                                 <Typography variant="h3" gutterBottom sx={{ fontWeight: 400 }}>
                                     {formatEventDate(event)}
