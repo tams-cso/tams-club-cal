@@ -27,6 +27,7 @@ export const getServerSideProps = async (ctx: GetServerSidePropsContext) => {
     const historyRes = await getHistory(resource, id);
     const historyList = historyRes.status === 200 ? historyRes.data.history : null;
     const error = historyRes.status !== 200;
+    const editId = ctx.query.editId as string;
     return {
         props: {
             historyList: error ? [] : historyList,
@@ -35,6 +36,7 @@ export const getServerSideProps = async (ctx: GetServerSidePropsContext) => {
             error,
             resource,
             id,
+            editId,
         },
     };
 };
@@ -50,6 +52,7 @@ const HistoryDisplay = ({
     error,
     resource,
     id,
+    editId,
 }: InferGetServerSidePropsType<typeof getServerSideProps>) => {
     const router = useRouter();
     const [components, setComponents] = useState(null);
@@ -88,6 +91,17 @@ const HistoryDisplay = ({
             );
         })();
     }, [historyList]);
+
+    // Open popup on load if editId is defined
+    useEffect(() => {
+        if (editId) {
+            const ind = historyList.findIndex((entry) => entry.id === editId);
+            if (ind != -1) {
+                setCurrHistory(ind);
+                setPopupOpen(true);
+            }
+        }
+    }, []);
 
     // Opens the popup for a single edit when clicked
     const openPopup = (index: React.MouseEventHandler<HTMLTableRowElement>) => {
