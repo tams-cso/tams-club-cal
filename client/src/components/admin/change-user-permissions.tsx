@@ -1,8 +1,9 @@
 import React, { useEffect, useState } from 'react';
 import Cookies from 'universal-cookie';
+import { AccessLevelEnum } from '../../types/enums';
 import { getUserList, putUserLevel } from '../../api';
-import { PopupEvent, User, AccessLevel } from '../../types';
-import { accessLevelToString, createPopupEvent } from '../../util';
+import { accessLevelToString } from '../../util/miscUtil';
+import { createPopupEvent } from '../../util/constructors';
 
 import Button from '@mui/material/Button';
 import IconButton from '@mui/material/IconButton';
@@ -29,7 +30,7 @@ import Popup from '../shared/popup';
 import UploadBackdrop from '../edit/shared/upload-backdrop';
 
 const ChangeUserPermissions = () => {
-    const [user, setUser] = useState<User>({ id: '0', level: AccessLevel.STANDARD, name: '', email: '' });
+    const [user, setUser] = useState<User>({ id: '0', level: AccessLevelEnum.STANDARD, name: '', email: '' });
     const [editLevelPrompt, setEditLevelPrompt] = useState(false);
     const [popupEvent, setPopupEvent] = useState<PopupEvent>(null);
     const [backdrop, setBackdrop] = useState(false);
@@ -189,9 +190,9 @@ const ChangeUserPermissions = () => {
                                 value={user.level}
                                 onChange={handleLevelChange}
                             >
-                                <MenuItem value={AccessLevel.STANDARD}>Standard</MenuItem>
-                                <MenuItem value={AccessLevel.CLUBS}>Clubs</MenuItem>
-                                <MenuItem value={AccessLevel.ADMIN}>Admin</MenuItem>
+                                <MenuItem value={AccessLevelEnum.STANDARD}>Standard</MenuItem>
+                                <MenuItem value={AccessLevelEnum.CLUBS}>Clubs</MenuItem>
+                                <MenuItem value={AccessLevelEnum.ADMIN}>Admin</MenuItem>
                             </Select>
                         </FormControl>
                     </Box>

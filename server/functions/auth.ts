@@ -3,7 +3,7 @@ import type { Request, Response } from 'express';
 import crypto from 'crypto';
 import User from '../models/user';
 import { newId, sendError } from './util';
-import { AccessLevel } from './types';
+import { AccessLevelEnum } from '../types/AccessLevel';
 
 // Instantiate Google Auth client
 const client = new OAuth2Client(process.env.G_CLIENT_ID, process.env.G_CLIENT_SECRET);
@@ -65,7 +65,7 @@ export async function upsertUser(payload: TokenPayload): Promise<string> {
                 name: payload.name,
                 token,
             },
-            $setOnInsert: { id, level: AccessLevel.STANDARD },
+            $setOnInsert: { id, level: AccessLevelEnum.STANDARD },
         },
         { upsert: true }
     );
@@ -84,12 +84,12 @@ export async function upsertUser(payload: TokenPayload): Promise<string> {
  */
 export async function isValidToken(
     token: string,
-    level: AccessLevel = AccessLevel.STANDARD,
+    level: AccessLevelEnum = AccessLevelEnum.STANDARD,
     id?: string
 ): Promise<boolean> {
     const user = await User.findOne({ token }).exec();
     if (user !== null && user.level >= level) {
-        if (!id || user.level === AccessLevel.ADMIN) return true;
+        if (!id || user.level === AccessLevelEnum.ADMIN) return true;
         console.log(user.id);
         return id === user.id;
     }
@@ -106,7 +106,7 @@ export async function isValidToken(
 export async function isAuthenticated(
     req: Request,
     res: Response,
-    level: AccessLevel = AccessLevel.STANDARD,
+    level: AccessLevelEnum = AccessLevelEnum.STANDARD,
     id?: string
 ): Promise<boolean> {
     // Check to see if header is there

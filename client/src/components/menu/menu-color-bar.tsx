@@ -1,6 +1,6 @@
 import React from 'react';
 import Box from '@mui/material/Box';
-import { darkSwitch } from '../../util';
+import { darkSwitch } from '../../util/cssUtil';
 
 /**
  * Displays a colored bar on top of the menu, for a color accent!

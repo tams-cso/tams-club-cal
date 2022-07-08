@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
-import { createConnectionErrorPopup, formatDate } from '../../util';
-import { Feedback, PopupEvent } from '../../types';
+import { createConnectionErrorPopup } from '../../util/constructors';
+import { formatDate } from '../../util/datetime';
 import { getFeedback } from '../../api';
 
 import Table from '@mui/material/Table';

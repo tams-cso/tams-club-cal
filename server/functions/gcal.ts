@@ -1,5 +1,4 @@
 import { google } from 'googleapis';
-import { EventObject } from './types';
 
 authorize();
 

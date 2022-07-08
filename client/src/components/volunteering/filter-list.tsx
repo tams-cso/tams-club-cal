@@ -1,6 +1,5 @@
 import React from 'react';
 import { useTheme } from '@mui/material';
-import type { Filters } from '../../types';
 
 import List from '@mui/material/List';
 import DashboardRoundedIcon from '@mui/icons-material/DashboardRounded';

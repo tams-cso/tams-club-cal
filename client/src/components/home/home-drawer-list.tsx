@@ -7,8 +7,8 @@ import Typography from '@mui/material/Typography';
 import MaterialSymbol from './material-symbol';
 import { getExternalLinks as getExternalLinks } from '../../api';
 import Popup from '../shared/popup';
-import { createPopupEvent, darkSwitchGrey } from '../../util';
-import type { ExternalLink } from '../../types';
+import { createPopupEvent } from '../../util/constructors';
+import { darkSwitchGrey } from '../../util/cssUtil';
 
 /**
  * Shows a list of external links on the home page
@@ -36,10 +36,12 @@ const HomeDrawerList = () => {
     // Create link components once links are loaded
     useEffect(() => {
         setLinkComponents(
-            links.map((link) => <ListItemButton component="a" href={link.url} target="_blank">
-                <MaterialSymbol icon={link.icon} />
-                <ListItemText primary={link.name} />
-            </ListItemButton>)
+            links.map((link) => (
+                <ListItemButton component="a" href={link.url} target="_blank">
+                    <MaterialSymbol icon={link.icon} />
+                    <ListItemText primary={link.name} />
+                </ListItemButton>
+            ))
         );
     }, [links]);
 

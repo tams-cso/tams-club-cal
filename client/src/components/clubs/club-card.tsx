@@ -1,6 +1,5 @@
 import React from 'react';
-import { darkSwitchGrey } from '../../util';
-import { Club } from '../../types';
+import { darkSwitchGrey } from '../../util/cssUtil';
 
 import Card from '@mui/material/Card';
 import CardActionArea from '@mui/material/CardActionArea';
@@ -12,7 +11,7 @@ import CustomImage from '../shared/custom-image';
 
 interface ClubCardProps {
     /** The club object to display */
-    club: Club
+    club: Club;
 }
 
 /**

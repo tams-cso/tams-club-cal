@@ -13,8 +13,8 @@ import ViewSwitcher from '../../src/components/shared/view-switcher';
 import SortSelect from '../../src/components/shared/sort-select';
 import PageWrapper from '../../src/components/shared/page-wrapper';
 import TitleMeta from '../../src/components/meta/title-meta';
-import { getAccessLevel } from '../../src/util';
-import { AccessLevel } from '../../src/types';
+import { getAccessLevel } from '../../src/util/miscUtil';
+import { AccessLevelEnum } from '../../src/types/enums';
 
 // Server-side Rendering
 export const getServerSideProps = async (ctx: GetServerSidePropsContext) => {
@@ -90,7 +90,7 @@ const ClubList = ({ clubList, error, level }: InferGetServerSidePropsType<typeof
                     />
                     <ViewSwitcher tableView={tableView} setTableView={setTableView} />
                 </Box>
-                <AddButton color="primary" label="Club" path="/edit/clubs" hidden={level < AccessLevel.ADMIN} />
+                <AddButton color="primary" label="Club" path="/edit/clubs" hidden={level < AccessLevelEnum.ADMIN} />
                 {tableView ? <ClubTable clubs={clubList} /> : clubCardList}
             </Container>
         </PageWrapper>

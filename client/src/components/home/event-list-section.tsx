@@ -1,5 +1,4 @@
 import React from 'react';
-import type { Event } from '../../types';
 
 import List from '@mui/material/List';
 import Divider from '@mui/material/Divider';
@@ -8,7 +7,7 @@ import EventEntry from './event-entry';
 
 interface EventListSectionProps {
     /** List of events for this section (day) */
-    eventList: Event[];
+    eventList: CalEvent[];
 }
 
 /**

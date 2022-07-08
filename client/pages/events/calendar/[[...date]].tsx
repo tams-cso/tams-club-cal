@@ -3,8 +3,12 @@ import { GetServerSidePropsContext, InferGetServerSidePropsType } from 'next';
 import { useRouter } from 'next/router';
 import { Typography } from '@mui/material';
 import dayjs from 'dayjs';
-import { darkSwitch, getAccessLevel, parseDateParams, parsePublicEventList } from '../../../src/util';
+import { getAccessLevel } from '../../../src/util/miscUtil';
+import { parsePublicEventList } from '../../../src/util/dataParsing';
+import { parseDateParams } from '../../../src/util/datetime';
+import { darkSwitch } from '../../../src/util/cssUtil';
 import { getPublicEventListInRange } from '../../../src/api';
+import { AccessLevelEnum } from '../../../src/types/enums';
 
 import Box from '@mui/material/Box';
 import IconButton from '@mui/material/IconButton';
@@ -15,7 +19,6 @@ import CalendarDay from '../../../src/components/calendar/calendar-day';
 import Loading from '../../../src/components/shared/loading';
 import AddButton from '../../../src/components/shared/add-button';
 import TitleMeta from '../../../src/components/meta/title-meta';
-import { AccessLevel } from '../../../src/types';
 
 // Template rows for each number of possible calendar rows
 const rowStyles = {
@@ -154,7 +157,7 @@ const Calendar = (props: InferGetServerSidePropsType<typeof getServerSideProps>)
                     color="primary"
                     label="Event"
                     path="/edit/events"
-                    disabled={props.level < AccessLevel.STANDARD}
+                    disabled={props.level < AccessLevelEnum.STANDARD}
                 />
                 <Box width="100%" display="flex" justifyContent="center" alignItems="center">
                     <IconButton size="small" onClick={offsetMonth.bind(this, false)}>

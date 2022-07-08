@@ -1,6 +1,5 @@
 import React, { useState } from 'react';
 import type { Control, FieldValues, UseFormRegister, UseFormSetValue } from 'react-hook-form';
-import { Committee } from '../../../types';
 
 import ListItem from '@mui/material/ListItem';
 import Box from '@mui/material/Box';
@@ -18,15 +17,15 @@ interface EditCommitteeProps {
 
     /** React hook form set value function */
     setValue: UseFormSetValue<FieldValues>;
-    
+
     /** React hook form error state */
-    errors: object
-    
+    errors: object;
+
     /** Index of the link in the array */
-    index: number
-    
+    index: number;
+
     /** Default committee info */
-    committee: Committee
+    committee: Committee;
 }
 
 /**

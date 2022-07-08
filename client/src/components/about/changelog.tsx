@@ -1,5 +1,5 @@
 import React from 'react';
-import { darkSwitchGrey } from '../../util';
+import { darkSwitchGrey } from '../../util/cssUtil';
 
 import Typography from '@mui/material/Typography';
 import List from '@mui/material/List';

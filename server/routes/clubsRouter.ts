@@ -5,7 +5,8 @@ import { deleteClubImages, processClubUpload } from '../functions/images';
 import { newId, sendError } from '../functions/util';
 import { createHistory } from '../functions/edit-history';
 import Club from '../models/club';
-import { AccessLevel, RequestWithClubFiles } from '../functions/types';
+import { AccessLevelEnum } from '../types/AccessLevel';
+import { RequestWithClubFiles } from '../types/RequestWithClubFiles';
 import { isAuthenticated } from '../functions/auth';
 import History from '../models/history';
 
@@ -137,7 +138,7 @@ router.put('/:id', imageUpload, async (req: Request, res: Response) => {
  */
 router.delete('/:id', async (req: Request, res: Response) => {
     // Check if user is authenticated
-    if (!isAuthenticated(req, res, AccessLevel.ADMIN)) return;
+    if (!isAuthenticated(req, res, AccessLevelEnum.ADMIN)) return;
 
     // Get club
     const club = await Club.findOne({ id: req.params.id });

@@ -3,8 +3,9 @@ import { useRouter } from 'next/router';
 import { GetServerSidePropsContext, InferGetServerSidePropsType } from 'next';
 import { useForm } from 'react-hook-form';
 import Cookies from 'universal-cookie';
-import { createPopupEvent, createVolunteering, createFilters, getTokenFromCookies } from '../../../src/util';
-import { AccessLevel, PopupEvent } from '../../../src/types';
+import { AccessLevelEnum } from '../../../src/types/enums';
+import { getTokenFromCookies } from '../../../src/util/miscUtil';
+import { createPopupEvent, createVolunteering, createFilters } from '../../../src/util/constructors';
 import { getUserInfo, getVolunteering, postVolunteering, putVolunteering } from '../../../src/api';
 
 import { Controller } from 'react-hook-form';
@@ -32,7 +33,7 @@ export const getServerSideProps = async (ctx: GetServerSidePropsContext) => {
     const token = getTokenFromCookies(ctx);
     const userRes = await getUserInfo(token);
     const userId = userRes.status === 200 ? userRes.data.id : null;
-    const level = userId ? userRes.data.level : AccessLevel.NONE;
+    const level = userId ? userRes.data.level : AccessLevelEnum.NONE;
 
     // Check if adding volunteering
     const id = ctx.params.id as string;
@@ -110,7 +111,7 @@ const EditVolunteering = ({
         setValue('open', volunteering.filters.open);
     }, []);
 
-    const unauthorized = level < AccessLevel.CLUBS;
+    const unauthorized = level < AccessLevelEnum.CLUBS;
 
     return (
         <EditWrapper>

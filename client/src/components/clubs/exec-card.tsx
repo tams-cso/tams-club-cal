@@ -1,7 +1,6 @@
 import React from 'react';
 import type { Theme } from '@mui/material';
-import { darkSwitchGrey } from '../../util';
-import type { Exec } from '../../types';
+import { darkSwitchGrey } from '../../util/cssUtil';
 
 import Box from '@mui/material/Box';
 import Hidden from '@mui/material/Hidden';

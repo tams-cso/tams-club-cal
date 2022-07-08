@@ -1,20 +1,3 @@
-import type {
-    Event,
-    Club,
-    ClubImageBlobs,
-    ExternalLink,
-    Feedback,
-    FetchResponse,
-    StatusResponse,
-    HistoryItemData,
-    HistoryListData,
-    Resource,
-    Volunteering,
-    AdminResourceList,
-    User,
-    TextData,
-    AccessLevel,
-} from './types';
 import type { GridFilterItem } from '@mui/x-data-grid';
 import Cookies from 'universal-cookie';
 
@@ -156,8 +139,8 @@ function createHeaders(auth: boolean, json: boolean): Headers {
 /**
  * Gets the list of public events.
  */
-export async function getPublicEventList(): Promise<ListFetchResponse<Event>> {
-    return getRequest('/events') as Promise<ListFetchResponse<Event>>;
+export async function getPublicEventList(): Promise<ListFetchResponse<CalEvent>> {
+    return getRequest('/events') as Promise<ListFetchResponse<CalEvent>>;
 }
 
 /**
@@ -166,8 +149,8 @@ export async function getPublicEventList(): Promise<ListFetchResponse<Event>> {
  * @param start Starting time to get events from
  * @param end Ending time to get events to
  */
-export async function getPublicEventListInRange(start: number, end: number): Promise<ListFetchResponse<Event>> {
-    return getRequest(`/events?start=${start}&end=${end}`) as Promise<ListFetchResponse<Event>>;
+export async function getPublicEventListInRange(start: number, end: number): Promise<ListFetchResponse<CalEvent>> {
+    return getRequest(`/events?start=${start}&end=${end}`) as Promise<ListFetchResponse<CalEvent>>;
 }
 
 /**
@@ -175,8 +158,8 @@ export async function getPublicEventListInRange(start: number, end: number): Pro
  *
  * @param id ID of the event to get
  */
-export async function getEvent(id: string): Promise<ResourceFetchResponse<Event>> {
-    return getRequest(`/events/${id}`) as Promise<ResourceFetchResponse<Event>>;
+export async function getEvent(id: string): Promise<ResourceFetchResponse<CalEvent>> {
+    return getRequest(`/events/${id}`) as Promise<ResourceFetchResponse<CalEvent>>;
 }
 
 /**
@@ -185,12 +168,12 @@ export async function getEvent(id: string): Promise<ResourceFetchResponse<Event>
  *
  * @param week UTC time for the current week to get; this can be any time within the week
  */
-export async function getReservationList(week: number = null): Promise<ListFetchResponse<Event>> {
-    return getRequest(`/events/reservations/${week ? week : ''}`) as Promise<ListFetchResponse<Event>>;
+export async function getReservationList(week: number = null): Promise<ListFetchResponse<CalEvent>> {
+    return getRequest(`/events/reservations/${week ? week : ''}`) as Promise<ListFetchResponse<CalEvent>>;
 }
 
-export async function getRoomReservationList(room: string, week: number = null): Promise<ListFetchResponse<Event>> {
-    return getRequest(`/events/reservations/room/${room}/${week ? week : ''}`) as Promise<ListFetchResponse<Event>>;
+export async function getRoomReservationList(room: string, week: number = null): Promise<ListFetchResponse<CalEvent>> {
+    return getRequest(`/events/reservations/room/${room}/${week ? week : ''}`) as Promise<ListFetchResponse<CalEvent>>;
 }
 
 /**
@@ -198,7 +181,7 @@ export async function getRoomReservationList(room: string, week: number = null):
  *
  * @param event Event object
  */
-export async function postEvent(event: Event): Promise<StatusResponse> {
+export async function postEvent(event: CalEvent): Promise<StatusResponse> {
     return postRequest('/events', JSON.stringify(event));
 }
 
@@ -208,7 +191,7 @@ export async function postEvent(event: Event): Promise<StatusResponse> {
  * @param event Event object
  * @param id ID of the event to update
  */
-export async function putEvent(event: Event, id: string): Promise<StatusResponse> {
+export async function putEvent(event: CalEvent, id: string): Promise<StatusResponse> {
     return putRequest(`/events/${id}`, JSON.stringify(event));
 }
 
@@ -223,8 +206,10 @@ export async function getOverlappingReservations(
     location: string,
     start: number,
     end: number
-): Promise<ListFetchResponse<Event>> {
-    return getRequest(`/events/reservations/search/${location}/${start}/${end}`) as Promise<ListFetchResponse<Event>>;
+): Promise<ListFetchResponse<CalEvent>> {
+    return getRequest(`/events/reservations/search/${location}/${start}/${end}`) as Promise<
+        ListFetchResponse<CalEvent>
+    >;
 }
 
 /**

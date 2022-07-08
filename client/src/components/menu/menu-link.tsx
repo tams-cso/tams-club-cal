@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { useRouter } from 'next/router';
 import { alpha } from '@mui/material/styles';
-import { darkSwitch } from '../../util';
+import { darkSwitch } from '../../util/cssUtil';
 
 import Typography from '@mui/material/Typography';
 import Box from '@mui/material/Box';

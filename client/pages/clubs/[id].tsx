@@ -3,7 +3,8 @@ import type { Theme } from '@mui/material';
 import { GetServerSidePropsContext, InferGetServerSidePropsType } from 'next';
 import { useRouter } from 'next/router';
 import { getClub } from '../../src/api';
-import { darkSwitchGrey, getAccessLevel, getParams } from '../../src/util';
+import { getAccessLevel, getParams } from '../../src/util/miscUtil';
+import { darkSwitchGrey } from '../../src/util/cssUtil';
 
 import Container from '@mui/material/Container';
 import Paper from '@mui/material/Paper';
@@ -26,7 +27,7 @@ import Loading from '../../src/components/shared/loading';
 import ResourceMeta from '../../src/components/meta/resource-meta';
 import TitleMeta from '../../src/components/meta/title-meta';
 import RobotBlockMeta from '../../src/components/meta/robot-block-meta';
-import { AccessLevel } from '../../src/types';
+import { AccessLevelEnum } from '../../src/types/enums';
 
 // Style for "No resource" text
 const emptyTextStyle: object = {
@@ -120,7 +121,7 @@ const ClubDisplay = ({ club, error, level }: InferGetServerSidePropsType<typeof 
                     label="Club"
                     path={`/edit/clubs/${club.id}`}
                     edit
-                    disabled={level < AccessLevel.CLUBS}
+                    disabled={level < AccessLevelEnum.CLUBS}
                 />
                 <Card sx={{ marginBottom: 4 }}>
                     <CardMedia

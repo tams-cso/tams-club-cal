@@ -3,8 +3,8 @@ import { useRouter } from 'next/router';
 import { GetServerSidePropsContext, InferGetServerSidePropsType } from 'next';
 import Cookies from 'universal-cookie';
 import { getBackendUrl, getUserInfo, postLogin } from '../../src/api';
-import { createPopupEvent, darkSwitchGrey } from '../../src/util';
-import type { PopupEvent } from '../../src/types';
+import { createPopupEvent } from '../../src/util/constructors';
+import { darkSwitchGrey } from '../../src/util/cssUtil';
 
 import Card from '@mui/material/Card';
 import CardContent from '@mui/material/CardContent';

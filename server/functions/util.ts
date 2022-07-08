@@ -43,5 +43,5 @@ export function newId(): string {
  * Extracts the IP address from the header of the express request object
  */
 export function getIp(req: Request): string {
-    return req.headers['x-real-ip'] as string || req.ip;
+    return (req.headers['x-real-ip'] as string) || req.ip;
 }

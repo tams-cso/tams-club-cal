@@ -1,6 +1,5 @@
 import React from 'react';
 import type { Dayjs } from 'dayjs';
-import type { Event } from '../../types';
 
 import Dialog from '@mui/material/Dialog';
 import DialogTitle from '@mui/material/DialogTitle';
@@ -9,7 +8,7 @@ import CalendarEvent from './calendar-event';
 
 interface CalendarPopupProps {
     /** List of all events for the current day */
-    activities: Event[];
+    activities: CalEvent[];
 
     /** Date to display */
     date: Dayjs;

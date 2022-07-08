@@ -1,6 +1,6 @@
 import AWS from 'aws-sdk';
 import sharp from 'sharp';
-import type { ClubObject, MulterFile, RequestWithClubFiles } from './types';
+import { RequestWithClubFiles } from '../types/RequestWithClubFiles';
 import { newId } from './util';
 
 // Connect to AWS S3 instance
@@ -120,7 +120,7 @@ export async function deleteClubImages(club: ClubObject) {
     club.execs.forEach((exec) => {
         if (exec.img && exec.img !== '') urls.push(exec.img);
     });
-    
+
     // Return if nothing to delete
     if (urls.length === 0) return;
 

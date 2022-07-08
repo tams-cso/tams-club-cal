@@ -1,6 +1,6 @@
 import React from 'react';
 import type { NextPage } from 'next';
-import { darkSwitchGrey } from '../src/util';
+import { darkSwitchGrey } from '../src/util/cssUtil';
 
 import Container from '@mui/material/Container';
 import Paper from '@mui/material/Paper';
@@ -22,7 +22,6 @@ const textStyle = { textAlign: 'center', fontSize: '1.5rem' };
  * 404 page for when the user tries to access a page that doesn't exist
  */
 const PageNotFound: NextPage = () => {
-
     return (
         <Container sx={{ paddingTop: { md: 12, xs: 2 } }}>
             <Paper sx={{ py: 3 }}>

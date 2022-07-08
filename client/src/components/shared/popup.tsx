@@ -1,19 +1,18 @@
 import React, { useEffect, useState } from 'react';
-import type { PopupEvent } from '../../types';
 import Cookies from 'universal-cookie';
 
 import Snackbar from '@mui/material/Snackbar';
 import Alert from '@mui/material/Alert';
 import Card from '@mui/material/Card';
 import Typography from '@mui/material/Typography';
-import { createPopupEvent } from '../../util';
+import { createPopupEvent } from '../../util/constructors';
 
 interface PopupProps {
     /** Event to display */
     event?: PopupEvent | null;
 
     /** If true, will check cookies to show success message */
-    cookieCheck?: boolean
+    cookieCheck?: boolean;
 }
 
 /**
@@ -47,7 +46,7 @@ const Popup = ({ event, cookieCheck }: PopupProps) => {
     // Update data when new event is passed in
     useEffect(() => {
         if (event) setData(event);
-    }, [event])
+    }, [event]);
 
     // Open the popup if the success cookie was set
     // Only do this on mount

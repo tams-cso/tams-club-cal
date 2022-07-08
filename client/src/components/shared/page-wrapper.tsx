@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { useRouter } from 'next/router';
-import { darkSwitch } from '../../util';
+import { darkSwitch } from '../../util/cssUtil';
 
 import CircularProgress from '@mui/material/CircularProgress';
 import Box from '@mui/material/Box';

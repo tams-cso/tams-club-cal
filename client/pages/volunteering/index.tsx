@@ -1,7 +1,8 @@
 import React, { useEffect, useState } from 'react';
 import { GetServerSidePropsContext, InferGetServerSidePropsType } from 'next';
 import { getVolunteeringList } from '../../src/api';
-import { darkSwitchGrey, getAccessLevel } from '../../src/util';
+import { getAccessLevel } from '../../src/util/miscUtil';
+import { darkSwitchGrey } from '../../src/util/cssUtil';
 
 import Grid from '@mui/material/Grid';
 import Container from '@mui/material/Container';
@@ -24,7 +25,7 @@ import VolunteeringTable from '../../src/components/volunteering/volunteering-ta
 import SortSelect from '../../src/components/shared/sort-select';
 import PageWrapper from '../../src/components/shared/page-wrapper';
 import TitleMeta from '../../src/components/meta/title-meta';
-import { AccessLevel } from '../../src/types';
+import { AccessLevelEnum } from '../../src/types/enums';
 
 // Server-side Rendering
 export const getServerSideProps = async (ctx: GetServerSidePropsContext) => {
@@ -142,7 +143,7 @@ const Volunteering = ({ volunteeringList, error, level }: InferGetServerSideProp
                     color="primary"
                     label="Volunteering"
                     path="/edit/volunteering"
-                    disabled={level < AccessLevel.CLUBS}
+                    disabled={level < AccessLevelEnum.CLUBS}
                 />
                 <Box width="100%" marginBottom={2} display="flex" alignItems="center">
                     <Tooltip title="Filters">

@@ -1,8 +1,8 @@
 import React, { useEffect, useState } from 'react';
 import Cookies from 'universal-cookie';
 import { deleteAdminResource, getAdminResources } from '../../api';
-import type { Resource, PopupEvent, DeleteObject } from '../../types';
-import { createPopupEvent, formatDate } from '../../util';
+import { createPopupEvent } from '../../util/constructors';
+import { formatDate } from '../../util/datetime';
 
 import Button from '@mui/material/Button';
 import IconButton from '@mui/material/IconButton';

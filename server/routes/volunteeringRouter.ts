@@ -4,7 +4,7 @@ import { sendError, newId } from '../functions/util';
 import { createHistory } from '../functions/edit-history';
 import Volunteering from '../models/volunteering';
 import { isAuthenticated } from '../functions/auth';
-import { AccessLevel } from '../functions/types';
+import { AccessLevelEnum } from '../types/AccessLevel';
 import History from '../models/history';
 const router = express.Router();
 
@@ -89,7 +89,7 @@ router.put('/:id', async (req: Request, res: Response) => {
  */
 router.delete('/:id', async (req: Request, res: Response) => {
     // Check for authentication and access level
-    if (!isAuthenticated(req, res, AccessLevel.CLUBS)) return;
+    if (!isAuthenticated(req, res, AccessLevelEnum.CLUBS)) return;
 
     // Delete volunteering and history
     const deleteRes = await Volunteering.deleteOne({ id: req.params.id });

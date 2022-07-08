@@ -1,17 +1,19 @@
-import React, { MouseEventHandler, useEffect, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useRouter } from 'next/router';
 import { GetServerSidePropsContext, InferGetServerSidePropsType } from 'next';
 import { useForm } from 'react-hook-form';
 import Cookies from 'universal-cookie';
 import dayjs, { Dayjs } from 'dayjs';
-import { createPopupEvent, createEvent, darkSwitch, getTokenFromCookies } from '../../../src/util';
+import { AccessLevelEnum } from '../../../src/types/enums';
+import { getTokenFromCookies } from '../../../src/util/miscUtil';
+import { createPopupEvent, createEvent } from '../../../src/util/constructors';
+import { darkSwitch } from '../../../src/util/cssUtil';
 import { getEvent, getOverlappingReservations, getUserInfo, postEvent, putEvent } from '../../../src/api';
-import { AccessLevel, EventType, PopupEvent } from '../../../src/types';
 
 import Typography from '@mui/material/Typography';
 import Box from '@mui/material/Box';
 import Alert from '@mui/material/Alert';
-
+import MenuItem from '@mui/material/MenuItem';
 import DateTimeInput from '../../../src/components/edit/events/date-time-input';
 import ControlledCheckbox from '../../../src/components/edit/events/controlled-checkbox';
 import ControlledTextField from '../../../src/components/edit/shared/controlled-text-field';
@@ -26,12 +28,11 @@ import EditWrapper from '../../../src/components/edit/shared/edit-wrapper';
 import Link from '../../../src/components/shared/Link';
 import TitleMeta from '../../../src/components/meta/title-meta';
 import RobotBlockMeta from '../../../src/components/meta/robot-block-meta';
-
-import data from '../../../src/data.json';
 import UnauthorizedAlert from '../../../src/components/edit/shared/unauthorized-alert';
 import DeleteButton from '../../../src/components/shared/delete-button';
 import ControlledSelect from '../../../src/components/edit/shared/controlled-select';
-import { MenuItem } from '@mui/material';
+
+import data from '../../../src/data.json';
 
 // Object for holding form data
 type SubmitData = {
@@ -57,7 +58,7 @@ export const getServerSideProps = async (ctx: GetServerSidePropsContext) => {
     const token = getTokenFromCookies(ctx);
     const userRes = await getUserInfo(token);
     const userId = userRes.status === 200 ? userRes.data.id : null;
-    const level = userId ? userRes.data.level : AccessLevel.NONE;
+    const level = userId ? userRes.data.level : AccessLevelEnum.NONE;
 
     // Check if adding event
     const id = ctx.params.id as string;
@@ -247,7 +248,8 @@ const EditEvents = ({
         : 'none';
 
     const unauthorized =
-        (level < AccessLevel.STANDARD || (!id ? false : event.editorId !== userId)) && level !== AccessLevel.ADMIN;
+        (level < AccessLevelEnum.STANDARD || (!id ? false : event.editorId !== userId)) &&
+        level !== AccessLevelEnum.ADMIN;
 
     return (
         <EditWrapper>

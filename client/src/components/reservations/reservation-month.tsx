@@ -1,14 +1,14 @@
 import React, { useEffect, useState } from 'react';
 import type { Dayjs } from 'dayjs';
 import { Theme } from '@mui/material';
-import { darkSwitch, getParams } from '../../util';
-import type { BrokenReservation, Room } from '../../types';
+import { darkSwitch } from '../../util/cssUtil';
 
 import Box from '@mui/material/Box';
 import Typography from '@mui/material/Typography';
 import ReservationEntry from './reservation-entry';
 
 import data from '../../data.json';
+import dayjs from 'dayjs';
 
 // Border color
 const borderColor = (theme: Theme) => darkSwitch(theme, theme.palette.grey[300], theme.palette.grey[800]);
@@ -59,7 +59,7 @@ const ReservationMonth = (props: ReservationMonthProps) => {
             ];
 
             // Get the reservations for the current date
-            const currDateRes = props.reservationList.filter((r) => r.start.isSame(curr, 'day'));
+            const currDateRes = props.reservationList.filter((r) => dayjs(r.start).isSame(curr, 'day'));
 
             // Iterate through the list of reservations for the current day
             currDateRes.forEach((res) => {

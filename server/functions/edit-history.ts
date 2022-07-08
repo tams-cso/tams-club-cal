@@ -2,7 +2,6 @@ import { Request } from 'express';
 import { Document } from 'mongoose';
 import History from '../models/history';
 import User from '../models/user';
-import type { Field, ClubObject } from './types';
 
 /**
  * Creates the editor object and finds the user ID from the token passed in.
@@ -15,7 +14,7 @@ async function getEditor(req: Request): Promise<string> {
     // Make sure header exists
     const authorization = req.headers['authorization'];
     if (!authorization) return null;
-    
+
     // Make sure user exists
     const user = await User.findOne({ token: authorization.substring(7) });
     if (!user) return null;

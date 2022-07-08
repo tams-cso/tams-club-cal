@@ -2,7 +2,8 @@ import React from 'react';
 import { GetServerSidePropsContext, InferGetServerSidePropsType } from 'next';
 import { useRouter } from 'next/router';
 import { getVolunteering } from '../../src/api';
-import { darkSwitchGrey, getAccessLevel, getParams } from '../../src/util';
+import { getAccessLevel, getParams } from '../../src/util/miscUtil';
+import { darkSwitchGrey } from '../../src/util/cssUtil';
 
 import Container from '@mui/material/Container';
 import Card from '@mui/material/Card';
@@ -21,7 +22,7 @@ import PageWrapper from '../../src/components/shared/page-wrapper';
 import ResourceMeta from '../../src/components/meta/resource-meta';
 import TitleMeta from '../../src/components/meta/title-meta';
 import RobotBlockMeta from '../../src/components/meta/robot-block-meta';
-import { AccessLevel } from '../../src/types';
+import { AccessLevelEnum } from '../../src/types/enums';
 
 // Server-side Rendering
 export const getServerSideProps = async (ctx: GetServerSidePropsContext) => {
@@ -77,7 +78,7 @@ const VolunteeringDisplay = ({
                     label="Volunteering"
                     path={`/edit/volunteering/${volunteering.id}`}
                     edit
-                    disabled={level < AccessLevel.CLUBS}
+                    disabled={level < AccessLevelEnum.CLUBS}
                 />
                 <Card>
                     <CardContent>

@@ -5,7 +5,7 @@ import { addToCalendar, deleteCalendarEvent, updateCalendar } from '../functions
 import { sendError, newId } from '../functions/util';
 import { createHistory } from '../functions/edit-history';
 import Event from '../models/event';
-import { AccessLevel, EventObject } from '../functions/types';
+import { AccessLevelEnum } from '../types/AccessLevel';
 import History from '../models/history';
 import User from '../models/user';
 import { isAuthenticated } from '../functions/auth';
@@ -164,7 +164,7 @@ router.get('/reservations/search/:location/:start/:end', async (req: Request, re
 router.post('/', async (req: Request, res: Response) => {
     try {
         // Check if user is authenticated
-        if (!isAuthenticated(req, res, AccessLevel.STANDARD)) return;
+        if (!isAuthenticated(req, res, AccessLevelEnum.STANDARD)) return;
 
         // Get user
         const user = await User.findOne({ token: req.headers.authorization.substring(7) });
@@ -224,7 +224,7 @@ router.put('/:id', async (req: Request, res: Response) => {
         }
 
         // Check if user is authenticated
-        if (!isAuthenticated(req, res, AccessLevel.STANDARD, prev.editorId)) return;
+        if (!isAuthenticated(req, res, AccessLevelEnum.STANDARD, prev.editorId)) return;
 
         // Get user
         const user = await User.findOne({ token: req.headers.authorization.substring(7) });
@@ -283,7 +283,7 @@ router.delete('/:id', async (req: Request, res: Response) => {
     }
 
     // Check if user is authenticated
-    if (!isAuthenticated(req, res, AccessLevel.STANDARD, event.editorId)) return;
+    if (!isAuthenticated(req, res, AccessLevelEnum.STANDARD, event.editorId)) return;
 
     // Delete event from Google Calendar, History DB, and Events DB
     if (event.publicEvent) await deleteCalendarEvent(event.eventId);

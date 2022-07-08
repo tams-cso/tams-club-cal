@@ -1,5 +1,5 @@
 import React from 'react';
-import { parseLinks } from '../../util';
+import { parseLinks } from '../../util/miscUtil';
 
 import Box from '@mui/material/Box';
 import Typography from '@mui/material/Typography';

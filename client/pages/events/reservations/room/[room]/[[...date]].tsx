@@ -3,7 +3,8 @@ import { GetServerSidePropsContext, InferGetServerSidePropsType } from 'next';
 import { useRouter } from 'next/router';
 import dayjs from 'dayjs';
 import { getRoomReservationList } from '../../../../../src/api';
-import { parseDateParams, parseReservations } from '../../../../../src/util';
+import { parseReservations } from '../../../../../src/util/dataParsing';
+import { parseDateParams } from '../../../../../src/util/datetime';
 import HomeBase from '../../../../../src/components/home/home-base';
 import TitleMeta from '../../../../../src/components/meta/title-meta';
 
