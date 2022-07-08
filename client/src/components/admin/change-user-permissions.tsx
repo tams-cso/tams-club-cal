@@ -128,6 +128,12 @@ const ChangeUserPermissions = () => {
             const reverse = sortModel[0] ? sortModel[0].sort === 'desc' : false;
             const filter = filterValue && filterValue.value ? filterValue : null;
 
+            // Default to sort by name ascending
+            if (!sort) {
+                setSortModel([{ field: 'name', sort: 'asc' }]);
+                return;
+            }
+
             const rowsRes = await getUserList(1, rowsState.pageSize, sort, reverse, filter);
             if (rowsRes.status !== 200) {
                 setPopupEvent(

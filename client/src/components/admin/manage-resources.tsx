@@ -115,11 +115,6 @@ const ManageResources = () => {
         ...actionColumns,
     ];
 
-    // When sorting changes
-    const handleSortModelChange = (newModel: GridSortModel) => {
-        setSortModel(newModel);
-    };
-
     // When filtering changes
     const onFilterChange = React.useCallback((filterModel: GridFilterModel) => {
         setFilterValue(filterModel.items[0]);
@@ -169,6 +164,12 @@ const ManageResources = () => {
             const sort = sortModel[0] ? sortModel[0].field : null;
             const reverse = sortModel[0] ? sortModel[0].sort === 'desc' : false;
             const filter = filterValue && filterValue.value ? filterValue : null;
+
+            // Default to sort by name ascending
+            if (!sort) {
+                setSortModel([{ field: 'name', sort: 'asc' }]);
+                return;
+            }
 
             const rowsRes = await getAdminResources(resource, 1, rowsState.pageSize, sort, reverse, filter);
             if (rowsRes.status !== 200) {
@@ -264,7 +265,7 @@ const ManageResources = () => {
                 sortModel={sortModel}
                 filterMode="server"
                 onFilterModelChange={onFilterChange}
-                onSortModelChange={handleSortModelChange}
+                onSortModelChange={(newSortModel) => setSortModel(newSortModel)}
                 sx={{ marginTop: 2, height: 650 }}
             />
         </React.Fragment>
