@@ -89,7 +89,11 @@ client - Contains client (frontend) code
         | types.ts - All type definitions for the frontend
         | theme.ts/darkTheme.ts - Theme definitions
         | util - All utility functions
+            | constructors.ts - Constructor functions for all objects
             | cssUtil.ts - CSS utility funtions
+            | dataParsing.tsx - Parsing functions for data (mostly event data)
+            | datetime.ts - Functions for parsing and formatting date/time
+            | miscUtil.ts - Miscellaneous util functions
     | next.config.js - Next.js configuration file, see https://nextjs.org/docs/api-reference/next.config.js/introduction
     | tsconfig.json - Configuration file for typescript settings
 server - Contains server (backend) code
