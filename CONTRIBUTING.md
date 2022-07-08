@@ -110,6 +110,7 @@ server - Contains server (backend) code
     | functions - Function definitions, used in routes
     | models - Mongoose models
     | routes - Main Express routers
+    | types - Type declaration files
     | .env - Not in Git but required for backend development, contains all the environmental variables
     | app.ts - Entry point script for backend server
     | esbuild.js - Build script for backend

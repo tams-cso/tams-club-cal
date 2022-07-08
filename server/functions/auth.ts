@@ -3,7 +3,7 @@ import type { Request, Response } from 'express';
 import crypto from 'crypto';
 import User from '../models/user';
 import { newId, sendError } from './util';
-import { AccessLevelEnum } from "./types/AccessLevel";
+import { AccessLevelEnum } from '../types/AccessLevel';
 
 // Instantiate Google Auth client
 const client = new OAuth2Client(process.env.G_CLIENT_ID, process.env.G_CLIENT_SECRET);

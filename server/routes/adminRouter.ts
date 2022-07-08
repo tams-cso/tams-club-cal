@@ -1,14 +1,14 @@
 import express from 'express';
 import type { Request, Response } from 'express';
 import { sendError } from '../functions/util';
-import { isAuthenticated, isValidToken } from '../functions/auth';
+import { isAuthenticated } from '../functions/auth';
 import { deleteClubImages } from '../functions/images';
 import Event from '../models/event';
 import Club from '../models/club';
 import Volunteering from '../models/volunteering';
 import History from '../models/history';
 import { deleteCalendarEvent } from '../functions/gcal';
-import { AccessLevelEnum } from "../functions/types/AccessLevel";
+import { AccessLevelEnum } from '../types/AccessLevel';
 
 const router = express.Router();
 

@@ -5,8 +5,8 @@ import { deleteClubImages, processClubUpload } from '../functions/images';
 import { newId, sendError } from '../functions/util';
 import { createHistory } from '../functions/edit-history';
 import Club from '../models/club';
-import { AccessLevelEnum } from '../functions/types/AccessLevel';
-import { RequestWithClubFiles } from '../functions/types/RequestWithClubFiles';
+import { AccessLevelEnum } from '../types/AccessLevel';
+import { RequestWithClubFiles } from '../types/RequestWithClubFiles';
 import { isAuthenticated } from '../functions/auth';
 import History from '../models/history';
 

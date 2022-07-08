@@ -4,7 +4,7 @@ import { sendError, newId } from '../functions/util';
 import { createHistory } from '../functions/edit-history';
 import Volunteering from '../models/volunteering';
 import { isAuthenticated } from '../functions/auth';
-import { AccessLevelEnum } from "../functions/types/AccessLevel";
+import { AccessLevelEnum } from '../types/AccessLevel';
 import History from '../models/history';
 const router = express.Router();
 

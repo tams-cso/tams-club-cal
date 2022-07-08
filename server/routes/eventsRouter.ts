@@ -5,7 +5,7 @@ import { addToCalendar, deleteCalendarEvent, updateCalendar } from '../functions
 import { sendError, newId } from '../functions/util';
 import { createHistory } from '../functions/edit-history';
 import Event from '../models/event';
-import { AccessLevelEnum } from "../functions/types/AccessLevel";
+import { AccessLevelEnum } from '../types/AccessLevel';
 import History from '../models/history';
 import User from '../models/user';
 import { isAuthenticated } from '../functions/auth';
