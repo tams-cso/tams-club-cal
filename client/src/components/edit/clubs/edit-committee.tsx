@@ -18,15 +18,15 @@ interface EditCommitteeProps {
 
     /** React hook form set value function */
     setValue: UseFormSetValue<FieldValues>;
-    
+
     /** React hook form error state */
-    errors: object
-    
+    errors: object;
+
     /** Index of the link in the array */
-    index: number
-    
+    index: number;
+
     /** Default committee info */
-    committee: Committee
+    committee: Committee;
 }
 
 /**

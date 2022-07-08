@@ -1,6 +1,6 @@
 import React, { PropsWithChildren, MouseEventHandler } from 'react';
 import { alpha } from '@mui/material/styles';
-import { darkSwitch } from "../../util/cssUtil";
+import { darkSwitch } from '../../util/cssUtil';
 
 import ButtonBase from '@mui/material/ButtonBase';
 import Tooltip from '@mui/material/Tooltip';

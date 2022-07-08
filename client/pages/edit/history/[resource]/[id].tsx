@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { GetServerSidePropsContext, InferGetServerSidePropsType } from 'next';
 import { useRouter } from 'next/router';
 import { calculateEditDate, getParams } from '../../../../src/util';
-import { darkSwitch } from "../../../../src/util/cssUtil";
+import { darkSwitch } from '../../../../src/util/cssUtil';
 import { getHistory } from '../../../../src/api';
 import type { History, Resource } from '../../../../src/types';
 

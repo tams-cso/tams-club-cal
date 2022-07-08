@@ -3,7 +3,7 @@ import { GetServerSidePropsContext, InferGetServerSidePropsType } from 'next';
 import dayjs from 'dayjs';
 import { getPublicEventList } from '../src/api';
 import { parsePublicEventList, isSameDate, getAccessLevel } from '../src/util';
-import { darkSwitchGrey } from "../src/util/cssUtil";
+import { darkSwitchGrey } from '../src/util/cssUtil';
 import type { SxProps, Theme } from '@mui/material';
 
 import Container from '@mui/material/Container';

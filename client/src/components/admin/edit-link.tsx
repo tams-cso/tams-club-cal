@@ -57,7 +57,7 @@ const EditLink = (props: EditLinkProps) => {
                             height: { lg: 48, xs: 36 },
                             width: { lg: 48, xs: 36 },
                             marginTop: { lg: 0.25, xs: 1.25 },
-                            alignSelf: 'center'
+                            alignSelf: 'center',
                         }}
                     />
                     <ControlledTextField

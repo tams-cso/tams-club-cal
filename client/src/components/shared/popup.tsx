@@ -13,7 +13,7 @@ interface PopupProps {
     event?: PopupEvent | null;
 
     /** If true, will check cookies to show success message */
-    cookieCheck?: boolean
+    cookieCheck?: boolean;
 }
 
 /**
@@ -47,7 +47,7 @@ const Popup = ({ event, cookieCheck }: PopupProps) => {
     // Update data when new event is passed in
     useEffect(() => {
         if (event) setData(event);
-    }, [event])
+    }, [event]);
 
     // Open the popup if the success cookie was set
     // Only do this on mount

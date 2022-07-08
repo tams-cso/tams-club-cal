@@ -15,7 +15,7 @@ async function getEditor(req: Request): Promise<string> {
     // Make sure header exists
     const authorization = req.headers['authorization'];
     if (!authorization) return null;
-    
+
     // Make sure user exists
     const user = await User.findOne({ token: authorization.substring(7) });
     if (!user) return null;

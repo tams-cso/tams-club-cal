@@ -129,7 +129,7 @@ export function getTokenFromCookies(ctx: GetServerSidePropsContext): string {
 
 /**
  * Converts the event type to a capitalized string
- * 
+ *
  * @param type Event type
  * @returns Capitalized string
  */

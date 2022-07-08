@@ -12,10 +12,7 @@ import {
     getTokenFromCookies,
     eventTypeToString,
 } from '../../src/util';
-import {
-    darkSwitch,
-    darkSwitchGrey
-} from "../../src/util/cssUtil";
+import { darkSwitch, darkSwitchGrey } from '../../src/util/cssUtil';
 
 import Container from '@mui/material/Container';
 import Card from '@mui/material/Card';

@@ -4,7 +4,7 @@ import { useRouter } from 'next/router';
 import { Typography } from '@mui/material';
 import dayjs from 'dayjs';
 import { getAccessLevel, parseDateParams, parsePublicEventList } from '../../../src/util';
-import { darkSwitch } from "../../../src/util/cssUtil";
+import { darkSwitch } from '../../../src/util/cssUtil';
 import { getPublicEventListInRange } from '../../../src/api';
 
 import Box from '@mui/material/Box';

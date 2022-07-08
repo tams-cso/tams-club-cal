@@ -1,5 +1,5 @@
 import React, { useState, MouseEventHandler } from 'react';
-import { darkSwitch } from "../../util/cssUtil";
+import { darkSwitch } from '../../util/cssUtil';
 
 import AppBar from '@mui/material/AppBar';
 import Toolbar from '@mui/material/Toolbar';

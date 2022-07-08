@@ -40,13 +40,17 @@ const LocationSelect = (props: LocationSelectProps) => {
             helperText={props.error ? 'Please select a location' : null}
             sx={props.sx}
         >
-            <MenuItem key="none" value="none">No Location Set</MenuItem>
+            <MenuItem key="none" value="none">
+                No Location Set
+            </MenuItem>
             {data.rooms.map((r) => (
                 <MenuItem value={r.value} id={r.value} key={r.value}>
                     {r.label}
                 </MenuItem>
             ))}
-            <MenuItem key="other" value="other">Other...</MenuItem>
+            <MenuItem key="other" value="other">
+                Other...
+            </MenuItem>
         </ControlledSelect>
     );
 };

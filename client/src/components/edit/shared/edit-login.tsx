@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import Cookies from 'universal-cookie';
 import type { PopupEvent } from '../../../types';
 import { createConnectionErrorPopup } from '../../../util';
-import { darkSwitch, darkSwitchGrey } from "../../../util/cssUtil";
+import { darkSwitch, darkSwitchGrey } from '../../../util/cssUtil';
 import { getUserInfo } from '../../../api';
 
 import Box from '@mui/material/Box';

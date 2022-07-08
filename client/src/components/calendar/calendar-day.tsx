@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import type { Dayjs } from 'dayjs';
 import { alpha } from '@mui/material/styles';
-import { darkSwitch, darkSwitchGrey } from "../../util/cssUtil";
+import { darkSwitch, darkSwitchGrey } from '../../util/cssUtil';
 import type { Event } from '../../types';
 
 import Box from '@mui/material/Box';
@@ -61,7 +61,8 @@ const CalendarDay = (props: CalendarDayPopup) => {
                 cursor: 'pointer',
                 transition: '0.2s',
                 '&:hover': {
-                    backgroundColor: (theme) => darkSwitch(theme, alpha(theme.palette.grey[200], 0.9), theme.palette.grey[800]),
+                    backgroundColor: (theme) =>
+                        darkSwitch(theme, alpha(theme.palette.grey[200], 0.9), theme.palette.grey[800]),
                 },
             }}
             onClick={togglePopup.bind(this, true)}

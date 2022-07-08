@@ -8,7 +8,7 @@ import MaterialSymbol from './material-symbol';
 import { getExternalLinks as getExternalLinks } from '../../api';
 import Popup from '../shared/popup';
 import { createPopupEvent } from '../../util';
-import { darkSwitchGrey } from "../../util/cssUtil";
+import { darkSwitchGrey } from '../../util/cssUtil';
 import type { ExternalLink } from '../../types';
 
 /**
@@ -37,10 +37,12 @@ const HomeDrawerList = () => {
     // Create link components once links are loaded
     useEffect(() => {
         setLinkComponents(
-            links.map((link) => <ListItemButton component="a" href={link.url} target="_blank">
-                <MaterialSymbol icon={link.icon} />
-                <ListItemText primary={link.name} />
-            </ListItemButton>)
+            links.map((link) => (
+                <ListItemButton component="a" href={link.url} target="_blank">
+                    <MaterialSymbol icon={link.icon} />
+                    <ListItemText primary={link.name} />
+                </ListItemButton>
+            ))
         );
     }, [links]);
 

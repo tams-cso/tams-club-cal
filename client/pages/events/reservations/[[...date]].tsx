@@ -59,7 +59,7 @@ const Reservations = ({
         const newWeek = forward ? dayjs(now).add(1, 'week') : dayjs(now).subtract(1, 'week');
         router.push(`/events/reservations/${newWeek.format('YYYY/M/D')}`);
     };
-    
+
     // Redirect the user to the new week if it changes and is not the same as the current
     const changeWeek = (date: Dayjs) => {
         // If the week is invalid (ie. user manually changed the text input), do nothing
@@ -70,13 +70,13 @@ const Reservations = ({
 
         // Otherwise, redirect the user to the new week
         router.push(`/events/reservations/${date.format('YYYY/M/D')}`);
-    }
+    };
 
     // Redirect the user to the current week on click
     const goToToday = () => {
         changeWeek(dayjs());
     };
-    
+
     // Scroll down to the requested day
     // Index refers to the day of the week where Sunday = 0, Monday = 1, ..., Saturday = 6
     const goToDay = (index) => {

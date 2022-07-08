@@ -1,7 +1,7 @@
 import React from 'react';
 import { alpha } from '@mui/material';
 import { formatTime } from '../../util';
-import { darkSwitch } from "../../util/cssUtil";
+import { darkSwitch } from '../../util/cssUtil';
 
 import Typography from '@mui/material/Typography';
 

@@ -1,5 +1,5 @@
 import React from 'react';
-import { darkSwitch } from "../../util/cssUtil";
+import { darkSwitch } from '../../util/cssUtil';
 import { Volunteering } from '../../types';
 
 import Table from '@mui/material/Table';

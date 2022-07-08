@@ -5,7 +5,7 @@ import { useForm } from 'react-hook-form';
 import Cookies from 'universal-cookie';
 import dayjs, { Dayjs } from 'dayjs';
 import { createPopupEvent, createEvent, getTokenFromCookies } from '../../../src/util';
-import { darkSwitch } from "../../../src/util/cssUtil";
+import { darkSwitch } from '../../../src/util/cssUtil';
 import { getEvent, getOverlappingReservations, getUserInfo, postEvent, putEvent } from '../../../src/api';
 import { AccessLevel, EventType, PopupEvent } from '../../../src/types';
 

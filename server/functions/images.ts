@@ -120,7 +120,7 @@ export async function deleteClubImages(club: ClubObject) {
     club.execs.forEach((exec) => {
         if (exec.img && exec.img !== '') urls.push(exec.img);
     });
-    
+
     // Return if nothing to delete
     if (urls.length === 0) return;
 

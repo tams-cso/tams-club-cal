@@ -6,13 +6,13 @@ import Typography from '@mui/material/Typography';
 
 interface LoadingProps extends React.HTMLProps<HTMLDivElement> {
     /** If true, shows error message -> passed in as children to the component */
-    error?: boolean
+    error?: boolean;
 
     /** No elevation on loading card if true */
-    flat?: boolean
+    flat?: boolean;
 
     /** Format the Container component */
-    sx?: object
+    sx?: object;
 }
 
 /**

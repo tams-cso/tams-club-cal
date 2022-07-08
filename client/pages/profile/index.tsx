@@ -4,7 +4,7 @@ import { GetServerSidePropsContext, InferGetServerSidePropsType } from 'next';
 import Cookies from 'universal-cookie';
 import { getBackendUrl, getUserInfo, postLogin } from '../../src/api';
 import { createPopupEvent } from '../../src/util';
-import { darkSwitchGrey } from "../../src/util/cssUtil";
+import { darkSwitchGrey } from '../../src/util/cssUtil';
 import type { PopupEvent } from '../../src/types';
 
 import Card from '@mui/material/Card';
