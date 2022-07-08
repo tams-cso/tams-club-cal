@@ -3,7 +3,6 @@ import Head from 'next/head';
 import { AppProps } from 'next/app';
 import { CacheProvider, EmotionCache } from '@emotion/react';
 import createEmotionCache from '../src/createEmotionCache';
-import Cookies from 'universal-cookie';
 import theme from '../src/theme';
 import darkTheme from '../src/darkTheme';
 
@@ -13,6 +12,7 @@ import { StyledEngineProvider } from '@mui/material';
 import { ThemeProvider } from '@mui/material/styles';
 import CssBaseline from '@mui/material/CssBaseline';
 import Menu from '../src/components/menu/menu';
+import { getCookie, setCookie } from '../src/util/cookies';
 
 // Client-side cache, shared for the whole session of the user in the browser.
 const clientSideEmotionCache = createEmotionCache();
@@ -30,23 +30,22 @@ export default function MyApp(props: MyAppProps) {
     // be passed into the component props
     useEffect(() => {
         // Get the previously saved dark theme choice from cookies
-        const cookies = new Cookies();
-        const prevDark = cookies.get('dark');
+        const prevDark = getCookie('dark');
 
         if (!prevDark) {
             // If it does not exist, use the system dark theme
             const systemDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
             setDark(systemDark);
-            cookies.set('dark', systemDark, { sameSite: 'strict', path: '/' });
+            setCookie('dark', systemDark);
         } else {
             // Otherwise, use the previously set setting
             setDark(prevDark === 'true');
         }
     }, []);
 
+    // Set dark theme on dark variable change
     useEffect(() => {
-        const cookies = new Cookies();
-        cookies.set('dark', dark, { sameSite: 'strict', path: '/' });
+        setCookie('dark', dark);
     }, [dark]);
 
     return (

@@ -1,5 +1,4 @@
 import React, { useEffect, useState } from 'react';
-import Cookies from 'universal-cookie';
 import { deleteAdminResource, getAdminResources } from '../../api';
 import { createPopupEvent } from '../../util/constructors';
 import { formatDate } from '../../util/datetime';
@@ -30,6 +29,7 @@ import { capitalize } from '@mui/material';
 
 import Popup from '../shared/popup';
 import UploadBackdrop from '../edit/shared/upload-backdrop';
+import { setCookie } from '../../util/cookies';
 
 const ManageResources = () => {
     const [dataToDelete, setDataToDelete] = useState<DeleteObject>({ resource: 'events', id: '', name: '' });
@@ -137,8 +137,7 @@ const ManageResources = () => {
         setBackdrop(true);
         const res = await deleteAdminResource(dataToDelete.resource, dataToDelete.id);
         if (res.status === 200) {
-            const cookies = new Cookies();
-            cookies.set('success', `${dataToDelete.name} deleted successfully!`, { path: '/' });
+            setCookie('success', `${dataToDelete.name} deleted successfully!`);
             window.location.reload();
         } else {
             setPopupEvent(createPopupEvent('Error deleting resource', 4));

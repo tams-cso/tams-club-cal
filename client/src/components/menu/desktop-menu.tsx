@@ -1,6 +1,6 @@
 import React, { useEffect, useState, MouseEventHandler } from 'react';
 import { useRouter } from 'next/router';
-import Cookies from 'universal-cookie';
+import { removeCookie } from '../../util/cookies';
 import { darkSwitch } from '../../util/cssUtil';
 import type { Theme } from '@mui/material';
 
@@ -45,8 +45,7 @@ const DesktopMenu = (props: DesktopMenuProps) => {
     // Route user to profile page
     const goToProfile = () => {
         // TODO: What do these 🍪s do?
-        const cookies = new Cookies();
-        cookies.remove('prev', { path: '/' });
+        removeCookie('prev');
         router.push('/profile/dashboard');
     };
 

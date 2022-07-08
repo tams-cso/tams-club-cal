@@ -1,11 +1,11 @@
 import React, { useEffect, useState } from 'react';
-import Cookies from 'universal-cookie';
 
 import Snackbar from '@mui/material/Snackbar';
 import Alert from '@mui/material/Alert';
 import Card from '@mui/material/Card';
 import Typography from '@mui/material/Typography';
 import { createPopupEvent } from '../../util/constructors';
+import { getCookie, removeCookie } from '../../util/cookies';
 
 interface PopupProps {
     /** Event to display */
@@ -52,10 +52,9 @@ const Popup = ({ event, cookieCheck }: PopupProps) => {
     // Only do this on mount
     useEffect(() => {
         if (!cookieCheck) return;
-        const cookies = new Cookies();
-        const success = cookies.get('success');
+        const success = getCookie('success');
         if (success) {
-            cookies.remove('success', { path: '/' });
+            removeCookie('success');
             setData(createPopupEvent(getSuccessMessage(success), 2));
             setOpen(true);
         }

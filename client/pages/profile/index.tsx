@@ -1,8 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { useRouter } from 'next/router';
 import { GetServerSidePropsContext, InferGetServerSidePropsType } from 'next';
-import Cookies from 'universal-cookie';
-import { getBackendUrl, getUserInfo, postLogin } from '../../src/api';
+import { getUserInfo, postLogin } from '../../src/api';
 import { createPopupEvent } from '../../src/util/constructors';
 import { darkSwitchGrey } from '../../src/util/cssUtil';
 
@@ -15,6 +14,7 @@ import PageWrapper from '../../src/components/shared/page-wrapper';
 import TitleMeta from '../../src/components/meta/title-meta';
 import Popup from '../../src/components/shared/popup';
 import UploadBackdrop from '../../src/components/edit/shared/upload-backdrop';
+import { setCookie } from '../../src/util/cookies';
 
 // Server-side Rendering to check for token
 // TODO: This block can be cleaned up
@@ -49,7 +49,6 @@ const Login = ({ authorized, error }: InferGetServerSidePropsType<typeof getServ
     const [popupEvent, setPopupEvent] = useState<PopupEvent>(null);
     const [backdrop, setBackdrop] = useState(false);
     const router = useRouter();
-    const cookies = new Cookies();
 
     // On login success, send googleId and accessToken to the backend server
     // and do token exchange
@@ -65,8 +64,7 @@ const Login = ({ authorized, error }: InferGetServerSidePropsType<typeof getServ
         }
 
         // Save token on frontend
-        const cookies = new Cookies();
-        cookies.set('token', token.data, { sameSite: 'strict', path: '/' });
+        setCookie('token', token.data);
 
         // Remove backdrop
         setBackdrop(false);
