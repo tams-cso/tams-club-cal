@@ -78,4 +78,5 @@ yarn docker - Performs a docker build based on the Dockerfile
 yarn type - Typechecks the client directory
 yarn type:server - Typechecks the server directory
 yarn docs - Generates the documentation in the docs directory using typedoc
+yarn format - Formats all ts, tsx, and json code files and WRITES CHANGES TO THE FILES
 ```
