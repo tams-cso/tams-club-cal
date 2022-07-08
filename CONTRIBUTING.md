@@ -86,7 +86,16 @@ client - Contains client (frontend) code
         | components - Folder for all components that are used in the pages, grouped by page
         | api.ts - Functions for backend API calls
         | data.json - Main hardcoded data for the site
-        | types.ts - All type definitions for the frontend
+        | types - All type declerations for the frontend (most are type decleration files; no need to import!)
+            | global.d.ts - General and misc type declerations
+            | admin.d.ts - Admin type declerations
+            | club.d.ts - Club type declerations
+            | event.d.ts - Event type declerations
+            | history.d.ts - History type declerations
+            | response.d.ts - Fetch response type declerations
+            | textData.d.ts - Text data type declerations (eg. external links)
+            | volunteering.d.ts - Volunteering type declerations
+            | enums.ts - <EXCEPTION> Enums cannot be in .d.ts files, so enums need to be IMPORTED!
         | theme.ts/darkTheme.ts - Theme definitions
         | util - All utility functions
             | constructors.ts - Constructor functions for all objects
@@ -127,11 +136,10 @@ Most of the standard JS formatting will be taken care of by the extension (such 
 **Imports** should be grouped together in the following order:
 
 1. At the top, you should `import React from 'react'`, along with all other **function** imports
-2. In the second group, put all Material UI components -- this can optionally be combined with **group 3** if there are not many components
-3. In the third group, all **components** should be imported
-4. In the fourth group, JSON and image file imports -- this can be optionally combined with **group 3** if there are not many links
+2. In the second group, put all **components** should be imported (MUI Components then local components)
+4. In the fourth group, JSON and image file imports
 
-Note that all external libraries should be imported before local libraries (see the first group in the example below).
+Note that all external libraries should be imported _before local libraries_ (see the first group in the example below).
 
 See the example below from the [EditEvents component](https://github.com/MichaelZhao21/tams-club-cal/blob/master/client/pages/edit/events/%5B%5B...id%5D%5D.tsx):
 
@@ -144,12 +152,10 @@ import Cookies from 'universal-cookie';
 import dayjs, { Dayjs } from 'dayjs';
 import { createPopupEvent, createEvent, darkSwitch } from '../../../src/util';
 import { getEvent, getOverlappingReservations, postEvent, putEvent } from '../../../src/api';
-import type { PopupEvent, RepeatingStatus } from '../../../src/types';
 
 import Typography from '@mui/material/Typography';
 import Box from '@mui/material/Box';
 import Alert from '@mui/material/Alert';
-
 import DateTimeInput from '../../../src/components/edit/events/date-time-input';
 import ControlledCheckbox from '../../../src/components/edit/events/controlled-checkbox';
 import ControlledTextField from '../../../src/components/edit/shared/controlled-text-field';

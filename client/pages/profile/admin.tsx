@@ -1,7 +1,7 @@
 import React, { useEffect } from 'react';
 import { useRouter } from 'next/router';
 import { GetServerSidePropsContext, InferGetServerSidePropsType } from 'next';
-import { AccessLevel } from '../../src/types';
+import { AccessLevelEnum } from '../../src/types/enums';
 import { getUserInfo } from '../../src/api';
 
 import Typography from '@mui/material/Typography';
@@ -28,7 +28,7 @@ export const getServerSideProps = async (ctx: GetServerSidePropsContext) => {
     if (res.status !== 200) return { props: { authorized: false, error: true } };
 
     // If there is no issue with the authorization, authorize user!
-    return { props: { authorized: res.data.level === AccessLevel.ADMIN, error: false } };
+    return { props: { authorized: res.data.level === AccessLevelEnum.ADMIN, error: false } };
 };
 
 /**

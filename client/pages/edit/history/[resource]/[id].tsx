@@ -5,7 +5,6 @@ import { getParams } from '../../../../src/util/miscUtil';
 import { calculateEditDate } from '../../../../src/util/datetime';
 import { darkSwitch } from '../../../../src/util/cssUtil';
 import { getHistory } from '../../../../src/api';
-import type { History, Resource } from '../../../../src/types';
 
 import Table from '@mui/material/Table';
 import TableBody from '@mui/material/TableBody';

@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from 'react';
 import Cookies from 'universal-cookie';
-import type { PopupEvent } from '../../../types';
 import { createConnectionErrorPopup } from '../../../util/constructors';
 import { darkSwitch, darkSwitchGrey } from '../../../util/cssUtil';
 import { getUserInfo } from '../../../api';

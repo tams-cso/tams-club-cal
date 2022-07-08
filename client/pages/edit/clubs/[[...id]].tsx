@@ -3,9 +3,9 @@ import { useRouter } from 'next/router';
 import { GetServerSidePropsContext, InferGetServerSidePropsType } from 'next';
 import { useForm } from 'react-hook-form';
 import Cookies from 'universal-cookie';
+import { AccessLevelEnum } from '../../../src/types/enums';
 import { processLinkObjectList, getTokenFromCookies } from '../../../src/util/miscUtil';
 import { createPopupEvent, createClub, createClubImageBlobs } from '../../../src/util/constructors';
-import { AccessLevel, Exec, PopupEvent } from '../../../src/types';
 import { getClub, getUserInfo, postClub, putClub } from '../../../src/api';
 
 import Typography from '@mui/material/Typography';
@@ -35,7 +35,7 @@ export const getServerSideProps = async (ctx: GetServerSidePropsContext) => {
     const token = getTokenFromCookies(ctx);
     const userRes = await getUserInfo(token);
     const userId = userRes.status === 200 ? userRes.data.id : null;
-    const level = userId ? userRes.data.level : AccessLevel.NONE;
+    const level = userId ? userRes.data.level : AccessLevelEnum.NONE;
 
     // Check if adding club
     const id = ctx.params.id as string;
@@ -164,11 +164,16 @@ const EditClubs = ({ club, id, error, level }: InferGetServerSidePropsType<typeo
             <Typography variant="h1" sx={{ textAlign: 'center', fontSize: '3rem' }}>
                 {id ? 'Edit Club' : 'Add Club'}
             </Typography>
-            <UnauthorizedAlert show={level < AccessLevel.CLUBS} resource="club" />
+            <UnauthorizedAlert show={level < AccessLevelEnum.CLUBS} resource="club" />
             {id ? (
                 <React.Fragment>
                     <AddButton editHistory path={`/edit/history/clubs/${id}`} />
-                    <DeleteButton resource="clubs" id={id} name={club.name} hidden={!id || level < AccessLevel.ADMIN} />
+                    <DeleteButton
+                        resource="clubs"
+                        id={id}
+                        name={club.name}
+                        hidden={!id || level < AccessLevelEnum.ADMIN}
+                    />
                 </React.Fragment>
             ) : null}
             <FormWrapper onSubmit={handleSubmit(onSubmit)}>
@@ -251,7 +256,7 @@ const EditClubs = ({ club, id, error, level }: InferGetServerSidePropsType<typeo
                     onSuccess={onSubmit}
                     submit
                     right
-                    disabled={level < AccessLevel.CLUBS}
+                    disabled={level < AccessLevelEnum.CLUBS}
                 />
             </FormWrapper>
         </EditWrapper>

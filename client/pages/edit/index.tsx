@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useRouter } from 'next/router';
 import { GetServerSidePropsContext, InferGetServerSidePropsType } from 'next';
-import { History, Resource, HistoryData, AccessLevel } from '../../src/types';
+import { AccessLevelEnum } from '../../src/types/enums';
 import { getTokenFromCookies, redirect } from '../../src/util/miscUtil';
 import { calculateEditDate } from '../../src/util/datetime';
 import { darkSwitch } from '../../src/util/cssUtil';
@@ -25,7 +25,7 @@ import AccessInfo from '../../src/components/edit/history/access-info';
 export const getServerSideProps = async (ctx: GetServerSidePropsContext) => {
     const token = getTokenFromCookies(ctx);
     const userRes = await getUserInfo(token);
-    return { props: { level: userRes.status === 200 ? userRes.data.level : AccessLevel.NONE } };
+    return { props: { level: userRes.status === 200 ? userRes.data.level : AccessLevelEnum.NONE } };
 };
 
 const Edit = ({ level }: InferGetServerSidePropsType<typeof getServerSideProps>) => {
@@ -108,7 +108,7 @@ const Edit = ({ level }: InferGetServerSidePropsType<typeof getServerSideProps>)
                     variant="outlined"
                     onClick={add.bind(this, 'events')}
                     sx={{ margin: 1.5 }}
-                    disabled={level < AccessLevel.STANDARD}
+                    disabled={level < AccessLevelEnum.STANDARD}
                 >
                     Add an Event
                 </Button>
@@ -116,7 +116,7 @@ const Edit = ({ level }: InferGetServerSidePropsType<typeof getServerSideProps>)
                     variant="outlined"
                     onClick={add.bind(this, 'clubs')}
                     sx={{ margin: 1.5 }}
-                    disabled={level < AccessLevel.ADMIN}
+                    disabled={level < AccessLevelEnum.ADMIN}
                 >
                     Add a Club
                 </Button>
@@ -124,7 +124,7 @@ const Edit = ({ level }: InferGetServerSidePropsType<typeof getServerSideProps>)
                     variant="outlined"
                     onClick={add.bind(this, 'volunteering')}
                     sx={{ margin: 1.5 }}
-                    disabled={level < AccessLevel.CLUBS}
+                    disabled={level < AccessLevelEnum.CLUBS}
                 >
                     Add a Volunteering Opportunity
                 </Button>

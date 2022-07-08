@@ -1,8 +1,8 @@
 import React, { useEffect, useState } from 'react';
 import { GetServerSidePropsContext, InferGetServerSidePropsType } from 'next';
 import dayjs, { Dayjs } from 'dayjs';
+import { AccessLevelEnum } from '../../../src/types/enums';
 import { getReservationList } from '../../../src/api';
-import { AccessLevel } from '../../../src/types';
 import { getAccessLevel } from '../../../src/util/miscUtil';
 import { parseReservations } from '../../../src/util/dataParsing';
 import { parseDateParams } from '../../../src/util/datetime';
@@ -154,7 +154,7 @@ const Reservations = ({
                     </Button>
                 ))}
             </Box>
-            <AddButton color="primary" label="Event" path="/edit/events" disabled={level < AccessLevel.STANDARD} />
+            <AddButton color="primary" label="Event" path="/edit/events" disabled={level < AccessLevelEnum.STANDARD} />
             {reservationComponentList === null ? <Loading /> : reservationComponentList}
         </HomeBase>
     );

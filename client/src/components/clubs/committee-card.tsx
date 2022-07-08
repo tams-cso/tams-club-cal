@@ -1,7 +1,6 @@
 import React from 'react';
 import type { Theme } from '@mui/material';
 import { darkSwitchGrey } from '../../util/cssUtil';
-import type { Committee } from '../../types';
 
 import Card from '@mui/material/Card';
 import Typography from '@mui/material/Typography';

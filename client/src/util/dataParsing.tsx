@@ -1,4 +1,3 @@
-import { Event, BrokenReservation, Room } from '../types';
 import React from 'react';
 import dayjs, { Dayjs } from 'dayjs';
 import ReservationDay from '../components/reservations/reservation-day';
@@ -14,7 +13,7 @@ import { isNotMidnight } from './datetime';
  * @returns The event list with split up events across days
  */
 
-export function parsePublicEventList(eventList: Event[]): Event[] {
+export function parsePublicEventList(eventList: CalEvent[]): CalEvent[] {
     const outputList = [];
     eventList.forEach((a) => {
         // Simply return the event if it does not span across multiple days
@@ -57,7 +56,7 @@ export function parsePublicEventList(eventList: Event[]): Event[] {
  */
 
 export function parseReservations(
-    reservationList: Event[],
+    reservationList: CalEvent[],
     date: Dayjs,
     useMonth: boolean = false,
     room?: Room
@@ -82,7 +81,7 @@ export function parseReservations(
             // Create an entry for the section of the event that spans this day
             // This entry will span the entire length of the day if it crosses over the entire day
             // However, the span will be less than 24 if it is less than the entire day
-            brokenUpReservationList.push({ start: curr, end: currEnd, span: currSpan, data: r });
+            brokenUpReservationList.push({ start: curr.valueOf(), end: currEnd.valueOf(), span: currSpan, data: r });
             curr = currEnd;
         }
 
@@ -90,7 +89,7 @@ export function parseReservations(
         // This is because the while loop will break on the last day of the reservation and we must
         // push the last segment on manually
         const span = dayjs(r.end).diff(curr, 'hour');
-        brokenUpReservationList.push({ start: curr, end: dayjs(r.end), span, data: r });
+        brokenUpReservationList.push({ start: curr.valueOf(), end: r.end, span, data: r });
     });
 
     // The reservation list is sorted by start date
@@ -101,16 +100,19 @@ export function parseReservations(
     // and truncate blocks that start within this interval but end after
     const cutReservationList = [];
     sortedReservationList.forEach((r) => {
+        // Convert to dayjs
+        const start = dayjs(r.start);
+        const end = dayjs(r.end);
         // If the reservation starts outside of the interval, simply add it to the list
-        if (r.start.hour() >= 6) {
+        if (start.hour() >= 6) {
             cutReservationList.push(r);
         } else {
             // If the reservation starts within the 6am-12am interval,
             // and ends after this interval, keep the block but truncate the start
             // Otherwise we will simply ignore the block and remove it from the list
-            if (r.end.hour() >= 6 || r.end.day() !== r.start.day()) {
-                const diff = 6 - r.start.hour();
-                cutReservationList.push({ ...r, start: r.start.hour(6), span: r.span - diff });
+            if (end.hour() >= 6 || end.day() !== start.day()) {
+                const diff = 6 - start.hour();
+                cutReservationList.push({ ...r, start: start.hour(6), span: r.span - diff });
             }
         }
     });

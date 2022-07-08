@@ -3,7 +3,6 @@ import type { Theme } from '@mui/material';
 import dayjs from 'dayjs';
 import { formatEventTime } from '../../util/datetime';
 import { darkSwitch, darkSwitchGrey } from '../../util/cssUtil';
-import type { Event } from '../../types';
 
 import ListItem from '@mui/material/ListItem';
 import Typography from '@mui/material/Typography';
@@ -11,7 +10,7 @@ import Link from '../shared/Link';
 
 interface CalendarEventProps {
     /** Event object to display */
-    event: Event;
+    event: CalEvent;
 }
 
 /**

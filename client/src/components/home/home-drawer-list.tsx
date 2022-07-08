@@ -9,7 +9,6 @@ import { getExternalLinks as getExternalLinks } from '../../api';
 import Popup from '../shared/popup';
 import { createPopupEvent } from '../../util/constructors';
 import { darkSwitchGrey } from '../../util/cssUtil';
-import type { ExternalLink } from '../../types';
 
 /**
  * Shows a list of external links on the home page

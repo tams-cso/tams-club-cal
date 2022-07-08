@@ -3,7 +3,7 @@ import { useRouter } from 'next/router';
 import { GetServerSidePropsContext, InferGetServerSidePropsType } from 'next';
 import Cookies from 'universal-cookie';
 import { getUserInfo } from '../../src/api';
-import { AccessLevel } from '../../src/types';
+import { AccessLevelEnum } from '../../src/types/enums';
 
 import Card from '@mui/material/Card';
 import CardContent from '@mui/material/CardContent';
@@ -25,7 +25,7 @@ import { accessLevelToString, getTokenFromCookies } from '../../src/util/miscUti
 // Server-side Rendering to check for token and get data
 export const getServerSideProps = async (ctx: GetServerSidePropsContext) => {
     // Error object to return if outside conditions fails
-    const error = { props: { authorized: false, level: AccessLevel.STANDARD, info: null, error: false } };
+    const error = { props: { authorized: false, level: AccessLevelEnum.STANDARD, info: null, error: false } };
 
     // Get the token from cookies
     const token = getTokenFromCookies(ctx);
@@ -116,7 +116,7 @@ const Dashboard = ({ authorized, error, level, info }: InferGetServerSidePropsTy
                         <Box sx={{ display: 'flex', justifyContent: 'center', marginTop: 2 }}>
                             <Button onClick={logout}>Logout</Button>
                         </Box>
-                        {level === AccessLevel.ADMIN ? (
+                        {level === AccessLevelEnum.ADMIN ? (
                             <Box sx={{ display: 'flex', justifyContent: 'center', marginTop: 2 }}>
                                 <Button onClick={toAdmin}>Go to Admin Dashboard</Button>
                             </Box>

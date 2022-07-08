@@ -2,7 +2,6 @@ import React, { useState } from 'react';
 import type { Dayjs } from 'dayjs';
 import { alpha } from '@mui/material/styles';
 import { darkSwitch, darkSwitchGrey } from '../../util/cssUtil';
-import type { Event } from '../../types';
 
 import Box from '@mui/material/Box';
 import List from '@mui/material/List';
@@ -13,7 +12,7 @@ import CalendarPopup from './calendar-popup';
 
 interface CalendarDayPopup {
     /** List of all events for the current day */
-    activities: Event[];
+    activities: CalEvent[];
 
     /** Date to display */
     date: Dayjs;

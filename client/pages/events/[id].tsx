@@ -2,7 +2,7 @@ import React from 'react';
 import type { Theme } from '@mui/material';
 import { GetServerSidePropsContext, InferGetServerSidePropsType } from 'next';
 import { useRouter } from 'next/router';
-import { AccessLevel } from '../../src/types';
+import { AccessLevelEnum } from '../../src/types/enums';
 import { getParams, getAccessLevel, getTokenFromCookies, eventTypeToString } from '../../src/util/miscUtil';
 import { formatEventDate, formatEventTime } from '../../src/util/datetime';
 import { darkSwitch, darkSwitchGrey } from '../../src/util/cssUtil';
@@ -79,7 +79,8 @@ const EventDisplay = ({ event, error, level, userId }: InferGetServerSidePropsTy
 
     const location = data.rooms.find((d) => d.value === event.location);
     const reserved = event.reservation ? ' (Reserved)' : '';
-    const unauthorized = (level < AccessLevel.STANDARD || userId !== event.editorId) && level !== AccessLevel.ADMIN;
+    const unauthorized =
+        (level < AccessLevelEnum.STANDARD || userId !== event.editorId) && level !== AccessLevelEnum.ADMIN;
 
     return (
         <HomeBase noActionBar>

@@ -2,7 +2,6 @@ import React, { useEffect, useState } from 'react';
 import { capitalize } from '@mui/material';
 import Head from 'next/head';
 import { getCdnUrl } from '../../api';
-import { Resource } from '../../types';
 
 interface ResourceMetaProps {
     /** If true, will show [Edit History] before title */

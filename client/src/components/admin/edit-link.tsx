@@ -5,7 +5,6 @@ import ListItem from '@mui/material/ListItem';
 import Box from '@mui/material/Box';
 import Card from '@mui/material/Card';
 
-import type { ExternalLink } from '../../types';
 import TrashCan from '../edit/clubs/trash-can';
 import ControlledTextField from '../edit/shared/controlled-text-field';
 

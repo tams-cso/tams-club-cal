@@ -1,16 +1,3 @@
-import {
-    Event,
-    PopupEvent,
-    Volunteering,
-    Filters,
-    Club,
-    Exec,
-    Committee,
-    ClubImageBlobs,
-    ExternalLink,
-    TextData,
-    EventType,
-} from '../types';
 import dayjs from 'dayjs';
 
 // ================== OBJECT CONSTRUCTORS =================== //
@@ -123,7 +110,7 @@ export function createEvent(
     noEnd: boolean = false,
     publicEvent: boolean = true,
     reservation: boolean = false
-): Event {
+): CalEvent {
     return {
         id,
         eventId,

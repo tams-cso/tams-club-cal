@@ -1,5 +1,4 @@
 import React, { useEffect, useState } from 'react';
-import type { PopupEvent } from '../../types';
 import Cookies from 'universal-cookie';
 
 import Snackbar from '@mui/material/Snackbar';

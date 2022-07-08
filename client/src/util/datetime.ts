@@ -1,4 +1,3 @@
-import { Event } from '../types';
 import dayjs, { Dayjs } from 'dayjs';
 import utc from 'dayjs/plugin/utc';
 import timezone from 'dayjs/plugin/timezone';
@@ -75,7 +74,7 @@ export function isSameDate(first: number, second: number): boolean {
  * @returns The formatted full date
  */
 
-export function formatEventDate(event: Event): string {
+export function formatEventDate(event: CalEvent): string {
     if (!toTz(event.start).isSame(toTz(event.end), 'day')) return formatTime(event.start, 'dddd, MMMM D, YYYY h:mma');
     let formattedTime = formatTime(event.start, 'dddd, MMMM D, YYYY');
     if (!isSameDate(event.start, event.end)) formattedTime += formatTime(event.end, ' - dddd, MMMM D, YYYY');
@@ -91,7 +90,7 @@ export function formatEventDate(event: Event): string {
  * @returns The formatted time for the event in the format [h:mma - h:mma]
  */
 
-export function formatEventTime(event: Event, noEnd: boolean = false, checkSame: boolean = false): string {
+export function formatEventTime(event: CalEvent, noEnd: boolean = false, checkSame: boolean = false): string {
     if (checkSame && !toTz(event.start).isSame(toTz(event.end), 'day'))
         return formatTime(event.end, 'dddd, MMMM D, YYYY h:mma');
 

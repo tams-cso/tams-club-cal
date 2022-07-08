@@ -14,7 +14,6 @@ import Button from '@mui/material/Button';
 
 import Popup from './popup';
 import UploadBackdrop from '../edit/shared/upload-backdrop';
-import { PopupEvent, Resource } from '../../types';
 import Cookies from 'universal-cookie';
 import { createPopupEvent } from '../../util/constructors';
 import { deleteClub, deleteEvent, deleteVolunteering } from '../../api';

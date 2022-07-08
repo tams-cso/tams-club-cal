@@ -1,6 +1,6 @@
-import { LinkInputData, AccessLevel, EventType } from '../types';
 import React from 'react';
 import Link from '../components/shared/Link';
+import { AccessLevelEnum } from '../types/enums';
 import { getUserInfo } from '../api';
 import { GetServerSidePropsContext } from 'next';
 
@@ -78,11 +78,11 @@ export function accessLevelToString(level: AccessLevel): string {
 export async function getAccessLevel(ctx: GetServerSidePropsContext): Promise<AccessLevel> {
     // Get token cookie from SSR props context
     const token = getTokenFromCookies(ctx);
-    if (!token) return AccessLevel.NONE;
+    if (!token) return AccessLevelEnum.NONE;
 
     // Check if valid token and compare with database
     const res = await getUserInfo(token);
-    if (res.status !== 200) return AccessLevel.NONE;
+    if (res.status !== 200) return AccessLevelEnum.NONE;
 
     return res.data.level;
 }

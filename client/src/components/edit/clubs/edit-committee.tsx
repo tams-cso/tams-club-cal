@@ -1,6 +1,5 @@
 import React, { useState } from 'react';
 import type { Control, FieldValues, UseFormRegister, UseFormSetValue } from 'react-hook-form';
-import { Committee } from '../../../types';
 
 import ListItem from '@mui/material/ListItem';
 import Box from '@mui/material/Box';

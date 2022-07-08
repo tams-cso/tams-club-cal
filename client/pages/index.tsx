@@ -1,12 +1,13 @@
 import React, { useState, useEffect } from 'react';
 import { GetServerSidePropsContext, InferGetServerSidePropsType } from 'next';
+import type { SxProps, Theme } from '@mui/material';
 import dayjs from 'dayjs';
+import { AccessLevelEnum } from '../src/types/enums';
 import { getPublicEventList } from '../src/api';
 import { getAccessLevel } from '../src/util/miscUtil';
 import { parsePublicEventList } from '../src/util/dataParsing';
 import { isSameDate } from '../src/util/datetime';
 import { darkSwitchGrey } from '../src/util/cssUtil';
-import type { SxProps, Theme } from '@mui/material';
 
 import Container from '@mui/material/Container';
 import Typography from '@mui/material/Typography';
@@ -24,7 +25,6 @@ import HomeBase from '../src/components/home/home-base';
 import Loading from '../src/components/shared/loading';
 import AddButton from '../src/components/shared/add-button';
 import EventListSection from '../src/components/home/event-list-section';
-import { AccessLevel } from '../src/types';
 import TitleMeta from '../src/components/meta/title-meta';
 
 // Format the no events/add more events text on the event list
@@ -41,7 +41,7 @@ export const getServerSideProps = async (ctx: GetServerSidePropsContext) => {
     const level = await getAccessLevel(ctx);
 
     // Return error if bad data
-    if (eventRes.status !== 200) return { props: { eventList: null, error: true, level: AccessLevel.STANDARD } };
+    if (eventRes.status !== 200) return { props: { eventList: null, error: true, level: AccessLevelEnum.STANDARD } };
 
     // Sort the events by date and filter out all elements
     // that do not start on or after the current date
@@ -169,7 +169,12 @@ const Home = ({ eventList, error, level }: InferGetServerSidePropsType<typeof ge
                     overflowX: 'hidden',
                 }}
             >
-                <AddButton color="primary" label="Event" path="/edit/events" disabled={level < AccessLevel.STANDARD} />
+                <AddButton
+                    color="primary"
+                    label="Event"
+                    path="/edit/events"
+                    disabled={level < AccessLevelEnum.STANDARD}
+                />
                 <Box width="100%" marginBottom={2} display="flex" alignItems="center">
                     <Tooltip title="Filters">
                         <IconButton onClick={openFilters} size="large">

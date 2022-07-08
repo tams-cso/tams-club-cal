@@ -2,10 +2,10 @@ import React from 'react';
 import { alpha, Tooltip } from '@mui/material';
 import { formatTime } from '../../util/datetime';
 import { darkSwitch } from '../../util/cssUtil';
-import type { BrokenReservation, Room } from '../../types';
 
 import Box from '@mui/material/Box';
 import Link from '../shared/Link';
+import dayjs from 'dayjs';
 
 interface ReservationEntryProps {
     /** Broken reservation entry */
@@ -23,23 +23,27 @@ interface ReservationEntryProps {
  * be offset from the left side based on the starting hour and duration.
  */
 const ReservationEntry = (props: ReservationEntryProps) => {
+    // Convert to dayjs
+    const start = dayjs(props.res.start);
+    const end = dayjs(props.res.end);
+
     // Calculate the offset (percentage of table width)
-    const hourStart = props.res.start.hour();
-    const minuteStart = props.res.start.minute();
+    const hourStart = start.hour();
+    const minuteStart = start.minute();
     const leftOffset = 10 + (hourStart - 6) * 5 + (5 * minuteStart) / 60;
 
     // Calculate the width
-    const diffHour = props.res.end.diff(props.res.start, 'hour');
-    const diffMinute = props.res.end.diff(props.res.end, 'minute');
+    const diffHour = end.diff(start, 'hour');
+    const diffMinute = end.diff(end, 'minute');
     const width = diffHour * 5 + (5 * diffMinute) / 60;
 
     // Format the tooltip title
-    const startFormatted = formatTime(props.res.start.valueOf(), 'h:mma', true);
-    const endFormatted = formatTime(props.res.end.valueOf(), 'h:mma', true);
+    const startFormatted = formatTime(start.valueOf(), 'h:mma', true);
+    const endFormatted = formatTime(end.valueOf(), 'h:mma', true);
     const tooltipTitle = `${props.res.data.name} (${startFormatted} - ${endFormatted})`;
 
     // Format the current date for url and add room if defined
-    const urlDate = props.res.start.format('/YYYY/MM/DD');
+    const urlDate = start.format('/YYYY/MM/DD');
     const fullUrl = props.room ? `/room/${props.room.value}/${urlDate}` : urlDate;
 
     return (

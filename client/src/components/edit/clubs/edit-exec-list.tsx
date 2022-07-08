@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from 'react';
 import type { Control, FieldValues, UseFormRegister, UseFormSetValue } from 'react-hook-form';
-import type { Exec } from '../../../types';
 import { createExec, createPopupEvent } from '../../../util/constructors';
 
 import List from '@mui/material/List';

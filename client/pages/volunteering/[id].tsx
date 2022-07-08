@@ -22,7 +22,7 @@ import PageWrapper from '../../src/components/shared/page-wrapper';
 import ResourceMeta from '../../src/components/meta/resource-meta';
 import TitleMeta from '../../src/components/meta/title-meta';
 import RobotBlockMeta from '../../src/components/meta/robot-block-meta';
-import { AccessLevel } from '../../src/types';
+import { AccessLevelEnum } from '../../src/types/enums';
 
 // Server-side Rendering
 export const getServerSideProps = async (ctx: GetServerSidePropsContext) => {
@@ -78,7 +78,7 @@ const VolunteeringDisplay = ({
                     label="Volunteering"
                     path={`/edit/volunteering/${volunteering.id}`}
                     edit
-                    disabled={level < AccessLevel.CLUBS}
+                    disabled={level < AccessLevelEnum.CLUBS}
                 />
                 <Card>
                     <CardContent>
