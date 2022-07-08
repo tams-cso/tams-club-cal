@@ -13,7 +13,7 @@ import ViewSwitcher from '../../src/components/shared/view-switcher';
 import SortSelect from '../../src/components/shared/sort-select';
 import PageWrapper from '../../src/components/shared/page-wrapper';
 import TitleMeta from '../../src/components/meta/title-meta';
-import { getAccessLevel } from '../../src/util';
+import { getAccessLevel } from '../../src/util/miscUtilUtil';
 import { AccessLevel } from '../../src/types';
 
 // Server-side Rendering

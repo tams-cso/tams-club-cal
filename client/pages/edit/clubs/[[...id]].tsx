@@ -3,13 +3,8 @@ import { useRouter } from 'next/router';
 import { GetServerSidePropsContext, InferGetServerSidePropsType } from 'next';
 import { useForm } from 'react-hook-form';
 import Cookies from 'universal-cookie';
-import {
-    processLinkObjectList,
-    createPopupEvent,
-    createClub,
-    createClubImageBlobs,
-    getTokenFromCookies,
-} from '../../../src/util';
+import { processLinkObjectList, getTokenFromCookies } from '../../../src/util/miscUtilUtil';
+import { createPopupEvent, createClub, createClubImageBlobs } from '../../../src/util/constructors';
 import { AccessLevel, Exec, PopupEvent } from '../../../src/types';
 import { getClub, getUserInfo, postClub, putClub } from '../../../src/api';
 

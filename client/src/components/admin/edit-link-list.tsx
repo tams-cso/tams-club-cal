@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { useForm } from 'react-hook-form';
-import { createExternalLink, createPopupEvent, createTextData } from '../../util';
+import { createExternalLink, createPopupEvent, createTextData } from '../../util/constructors';
 import { getExternalLinks, putExternalLinks } from '../../api';
 import type { ExternalLink, PopupEvent } from '../../types';
 

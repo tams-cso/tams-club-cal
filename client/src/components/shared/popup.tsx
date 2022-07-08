@@ -6,7 +6,7 @@ import Snackbar from '@mui/material/Snackbar';
 import Alert from '@mui/material/Alert';
 import Card from '@mui/material/Card';
 import Typography from '@mui/material/Typography';
-import { createPopupEvent } from '../../util';
+import { createPopupEvent } from '../../util/constructors';
 
 interface PopupProps {
     /** Event to display */
