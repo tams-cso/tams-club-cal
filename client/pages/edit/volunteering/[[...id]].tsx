@@ -3,7 +3,7 @@ import { useRouter } from 'next/router';
 import { GetServerSidePropsContext, InferGetServerSidePropsType } from 'next';
 import { useForm } from 'react-hook-form';
 import Cookies from 'universal-cookie';
-import { getTokenFromCookies } from '../../../src/util/miscUtilUtil';
+import { getTokenFromCookies } from '../../../src/util/miscUtil';
 import { createPopupEvent, createVolunteering, createFilters } from '../../../src/util/constructors';
 import { AccessLevel, PopupEvent } from '../../../src/types';
 import { getUserInfo, getVolunteering, postVolunteering, putVolunteering } from '../../../src/api';

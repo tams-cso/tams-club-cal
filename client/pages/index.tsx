@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { GetServerSidePropsContext, InferGetServerSidePropsType } from 'next';
 import dayjs from 'dayjs';
 import { getPublicEventList } from '../src/api';
-import { getAccessLevel } from '../src/util/miscUtilUtil';
+import { getAccessLevel } from '../src/util/miscUtil';
 import { parsePublicEventList } from '../src/util/dataParsing';
 import { isSameDate } from '../src/util/datetime';
 import { darkSwitchGrey } from '../src/util/cssUtil';

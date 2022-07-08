@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { useRouter } from 'next/router';
 import { GetServerSidePropsContext, InferGetServerSidePropsType } from 'next';
 import { History, Resource, HistoryData, AccessLevel } from '../../src/types';
-import { getTokenFromCookies, redirect } from '../../src/util/miscUtilUtil';
+import { getTokenFromCookies, redirect } from '../../src/util/miscUtil';
 import { calculateEditDate } from '../../src/util/datetime';
 import { darkSwitch } from '../../src/util/cssUtil';
 import { getHistoryList, getUserInfo } from '../../src/api';

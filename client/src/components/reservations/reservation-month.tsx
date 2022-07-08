@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import type { Dayjs } from 'dayjs';
 import { Theme } from '@mui/material';
-import { getParams } from '../../util/miscUtilUtil';
+import { getParams } from '../../util/miscUtil';
 import { darkSwitch } from '../../util/cssUtil';
 import type { BrokenReservation, Room } from '../../types';
 

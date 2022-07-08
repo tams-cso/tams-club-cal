@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { useRouter } from 'next/router';
-import { getParams } from '../../util/miscUtilUtil';
+import { getParams } from '../../util/miscUtil';
 
 import Box from '@mui/material/Box';
 import Drawer from '@mui/material/Drawer';

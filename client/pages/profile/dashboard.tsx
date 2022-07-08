@@ -20,7 +20,7 @@ import Container from '@mui/material/Container';
 import PageWrapper from '../../src/components/shared/page-wrapper';
 import Loading from '../../src/components/shared/loading';
 import TitleMeta from '../../src/components/meta/title-meta';
-import { accessLevelToString, getTokenFromCookies } from '../../src/util/miscUtilUtil';
+import { accessLevelToString, getTokenFromCookies } from '../../src/util/miscUtil';
 
 // Server-side Rendering to check for token and get data
 export const getServerSideProps = async (ctx: GetServerSidePropsContext) => {

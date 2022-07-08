@@ -4,7 +4,7 @@ import { GetServerSidePropsContext, InferGetServerSidePropsType } from 'next';
 import { useForm } from 'react-hook-form';
 import Cookies from 'universal-cookie';
 import dayjs, { Dayjs } from 'dayjs';
-import { getTokenFromCookies } from '../../../src/util/miscUtilUtil';
+import { getTokenFromCookies } from '../../../src/util/miscUtil';
 import { createPopupEvent, createEvent } from '../../../src/util/constructors';
 import { darkSwitch } from '../../../src/util/cssUtil';
 import { getEvent, getOverlappingReservations, getUserInfo, postEvent, putEvent } from '../../../src/api';

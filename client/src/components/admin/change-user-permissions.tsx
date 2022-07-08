@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import Cookies from 'universal-cookie';
 import { getUserList, putUserLevel } from '../../api';
 import { PopupEvent, User, AccessLevel } from '../../types';
-import { accessLevelToString } from '../../util/miscUtilUtil';
+import { accessLevelToString } from '../../util/miscUtil';
 import { createPopupEvent } from '../../util/constructors';
 
 import Button from '@mui/material/Button';

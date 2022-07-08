@@ -1,5 +1,5 @@
 import React, { useEffect } from 'react';
-import { getParams } from '../../util/miscUtilUtil';
+import { getParams } from '../../util/miscUtil';
 
 import Tooltip from '@mui/material/Tooltip';
 import IconButton from '@mui/material/IconButton';

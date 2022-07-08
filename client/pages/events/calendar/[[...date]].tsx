@@ -3,7 +3,7 @@ import { GetServerSidePropsContext, InferGetServerSidePropsType } from 'next';
 import { useRouter } from 'next/router';
 import { Typography } from '@mui/material';
 import dayjs from 'dayjs';
-import { getAccessLevel } from '../../../src/util/miscUtilUtil';
+import { getAccessLevel } from '../../../src/util/miscUtil';
 import { parsePublicEventList } from '../../../src/util/dataParsing';
 import { parseDateParams } from '../../../src/util/datetime';
 import { darkSwitch } from '../../../src/util/cssUtil';

@@ -3,7 +3,7 @@ import type { Theme } from '@mui/material';
 import { GetServerSidePropsContext, InferGetServerSidePropsType } from 'next';
 import { useRouter } from 'next/router';
 import { AccessLevel } from '../../src/types';
-import { getParams, getAccessLevel, getTokenFromCookies, eventTypeToString } from '../../src/util/miscUtilUtil';
+import { getParams, getAccessLevel, getTokenFromCookies, eventTypeToString } from '../../src/util/miscUtil';
 import { formatEventDate, formatEventTime } from '../../src/util/datetime';
 import { darkSwitch, darkSwitchGrey } from '../../src/util/cssUtil';
 

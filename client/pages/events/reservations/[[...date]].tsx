@@ -3,7 +3,7 @@ import { GetServerSidePropsContext, InferGetServerSidePropsType } from 'next';
 import dayjs, { Dayjs } from 'dayjs';
 import { getReservationList } from '../../../src/api';
 import { AccessLevel } from '../../../src/types';
-import { getAccessLevel } from '../../../src/util/miscUtilUtil';
+import { getAccessLevel } from '../../../src/util/miscUtil';
 import { parseReservations } from '../../../src/util/dataParsing';
 import { parseDateParams } from '../../../src/util/datetime';
 
