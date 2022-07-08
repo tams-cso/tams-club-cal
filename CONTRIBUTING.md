@@ -86,15 +86,15 @@ client - Contains client (frontend) code
         | components - Folder for all components that are used in the pages, grouped by page
         | api.ts - Functions for backend API calls
         | data.json - Main hardcoded data for the site
-        | types - All type declerations for the frontend (most are type decleration files; no need to import!)
-            | global.d.ts - General and misc type declerations
-            | admin.d.ts - Admin type declerations
-            | club.d.ts - Club type declerations
-            | event.d.ts - Event type declerations
-            | history.d.ts - History type declerations
-            | response.d.ts - Fetch response type declerations
-            | textData.d.ts - Text data type declerations (eg. external links)
-            | volunteering.d.ts - Volunteering type declerations
+        | types - All type declarations for the frontend (most are type declaration files; no need to import!)
+            | global.d.ts - General and misc type declarations
+            | admin.d.ts - Admin type declarations
+            | club.d.ts - Club type declarations
+            | event.d.ts - Event type declarations
+            | history.d.ts - History type declarations
+            | response.d.ts - Fetch response type declarations
+            | textData.d.ts - Text data type declarations (eg. external links)
+            | volunteering.d.ts - Volunteering type declarations
             | enums.ts - <EXCEPTION> Enums cannot be in .d.ts files, so enums need to be IMPORTED!
         | theme.ts/darkTheme.ts - Theme definitions
         | util - All utility functions

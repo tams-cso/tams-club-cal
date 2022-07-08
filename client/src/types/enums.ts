@@ -1,6 +1,6 @@
 /**
  * Access level enum for users -- only to be used for enum constants.
- * For type definitions, use the AccessLevel global type decleration.
+ * For type definitions, use the AccessLevel global type declaration.
  */
 export enum AccessLevelEnum {
     NONE = -1,
