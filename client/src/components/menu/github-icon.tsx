@@ -1,5 +1,5 @@
 import React from 'react';
-import { darkSwitch } from '../../util';
+import { darkSwitch } from "../../util/cssUtil";
 
 import SvgIcon from '@mui/material/SvgIcon';
 

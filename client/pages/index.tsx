@@ -2,7 +2,8 @@ import React, { useState, useEffect } from 'react';
 import { GetServerSidePropsContext, InferGetServerSidePropsType } from 'next';
 import dayjs from 'dayjs';
 import { getPublicEventList } from '../src/api';
-import { darkSwitchGrey, parsePublicEventList, isSameDate, getAccessLevel } from '../src/util';
+import { parsePublicEventList, isSameDate, getAccessLevel } from '../src/util';
+import { darkSwitchGrey } from "../src/util/cssUtil";
 import type { SxProps, Theme } from '@mui/material';
 
 import Container from '@mui/material/Container';

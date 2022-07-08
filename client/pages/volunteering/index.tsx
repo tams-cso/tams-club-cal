@@ -1,7 +1,8 @@
 import React, { useEffect, useState } from 'react';
 import { GetServerSidePropsContext, InferGetServerSidePropsType } from 'next';
 import { getVolunteeringList } from '../../src/api';
-import { darkSwitchGrey, getAccessLevel } from '../../src/util';
+import { getAccessLevel } from '../../src/util';
+import { darkSwitchGrey } from "../../src/util/cssUtil";
 
 import Grid from '@mui/material/Grid';
 import Container from '@mui/material/Container';

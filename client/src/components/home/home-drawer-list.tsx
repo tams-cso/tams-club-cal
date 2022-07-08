@@ -7,7 +7,8 @@ import Typography from '@mui/material/Typography';
 import MaterialSymbol from './material-symbol';
 import { getExternalLinks as getExternalLinks } from '../../api';
 import Popup from '../shared/popup';
-import { createPopupEvent, darkSwitchGrey } from '../../util';
+import { createPopupEvent } from '../../util';
+import { darkSwitchGrey } from "../../util/cssUtil";
 import type { ExternalLink } from '../../types';
 
 /**

@@ -2,7 +2,8 @@ import React, { useState, useEffect } from 'react';
 import { useRouter } from 'next/router';
 import { GetServerSidePropsContext, InferGetServerSidePropsType } from 'next';
 import { History, Resource, HistoryData, AccessLevel } from '../../src/types';
-import { calculateEditDate, darkSwitch, getTokenFromCookies, redirect } from '../../src/util';
+import { calculateEditDate, getTokenFromCookies, redirect } from '../../src/util';
+import { darkSwitch } from "../../src/util/cssUtil";
 import { getHistoryList, getUserInfo } from '../../src/api';
 
 import Box from '@mui/material/Box';

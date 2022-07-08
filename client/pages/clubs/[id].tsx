@@ -3,7 +3,8 @@ import type { Theme } from '@mui/material';
 import { GetServerSidePropsContext, InferGetServerSidePropsType } from 'next';
 import { useRouter } from 'next/router';
 import { getClub } from '../../src/api';
-import { darkSwitchGrey, getAccessLevel, getParams } from '../../src/util';
+import { getAccessLevel, getParams } from '../../src/util';
+import { darkSwitchGrey } from "../../src/util/cssUtil";
 
 import Container from '@mui/material/Container';
 import Paper from '@mui/material/Paper';

@@ -4,8 +4,6 @@ import { GetServerSidePropsContext, InferGetServerSidePropsType } from 'next';
 import { useRouter } from 'next/router';
 import { AccessLevel } from '../../src/types';
 import {
-    darkSwitch,
-    darkSwitchGrey,
     formatEventDate,
     formatEventTime,
     formatDate,
@@ -14,6 +12,10 @@ import {
     getTokenFromCookies,
     eventTypeToString,
 } from '../../src/util';
+import {
+    darkSwitch,
+    darkSwitchGrey
+} from "../../src/util/cssUtil";
 
 import Container from '@mui/material/Container';
 import Card from '@mui/material/Card';

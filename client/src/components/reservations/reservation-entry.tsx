@@ -1,6 +1,7 @@
 import React from 'react';
 import { alpha, Tooltip } from '@mui/material';
-import { darkSwitch, formatTime } from '../../util';
+import { formatTime } from '../../util';
+import { darkSwitch } from "../../util/cssUtil";
 import type { BrokenReservation, Room } from '../../types';
 
 import Box from '@mui/material/Box';

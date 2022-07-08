@@ -1,5 +1,5 @@
 import React from 'react';
-import { darkSwitchGrey } from '../../util';
+import { darkSwitchGrey } from "../../util/cssUtil";
 import { Club } from '../../types';
 
 import Card from '@mui/material/Card';

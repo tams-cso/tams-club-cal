@@ -1,6 +1,6 @@
 import React from 'react';
 import type { NextPage } from 'next';
-import { darkSwitchGrey } from '../src/util';
+import { darkSwitchGrey } from "../src/util/cssUtil";
 
 import Container from '@mui/material/Container';
 import Paper from '@mui/material/Paper';

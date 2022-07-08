@@ -88,7 +88,8 @@ client - Contains client (frontend) code
         | data.json - Main hardcoded data for the site
         | types.ts - All type definitions for the frontend
         | theme.ts/darkTheme.ts - Theme definitions
-        | util.tsx - All utility functions
+        | util - All utility functions
+            | cssUtil.ts - CSS utility funtions
     | next.config.js - Next.js configuration file, see https://nextjs.org/docs/api-reference/next.config.js/introduction
     | tsconfig.json - Configuration file for typescript settings
 server - Contains server (backend) code

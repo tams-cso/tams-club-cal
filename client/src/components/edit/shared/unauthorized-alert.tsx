@@ -1,7 +1,7 @@
 import React from 'react';
 
 import Alert from '@mui/material/Alert';
-import { darkSwitch } from '../../../util';
+import { darkSwitch } from "../../../util/cssUtil";
 
 interface UnauthorizedAlertProps {
     /** Name of the resource to show an alert about */

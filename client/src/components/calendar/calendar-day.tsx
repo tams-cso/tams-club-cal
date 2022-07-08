@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import type { Dayjs } from 'dayjs';
 import { alpha } from '@mui/material/styles';
-import { darkSwitch, darkSwitchGrey } from '../../util';
+import { darkSwitch, darkSwitchGrey } from "../../util/cssUtil";
 import type { Event } from '../../types';
 
 import Box from '@mui/material/Box';

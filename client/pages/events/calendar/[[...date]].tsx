@@ -3,7 +3,8 @@ import { GetServerSidePropsContext, InferGetServerSidePropsType } from 'next';
 import { useRouter } from 'next/router';
 import { Typography } from '@mui/material';
 import dayjs from 'dayjs';
-import { darkSwitch, getAccessLevel, parseDateParams, parsePublicEventList } from '../../../src/util';
+import { getAccessLevel, parseDateParams, parsePublicEventList } from '../../../src/util';
+import { darkSwitch } from "../../../src/util/cssUtil";
 import { getPublicEventListInRange } from '../../../src/api';
 
 import Box from '@mui/material/Box';

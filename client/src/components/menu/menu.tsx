@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import type { Theme } from '@mui/material';
-import { darkSwitch } from '../../util';
+import { darkSwitch } from "../../util/cssUtil";
 
 import Hidden from '@mui/material/Hidden';
 import WbSunnyRoundedIcon from '@mui/icons-material/WbSunnyRounded';

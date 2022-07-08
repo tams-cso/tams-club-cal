@@ -1,7 +1,8 @@
 import React from 'react';
 import type { Theme } from '@mui/material';
 import dayjs from 'dayjs';
-import { darkSwitch, darkSwitchGrey, formatEventTime } from '../../util';
+import { formatEventTime } from '../../util';
+import { darkSwitch, darkSwitchGrey } from "../../util/cssUtil";
 import type { Event } from '../../types';
 
 import ListItem from '@mui/material/ListItem';

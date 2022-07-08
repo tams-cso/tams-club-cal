@@ -1,7 +1,7 @@
 import React, { useEffect, useState, MouseEventHandler } from 'react';
 import { useRouter } from 'next/router';
 import Cookies from 'universal-cookie';
-import { darkSwitch } from '../../util';
+import { darkSwitch } from "../../util/cssUtil";
 import type { Theme } from '@mui/material';
 
 import AppBar from '@mui/material/AppBar';

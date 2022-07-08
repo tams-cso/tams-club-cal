@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { darkSwitch } from '../../util';
+import { darkSwitch } from "../../util/cssUtil";
 import type { Theme } from '@mui/material';
 import { styled } from '@mui/system';
 

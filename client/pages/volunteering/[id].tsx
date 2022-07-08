@@ -2,7 +2,8 @@ import React from 'react';
 import { GetServerSidePropsContext, InferGetServerSidePropsType } from 'next';
 import { useRouter } from 'next/router';
 import { getVolunteering } from '../../src/api';
-import { darkSwitchGrey, getAccessLevel, getParams } from '../../src/util';
+import { getAccessLevel, getParams } from '../../src/util';
+import { darkSwitchGrey } from "../../src/util/cssUtil";
 
 import Container from '@mui/material/Container';
 import Card from '@mui/material/Card';
