@@ -8,7 +8,7 @@ import Club from '../models/club';
 import Volunteering from '../models/volunteering';
 import History from '../models/history';
 import { deleteCalendarEvent } from '../functions/gcal';
-import { AccessLevel, EventObject } from '../functions/types';
+import { AccessLevelEnum } from "../functions/types/AccessLevel";
 
 const router = express.Router();
 
@@ -66,7 +66,7 @@ router.delete('/resources/:resource/:id', async (req: Request, res: Response) =>
     // TODO: This is honestly also a spaghetti pile but idk if it can actually be cleaned up LMAO
 
     // Check if user is authenticated
-    if (!isAuthenticated(req, res, AccessLevel.ADMIN)) return;
+    if (!isAuthenticated(req, res, AccessLevelEnum.ADMIN)) return;
 
     // If everything is good, delete the resource
     try {

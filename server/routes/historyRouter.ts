@@ -4,7 +4,6 @@ import { sendError } from '../functions/util';
 import History from '../models/history';
 import Club from '../models/club';
 import Volunteering from '../models/volunteering';
-import { HistoryObject } from '../functions/types';
 import Event from '../models/event';
 import User from '../models/user';
 const router = express.Router();

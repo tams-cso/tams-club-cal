@@ -1,7 +1,6 @@
 import mongoose from 'mongoose';
 import mongoosePaginate from 'mongoose-paginate-v2';
 import { PaginateModel } from 'mongoose';
-import { VolunteeringObject } from '../functions/types';
 
 const volunteeringSchema = new mongoose.Schema({
     id: String,

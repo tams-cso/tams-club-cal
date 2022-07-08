@@ -1,7 +1,6 @@
 import mongoose from 'mongoose';
 import mongoosePaginate from 'mongoose-paginate-v2';
 import { PaginateModel } from 'mongoose';
-import type { UserObject } from '../functions/types';
 
 // User levels: 0 - standard, 1 - clubs, 2 - admin
 const userSchema = new mongoose.Schema({

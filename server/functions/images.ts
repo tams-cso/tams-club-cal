@@ -1,6 +1,6 @@
 import AWS from 'aws-sdk';
 import sharp from 'sharp';
-import type { ClubObject, MulterFile, RequestWithClubFiles } from './types';
+import { RequestWithClubFiles } from './types/RequestWithClubFiles';
 import { newId } from './util';
 
 // Connect to AWS S3 instance

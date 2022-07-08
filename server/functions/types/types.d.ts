@@ -1,14 +1,5 @@
-import type { Request } from 'express';
-
-/** Access levels for users */
-export enum AccessLevel {
-    STANDARD = 0,
-    CLUBS,
-    ADMIN,
-}
-
 /** An object containing a specific edited field */
-export interface Field {
+interface Field {
     /** The key for the field (eg. 'name') */
     key: string;
 
@@ -20,7 +11,7 @@ export interface Field {
 }
 
 /** An object containing the information for calendar events */
-export interface EventObject {
+interface EventObject {
     /** The unique UUIDv4 for the event */
     id: string;
 
@@ -62,14 +53,12 @@ export interface EventObject {
 }
 
 /** Type of the event, can be used as filter on the event list */
-export type EventType = 'event' | 'ga' | 'meeting' | 'volunteering' | 'other';
+type EventType = 'event' | 'ga' | 'meeting' | 'volunteering' | 'other';
 
 // Type for club image upload
-export type MulterFile = { buffer: Buffer };
-export type RequestWithClubFiles = Request & { files: { cover: MulterFile[]; exec: MulterFile[] } };
-
+type MulterFile = { buffer: Buffer };
 /** An object containing the information for a club */
-export interface ClubObject {
+interface ClubObject {
     /** The unique UUIDv4 for the club */
     id: string;
 
@@ -99,7 +88,7 @@ export interface ClubObject {
 }
 
 /** An object containing the information of an exec */
-export interface Exec {
+interface Exec {
     /** The name of the exec */
     name: string;
 
@@ -114,7 +103,7 @@ export interface Exec {
 }
 
 /** An object containing the information of a committee */
-export interface Committee {
+interface Committee {
     /** The name of the committee */
     name: string;
 
@@ -129,7 +118,7 @@ export interface Committee {
 }
 
 /** An object containing the image blobs for a club to upload */
-export interface ClubImageBlobs {
+interface ClubImageBlobs {
     /** Uploaded cover photo for a club */
     coverPhoto: Blob;
 
@@ -138,7 +127,7 @@ export interface ClubImageBlobs {
 }
 
 /** An object containing the information for a volunteering opportunity */
-export interface VolunteeringObject {
+interface VolunteeringObject {
     /** The unique UUIDv4 for the volunteering opportunity */
     id: string;
 
@@ -156,7 +145,7 @@ export interface VolunteeringObject {
 }
 
 /** An object with the filters for a volunteering opportunity */
-export interface Filters {
+interface Filters {
     /** True if limited volunteering opportunity */
     limited: boolean;
 
@@ -173,10 +162,10 @@ export interface Filters {
     open: boolean;
 }
 
-export type Resource = 'events' | 'clubs' | 'volunteering';
+type Resource = 'events' | 'clubs' | 'volunteering';
 
 /** An object containing the information for a single edit to a specific resource */
-export interface HistoryObject {
+interface HistoryObject {
     /** The unique UUIDv4 for the history object */
     id: string;
 
@@ -196,8 +185,11 @@ export interface HistoryObject {
     fields: Field[];
 }
 
+/** Access level of the user */
+type AccessLevel = -1 | 0 | 1 | 2;
+
 /** An object containing the information for a single user */
-export interface UserObject {
+interface UserObject {
     /** ID of the user */
     id: string;
 

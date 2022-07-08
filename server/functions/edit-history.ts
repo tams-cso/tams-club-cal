@@ -2,7 +2,6 @@ import { Request } from 'express';
 import { Document } from 'mongoose';
 import History from '../models/history';
 import User from '../models/user';
-import type { Field, ClubObject } from './types';
 
 /**
  * Creates the editor object and finds the user ID from the token passed in.

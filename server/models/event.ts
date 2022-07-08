@@ -1,7 +1,6 @@
 import mongoose from 'mongoose';
 import mongoosePaginate from 'mongoose-paginate-v2';
 import { PaginateModel } from 'mongoose';
-import { EventObject } from '../functions/types';
 
 const eventSchema = new mongoose.Schema({
     id: String,
