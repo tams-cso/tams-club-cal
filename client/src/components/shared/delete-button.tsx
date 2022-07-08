@@ -1,6 +1,9 @@
 import React, { useState } from 'react';
 import { useRouter } from 'next/router';
 import { capitalize, useMediaQuery, useTheme } from '@mui/material';
+import { createPopupEvent } from '../../util/constructors';
+import { deleteClub, deleteEvent, deleteVolunteering } from '../../api';
+import { setCookie } from '../../util/cookies';
 
 import Fab from '@mui/material/Fab';
 import DeleteIcon from '@mui/icons-material/Delete';
@@ -11,12 +14,8 @@ import DialogContent from '@mui/material/DialogContent';
 import DialogContentText from '@mui/material/DialogContentText';
 import DialogActions from '@mui/material/DialogActions';
 import Button from '@mui/material/Button';
-
 import Popup from './popup';
 import UploadBackdrop from '../edit/shared/upload-backdrop';
-import Cookies from 'universal-cookie';
-import { createPopupEvent } from '../../util/constructors';
-import { deleteClub, deleteEvent, deleteVolunteering } from '../../api';
 
 interface DeleteButtonProps {
     /** Resource that is being deleted */
@@ -65,8 +64,7 @@ const DeleteButton = (props: DeleteButtonProps) => {
 
         // Make sure delete was successful and send error if not
         if (res.status === 204) {
-            const cookies = new Cookies();
-            cookies.set('success', `${props.name} deleted successfully!`, { path: '/' });
+            setCookie('success', `${props.name} deleted successfully!`);
             router.push(`/${props.resource}`);
         } else {
             setPopupEvent(createPopupEvent('Error deleting resource', 4));

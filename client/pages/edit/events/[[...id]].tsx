@@ -2,13 +2,13 @@ import React, { useEffect, useState } from 'react';
 import { useRouter } from 'next/router';
 import { GetServerSidePropsContext, InferGetServerSidePropsType } from 'next';
 import { useForm } from 'react-hook-form';
-import Cookies from 'universal-cookie';
 import dayjs, { Dayjs } from 'dayjs';
 import { AccessLevelEnum } from '../../../src/types/enums';
 import { getTokenFromCookies } from '../../../src/util/miscUtil';
 import { createPopupEvent, createEvent } from '../../../src/util/constructors';
 import { darkSwitch } from '../../../src/util/cssUtil';
 import { getEvent, getOverlappingReservations, getUserInfo, postEvent, putEvent } from '../../../src/api';
+import { setCookie } from '../../../src/util/cookies';
 
 import Typography from '@mui/material/Typography';
 import Box from '@mui/material/Box';
@@ -175,10 +175,7 @@ const EditEvents = ({
 
         // If the event was created successfully, redirect to the event page, otherwise display an error
         if (res.status === 204) {
-            new Cookies().set('success', !addEvent ? 'update-event' : 'add-event', {
-                sameSite: 'strict',
-                path: '/',
-            });
+            setCookie('success', !addEvent ? 'update-event' : 'add-event');
             back(null, addEvent);
         } else setPopupEvent(createPopupEvent('Unable to upload data. Please refresh the page or try again.', 4));
     };

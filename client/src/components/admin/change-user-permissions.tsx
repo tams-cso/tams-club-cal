@@ -1,5 +1,4 @@
 import React, { useEffect, useState } from 'react';
-import Cookies from 'universal-cookie';
 import { AccessLevelEnum } from '../../types/enums';
 import { getUserList, putUserLevel } from '../../api';
 import { accessLevelToString } from '../../util/miscUtil';
@@ -28,6 +27,7 @@ import {
 
 import Popup from '../shared/popup';
 import UploadBackdrop from '../edit/shared/upload-backdrop';
+import { setCookie } from '../../util/cookies';
 
 const ChangeUserPermissions = () => {
     const [user, setUser] = useState<User>({ id: '0', level: AccessLevelEnum.STANDARD, name: '', email: '' });
@@ -106,10 +106,7 @@ const ChangeUserPermissions = () => {
         setBackdrop(true);
         const res = await putUserLevel(user.id, user.level);
         if (res.status === 204) {
-            const cookies = new Cookies();
-            cookies.set('success', `${user.name}'s level updated to ${accessLevelToString(user.level)}!`, {
-                path: '/',
-            });
+            setCookie('success', `${user.name}'s level updated to ${accessLevelToString(user.level)}!`);
             window.location.reload();
         } else {
             setPopupEvent(createPopupEvent('Error changing user access levels', 4));

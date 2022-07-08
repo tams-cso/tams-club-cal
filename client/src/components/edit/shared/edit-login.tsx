@@ -1,5 +1,4 @@
 import React, { useEffect, useState } from 'react';
-import Cookies from 'universal-cookie';
 import { createConnectionErrorPopup } from '../../../util/constructors';
 import { darkSwitch, darkSwitchGrey } from '../../../util/cssUtil';
 import { getUserInfo } from '../../../api';
@@ -7,6 +6,7 @@ import { getUserInfo } from '../../../api';
 import Box from '@mui/material/Box';
 import Typography from '@mui/material/Typography';
 import Popup from '../../shared/popup';
+import { getCookie } from '../../../util/cookies';
 
 /**
  * Display a login message at the top of edit pages telling
@@ -20,11 +20,10 @@ const EditLogin = () => {
     // When component mounts and the user opens any edit page, check if they are logged in
     useEffect(() => {
         (async () => {
-            const cookies = new Cookies();
-            const tokenCookie = cookies.get('token');
+            const tokenCookie = getCookie('token');
 
             // Check if token defined
-            if (tokenCookie === undefined) {
+            if (!tokenCookie) {
                 setMessage('You are not logged in');
                 return;
             }

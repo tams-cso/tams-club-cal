@@ -1,7 +1,6 @@
 import React, { useEffect } from 'react';
 import { useRouter } from 'next/router';
 import { GetServerSidePropsContext, InferGetServerSidePropsType } from 'next';
-import Cookies from 'universal-cookie';
 import { getUserInfo } from '../../src/api';
 import { AccessLevelEnum } from '../../src/types/enums';
 
@@ -21,6 +20,7 @@ import PageWrapper from '../../src/components/shared/page-wrapper';
 import Loading from '../../src/components/shared/loading';
 import TitleMeta from '../../src/components/meta/title-meta';
 import { accessLevelToString, getTokenFromCookies } from '../../src/util/miscUtil';
+import { removeCookie, setCookie } from '../../src/util/cookies';
 
 // Server-side Rendering to check for token and get data
 export const getServerSideProps = async (ctx: GetServerSidePropsContext) => {
@@ -58,19 +58,16 @@ const Dashboard = ({ authorized, error, level, info }: InferGetServerSidePropsTy
 
     // Log the user out by removing their auth cookies
     const logout = () => {
-        const cookies = new Cookies();
-        cookies.remove('token', { path: '/' });
-        cookies.set('success', 'Successfully logged out!', { path: '/' });
+        removeCookie('token');
+        setCookie('success', 'Successfully logged out!');
         router.push('/profile');
     };
 
     // Redirect user if they are not logged in
     useEffect(() => {
-        const cookies = new Cookies();
-
         // If missing or bad token, return user to login page
         if (!authorized) {
-            // cookies.remove('token', { path: '/' });
+            removeCookie('token');
             router.push('/profile');
         }
     }, []);

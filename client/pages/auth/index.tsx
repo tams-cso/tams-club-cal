@@ -1,12 +1,12 @@
 import React, { useEffect } from 'react';
 import { GetServerSidePropsContext, InferGetServerSidePropsType } from 'next';
 import { useRouter } from 'next/router';
-import Cookies from 'universal-cookie';
 
 import PageWrapper from '../../src/components/shared/page-wrapper';
 import Loading from '../../src/components/shared/loading';
 import TitleMeta from '../../src/components/meta/title-meta';
 import RobotBlockMeta from '../../src/components/meta/robot-block-meta';
+import { getCookie, removeCookie, setCookie } from '../../src/util/cookies';
 
 // Server-side Rendering
 export const getServerSideProps = async (ctx: GetServerSidePropsContext) => {
@@ -36,12 +36,11 @@ const Auth = ({ token, error }: InferGetServerSidePropsType<typeof getServerSide
         } else {
             // Saves the token into the cookies so the user doesn't have to re-login
             // TODO: This does not seem to work for long TT-TT
-            const cookies = new Cookies();
-            cookies.set('token', token, { sameSite: 'strict', path: '/' });
+            setCookie('token', token);
 
             // Return the user to the previous page they were on
-            const prev = cookies.get('prev');
-            cookies.remove('prev', { path: '/' });
+            const prev = getCookie('prev');
+            removeCookie('prev');
             if (prev) router.push(prev);
             else router.push('/profile/dashboard');
         }

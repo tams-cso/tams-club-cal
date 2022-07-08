@@ -2,7 +2,6 @@ import React, { useEffect, useState } from 'react';
 import { useRouter } from 'next/router';
 import { GetServerSidePropsContext, InferGetServerSidePropsType } from 'next';
 import { useForm } from 'react-hook-form';
-import Cookies from 'universal-cookie';
 import { AccessLevelEnum } from '../../../src/types/enums';
 import { processLinkObjectList, getTokenFromCookies } from '../../../src/util/miscUtil';
 import { createPopupEvent, createClub, createClubImageBlobs } from '../../../src/util/constructors';
@@ -28,6 +27,7 @@ import TitleMeta from '../../../src/components/meta/title-meta';
 import RobotBlockMeta from '../../../src/components/meta/robot-block-meta';
 import DeleteButton from '../../../src/components/shared/delete-button';
 import UnauthorizedAlert from '../../../src/components/edit/shared/unauthorized-alert';
+import { setCookie } from '../../../src/util/cookies';
 
 // Server-side Rendering
 export const getServerSideProps = async (ctx: GetServerSidePropsContext) => {
@@ -123,7 +123,7 @@ const EditClubs = ({ club, id, error, level }: InferGetServerSidePropsType<typeo
 
         // If the response is successful, redirect to the club page, otherwise display an error
         if (res.status === 204) {
-            new Cookies().set('success', id ? 'update-club' : 'add-club', { sameSite: 'strict', path: '/' });
+            setCookie('success', id ? 'update-club' : 'add-club');
             back();
         } else setPopupEvent(createPopupEvent('Unable to upload data. Please refresh the page or try again.', 4));
     };

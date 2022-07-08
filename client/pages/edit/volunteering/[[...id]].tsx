@@ -2,11 +2,11 @@ import React, { useEffect, useState } from 'react';
 import { useRouter } from 'next/router';
 import { GetServerSidePropsContext, InferGetServerSidePropsType } from 'next';
 import { useForm } from 'react-hook-form';
-import Cookies from 'universal-cookie';
 import { AccessLevelEnum } from '../../../src/types/enums';
 import { getTokenFromCookies } from '../../../src/util/miscUtil';
 import { createPopupEvent, createVolunteering, createFilters } from '../../../src/util/constructors';
 import { getUserInfo, getVolunteering, postVolunteering, putVolunteering } from '../../../src/api';
+import { setCookie } from '../../../src/util/cookies';
 
 import { Controller } from 'react-hook-form';
 import Typography from '@mui/material/Typography';
@@ -85,10 +85,7 @@ const EditVolunteering = ({
 
         // If the request was successful, redirect to the volunteering page, otherwise display an error
         if (res.status === 204) {
-            new Cookies().set('success', id ? 'update-volunteering' : 'add-volunteering', {
-                sameSite: 'strict',
-                path: '/',
-            });
+            setCookie('success', id ? 'update-volunteering' : 'add-volunteering');
             back();
         } else setPopupEvent(createPopupEvent('Unable to upload data. Please refresh the page or try again.', 4));
     };
