@@ -162,7 +162,7 @@ const Edit = ({ level }: InferGetServerSidePropsType<typeof getServerSideProps>)
                                     }}
                                     onClick={redirect.bind(
                                         this,
-                                        `/edit/history/${h.resource}/${h.resourceId}?view=list`
+                                        `/edit/history/${h.resource}/${h.resourceId}?view=list&editId=${h.id}`
                                     )}
                                 >
                                     <TableCell>{calculateEditDate(h.time)}</TableCell>
