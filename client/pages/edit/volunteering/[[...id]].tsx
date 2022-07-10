@@ -11,7 +11,6 @@ import { setCookie } from '../../../src/util/cookies';
 import { Controller } from 'react-hook-form';
 import Typography from '@mui/material/Typography';
 import Hidden from '@mui/material/Hidden';
-import Box from '@mui/material/Box';
 import Switch from '@mui/material/Switch';
 import FormControlLabel from '@mui/material/FormControlLabel';
 import ControlledTextField from '../../../src/components/edit/shared/controlled-text-field';
@@ -26,6 +25,7 @@ import EditWrapper from '../../../src/components/edit/shared/edit-wrapper';
 import TitleMeta from '../../../src/components/meta/title-meta';
 import UnauthorizedAlert from '../../../src/components/edit/shared/unauthorized-alert';
 import DeleteButton from '../../../src/components/shared/delete-button';
+import FormBox from '../../../src/components/edit/shared/form-box';
 
 // Server-side Rendering
 export const getServerSideProps = async (ctx: GetServerSidePropsContext) => {
@@ -131,8 +131,7 @@ const EditVolunteering = ({
                 </React.Fragment>
             ) : null}
             <FormWrapper onSubmit={handleSubmit(onSubmit)}>
-                {/* TODO: Make a BoxWrapper component as this css is repeated so much across all forms */}
-                <Box sx={{ marginBottom: 3, display: 'flex', flexDirection: { lg: 'row', xs: 'column' } }}>
+                <FormBox>
                     <Controller
                         control={control}
                         name="open"
@@ -178,7 +177,7 @@ const EditVolunteering = ({
                         required
                         errorMessage="Please enter a club name"
                     />
-                </Box>
+                </FormBox>
                 <Hidden mdDown>
                     <Typography sx={{ display: 'inline', marginRight: { lg: 16, xs: 0 } }}>Filters:</Typography>
                 </Hidden>

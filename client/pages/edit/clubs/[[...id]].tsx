@@ -8,7 +8,6 @@ import { createPopupEvent, createClub, createClubImageBlobs } from '../../../src
 import { getClub, getUserInfo, postClub, putClub } from '../../../src/api';
 
 import Typography from '@mui/material/Typography';
-import Box from '@mui/material/Box';
 import MenuItem from '@mui/material/MenuItem';
 import LinkInputList from '../../../src/components/edit/clubs/link-input-list';
 import EditCommitteeList from '../../../src/components/edit/clubs/edit-committee-list';
@@ -28,6 +27,7 @@ import RobotBlockMeta from '../../../src/components/meta/robot-block-meta';
 import DeleteButton from '../../../src/components/shared/delete-button';
 import UnauthorizedAlert from '../../../src/components/edit/shared/unauthorized-alert';
 import { setCookie } from '../../../src/util/cookies';
+import FormBox from '../../../src/components/edit/shared/form-box';
 
 // Server-side Rendering
 export const getServerSideProps = async (ctx: GetServerSidePropsContext) => {
@@ -177,7 +177,7 @@ const EditClubs = ({ club, id, error, level }: InferGetServerSidePropsType<typeo
                 </React.Fragment>
             ) : null}
             <FormWrapper onSubmit={handleSubmit(onSubmit)}>
-                <Box sx={{ marginBottom: 3, display: 'flex', flexDirection: { lg: 'row', xs: 'column' } }}>
+                <FormBox>
                     <ControlledSelect
                         control={control}
                         setValue={setValue}
@@ -201,7 +201,7 @@ const EditClubs = ({ club, id, error, level }: InferGetServerSidePropsType<typeo
                         required
                         errorMessage="Please enter a name"
                     />
-                </Box>
+                </FormBox>
                 <ControlledTextField
                     control={control}
                     setValue={setValue}

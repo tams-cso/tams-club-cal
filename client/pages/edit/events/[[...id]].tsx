@@ -33,6 +33,7 @@ import DeleteButton from '../../../src/components/shared/delete-button';
 import ControlledSelect from '../../../src/components/edit/shared/controlled-select';
 
 import data from '../../../src/data.json';
+import FormBox from '../../../src/components/edit/shared/form-box';
 
 // Object for holding form data
 type SubmitData = {
@@ -46,7 +47,7 @@ type SubmitData = {
     date: Dayjs;
     noEnd: boolean;
     description: string;
-    hideEvent: boolean;
+    private: boolean;
 };
 
 // List of locations to not create reservations for
@@ -120,8 +121,6 @@ const EditEvents = ({
             return;
         }
 
-        // Make sure reservations are in the valid period
-
         // Start the upload process display because the reservation might take a bit to find
         setBackdrop(true);
 
@@ -162,7 +161,7 @@ const EditEvents = ({
             endTime,
             data.location === 'other' ? data.otherLocation : data.location,
             data.noEnd,
-            !data.hideEvent,
+            !data.private,
             createReservation
         );
 
@@ -290,7 +289,7 @@ const EditEvents = ({
                         </Link>
                     </Alert>
                 ) : null}
-                <Box sx={{ marginBottom: 3, display: 'flex', flexDirection: { lg: 'row', xs: 'column' } }}>
+                <FormBox>
                     <ControlledSelect
                         control={control}
                         setValue={setValue}
@@ -318,8 +317,8 @@ const EditEvents = ({
                         grow
                         errorMessage="Please enter a name"
                     />
-                </Box>
-                <Box sx={{ marginBottom: 3, display: 'flex', flexDirection: { lg: 'row', xs: 'column' } }}>
+                </FormBox>
+                <FormBox>
                     <ControlledTextField
                         control={control}
                         setValue={setValue}
@@ -356,7 +355,7 @@ const EditEvents = ({
                             />
                         </React.Fragment>
                     ) : null}
-                </Box>
+                </FormBox>
                 <Box
                     sx={{
                         marginBottom: 3,
@@ -404,8 +403,8 @@ const EditEvents = ({
                 />
                 <ControlledCheckbox
                     control={control}
-                    name="hideEvent"
-                    label="Hide from the public calendar (This will be shown ONLY on the reservation calendar)"
+                    name="private"
+                    label="Private event/reservation (This will be shown ONLY on the reservation calendar)"
                     value={!event.publicEvent}
                     setValue={setValue}
                     sx={{ display: 'block' }}
