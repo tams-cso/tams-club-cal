@@ -14,7 +14,7 @@ interface TitleMetaProps {
  * are not resource displays: [resource lists and utility pages]
  */
 const TitleMeta = (props: TitleMetaProps) => {
-    const [prod, setProd] = useState(false);
+    const [prod, setProd] = useState(true);
 
     useEffect(() => {
         setProd(window.location.origin === 'https://tams.club');
