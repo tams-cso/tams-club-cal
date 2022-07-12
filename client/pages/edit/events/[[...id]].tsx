@@ -405,7 +405,7 @@ const EditEvents = ({
                 <ControlledCheckbox
                     control={control}
                     name="hideEvent"
-                    label="Hide from the public calendar (This will be shown ONLY on the reservation calendar)"
+                    label="Private event (This will be shown ONLY on the reservation calendar)"
                     value={!event.publicEvent}
                     setValue={setValue}
                     sx={{ display: 'block' }}
