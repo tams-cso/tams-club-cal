@@ -104,6 +104,22 @@
     ],
     "changelog": [
         {
+            "v": "6.1",
+            "date": "July 12, 2022",
+            "changes": [
+                "Completely rewrote the reservation calendar with divs that display finer (minute) detail on reservations",
+                "Reservations can now be made down to the minute",
+                "Fixed issue where login token cookies were not being saved",
+                "Added new colors for light theme",
+                "Added back event type with a dropdown in the edit menu",
+                "Added the ability to filter events by event type",
+                "Added a loading screen to the home page",
+                "Fixed invalid pagination on the admin page",
+                "Clicking on an edit entry on /edit will now open the popup with those specific edits",
+                "Reworded the checkbox to create a private (non-public) event"
+            ]
+        },
+        {
             "v": "6.0",
             "date": "June 13, 2022",
             "changes": [
