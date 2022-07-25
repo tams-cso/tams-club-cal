@@ -51,6 +51,7 @@ type SubmitData = {
     private: boolean;
     repeatsWeekly: boolean;
     repeatsUntil: Dayjs;
+    editAll: boolean;
 };
 
 // List of locations to not create reservations for
@@ -167,12 +168,15 @@ const EditEvents = ({
             data.location === 'other' ? data.otherLocation : data.location,
             data.noEnd,
             !data.private,
-            createReservation
+            createReservation,
+            data.repeatsWeekly ? '1' : null
         );
 
         // If the event ID is null OR it's a duplicate, create the event, otherwise update it
         const addEvent = id === null || duplicate;
-        const res = addEvent ? await postEvent(newEvent) : await putEvent(newEvent, id);
+        const res = addEvent
+            ? await postEvent({ ...newEvent, repeatsUntil: data.repeatsUntil.valueOf() })
+            : await putEvent({ ...newEvent, editAll: data.editAll }, id);
 
         // Finished uploading
         setBackdrop(false);
@@ -435,12 +439,19 @@ const EditEvents = ({
                             label="Repeat Until (Inclusive)"
                             value={dayjs().add(1, 'week').valueOf()}
                             errorMessage="Repeats Until must be after start time"
-                            validate={() =>
-                                (!watchRepeatsWeekly) || watchRepeatsUntil.isAfter(watchStart)
-                            }
+                            validate={() => !watchRepeatsWeekly || watchRepeatsUntil.isAfter(watchStart)}
                             sx={{ display: watchRepeatsWeekly ? 'flex' : 'none' }}
                         />
                     </FormBox>
+                )}
+                {event.id && event.repeatingId && (
+                    <ControlledCheckbox
+                        control={control}
+                        name="editAll"
+                        label="Edit all Repeating Instances (Leave this unchecked to only edit this instance)"
+                        value={false}
+                        setValue={setValue}
+                    />
                 )}
                 <TwoButtonBox success="Submit" onCancel={back} submit right disabled={unauthorized} />
             </FormWrapper>
