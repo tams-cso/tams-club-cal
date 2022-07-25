@@ -2,6 +2,10 @@
     "$schema": "https://json.schemastore.org/tsconfig",
     "display": "Node 16",
 
+    "ts-node": {
+        "files": true
+    },
+
     "compilerOptions": {
         "lib": ["es2021"],
         "module": "commonjs",
