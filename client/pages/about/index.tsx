@@ -8,9 +8,10 @@ import CustomImage from '../../src/components/shared/custom-image';
 import PageWrapper from '../../src/components/shared/page-wrapper';
 import FeedbackForm from '../../src/components/about/feedback-form';
 import Changelog from '../../src/components/about/changelog';
+import TitleMeta from '../../src/components/meta/title-meta';
+import HowToUse from '../../src/components/about/how-to-use';
 
 import data from '../../src/data.json';
-import TitleMeta from '../../src/components/meta/title-meta';
 
 // Format for a section title
 const sectionTitle = {
@@ -41,6 +42,10 @@ const About = () => {
                 </Typography>
                 <Paragraph text={data.aboutFeedback} fontSize="1.1rem" />
                 <FeedbackForm />
+                <Typography variant="h2" sx={sectionTitle}>
+                    Changelog
+                </Typography>
+                <HowToUse />
                 <Typography variant="h2" sx={sectionTitle}>
                     Changelog
                 </Typography>

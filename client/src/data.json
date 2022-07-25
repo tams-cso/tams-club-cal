@@ -102,6 +102,36 @@
             "label": "[Van] #388 (truck)"
         }
     ],
+    "howToUse": [
+        {
+            "section": "General",
+            "text": "The site is organized into 3 main resource types: events, volunteering, and clubs. For the most part, a normal TAMS student would only need to create/edit events. Volunteering and club resources are there as a reference point for students who want to familiarize themselves with or find new clubs/volunteering to go to."
+        },
+        {
+            "section": "Events",
+            "text": "[WIP]"
+        },
+        {
+            "section": "Reservations",
+            "text": "[WIP]"
+        },
+        {
+            "section": "Volunteering",
+            "text": "[WIP]"
+        },
+        {
+            "section": "Clubs",
+            "text": "[WIP]"
+        },
+        {
+            "section": "Accounts",
+            "text": "[WIP]"
+        },
+        {
+            "section": "Admin",
+            "text": "[WIP]"
+        }
+    ],
     "changelog": [
         {
             "v": "6.0",
