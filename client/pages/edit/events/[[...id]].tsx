@@ -415,13 +415,13 @@ const EditEvents = ({
                     sx={{ display: 'block' }}
                 />
                 {displayError ? (
-                    <Typography sx={{ color: (theme) => theme.palette.error.main, marginBottom: 6 }}>
+                    <Typography sx={{ color: (theme) => theme.palette.error.main }}>
                         You may not hide events that do not have a reservation! (Because they would literally not show
                         up anywhere)
                     </Typography>
                 ) : null}
                 {event.id ? null : (
-                    <FormBox>
+                    <FormBox sx={{ marginTop: 2 }}>
                         <ControlledCheckbox
                             control={control}
                             name="repeatsWeekly"
@@ -434,11 +434,11 @@ const EditEvents = ({
                             name="repeatsUntil"
                             label="Repeat Until (Inclusive)"
                             value={dayjs().add(1, 'week').valueOf()}
-                            disabled={!watchRepeatsWeekly}
                             errorMessage="Repeats Until must be after start time"
                             validate={() =>
                                 (!watchRepeatsWeekly) || watchRepeatsUntil.isAfter(watchStart)
                             }
+                            sx={{ display: watchRepeatsWeekly ? 'flex' : 'none' }}
                         />
                     </FormBox>
                 )}
