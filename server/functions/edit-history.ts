@@ -1,25 +1,6 @@
 import { Request } from 'express';
 import { Document } from 'mongoose';
 import History from '../models/history';
-import User from '../models/user';
-
-/**
- * Creates the editor object and finds the user ID from the token passed in.
- * Returns null if the authorization token or user is invalid
- *
- * @param {Request} req Express request object
- * @returns {Promise<object>} Returns token string from database
- */
-async function getEditor(req: Request): Promise<string> {
-    // Make sure header exists
-    const authorization = req.headers['authorization'];
-    if (!authorization) return null;
-
-    // Make sure user exists
-    const user = await User.findOne({ token: authorization.substring(7) });
-    if (!user) return null;
-    return user.id;
-}
 
 /**
  * Creates a history object given the data of the newly created resource.
@@ -31,21 +12,22 @@ async function getEditor(req: Request): Promise<string> {
  * @param data Resource data (either new data or previous data depending on "isNew")
  * @param resource Resource name
  * @param id UUIDv4 for the resource
+ * @param editorId UUIDv4 for the ID of the user that edited the event
  * @param historyId UUIDv4 for the history object
  * @param isNew True if a new resource (default: true)
  * @param club Will use club object instead of req.body to get diff if defined
  */
-export async function createHistory(
+export function createHistory(
     req: Request,
     data: object,
     resource: string,
     id: string,
+    editorId: string,
     historyId: string,
     isNew: boolean = true,
-    club?: ClubObject
-): Promise<Document> {
+    club?: ClubObject,
+): Document {
     // Make sure editor is valid user
-    const editorId = await getEditor(req);
     if (!editorId) return null;
 
     // Return history object

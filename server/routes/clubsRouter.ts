@@ -7,7 +7,7 @@ import { createHistory } from '../functions/edit-history';
 import Club from '../models/club';
 import { AccessLevelEnum } from '../types/AccessLevel';
 import { RequestWithClubFiles } from '../types/RequestWithClubFiles';
-import { isAuthenticated } from '../functions/auth';
+import { getUserId, isAuthenticated } from '../functions/auth';
 import History from '../models/history';
 
 const router = express.Router();
@@ -48,11 +48,17 @@ const imageUpload = upload.fields([
  */
 router.post('/', imageUpload, async (req: Request, res: Response) => {
     try {
+        // Check if user is authenticated
+        if (!isAuthenticated(req, res, AccessLevelEnum.ADMIN)) return;
+
+        // Create or get IDs needed
+        const id = newId();
+        const userId = await getUserId(req);
+
+        // Process all club resources
         const { coverImg, coverImgThumbnail, execImgList, club } = await processClubUpload(req as RequestWithClubFiles);
 
-        const historyId = newId();
-        const id = newId();
-
+        // Create list of execs
         const execs = club.execs.map((e, i) => ({
             name: e.name,
             position: e.position,
@@ -71,7 +77,7 @@ router.post('/', imageUpload, async (req: Request, res: Response) => {
             execs,
             committees: club.committees,
         });
-        const newHistory = await createHistory(req, newClub.toObject(), 'clubs', id, historyId, true, club);
+        const newHistory = createHistory(req, newClub.toObject(), 'clubs', id, userId, newId(), true, club);
 
         const clubRes = await newClub.save();
         const historyRes = await newHistory.save();
@@ -88,6 +94,10 @@ router.post('/', imageUpload, async (req: Request, res: Response) => {
  */
 router.put('/:id', imageUpload, async (req: Request, res: Response) => {
     try {
+        // Check if user is authenticated
+        if (!isAuthenticated(req, res, AccessLevelEnum.CLUBS)) return;
+
+        // Get ID and find previous club object
         const id = req.params.id;
         const prev = await Club.findOne({ id }).exec();
         if (!prev) {
@@ -95,6 +105,7 @@ router.put('/:id', imageUpload, async (req: Request, res: Response) => {
             return;
         }
 
+        // Process club req
         const { coverImg, coverImgThumbnail, execImgList, club } = await processClubUpload(req as RequestWithClubFiles);
 
         const execs = club.execs.map((e, i) => ({
@@ -104,8 +115,9 @@ router.put('/:id', imageUpload, async (req: Request, res: Response) => {
             img: execImgList[i] || e.img || '',
         }));
 
-        const historyId = newId();
-        const newHistory = await createHistory(req, prev, 'clubs', id, historyId, false, club);
+        // Get User
+        const userId = await getUserId(req);
+
         const clubRes = await Club.updateOne(
             { id },
             {
@@ -121,6 +133,9 @@ router.put('/:id', imageUpload, async (req: Request, res: Response) => {
                 },
             }
         );
+
+        // Create history
+        const newHistory = createHistory(req, prev, 'clubs', id, userId, newId(), false, club);
         const historyRes = await newHistory.save();
 
         if (clubRes.acknowledged && historyRes === newHistory) res.sendStatus(204);
@@ -137,22 +152,27 @@ router.put('/:id', imageUpload, async (req: Request, res: Response) => {
  * Deletes a club by ID
  */
 router.delete('/:id', async (req: Request, res: Response) => {
-    // Check if user is authenticated
-    if (!isAuthenticated(req, res, AccessLevelEnum.ADMIN)) return;
+    try {
+        // Check if user is authenticated
+        if (!isAuthenticated(req, res, AccessLevelEnum.ADMIN)) return;
 
-    // Get club
-    const club = await Club.findOne({ id: req.params.id });
+        // Get club
+        const club = await Club.findOne({ id: req.params.id });
 
-    // Delete images from AWS
-    await deleteClubImages(club);
+        // Delete images from AWS
+        await deleteClubImages(club);
 
-    // Delete club and history
-    const deleteRes = await Club.deleteOne({ id: req.params.id });
-    await History.deleteMany({ resource: 'clubs', editId: req.params.id });
+        // Delete club and history
+        const deleteRes = await Club.deleteOne({ id: req.params.id });
+        await History.deleteMany({ resource: 'clubs', editId: req.params.id });
 
-    // Return ok: 1 or error
-    if (deleteRes.deletedCount === 1) res.sendStatus(204);
-    else sendError(res, 500, 'Could not delete club');
+        // Return ok: 1 or error
+        if (deleteRes.deletedCount === 1) res.sendStatus(204);
+        else sendError(res, 500, 'Could not delete club');
+    } catch (error) {
+        console.error(error);
+        sendError(res, 500, 'Internal server error');
+    }
 });
 
 export default router;
