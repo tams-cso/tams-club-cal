@@ -30,10 +30,11 @@ import TitleMeta from '../../../src/components/meta/title-meta';
 import RobotBlockMeta from '../../../src/components/meta/robot-block-meta';
 import UnauthorizedAlert from '../../../src/components/edit/shared/unauthorized-alert';
 import DeleteButton from '../../../src/components/shared/delete-button';
+import FormBox from '../../../src/components/edit/shared/form-box';
+import DateInput from '../../../src/components/edit/events/date-input';
 import ControlledSelect from '../../../src/components/edit/shared/controlled-select';
 
 import data from '../../../src/data.json';
-import FormBox from '../../../src/components/edit/shared/form-box';
 
 // Object for holding form data
 type SubmitData = {
@@ -48,6 +49,8 @@ type SubmitData = {
     noEnd: boolean;
     description: string;
     private: boolean;
+    repeatsWeekly: boolean;
+    repeatsUntil: Dayjs;
 };
 
 // List of locations to not create reservations for
@@ -107,6 +110,8 @@ const EditEvents = ({
     const watchLocation: string = watch('location');
     const watchOtherLocation: string = watch('otherLocation');
     const watchHideEvent: boolean = watch('hideEvent');
+    const watchRepeatsWeekly: boolean = watch('repeatsWeekly');
+    const watchRepeatsUntil: Dayjs = watch('repeatsUntil');
 
     // When the user submits the form, either create or update the event
     const onSubmit = async (data: SubmitData) => {
@@ -410,11 +415,33 @@ const EditEvents = ({
                     sx={{ display: 'block' }}
                 />
                 {displayError ? (
-                    <Typography sx={{ color: (theme) => theme.palette.error.main }}>
+                    <Typography sx={{ color: (theme) => theme.palette.error.main, marginBottom: 6 }}>
                         You may not hide events that do not have a reservation! (Because they would literally not show
                         up anywhere)
                     </Typography>
                 ) : null}
+                {event.id ? null : (
+                    <FormBox>
+                        <ControlledCheckbox
+                            control={control}
+                            name="repeatsWeekly"
+                            label="Repeats Weekly"
+                            value={false}
+                            setValue={setValue}
+                        />
+                        <DateInput
+                            control={control}
+                            name="repeatsUntil"
+                            label="Repeat Until (Inclusive)"
+                            value={dayjs().add(1, 'week').valueOf()}
+                            disabled={!watchRepeatsWeekly}
+                            errorMessage="Repeats Until must be after start time"
+                            validate={() =>
+                                (!watchRepeatsWeekly) || watchRepeatsUntil.isAfter(watchStart)
+                            }
+                        />
+                    </FormBox>
+                )}
                 <TwoButtonBox success="Submit" onCancel={back} submit right disabled={unauthorized} />
             </FormWrapper>
         </EditWrapper>
