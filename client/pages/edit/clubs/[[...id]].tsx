@@ -172,7 +172,7 @@ const EditClubs = ({ club, id, error, level }: InferGetServerSidePropsType<typeo
                         resource="clubs"
                         id={id}
                         name={club.name}
-                        hidden={!id || level < AccessLevelEnum.ADMIN}
+                        hidden={!id || level < AccessLevelEnum.CLUBS}
                     />
                 </React.Fragment>
             ) : null}

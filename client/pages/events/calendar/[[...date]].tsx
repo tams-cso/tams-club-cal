@@ -156,8 +156,7 @@ const Calendar = (props: InferGetServerSidePropsType<typeof getServerSideProps>)
                 <AddButton
                     color="primary"
                     label="Event"
-                    path="/edit/events"
-                    disabled={props.level < AccessLevelEnum.STANDARD}
+                    path={props.level < AccessLevelEnum.STANDARD ? "/profile?prev=/edit/events" : "/edit/events"}
                 />
                 <Box width="100%" display="flex" justifyContent="center" alignItems="center">
                     <IconButton size="small" onClick={offsetMonth.bind(this, false)}>

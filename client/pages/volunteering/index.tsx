@@ -143,7 +143,7 @@ const Volunteering = ({ volunteeringList, error, level }: InferGetServerSideProp
                     color="primary"
                     label="Volunteering"
                     path="/edit/volunteering"
-                    disabled={level < AccessLevelEnum.CLUBS}
+                    hidden={level < AccessLevelEnum.CLUBS}
                 />
                 <Box width="100%" marginBottom={2} display="flex" alignItems="center">
                     <Tooltip title="Filters">

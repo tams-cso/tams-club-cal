@@ -49,7 +49,7 @@ const imageUpload = upload.fields([
 router.post('/', imageUpload, async (req: Request, res: Response) => {
     try {
         // Check if user is authenticated
-        if (!isAuthenticated(req, res, AccessLevelEnum.ADMIN)) return;
+        if (!isAuthenticated(req, res, AccessLevelEnum.CLUBS)) return;
 
         // Create or get IDs needed
         const id = newId();
@@ -154,7 +154,7 @@ router.put('/:id', imageUpload, async (req: Request, res: Response) => {
 router.delete('/:id', async (req: Request, res: Response) => {
     try {
         // Check if user is authenticated
-        if (!isAuthenticated(req, res, AccessLevelEnum.ADMIN)) return;
+        if (!isAuthenticated(req, res, AccessLevelEnum.CLUBS)) return;
 
         // Get club
         const club = await Club.findOne({ id: req.params.id });

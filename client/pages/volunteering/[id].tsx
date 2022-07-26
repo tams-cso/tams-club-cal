@@ -78,7 +78,7 @@ const VolunteeringDisplay = ({
                     label="Volunteering"
                     path={`/edit/volunteering/${volunteering.id}`}
                     edit
-                    disabled={level < AccessLevelEnum.CLUBS}
+                    hidden={level < AccessLevelEnum.CLUBS}
                 />
                 <Card>
                     <CardContent>

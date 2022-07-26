@@ -90,7 +90,7 @@ const ClubList = ({ clubList, error, level }: InferGetServerSidePropsType<typeof
                     />
                     <ViewSwitcher tableView={tableView} setTableView={setTableView} />
                 </Box>
-                <AddButton color="primary" label="Club" path="/edit/clubs" hidden={level < AccessLevelEnum.ADMIN} />
+                <AddButton color="primary" label="Club" path="/edit/clubs" hidden={level < AccessLevelEnum.CLUBS} />
                 {tableView ? <ClubTable clubs={clubList} /> : clubCardList}
             </Container>
         </PageWrapper>

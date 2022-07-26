@@ -15,13 +15,15 @@ import TitleMeta from '../../src/components/meta/title-meta';
 import Popup from '../../src/components/shared/popup';
 import UploadBackdrop from '../../src/components/edit/shared/upload-backdrop';
 import { setCookie } from '../../src/util/cookies';
+import { getParams } from '../../src/util/miscUtil';
 
 // Server-side Rendering to check for token
 // TODO: This block can be cleaned up
 export const getServerSideProps = async (ctx: GetServerSidePropsContext) => {
     // Get the token from cookies
     const token = ctx.req.cookies.token;
-    if (token === undefined) return { props: { authorized: false } };
+    console.log(token)
+    if (token === undefined) return { props: { authorized: false, error: false } };
 
     // Check if valid token and compare with database
     const res = await getUserInfo(token);
@@ -69,8 +71,13 @@ const Login = ({ authorized, error }: InferGetServerSidePropsType<typeof getServ
         // Remove backdrop
         setBackdrop(false);
 
-        // Send user to dashboard
-        router.push('/profile/dashboard');
+        // Send user to dashboard or previous page
+        const prev = getParams('prev');
+        if (prev) {
+            router.push(prev);
+        } else {
+            router.push('/profile/dashboard');
+        }
     };
 
     const errorMessage = (response) => {
@@ -103,7 +110,7 @@ const Login = ({ authorized, error }: InferGetServerSidePropsType<typeof getServ
                         ></GoogleLogin>
                     </Box>
                     <Typography sx={{ color: (theme) => darkSwitchGrey(theme) }}>
-                        {error ? 'Error getting login page! Please check your internet and try again!' : loginText}
+                        {error ? 'Invalid token detected. Please log in again to refresh the token.' : loginText}
                     </Typography>
                 </CardContent>
             </Card>

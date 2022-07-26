@@ -172,8 +172,7 @@ const Home = ({ eventList, error, level }: InferGetServerSidePropsType<typeof ge
                 <AddButton
                     color="primary"
                     label="Event"
-                    path="/edit/events"
-                    disabled={level < AccessLevelEnum.STANDARD}
+                    path={level < AccessLevelEnum.STANDARD ? "/profile?prev=/edit/events" : "/edit/events"}
                 />
                 <Box width="100%" marginBottom={2} display="flex" alignItems="center">
                     <Tooltip title="Filters">
