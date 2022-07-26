@@ -110,7 +110,7 @@ const EditEvents = ({
     const watchNoEnd: boolean = watch('noEnd');
     const watchLocation: string = watch('location');
     const watchOtherLocation: string = watch('otherLocation');
-    const watchHideEvent: boolean = watch('hideEvent');
+    const watchHideEvent: boolean = watch('private');
     const watchRepeatsWeekly: boolean = watch('repeatsWeekly');
     const watchRepeatsUntil: Dayjs = watch('repeatsUntil');
 
@@ -127,6 +127,11 @@ const EditEvents = ({
             return;
         }
 
+        // Make sure the events with a location are shown
+        if (data.private && noReservationLocations.indexOf(data.location) !== -1) {
+            setPopupEvent(createPopupEvent('Events that do not have a room reservation cannot be private!', 3));
+        }
+
         // Start the upload process display because the reservation might take a bit to find
         setBackdrop(true);
 
@@ -135,22 +140,21 @@ const EditEvents = ({
         const createReservation = !data.noEnd && noReservationLocations.indexOf(data.location) === -1;
         if (createReservation) {
             // Check to make sure that the reservation is not already taken
-            const overlaps = await getOverlappingReservations(data.location, startTime, endTime);
-            if (overlaps.status !== 200) {
-                setPopupEvent(
-                    createPopupEvent(
-                        'There was an error checking reservation time. Please check your connection and try again.',
-                        4
-                    )
-                );
-                setBackdrop(false);
-                return;
-            }
-            if (overlaps.data.length !== 0 && overlaps.data[0].id !== event.id) {
-                // TODO: Log error to admins if the overlaps length is > 1
-                setPopupEvent(createPopupEvent('There is already a reservation during that time!', 3));
-                setBackdrop(false);
-                return;
+            if (await isOverlapping(data.location, startTime, endTime)) return;
+
+            // If repeating, make sure none of the instances are overlapping either
+            // this shouldn't run when editing
+            if (!event.id && data.repeatsWeekly) {
+                const lastDay = data.repeatsUntil.add(1, 'day');
+                let currStart = data.start.add(1, 'week');
+                let currEnd = data.end.add(1, 'week');
+
+                // Check events up to the last day
+                while (currStart.isBefore(lastDay, 'day')) {
+                    if (await isOverlapping(data.location, currStart.valueOf(), currEnd.valueOf())) return;
+                    currStart = currStart.add(1, 'week');
+                    currEnd = currEnd.add(1, 'week');
+                }
             }
         }
 
@@ -169,7 +173,7 @@ const EditEvents = ({
             data.noEnd,
             !data.private,
             createReservation,
-            data.repeatsWeekly ? '1' : null
+            data.repeatsWeekly ? '1' : event.repeatingId
         );
 
         // If the event ID is null OR it's a duplicate, create the event, otherwise update it
@@ -186,6 +190,28 @@ const EditEvents = ({
             setCookie('success', !addEvent ? 'update-event' : 'add-event');
             back(null, addEvent);
         } else setPopupEvent(createPopupEvent('Unable to upload data. Please refresh the page or try again.', 4));
+    };
+
+    const isOverlapping = async (location: string, start: number, end: number): Promise<boolean> => {
+        const overlaps = await getOverlappingReservations(location, start, end);
+        if (overlaps.status !== 200) {
+            setPopupEvent(
+                createPopupEvent(
+                    'There was an error checking reservation time. Please check your connection and try again.',
+                    4
+                )
+            );
+            setBackdrop(false);
+            return true;
+        }
+        if (overlaps.data.length !== 0 && overlaps.data[0].id !== event.id) {
+            setPopupEvent(
+                createPopupEvent(`There is already a reservation during that time! (${overlaps.data[0].name})`, 3)
+            );
+            setBackdrop(false);
+            return true;
+        }
+        return false;
     };
 
     // Returns the user back to the event display page
@@ -445,13 +471,25 @@ const EditEvents = ({
                     </FormBox>
                 )}
                 {event.id && event.repeatingId && (
-                    <ControlledCheckbox
-                        control={control}
-                        name="editAll"
-                        label="Edit all Repeating Instances (Leave this unchecked to only edit this instance)"
-                        value={false}
-                        setValue={setValue}
-                    />
+                    <React.Fragment>
+                        <ControlledCheckbox
+                            control={control}
+                            name="editAll"
+                            label="Edit all Repeating Instances (Leave this unchecked to only edit this instance)"
+                            value={false}
+                            setValue={setValue}
+                        />
+                        <Alert
+                            severity="info"
+                            sx={{ my: 3, backgroundColor: (theme) => darkSwitch(theme, null, '#304249') }}
+                        >
+                            This event is an instance of a repeating event. You may either choose to edit all repeating
+                            instances or just this specific event. Note that edits made to time will be ignored if "Edit
+                            All" is checked. Also note that editing only this specific instance will detach it from the
+                            repeating instances, meaning that it can no longer be edited with all other repeating
+                            instances.
+                        </Alert>
+                    </React.Fragment>
                 )}
                 <TwoButtonBox success="Submit" onCancel={back} submit right disabled={unauthorized} />
             </FormWrapper>

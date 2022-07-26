@@ -196,15 +196,15 @@ router.post('/', async (req: Request, res: Response) => {
         if (repeatingId) {
             // Generate the repeating events
             const lastDay = dayjs(req.body.repeatsUntil).add(1, 'day');
-            let currStart = dayjs(req.body.start).add(1, 'day');
-            let currEnd = dayjs(req.body.end).add(1, 'day');
+            let currStart = dayjs(req.body.start).add(1, 'week');
+            let currEnd = dayjs(req.body.end).add(1, 'week');
             const eventList = [eventObj];
 
             // Create events until the last day
             while (currStart.isBefore(lastDay, 'day')) {
                 eventList.push({ ...eventObj, id: newId(), start: currStart.valueOf(), end: currEnd.valueOf() });
-                currStart.add(1, 'day');
-                currEnd.add(1, 'day');
+                currStart = currStart.add(1, 'week');
+                currEnd = currEnd.add(1, 'week');
             }
 
             // If public, add all events to the Google Calendar
@@ -271,7 +271,7 @@ router.put('/:id', async (req: Request, res: Response) => {
         const userId = await getUserId(req);
 
         // Check if we are editing all events
-        if (req.params.editAll) {
+        if (req.body.editAll) {
             // Create the edit object
             const toUpdate = {
                 editorId: userId,
@@ -287,7 +287,7 @@ router.put('/:id', async (req: Request, res: Response) => {
             };
 
             // Update event in DB
-            await Event.updateMany({ id }, { $set: toUpdate });
+            await Event.updateMany({ repeatingId: req.body.repeatingId }, { $set: toUpdate });
 
             // Create and save history
             // TODO: How do we add a history entry for each repeating event that was updated????
