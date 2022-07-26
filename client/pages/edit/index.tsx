@@ -116,7 +116,7 @@ const Edit = ({ level }: InferGetServerSidePropsType<typeof getServerSideProps>)
                     variant="outlined"
                     onClick={add.bind(this, 'clubs')}
                     sx={{ margin: 1.5 }}
-                    disabled={level < AccessLevelEnum.ADMIN}
+                    disabled={level < AccessLevelEnum.CLUBS}
                 >
                     Add a Club
                 </Button>
