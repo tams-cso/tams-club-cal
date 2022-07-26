@@ -154,7 +154,11 @@ const Reservations = ({
                     </Button>
                 ))}
             </Box>
-            <AddButton color="primary" label="Event" path="/edit/events" disabled={level < AccessLevelEnum.STANDARD} />
+            <AddButton
+                color="primary"
+                label="Event"
+                path={level < AccessLevelEnum.STANDARD ? '/profile?prev=/edit/events' : '/edit/events'}
+            />
             {reservationComponentList === null ? <Loading /> : reservationComponentList}
         </HomeBase>
     );

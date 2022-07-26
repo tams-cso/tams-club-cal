@@ -24,9 +24,6 @@ interface AddButtonProps {
     /** Shows the edit history button and will override all other options if true */
     editHistory?: boolean;
 
-    /** True if button should be disabled */
-    disabled?: boolean;
-
     /** True if button should be hidden */
     hidden?: boolean;
 }
@@ -59,7 +56,6 @@ const AddButton = (props: AddButtonProps) => {
                 color={props.editHistory ? 'primary' : props.color || 'default'}
                 aria-label={props.editHistory ? 'edit history' : props.edit ? 'edit' : 'add'}
                 onClick={redirectTo}
-                disabled={props.disabled}
                 sx={{
                     display: props.hidden ? 'none' : 'flex',
                     margin: props.editHistory ? '12px auto' : 'auto',

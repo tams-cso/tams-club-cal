@@ -121,7 +121,7 @@ const ClubDisplay = ({ club, error, level }: InferGetServerSidePropsType<typeof 
                     label="Club"
                     path={`/edit/clubs/${club.id}`}
                     edit
-                    disabled={level < AccessLevelEnum.CLUBS}
+                    hidden={level < AccessLevelEnum.CLUBS}
                 />
                 <Card sx={{ marginBottom: 4 }}>
                     <CardMedia
