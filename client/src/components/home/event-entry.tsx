@@ -19,9 +19,6 @@ interface EventEntryProps {
  * An event entry on the home page events list
  */
 const EventEntry = (props: EventEntryProps) => {
-    // Replace all the newlines in the description with a pipe
-    const description = `[${eventTypeToString(props.event.type)}] ` + props.event.description.replace(/\n/g, ' | ');
-
     return (
         <ListItem
             button
@@ -29,6 +26,7 @@ const EventEntry = (props: EventEntryProps) => {
                 overflowX: 'hidden',
                 padding: 0,
             }}
+            key={props.event.id}
         >
             <Link
                 href={`/events/${props.event.id}`}
@@ -81,7 +79,8 @@ const EventEntry = (props: EventEntryProps) => {
                         >
                             {props.event.club}
                         </StyledSpan>
-                        {props.event.description ? ` - ${description}` : ` - [${eventTypeToString(props.event.type)}]`}
+                        {`  ·  ${eventTypeToString(props.event.type)}` +
+                            (props.event.description ? '  ·  ' + props.event.description.replace(/\n/g, ' | ') : '')}
                     </Typography>
                 </Box>
             </Link>
