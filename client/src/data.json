@@ -2,7 +2,7 @@
     "daysOfTheWeek": ["Sun", "Mon", "Tues", "Wed", "Thu", "Fri", "Sat"],
     "charsOfTheWeek": ["S", "M", "T", "W", "T", "F", "S"],
     "githubLink": "https://github.com/MichaelZhao21/tams-club-cal",
-    "aboutText": "Welcome to the TAMS Club Calendar! This is a simple web app that displays all the student organization events at TAMS, along with a list of clubs and other resources. Our vision is a community-maintained resource that’s avaliable to anyone and can be updated by anyone as well.\nWe are an open-source project, meaning that anyone and everyone can help contribute to the development of the website! You can go to the Github repository where this project is being hosted, where there's more information on that page about how to contribute and help code. If you can't code and still want to help, there is a feedback form below where you can write whatever you would like! The way programs like these get better, after all, is through independent user feedback. Thank you once again for checking out tams.club, and we hope you enjoy the rest of your day! :D",
+    "aboutText": "Welcome to the TAMS Club Calendar! This is a simple web app that displays all the student organization events at TAMS, along with a list of clubs and other resources. Our vision is a community-maintained resource that’s available to anyone and can be updated by anyone as well.\nWe are an open-source project, meaning that anyone and everyone can help contribute to the development of the website! You can go to the Github repository where this project is being hosted, where there's more information on that page about how to contribute and help code. If you can't code and still want to help, there is a feedback form below where you can write whatever you would like! The way programs like these get better, after all, is through independent user feedback. Thank you once again for checking out tams.club, and we hope you enjoy the rest of your day! :D",
     "aboutFeedback": "We would love to hear what you think and what ideas you would like to see! Here’s the form for any bugs, comments, suggestions, and anything else you would like us to know!",
     "hours": [
         "6a",
@@ -133,6 +133,22 @@
         }
     ],
     "changelog": [
+        {
+            "v": "6.1",
+            "date": "July 12, 2022",
+            "changes": [
+                "Completely rewrote the reservation calendar with divs that display finer (minute) detail on reservations",
+                "Reservations can now be made down to the minute",
+                "Fixed issue where login token cookies were not being saved",
+                "Added new colors for light theme",
+                "Added back event type with a dropdown in the edit menu",
+                "Added the ability to filter events by event type",
+                "Added a loading screen to the home page",
+                "Fixed invalid pagination on the admin page",
+                "Clicking on an edit entry on /edit will now open the popup with those specific edits",
+                "Reworded the checkbox to create a private (non-public) event"
+            ]
+        },
         {
             "v": "6.0",
             "date": "June 13, 2022",

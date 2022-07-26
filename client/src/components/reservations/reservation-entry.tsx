@@ -33,9 +33,8 @@ const ReservationEntry = (props: ReservationEntryProps) => {
     const leftOffset = 10 + (hourStart - 6) * 5 + (5 * minuteStart) / 60;
 
     // Calculate the width
-    const diffHour = end.diff(start, 'hour');
-    const diffMinute = end.diff(end, 'minute');
-    const width = diffHour * 5 + (5 * diffMinute) / 60;
+    const diffMinute = end.diff(start, 'minute');
+    const width = (5 * diffMinute) / 60;
 
     // Format the tooltip title
     const startFormatted = formatTime(start.valueOf(), 'h:mma', true);
