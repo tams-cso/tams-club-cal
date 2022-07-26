@@ -125,3 +125,16 @@ export async function isAuthenticated(
     // Return true if authenticated
     return true;
 }
+
+/**
+ * Given a valid token from the Authorization header,
+ * returns the user's ID. If the user is invalid, returns null
+ * 
+ * @param req Express request object
+ * @returns The ID of the user or null if invalid request header
+ */
+export async function getUserId(req: Request): Promise<string> {
+    const user = await User.findOne({ token: req.headers.authorization.substring(7) });
+    if (!user) return null;
+    return user.id;
+}

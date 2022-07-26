@@ -175,12 +175,16 @@ export async function getRoomReservationList(room: string, week: number = null):
     return getRequest(`/events/reservations/room/${room}/${week ? week : ''}`) as Promise<ListFetchResponse<CalEvent>>;
 }
 
+// Define extra types for event POST/PUT
+type CalEventPost = CalEvent & { repeatsUntil: number };
+type CalEventPut = CalEvent & { editAll: boolean };
+
 /**
  * Creates a new event
  *
  * @param event Event object
  */
-export async function postEvent(event: CalEvent): Promise<StatusResponse> {
+export async function postEvent(event: CalEventPost): Promise<StatusResponse> {
     return postRequest('/events', JSON.stringify(event));
 }
 
@@ -190,7 +194,7 @@ export async function postEvent(event: CalEvent): Promise<StatusResponse> {
  * @param event Event object
  * @param id ID of the event to update
  */
-export async function putEvent(event: CalEvent, id: string): Promise<StatusResponse> {
+export async function putEvent(event: CalEventPut, id: string): Promise<StatusResponse> {
     return putRequest(`/events/${id}`, JSON.stringify(event));
 }
 

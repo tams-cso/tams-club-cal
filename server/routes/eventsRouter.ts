@@ -7,8 +7,7 @@ import { createHistory } from '../functions/edit-history';
 import Event from '../models/event';
 import { AccessLevelEnum } from '../types/AccessLevel';
 import History from '../models/history';
-import User from '../models/user';
-import { isAuthenticated } from '../functions/auth';
+import { getUserId, isAuthenticated } from '../functions/auth';
 
 const router = express.Router();
 
@@ -160,24 +159,26 @@ router.get('/reservations/search/:location/:start/:end', async (req: Request, re
  * POST /events
  *
  * Creates a new event
+ *
+ * req.body.repeatsUntil stores the end date of the repeating events (inclusive)
  */
 router.post('/', async (req: Request, res: Response) => {
     try {
         // Check if user is authenticated
         if (!isAuthenticated(req, res, AccessLevelEnum.STANDARD)) return;
 
-        // Get user
-        const user = await User.findOne({ token: req.headers.authorization.substring(7) });
-
-        // Create unique IDs for history and event
-        const historyId = newId();
+        // Create/get IDs
+        const userId = await getUserId(req);
         const id = newId();
 
+        // Calculate repeating status
+        const repeatingId = req.body.repeatingId ? newId() : null;
+
         // Create the event with the IDs and event data
-        const newEvent = new Event({
+        const eventObj = {
             id,
             eventId: null,
-            editorId: user.id,
+            editorId: userId,
             name: req.body.name,
             type: req.body.type,
             club: req.body.club,
@@ -188,7 +189,45 @@ router.post('/', async (req: Request, res: Response) => {
             noEnd: req.body.noEnd,
             publicEvent: req.body.publicEvent,
             reservation: req.body.reservation,
-        });
+            repeatingId,
+        };
+
+        // If repeating event, repeatingId will be not be null
+        if (repeatingId) {
+            // Generate the repeating events
+            const lastDay = dayjs(req.body.repeatsUntil).add(1, 'day');
+            let currStart = dayjs(req.body.start).add(1, 'week');
+            let currEnd = dayjs(req.body.end).add(1, 'week');
+            const eventList = [eventObj];
+
+            // Create events until the last day
+            while (currStart.isBefore(lastDay, 'day')) {
+                eventList.push({ ...eventObj, id: newId(), start: currStart.valueOf(), end: currEnd.valueOf() });
+                currStart = currStart.add(1, 'week');
+                currEnd = currEnd.add(1, 'week');
+            }
+
+            // If public, add all events to the Google Calendar
+            if (req.body.publicEvent) {
+                await Promise.all(
+                    eventList.map(async (e) => {
+                        e.eventId = await addToCalendar(e);
+                    })
+                );
+            }
+
+            // Create a list of history objects
+            const historyList = eventList.map((e) => createHistory(req, e, 'events', e.id, userId, newId()));
+            await History.insertMany(historyList);
+
+            // Insert all events
+            await Event.insertMany(eventList);
+            res.sendStatus(204);
+            return;
+        }
+
+        // If not repeating, simply create a new event
+        const newEvent = new Event(eventObj);
 
         // If public, add to Google Calendar
         if (req.body.publicEvent) {
@@ -196,7 +235,7 @@ router.post('/', async (req: Request, res: Response) => {
         }
 
         // Create a new history object
-        const newHistory = await createHistory(req, newEvent.toObject(), 'events', id, historyId);
+        const newHistory = createHistory(req, newEvent.toObject(), 'events', id, userId, newId());
         await newHistory.save();
 
         // Save the event
@@ -212,6 +251,8 @@ router.post('/', async (req: Request, res: Response) => {
  * PUT /events/<id>
  *
  * Updates an event
+ *
+ * req.body.editAll is true if this will edit all events
  */
 router.put('/:id', async (req: Request, res: Response) => {
     try {
@@ -227,16 +268,44 @@ router.put('/:id', async (req: Request, res: Response) => {
         if (!isAuthenticated(req, res, AccessLevelEnum.STANDARD, prev.editorId)) return;
 
         // Get user
-        const user = await User.findOne({ token: req.headers.authorization.substring(7) });
+        const userId = await getUserId(req);
 
-        // Create new ID for edit history
-        const historyId = newId();
+        // Check if we are editing all events
+        if (req.body.editAll) {
+            // Create the edit object
+            const toUpdate = {
+                editorId: userId,
+                name: req.body.name,
+                type: req.body.type,
+                club: req.body.club,
+                description: req.body.description,
+                location: req.body.location,
+                allDay: req.body.allDay,
+                noEnd: req.body.noEnd,
+                publicEvent: req.body.publicEvent,
+                reservation: req.body.reservation,
+            };
 
+            // Update event in DB
+            await Event.updateMany({ repeatingId: req.body.repeatingId }, { $set: toUpdate });
+
+            // Create and save history
+            // TODO: How do we add a history entry for each repeating event that was updated????
+            const newHistory = createHistory(req, prev, 'events', id, userId, newId(), false);
+            await newHistory.save();
+
+            // Send user success and return
+            res.sendStatus(204);
+            return;
+        }
+
+        // Otherwise, if we are only editing one event
+        // If it was previously repeating, it no longer is due to this update (repeatingId = null)
         // Create Event to update
         const toUpdate = {
             id,
             eventId: req.body.eventId,
-            editorId: user.id,
+            editorId: userId,
             name: req.body.name,
             type: req.body.type,
             club: req.body.club,
@@ -248,6 +317,7 @@ router.put('/:id', async (req: Request, res: Response) => {
             noEnd: req.body.noEnd,
             publicEvent: req.body.publicEvent,
             reservation: req.body.reservation,
+            repeatingId: null,
         };
 
         // Update or create google calendar event
@@ -258,7 +328,7 @@ router.put('/:id', async (req: Request, res: Response) => {
         await Event.updateOne({ id }, { $set: toUpdate });
 
         // Create and save history
-        const newHistory = await createHistory(req, prev, 'events', id, historyId, false);
+        const newHistory = createHistory(req, prev, 'events', id, userId, newId(), false);
         await newHistory.save();
 
         // Send user success and return

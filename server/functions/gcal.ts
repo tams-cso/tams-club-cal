@@ -38,16 +38,17 @@ export async function addToCalendar(data: EventObject): Promise<string> {
  *
  * @param data Event data to update on the calendar
  * @param id Google Calendar event ID to update
+ * @param noTime Don't update the time
  */
-export async function updateCalendar(data: EventObject, id: string): Promise<void> {
+export async function updateCalendar(data: EventObject, id: string, noTime: boolean = false): Promise<void> {
     const start = { dateTime: new Date(data.start).toISOString() };
     const end = { dateTime: new Date(data.end).toISOString() };
+    const timeObj = noTime ? null : { start, end };
     await google.calendar('v3').events.update({
         calendarId: process.env.CALENDAR_ID,
         eventId: id,
         requestBody: {
-            start,
-            end,
+            ...timeObj,
             summary: `${data.name} (${data.club})`,
             description: data.description,
         },

@@ -50,6 +50,9 @@ interface EventObject {
 
     /** True to show on reservation calendar/check for overlaps */
     reservation: boolean;
+
+    /** Repeating ID for connecting repeating events */
+    repeatingId: string;
 }
 
 /** Type of the event, can be used as filter on the event list */

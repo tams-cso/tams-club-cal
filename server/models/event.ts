@@ -16,6 +16,7 @@ const eventSchema = new mongoose.Schema({
     noEnd: Boolean,
     publicEvent: Boolean,
     reservation: Boolean,
+    repeatingId: String,
 });
 eventSchema.plugin(mongoosePaginate);
 

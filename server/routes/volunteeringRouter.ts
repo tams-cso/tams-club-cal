@@ -3,7 +3,7 @@ import type { Request, Response } from 'express';
 import { sendError, newId } from '../functions/util';
 import { createHistory } from '../functions/edit-history';
 import Volunteering from '../models/volunteering';
-import { isAuthenticated } from '../functions/auth';
+import { getUserId, isAuthenticated } from '../functions/auth';
 import { AccessLevelEnum } from '../types/AccessLevel';
 import History from '../models/history';
 const router = express.Router();
@@ -36,68 +36,93 @@ router.get('/:id', async (req: Request, res: Response) => {
  * Creates a new event
  */
 router.post('/', async (req: Request, res: Response) => {
-    const historyId = newId();
-    const id = newId();
+    try {
+        // Check if user is authenticated
+        if (!isAuthenticated(req, res, AccessLevelEnum.CLUBS)) return;
 
-    const newVolunteering = new Volunteering({
-        id,
-        name: req.body.name,
-        club: req.body.club,
-        description: req.body.description,
-        filters: req.body.filters,
-    });
-    const newHistory = await createHistory(req, newVolunteering.toObject(), 'volunteering', id, historyId);
+        // Create or get IDs needed
+        const id = newId();
+        const userId = await getUserId(req);
 
-    const volunteeringRes = await newVolunteering.save();
-    const historyRes = await newHistory.save();
-    if (volunteeringRes === newVolunteering && historyRes === newHistory) res.sendStatus(204);
-    else sendError(res, 500, 'Unable to add new volunteering opportunity to database');
+        const newVolunteering = new Volunteering({
+            id,
+            name: req.body.name,
+            club: req.body.club,
+            description: req.body.description,
+            filters: req.body.filters,
+        });
+        
+        const newHistory = createHistory(req, newVolunteering.toObject(), 'volunteering', id, userId, newId());
+        const historyRes = await newHistory.save();
+
+        const volunteeringRes = await newVolunteering.save();
+        if (volunteeringRes === newVolunteering && historyRes === newHistory) res.sendStatus(204);
+        else sendError(res, 500, 'Unable to add new volunteering opportunity to database');
+    } catch (error) {
+        console.error(error);
+        sendError(res, 500, 'Internal server error');
+    }
 });
 
 /**
  * PUT /volunteering/<id>
  */
 router.put('/:id', async (req: Request, res: Response) => {
-    const id = req.params.id;
-    const prev = await Volunteering.findOne({ id }).exec();
-    if (!prev) {
-        sendError(res, 400, 'Invalid volunteering ID');
-        return;
-    }
-
-    const historyId = newId();
-    const newHistory = await createHistory(req, prev, 'volunteering', id, historyId, false);
-    const volunteeringRes = await Volunteering.updateOne(
-        { id },
-        {
-            $set: {
-                name: req.body.name,
-                club: req.body.club,
-                description: req.body.description,
-                filters: req.body.filters,
-            },
+    try {
+        // Check if user is authenticated
+        if (!isAuthenticated(req, res, AccessLevelEnum.CLUBS)) return;
+        const id = req.params.id;
+        const prev = await Volunteering.findOne({ id }).exec();
+        if (!prev) {
+            sendError(res, 400, 'Invalid volunteering ID');
+            return;
         }
-    );
-    const historyRes = await newHistory.save();
 
-    if (volunteeringRes.acknowledged && historyRes === newHistory) res.sendStatus(204);
-    else sendError(res, 500, 'Unable to update volunteering opportunity in database.');
+        // Get user ID
+        const userId = await getUserId(req);
+
+        const volunteeringRes = await Volunteering.updateOne(
+            { id },
+            {
+                $set: {
+                    name: req.body.name,
+                    club: req.body.club,
+                    description: req.body.description,
+                    filters: req.body.filters,
+                },
+            }
+        );
+
+        const newHistory = createHistory(req, prev, 'volunteering', id, userId, newId(), false);
+        const historyRes = await newHistory.save();
+
+        if (volunteeringRes.acknowledged && historyRes === newHistory) res.sendStatus(204);
+        else sendError(res, 500, 'Unable to update volunteering opportunity in database.');
+    } catch (error) {
+        console.error(error);
+        sendError(res, 500, 'Internal server error');
+    }
 });
 
 /**
  * DELETE /volunteering/<id>
  */
 router.delete('/:id', async (req: Request, res: Response) => {
-    // Check for authentication and access level
-    if (!isAuthenticated(req, res, AccessLevelEnum.CLUBS)) return;
+    try {
+        // Check for authentication and access level
+        if (!isAuthenticated(req, res, AccessLevelEnum.CLUBS)) return;
 
-    // Delete volunteering and history
-    const deleteRes = await Volunteering.deleteOne({ id: req.params.id });
-    await History.deleteMany({ resource: 'volunteering', editId: req.params.id });
+        // Delete volunteering and history
+        const deleteRes = await Volunteering.deleteOne({ id: req.params.id });
+        await History.deleteMany({ resource: 'volunteering', editId: req.params.id });
 
-    // Return ok or error
-    if (deleteRes.deletedCount === 1) res.status(204);
-    else sendError(res, 500, 'Could not delete volunteering');
+        // Return ok or error
+        if (deleteRes.deletedCount === 1) res.status(204);
+        else sendError(res, 500, 'Could not delete volunteering');
+    } catch (error) {
+        console.error(error);
+        sendError(res, 500, 'Internal server error');
+    }
 });
 
 export default router;
