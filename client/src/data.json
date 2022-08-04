@@ -58,10 +58,6 @@
             "label": "[Room] Bewley"
         },
         {
-            "value": "room-board",
-            "label": "[Room] Board Room"
-        },
-        {
             "value": "room-kitchenette",
             "label": "[Room] Kitchenette"
         },
