@@ -2,8 +2,9 @@ import React, { useState } from 'react';
 import { useRouter } from 'next/router';
 import { capitalize, useMediaQuery, useTheme } from '@mui/material';
 import { createPopupEvent } from '../../util/constructors';
-import { deleteClub, deleteEvent, deleteVolunteering } from '../../api';
+import { deleteClub, deleteEvent, deleteRepeatingEvents, deleteVolunteering } from '../../api';
 import { setCookie } from '../../util/cookies';
+import { darkSwitch } from '../../util/cssUtil';
 
 import Fab from '@mui/material/Fab';
 import DeleteIcon from '@mui/icons-material/Delete';
@@ -14,6 +15,7 @@ import DialogContent from '@mui/material/DialogContent';
 import DialogContentText from '@mui/material/DialogContentText';
 import DialogActions from '@mui/material/DialogActions';
 import Button from '@mui/material/Button';
+import Alert from '@mui/material/Alert';
 import Popup from './popup';
 import UploadBackdrop from '../edit/shared/upload-backdrop';
 
@@ -32,6 +34,12 @@ interface DeleteButtonProps {
 
     /** True if button should be hidden */
     hidden?: boolean;
+
+    /** Repeating ID for the event if it repeats */
+    repeatingId?: string;
+
+    /** True if the user wants to edit all repeating instances */
+    editAll?: boolean;
 }
 
 /**
@@ -52,7 +60,10 @@ const DeleteButton = (props: DeleteButtonProps) => {
         // Call the delete endpoint
         let res = null;
         if (props.resource === 'events') {
-            res = await deleteEvent(props.id);
+            res =
+                props.repeatingId && props.editAll
+                    ? await deleteRepeatingEvents(props.repeatingId)
+                    : await deleteEvent(props.id);
         } else if (props.resource === 'clubs') {
             res = await deleteClub(props.id);
         } else if (props.resource === 'volunteering') {
@@ -88,6 +99,16 @@ const DeleteButton = (props: DeleteButtonProps) => {
                         Are you sure you want to delete <b>{props.name}</b>? This action is permanent and the resource
                         cannot be recovered!
                     </DialogContentText>
+                    {props.repeatingId && (
+                        <Alert
+                            severity="warning"
+                            sx={{ marginTop: 3, backgroundColor: (theme) => darkSwitch(theme, null, '#3d3a2c') }}
+                        >
+                            {props.editAll
+                                ? 'This will delete ALL repeating instances of this event! Please uncheck "Edit All Repeating Instances" if you only want to delete this instance.'
+                                : 'This will only delete THIS event and not the other repeating events. Please check "Edit All Repeating Instances" if you want to delete all repeating instances.'}
+                        </Alert>
+                    )}
                 </DialogContent>
                 <DialogActions>
                     <Button onClick={setDeletePrompt.bind(this, false)} sx={{ color: '#aaa' }} variant="text">
