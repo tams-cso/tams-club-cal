@@ -130,6 +130,16 @@
     ],
     "changelog": [
         {
+            "v": "6.2",
+            "date": "August 9, 2022",
+            "changes": [
+                "Fixed typo on about page",
+                "Fixed club/type/description line of event list",
+                "Modified club access level permissions to add and delete clubs",
+                "Remove board room from reservation list"
+            ]
+        },
+        {
             "v": "6.1",
             "date": "July 12, 2022",
             "changes": [
