@@ -224,6 +224,15 @@ export async function deleteEvent(id: string): Promise<StatusResponse> {
     return deleteRequest(`/events/${id}`);
 }
 
+/**
+ * Deletes a repeating event by the repeatingId
+ *
+ * @param id Repeating ID of the events to delete
+ */
+export async function deleteRepeatingEvents(id: string): Promise<StatusResponse> {
+    return deleteRequest(`/events/repeating/${id}`);
+}
+
 /* #################### CLUBS API ##################### */
 
 /**

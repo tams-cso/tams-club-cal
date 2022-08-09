@@ -113,6 +113,7 @@ const EditEvents = ({
     const watchHideEvent: boolean = watch('private');
     const watchRepeatsWeekly: boolean = watch('repeatsWeekly');
     const watchRepeatsUntil: Dayjs = watch('repeatsUntil');
+    const watchEditAll: boolean = watch('editAll');
 
     // When the user submits the form, either create or update the event
     const onSubmit = async (data: SubmitData) => {
@@ -173,7 +174,7 @@ const EditEvents = ({
             data.noEnd,
             !data.private,
             createReservation,
-            data.repeatsWeekly ? '1' : event.repeatingId
+            data.repeatsWeekly ? '1' : duplicate ? null : event.repeatingId
         );
 
         // If the event ID is null OR it's a duplicate, create the event, otherwise update it
@@ -300,7 +301,9 @@ const EditEvents = ({
                         id={id}
                         name={event.name}
                         hidden={!id || duplicate || unauthorized}
-                    />
+                        repeatingId={event.repeatingId}
+                        editAll={watchEditAll}
+                    ></DeleteButton>
                 </React.Fragment>
             ) : null}
             <FormWrapper onSubmit={handleSubmit(onSubmit)}>
@@ -320,7 +323,7 @@ const EditEvents = ({
                             sx={{ color: (theme) => darkSwitch(theme, theme.palette.primary.dark, null) }}
                         >
                             {' '}
-                            Click here to see the original event.
+                            Click here to edit the original event.
                         </Link>
                     </Alert>
                 ) : null}
@@ -450,7 +453,7 @@ const EditEvents = ({
                         up anywhere)
                     </Typography>
                 ) : null}
-                {event.id ? null : (
+                {event.id && !duplicate ? null : (
                     <FormBox sx={{ marginTop: 2 }}>
                         <ControlledCheckbox
                             control={control}
@@ -470,7 +473,7 @@ const EditEvents = ({
                         />
                     </FormBox>
                 )}
-                {event.id && event.repeatingId && (
+                {event.id && event.repeatingId && !duplicate && (
                     <React.Fragment>
                         <ControlledCheckbox
                             control={control}

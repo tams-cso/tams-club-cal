@@ -365,4 +365,30 @@ router.delete('/:id', async (req: Request, res: Response) => {
     else sendError(res, 500, 'Could not delete event');
 });
 
+/**
+ * DELETE /events/repeating/<repeatingId>
+ */
+router.delete('/repeating/:id', async (req: Request, res: Response) => {
+    // Get the previous event
+    const eventList = await Event.find({ repeatingId: req.params.id });
+    if (eventList.length === 0) {
+        sendError(res, 400, 'Invalid repeating ID');
+        return;
+    }
+
+    // Check if user is authenticated
+    if (!isAuthenticated(req, res, AccessLevelEnum.STANDARD, eventList[0].editorId)) return;
+
+    // Delete all events from Google Calendar, History DB, and Events DB
+    for (let i = 0; i < eventList.length; i++) {
+        if (eventList[i].publicEvent) await deleteCalendarEvent(eventList[i].eventId);
+        await History.deleteMany({ resource: 'events', editId: eventList[i].id });
+    }
+    const deleteRes = await Event.deleteMany({ repeatingId: req.params.id });
+
+    // Return ok status or error
+    if (deleteRes.deletedCount > 0) res.sendStatus(204);
+    else sendError(res, 500, 'Could not delete event');
+});
+
 export default router;
