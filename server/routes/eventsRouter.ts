@@ -298,7 +298,7 @@ router.put('/:id', async (req: Request, res: Response) => {
             const endChange = dayjs(req.body.end).diff(prev.end);
 
             // Iterate through all previous event objects
-            Promise.all(
+            await Promise.all(
                 repeatingEvents.map(async (event) => {
                     // Update each event with its adjusted date if date was changed
                     let adjustedStart = null;
