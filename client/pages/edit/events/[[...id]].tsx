@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { useRouter } from 'next/router';
 import { GetServerSidePropsContext, InferGetServerSidePropsType } from 'next';
-import { useForm } from 'react-hook-form';
+import { SubmitHandler, useForm } from 'react-hook-form';
 import dayjs, { Dayjs } from 'dayjs';
 import { AccessLevelEnum } from '../../../src/types/enums';
 import { getTokenFromCookies } from '../../../src/util/miscUtil';
@@ -14,6 +14,15 @@ import Typography from '@mui/material/Typography';
 import Box from '@mui/material/Box';
 import Alert from '@mui/material/Alert';
 import MenuItem from '@mui/material/MenuItem';
+import Dialog from '@mui/material/Dialog';
+import DialogTitle from '@mui/material/DialogTitle';
+import DialogContent from '@mui/material/DialogContent';
+import DialogActions from '@mui/material/DialogActions';
+import Button from '@mui/material/Button';
+import Radio from '@mui/material/Radio';
+import RadioGroup from '@mui/material/RadioGroup';
+import FormControlLabel from '@mui/material/FormControlLabel';
+import FormControl from '@mui/material/FormControl';
 import DateTimeInput from '../../../src/components/edit/events/date-time-input';
 import ControlledCheckbox from '../../../src/components/edit/events/controlled-checkbox';
 import ControlledTextField from '../../../src/components/edit/shared/controlled-text-field';
@@ -51,7 +60,6 @@ type SubmitData = {
     private: boolean;
     repeatsWeekly: boolean;
     repeatsUntil: Dayjs;
-    editAll: boolean;
 };
 
 // List of locations to not create reservations for
@@ -95,6 +103,9 @@ const EditEvents = ({
     const [backdrop, setBackdrop] = useState(false);
     const [prevStart, setPrevStart] = useState(null);
     const [popupEvent, setPopupEvent] = useState<PopupEvent>();
+    const [repPopup, setRepPopup] = useState(false);
+    const [editAll, setEditAll] = useState('one');
+    const [tempData, setTempData] = useState<SubmitData>(null);
     const [displayError, setDisplayError] = useState(false);
     const {
         handleSubmit,
@@ -113,10 +124,82 @@ const EditEvents = ({
     const watchHideEvent: boolean = watch('private');
     const watchRepeatsWeekly: boolean = watch('repeatsWeekly');
     const watchRepeatsUntil: Dayjs = watch('repeatsUntil');
-    const watchEditAll: boolean = watch('editAll');
+
+    // On load
+    useEffect(() => {
+        // Send error if can't fetch resource
+        if (error) {
+            setPopupEvent(
+                createPopupEvent('Error fetching event info. Please refresh the page or add a new event.', 4)
+            );
+        }
+
+        // Set "prevStart" variable to the starting time to use later
+        setPrevStart(event.start);
+    }, []);
+
+    // Change start and end times if event changes
+    useEffect(() => {
+        setValue('start', dayjs(event.start));
+    }, [event]);
+
+    // Offset the end time if startTime is changed to the same duration
+    useEffect(() => {
+        if (!watchEnd || errors.end) return;
+        const diff = watchEnd.valueOf() - prevStart;
+        setValue('end', dayjs(watchStart.valueOf() + diff));
+        setPrevStart(watchStart.valueOf());
+    }, [watchStart]);
+
+    // Set an error if the end time is set before the start time
+    useEffect(() => {
+        if (!watchEnd) return;
+        if (watchNoEnd) {
+            clearErrors('end');
+            return;
+        }
+        if (watchEnd.isBefore(watchStart)) setError('end', { message: 'End is before start' });
+        else clearErrors('end');
+    }, [watchStart, watchEnd, watchNoEnd]);
+
+    // Check to see if the other location is empty and clear errors if the location is changed
+    useEffect(() => {
+        if (watchLocation !== 'other') {
+            clearErrors('otherLocation');
+        }
+    }, [watchLocation]);
+
+    // Set display error if neither public or reservation is selected
+    useEffect(() => {
+        setDisplayError(watchHideEvent && noReservationLocations.indexOf(watchLocation) !== -1);
+    }, [watchHideEvent, watchLocation]);
 
     // When the user submits the form, either create or update the event
-    const onSubmit = async (data: SubmitData) => {
+    const onSubmit: SubmitHandler<SubmitData> = (data: SubmitData, e) => {
+        // Stop reload
+        e.preventDefault();
+
+        // Set the data
+        setTempData(data);
+
+        // Open the "edit all or one repeating instance" popup
+        // if it is a repeating event
+        if (isRepeating) {
+            setRepPopup(true);
+            return;
+        }
+
+        // Otherwise, directly upload the data
+        upload(data);
+    };
+
+    const upload = async (data?: SubmitData) => {
+        // If calling from the repeating popup, fetch from store
+        if (data === null) {
+            setRepPopup(false);
+            data = tempData;
+        }
+
         // Calculate the start and end times
         // For the end time, if noEnd, simply set to the same as the start time
         const startTime = data.start.valueOf();
@@ -181,7 +264,7 @@ const EditEvents = ({
         const addEvent = id === null || duplicate;
         const res = addEvent
             ? await postEvent({ ...newEvent, repeatsUntil: data.repeatsUntil.valueOf() })
-            : await putEvent({ ...newEvent, editAll: data.editAll }, id);
+            : await putEvent({ ...newEvent, editAll: editAll === 'all' }, id);
 
         // Finished uploading
         setBackdrop(false);
@@ -221,54 +304,9 @@ const EditEvents = ({
         else router.push(`/events${id ? `/${id}` : ''}`);
     };
 
-    // On load
-    useEffect(() => {
-        // Send error if can't fetch resource
-        if (error) {
-            setPopupEvent(
-                createPopupEvent('Error fetching event info. Please refresh the page or add a new event.', 4)
-            );
-        }
-
-        // Set "prevStart" variable to the starting time to use later
-        setPrevStart(event.start);
-    }, []);
-
-    // Change start and end times if event changes
-    useEffect(() => {
-        setValue('start', dayjs(event.start));
-    }, [event]);
-
-    // Offset the end time if startTime is changed to the same duration
-    useEffect(() => {
-        if (!watchEnd || errors.end) return;
-        const diff = watchEnd.valueOf() - prevStart;
-        setValue('end', dayjs(watchStart.valueOf() + diff));
-        setPrevStart(watchStart.valueOf());
-    }, [watchStart]);
-
-    // Set an error if the end time is set before the start time
-    useEffect(() => {
-        if (!watchEnd) return;
-        if (watchNoEnd) {
-            clearErrors('end');
-            return;
-        }
-        if (watchEnd.isBefore(watchStart)) setError('end', { message: 'End is before start' });
-        else clearErrors('end');
-    }, [watchStart, watchEnd, watchNoEnd]);
-
-    // Check to see if the other location is empty and clear errors if the location is changed
-    useEffect(() => {
-        if (watchLocation !== 'other') {
-            clearErrors('otherLocation');
-        }
-    }, [watchLocation]);
-
-    // Set display error if neither public or reservation is selected
-    useEffect(() => {
-        setDisplayError(watchHideEvent && noReservationLocations.indexOf(watchLocation) !== -1);
-    }, [watchHideEvent, watchLocation]);
+    const handleRepeatingRadioChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+        setEditAll(e.currentTarget.value);
+    };
 
     // If the location is a custom one, replace with "other" in form
     const defaultLocation = id
@@ -282,6 +320,8 @@ const EditEvents = ({
     const unauthorized =
         (level < AccessLevelEnum.STANDARD || (!id ? false : event.editorId !== userId)) &&
         level !== AccessLevelEnum.ADMIN;
+
+    const isRepeating = event.id !== null && event.repeatingId !== null && !duplicate;
 
     return (
         <EditWrapper>
@@ -301,11 +341,37 @@ const EditEvents = ({
                         id={id}
                         name={event.name}
                         hidden={!id || duplicate || unauthorized}
+                        isRepeating={isRepeating}
                         repeatingId={event.repeatingId}
-                        editAll={watchEditAll}
                     ></DeleteButton>
                 </React.Fragment>
             ) : null}
+            <Dialog open={repPopup} aria-labelledby="edit-dialog-title" aria-describedby="edit-dialog-description">
+                <DialogTitle id="edit-dialog-title">Edit repeating event</DialogTitle>
+                <DialogContent>
+                    <React.Fragment>
+                        <FormControl>
+                            <RadioGroup
+                                defaultValue="one"
+                                name="edit-repeating"
+                                onChange={handleRepeatingRadioChange}
+                                value={editAll}
+                            >
+                                <FormControlLabel value="one" control={<Radio />} label="Edit this event" />
+                                <FormControlLabel value="all" control={<Radio />} label="Edit all events" />
+                            </RadioGroup>
+                        </FormControl>
+                    </React.Fragment>
+                </DialogContent>
+                <DialogActions>
+                    <Button onClick={setRepPopup.bind(this, false)} sx={{ color: '#aaa' }} variant="text">
+                        Cancel
+                    </Button>
+                    <Button onClick={upload.bind(this, null)} color="primary" variant="contained">
+                        Submit
+                    </Button>
+                </DialogActions>
+            </Dialog>
             <FormWrapper onSubmit={handleSubmit(onSubmit)}>
                 {id && !duplicate ? (
                     <Box sx={{ display: 'flex', justifyContent: 'center', marginBottom: 2 }}>
@@ -473,26 +539,16 @@ const EditEvents = ({
                         />
                     </FormBox>
                 )}
-                {event.id && event.repeatingId && !duplicate && (
-                    <React.Fragment>
-                        <ControlledCheckbox
-                            control={control}
-                            name="editAll"
-                            label="Edit all Repeating Instances (Leave this unchecked to only edit this instance)"
-                            value={false}
-                            setValue={setValue}
-                        />
-                        <Alert
-                            severity="info"
-                            sx={{ my: 3, backgroundColor: (theme) => darkSwitch(theme, null, '#304249') }}
-                        >
-                            This event is an instance of a repeating event. You may either choose to edit all repeating
-                            instances or just this specific event. Note that edits made to time will be ignored if "Edit
-                            All" is checked. Also note that editing only this specific instance will detach it from the
-                            repeating instances, meaning that it can no longer be edited with all other repeating
-                            instances.
-                        </Alert>
-                    </React.Fragment>
+                {isRepeating && (
+                    <Alert
+                        severity="info"
+                        sx={{ my: 3, backgroundColor: (theme) => darkSwitch(theme, null, '#304249') }}
+                    >
+                        This event is an instance of a repeating event. You may either choose to edit all repeating
+                        instances or just this specific event. Editing only this event will detatch the current instance
+                        from the repeating instances! This means that it will NOT be editable with the rest of the
+                        events.
+                    </Alert>
                 )}
                 <TwoButtonBox success="Submit" onCancel={back} submit right disabled={unauthorized} />
             </FormWrapper>
