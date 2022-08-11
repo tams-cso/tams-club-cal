@@ -281,7 +281,7 @@ const EditEvents = ({
         // If the event was created successfully, redirect to the event page, otherwise display an error
         if (res.status === 204) {
             setCookie('success', !addEvent ? 'update-event' : 'add-event');
-            back(null, addEvent, true);
+            back(null, addEvent);
         } else setPopupEvent(createPopupEvent('Unable to upload data. Please refresh the page or try again.', 4));
     };
 
@@ -320,11 +320,10 @@ const EditEvents = ({
     };
 
     // Returns the user back to the event display page
-    const back = (_, addEvent = false, refresh = false) => {
+    const back = (_, addEvent = false) => {
+        const url = `/events${id ? `/${id}` : ''}`
         if (addEvent) router.push('/events');
-        else router.push(`/events${id ? `/${id}` : ''}`);
-
-        if (refresh) router.reload();
+        else router.push(url);
     };
 
     const handleRepeatingRadioChange = (e: React.ChangeEvent<HTMLInputElement>) => {
