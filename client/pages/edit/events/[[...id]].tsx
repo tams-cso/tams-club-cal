@@ -300,7 +300,7 @@ const EditEvents = ({
 
         // Not overlapping cases
         if (
-            overlaps.data.length !== 0 ||
+            overlaps.data.length === 0 ||
             overlaps.data[0].id === event.id ||
             (repeating && overlaps.data[0].repeatingId === event.repeatingId)
         ) {
