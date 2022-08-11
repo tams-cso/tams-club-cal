@@ -4,6 +4,8 @@ import { AccessLevelEnum } from '../types/enums';
 import { getUserInfo } from '../api';
 import { GetServerSidePropsContext } from 'next';
 
+import data from '../data.json';
+
 /**
  * Gets a query parameter given the key
  */
@@ -115,4 +117,18 @@ export function eventTypeToString(type: EventType): string {
         default:
             return 'Other';
     }
+}
+
+/**
+ * Converts a location to a string
+ *
+ * @param location Location value
+ * @return String representation of the location, or null if no location
+ */
+export function locationToString(location: string): string {
+    if (location === 'none') return null;
+
+    const room = data.rooms.find((d) => d.value === location);
+    if (room) return room.label;
+    return location;
 }

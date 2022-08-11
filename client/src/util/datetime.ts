@@ -66,6 +66,9 @@ export function formatDate(millis: number, format: string): string {
 export function isSameDate(first: number, second: number): boolean {
     return formatTime(first, 'MM/DD/YYYY') === formatTime(second, 'MM/DD/YYYY');
 }
+
+// TODO: The formatEventDate and formatEventTime functions are JANK -- need to refactor
+
 /**
  * Formats the full date of the event.
  * Includes an end date if not the same as the start date.
@@ -75,10 +78,8 @@ export function isSameDate(first: number, second: number): boolean {
  */
 
 export function formatEventDate(event: CalEvent): string {
-    if (!toTz(event.start).isSame(toTz(event.end), 'day')) return formatTime(event.start, 'dddd, MMMM D, YYYY h:mma');
-    let formattedTime = formatTime(event.start, 'dddd, MMMM D, YYYY');
-    if (!isSameDate(event.start, event.end)) formattedTime += formatTime(event.end, ' - dddd, MMMM D, YYYY');
-    return formattedTime;
+    if (!toTz(event.start).isSame(toTz(event.end), 'day')) return 'Start: ' + formatTime(event.start, 'dddd, MMMM D, YYYY h:mma');
+    return formatTime(event.start, 'dddd, MMMM D, YYYY');
 }
 /**
  * Formats the time of the event.
@@ -92,12 +93,17 @@ export function formatEventDate(event: CalEvent): string {
 
 export function formatEventTime(event: CalEvent, noEnd: boolean = false, checkSame: boolean = false): string {
     if (checkSame && !toTz(event.start).isSame(toTz(event.end), 'day'))
-        return formatTime(event.end, 'dddd, MMMM D, YYYY h:mma');
+        return 'End: ' + formatTime(event.end, 'dddd, MMMM D, YYYY h:mma');
 
     let formattedTime = formatTime(event.start, 'h:mma', true);
     if (!noEnd && event.start !== event.end) formattedTime += ` - ${formatTime(event.end, 'h:mma', true)}`;
     return formattedTime;
 }
+
+export function formatEventDateTime(event: CalEvent): string {
+    return formatTime(event.start, 'dddd, MMMM D, YYYY h:mma') + ' - ' + formatTime(event.end, 'dddd, MMMM D, YYYY h:mma');
+}
+
 /**
  * Calculates how long ago an edit was made, given the edit date,
  * and displays it in the most reasonable time interval

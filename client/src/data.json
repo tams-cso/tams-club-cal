@@ -130,6 +130,17 @@
     ],
     "changelog": [
         {
+            "v": "6.2.1",
+            "date": "August 11, 2022",
+            "changes": [
+                "Changed the \"editAll\" checkbox to a significantly more intuitive popup when editing repeating events",
+                "Added the ability to edit start/end times for repeating events",
+                "Added checking for overlapping events when editing repeating events",
+                "Added the \"start\" and \"end\" word to event display cards that span multiple days",
+                "Added the location to the event list"
+            ]
+        },
+        {
             "v": "6.2",
             "date": "August 9, 2022",
             "changes": [

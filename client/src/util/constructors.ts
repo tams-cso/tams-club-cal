@@ -110,7 +110,8 @@ export function createEvent(
     noEnd: boolean = false,
     publicEvent: boolean = true,
     reservation: boolean = false,
-    repeatingId: string = null
+    repeatingId: string = null,
+    repeatsUntil: number = null,
 ): CalEvent {
     return {
         id,
@@ -127,6 +128,7 @@ export function createEvent(
         publicEvent,
         reservation,
         repeatingId,
+        repeatsUntil,
     };
 }
 

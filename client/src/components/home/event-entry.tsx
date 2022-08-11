@@ -1,6 +1,6 @@
 import React from 'react';
 import type { Theme } from '@mui/material';
-import { eventTypeToString } from '../../util/miscUtil';
+import { eventTypeToString, locationToString } from '../../util/miscUtil';
 import { formatEventTime } from '../../util/datetime';
 import { darkSwitch } from '../../util/cssUtil';
 
@@ -18,7 +18,8 @@ interface EventEntryProps {
 /**
  * An event entry on the home page events list
  */
-const EventEntry = (props: EventEntryProps) => {
+const EventEntry = ({ event }: EventEntryProps) => {
+    const location = locationToString(event.location);
     return (
         <ListItem
             button
@@ -26,10 +27,10 @@ const EventEntry = (props: EventEntryProps) => {
                 overflowX: 'hidden',
                 padding: 0,
             }}
-            key={props.event.id}
+            key={event.id}
         >
             <Link
-                href={`/events/${props.event.id}`}
+                href={`/events/${event.id}`}
                 sx={{
                     width: '100%',
                     padding: { lg: 2, xs: '8px 0' },
@@ -48,7 +49,7 @@ const EventEntry = (props: EventEntryProps) => {
                         fontSize: { lg: '1.2rem', xs: '0.9rem' },
                     }}
                 >
-                    {`${formatEventTime(props.event)}`}
+                    {`${formatEventTime(event)}`}
                 </Typography>
                 <Box sx={{ overflow: 'hidden' }}>
                     <Typography
@@ -59,7 +60,7 @@ const EventEntry = (props: EventEntryProps) => {
                             fontSize: { lg: '1.25rem', xs: '1rem' },
                         }}
                     >
-                        {props.event.name}
+                        {event.name}
                     </Typography>
                     <Typography
                         sx={{
@@ -77,10 +78,11 @@ const EventEntry = (props: EventEntryProps) => {
                                     darkSwitch(theme, theme.palette.common.black, theme.palette.grey[400]),
                             }}
                         >
-                            {props.event.club}
+                            {event.club}
                         </StyledSpan>
-                        {`  ·  ${eventTypeToString(props.event.type)}` +
-                            (props.event.description ? '  ·  ' + props.event.description.replace(/\n/g, ' | ') : '')}
+                        {`  ·  ${eventTypeToString(event.type)}` +
+                            (location ? ` | ${location}` : '') +
+                            (event.description ? '  ·  ' + event.description.replace(/\n/g, ' | ') : '')}
                     </Typography>
                 </Box>
             </Link>

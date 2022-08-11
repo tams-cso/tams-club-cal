@@ -16,6 +16,11 @@ import DialogContentText from '@mui/material/DialogContentText';
 import DialogActions from '@mui/material/DialogActions';
 import Button from '@mui/material/Button';
 import Alert from '@mui/material/Alert';
+import Radio from '@mui/material/Radio';
+import RadioGroup from '@mui/material/RadioGroup';
+import FormControlLabel from '@mui/material/FormControlLabel';
+import FormControl from '@mui/material/FormControl';
+import FormLabel from '@mui/material/FormLabel';
 import Popup from './popup';
 import UploadBackdrop from '../edit/shared/upload-backdrop';
 
@@ -35,11 +40,11 @@ interface DeleteButtonProps {
     /** True if button should be hidden */
     hidden?: boolean;
 
-    /** Repeating ID for the event if it repeats */
-    repeatingId?: string;
+    /** True if the event is repeating */
+    isRepeating?: boolean;
 
-    /** True if the user wants to edit all repeating instances */
-    editAll?: boolean;
+    /** Repeating ID for the event if it repeats, required if isRepeating is true */
+    repeatingId?: string;
 }
 
 /**
@@ -47,6 +52,7 @@ interface DeleteButtonProps {
  */
 const DeleteButton = (props: DeleteButtonProps) => {
     const [deletePrompt, setDeletePrompt] = useState(false);
+    const [repDelete, setRepDelete] = useState('all');
     const [popupEvent, setPopupEvent] = useState<PopupEvent>(null);
     const [backdrop, setBackdrop] = useState(false);
     const theme = useTheme();
@@ -61,7 +67,7 @@ const DeleteButton = (props: DeleteButtonProps) => {
         let res = null;
         if (props.resource === 'events') {
             res =
-                props.repeatingId && props.editAll
+                props.isRepeating && repDelete
                     ? await deleteRepeatingEvents(props.repeatingId)
                     : await deleteEvent(props.id);
         } else if (props.resource === 'clubs') {
@@ -83,6 +89,10 @@ const DeleteButton = (props: DeleteButtonProps) => {
         setBackdrop(false);
     };
 
+    const handleRepeatingRadioChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+        setRepDelete(e.currentTarget.value);
+    }
+
     return (
         <React.Fragment>
             <Popup event={popupEvent} />
@@ -99,15 +109,33 @@ const DeleteButton = (props: DeleteButtonProps) => {
                         Are you sure you want to delete <b>{props.name}</b>? This action is permanent and the resource
                         cannot be recovered!
                     </DialogContentText>
-                    {props.repeatingId && (
-                        <Alert
-                            severity="warning"
-                            sx={{ marginTop: 3, backgroundColor: (theme) => darkSwitch(theme, null, '#3d3a2c') }}
-                        >
-                            {props.editAll
-                                ? 'This will delete ALL repeating instances of this event! Please uncheck "Edit All Repeating Instances" if you only want to delete this instance.'
-                                : 'This will only delete THIS event and not the other repeating events. Please check "Edit All Repeating Instances" if you want to delete all repeating instances.'}
-                        </Alert>
+                    {props.isRepeating && (
+                        <React.Fragment>
+                            <FormControl sx={{ marginTop: 3 }}>
+                                <FormLabel id="delete-repeating-label">Delete Repeating Event</FormLabel>
+                                <RadioGroup
+                                    aria-labelledby="delete-repeating-label"
+                                    defaultValue="one"
+                                    name="delete-repeating"
+                                    onChange={handleRepeatingRadioChange}
+                                    value={repDelete}
+                                >
+                                    <FormControlLabel value="one" control={<Radio />} label="Delete this event" />
+                                    <FormControlLabel value="all" control={<Radio />} label="Delete all events" />
+                                </RadioGroup>
+                            </FormControl>
+                            {repDelete === 'all' && (
+                                <Alert
+                                    severity="warning"
+                                    sx={{
+                                        marginTop: 3,
+                                        backgroundColor: (theme) => darkSwitch(theme, null, '#3d3a2c'),
+                                    }}
+                                >
+                                    This will delete ALL instances of this repeating event!
+                                </Alert>
+                            )}
+                        </React.Fragment>
                     )}
                 </DialogContent>
                 <DialogActions>

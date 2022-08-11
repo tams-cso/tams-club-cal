@@ -190,6 +190,7 @@ router.post('/', async (req: Request, res: Response) => {
             publicEvent: req.body.publicEvent,
             reservation: req.body.reservation,
             repeatingId,
+            repeatsUntil: req.body.repeatsUntil,
         };
 
         // If repeating event, repeatingId will be not be null
@@ -280,19 +281,69 @@ router.put('/:id', async (req: Request, res: Response) => {
                 club: req.body.club,
                 description: req.body.description,
                 location: req.body.location,
-                allDay: req.body.allDay,
                 noEnd: req.body.noEnd,
                 publicEvent: req.body.publicEvent,
                 reservation: req.body.reservation,
+                repeatsUntil: req.body.repeatsUntil,
             };
 
-            // Update event in DB
+            // Update events in DB
             await Event.updateMany({ repeatingId: req.body.repeatingId }, { $set: toUpdate });
 
-            // Create and save history
-            // TODO: How do we add a history entry for each repeating event that was updated????
-            const newHistory = createHistory(req, prev, 'events', id, userId, newId(), false);
-            await newHistory.save();
+            // Retrieve all repeating events from database
+            const repeatingEvents = await Event.find({ repeatingId: req.body.repeatingId });
+
+            // Calculate the date change
+            const startChange = dayjs(req.body.start).diff(prev.start);
+            const endChange = dayjs(req.body.end).diff(prev.end);
+
+            // Iterate through all previous event objects
+            Promise.all(
+                repeatingEvents.map(async (event) => {
+                    // Update each event with its adjusted date if date was changed
+                    let adjustedStart = null;
+                    let adjustedEnd = null;
+                    if (startChange !== 0 || endChange !== 0) {
+                        adjustedStart = dayjs(event.start).add(startChange, 'ms').valueOf();
+                        adjustedEnd = dayjs(event.end).add(endChange, 'ms').valueOf();
+                    }
+
+                    // Create and save a new history for each object
+                    const toUpdateFull: EventObject = {
+                        ...toUpdate,
+                        id: event.id,
+                        eventId: event.eventId,
+                        repeatingId: event.repeatingId,
+                        start: adjustedStart,
+                        end: adjustedEnd,
+                    };
+                    const newHistory = createHistory(
+                        null,
+                        event,
+                        'events',
+                        event.id,
+                        userId,
+                        newId(),
+                        false,
+                        toUpdateFull
+                    );
+                    await newHistory.save();
+
+                    // Updates the event date fields
+                    if (adjustedStart) {
+                        event.start = adjustedStart;
+                        event.end = adjustedEnd;
+                    }
+
+                    // Updates the event in Google Calendar
+                    if (prev.publicEvent && toUpdate.publicEvent) await updateCalendar(event, event.eventId);
+                    else if (toUpdate.publicEvent) event.eventId = await addToCalendar(event);
+                    else if (prev.publicEvent && !toUpdate.publicEvent) await deleteCalendarEvent(event.eventId);
+
+                    // Save the updated event
+                    await event.save();
+                })
+            );
 
             // Send user success and return
             res.sendStatus(204);
@@ -313,16 +364,17 @@ router.put('/:id', async (req: Request, res: Response) => {
             start: Number(req.body.start),
             end: Number(req.body.end),
             location: req.body.location,
-            allDay: req.body.allDay,
             noEnd: req.body.noEnd,
             publicEvent: req.body.publicEvent,
             reservation: req.body.reservation,
             repeatingId: null,
+            repeatsUntil: null,
         };
 
         // Update or create google calendar event
         if (prev.publicEvent && toUpdate.publicEvent) await updateCalendar(req.body, prev.eventId);
         else if (toUpdate.publicEvent) toUpdate.eventId = await addToCalendar(toUpdate);
+        else if (prev.publicEvent && !toUpdate.publicEvent) await deleteCalendarEvent(prev.eventId);
 
         // Update event in DB
         await Event.updateOne({ id }, { $set: toUpdate });

@@ -23,8 +23,9 @@ export function parsePublicEventList(eventList: CalEvent[]): CalEvent[] {
         }
 
         // Calculate how many days the events span
+        // TODO: This still probably doesn't work with events that start/end on midnight
         let currDate = dayjs(a.start);
-        const span = dayjs(a.end).diff(currDate, 'day') + isNotMidnight(a.start) + isNotMidnight(a.end);
+        const span = dayjs(a.end).diff(currDate, 'day') + isNotMidnight(a.start);
 
         // Iterate through the days and set the display start/end times
         for (let day = 1; day <= span; day++) {
