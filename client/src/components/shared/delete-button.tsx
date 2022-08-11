@@ -124,7 +124,7 @@ const DeleteButton = (props: DeleteButtonProps) => {
                                     <FormControlLabel value="all" control={<Radio />} label="Delete all events" />
                                 </RadioGroup>
                             </FormControl>
-                            {repDelete && (
+                            {repDelete === 'all' && (
                                 <Alert
                                     severity="warning"
                                     sx={{
