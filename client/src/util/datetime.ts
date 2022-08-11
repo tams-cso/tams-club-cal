@@ -98,6 +98,11 @@ export function formatEventTime(event: CalEvent, noEnd: boolean = false, checkSa
     if (!noEnd && event.start !== event.end) formattedTime += ` - ${formatTime(event.end, 'h:mma', true)}`;
     return formattedTime;
 }
+
+export function formatEventDateTime(event: CalEvent): string {
+    return formatTime(event.start, 'dddd, MMMM D, YYYY h:mma') + ' - ' + formatTime(event.end, 'dddd, MMMM D, YYYY h:mma');
+}
+
 /**
  * Calculates how long ago an edit was made, given the edit date,
  * and displays it in the most reasonable time interval

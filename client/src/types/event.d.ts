@@ -43,6 +43,9 @@ interface CalEvent {
 
     /** Repeating ID for connecting repeating events */
     repeatingId: string;
+
+    /** End repeating date for the event */
+    repeatsUntil: number;
 }
 
 /** Type of the event, can be used as filter on the event list */

@@ -190,6 +190,7 @@ router.post('/', async (req: Request, res: Response) => {
             publicEvent: req.body.publicEvent,
             reservation: req.body.reservation,
             repeatingId,
+            repeatsUntil: req.body.repeatsUntil,
         };
 
         // If repeating event, repeatingId will be not be null
@@ -283,6 +284,7 @@ router.put('/:id', async (req: Request, res: Response) => {
                 noEnd: req.body.noEnd,
                 publicEvent: req.body.publicEvent,
                 reservation: req.body.reservation,
+                repeatsUntil: req.body.repeatsUntil,
             };
 
             // Update events in DB
@@ -366,6 +368,7 @@ router.put('/:id', async (req: Request, res: Response) => {
             publicEvent: req.body.publicEvent,
             reservation: req.body.reservation,
             repeatingId: null,
+            repeatsUntil: null,
         };
 
         // Update or create google calendar event

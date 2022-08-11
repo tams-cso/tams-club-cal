@@ -9,6 +9,7 @@ import { createPopupEvent, createEvent } from '../../../src/util/constructors';
 import { darkSwitch } from '../../../src/util/cssUtil';
 import { getEvent, getOverlappingReservations, getUserInfo, postEvent, putEvent } from '../../../src/api';
 import { setCookie } from '../../../src/util/cookies';
+import { formatEventDateTime } from '../../../src/util/datetime';
 
 import Typography from '@mui/material/Typography';
 import Box from '@mui/material/Box';
@@ -134,6 +135,9 @@ const EditEvents = ({
             );
         }
 
+        // Remove the repeatingId if the event is being duplicated
+        if (duplicate) event.repeatingId = null;
+
         // Set "prevStart" variable to the starting time to use later
         setPrevStart(event.start);
     }, []);
@@ -227,15 +231,19 @@ const EditEvents = ({
             if (await isOverlapping(data.location, startTime, endTime)) return;
 
             // If repeating, make sure none of the instances are overlapping either
-            // this shouldn't run when editing
-            if (!event.id && data.repeatsWeekly) {
-                const lastDay = data.repeatsUntil.add(1, 'day');
+            // If editing, only run if dates change
+            if (
+                (!event.id && data.repeatsWeekly) ||
+                (event.repeatingId && (data.start.valueOf() !== event.start || data.end.valueOf() !== event.end))
+            ) {
+                const repeatsUntil = event.repeatsUntil ? dayjs(event.repeatsUntil) : data.repeatsUntil;
+                const lastDay = repeatsUntil.add(1, 'day');
                 let currStart = data.start.add(1, 'week');
                 let currEnd = data.end.add(1, 'week');
 
                 // Check events up to the last day
                 while (currStart.isBefore(lastDay, 'day')) {
-                    if (await isOverlapping(data.location, currStart.valueOf(), currEnd.valueOf())) return;
+                    if (await isOverlapping(data.location, currStart.valueOf(), currEnd.valueOf(), true)) return;
                     currStart = currStart.add(1, 'week');
                     currEnd = currEnd.add(1, 'week');
                 }
@@ -257,7 +265,8 @@ const EditEvents = ({
             data.noEnd,
             !data.private,
             createReservation,
-            data.repeatsWeekly ? '1' : duplicate ? null : event.repeatingId
+            data.repeatsWeekly ? '1' : event.repeatingId,
+            data.repeatsWeekly ? data.repeatsUntil.valueOf() : event.repeatsUntil
         );
 
         // If the event ID is null OR it's a duplicate, create the event, otherwise update it
@@ -272,11 +281,11 @@ const EditEvents = ({
         // If the event was created successfully, redirect to the event page, otherwise display an error
         if (res.status === 204) {
             setCookie('success', !addEvent ? 'update-event' : 'add-event');
-            back(null, addEvent);
+            back(null, addEvent, true);
         } else setPopupEvent(createPopupEvent('Unable to upload data. Please refresh the page or try again.', 4));
     };
 
-    const isOverlapping = async (location: string, start: number, end: number): Promise<boolean> => {
+    const isOverlapping = async (location: string, start: number, end: number, repeating = false): Promise<boolean> => {
         const overlaps = await getOverlappingReservations(location, start, end);
         if (overlaps.status !== 200) {
             setPopupEvent(
@@ -288,20 +297,34 @@ const EditEvents = ({
             setBackdrop(false);
             return true;
         }
-        if (overlaps.data.length !== 0 && overlaps.data[0].id !== event.id) {
-            setPopupEvent(
-                createPopupEvent(`There is already a reservation during that time! (${overlaps.data[0].name})`, 3)
-            );
-            setBackdrop(false);
-            return true;
+
+        // Not overlapping cases
+        if (
+            overlaps.data.length !== 0 ||
+            overlaps.data[0].id === event.id ||
+            (repeating && overlaps.data[0].repeatingId === event.repeatingId)
+        ) {
+            return false;
         }
-        return false;
+
+        // Otherwise, show error if overlapping
+        setPopupEvent(
+            createPopupEvent(
+                `There is already a reservation during that time: ${overlaps.data[0].name} ` +
+                    `(${formatEventDateTime(overlaps.data[0])})`,
+                3
+            )
+        );
+        setBackdrop(false);
+        return true;
     };
 
     // Returns the user back to the event display page
-    const back = (_event, addEvent = false) => {
+    const back = (_, addEvent = false, refresh = false) => {
         if (addEvent) router.push('/events');
         else router.push(`/events${id ? `/${id}` : ''}`);
+
+        if (refresh) router.reload();
     };
 
     const handleRepeatingRadioChange = (e: React.ChangeEvent<HTMLInputElement>) => {
