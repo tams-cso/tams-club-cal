@@ -4,7 +4,7 @@ import { GetServerSidePropsContext, InferGetServerSidePropsType } from 'next';
 import { useRouter } from 'next/router';
 import { AccessLevelEnum } from '../../src/types/enums';
 import { getParams, getAccessLevel, getTokenFromCookies, eventTypeToString } from '../../src/util/miscUtil';
-import { formatEventDate, formatEventTime } from '../../src/util/datetime';
+import { formatEventDate, formatEventTime, formatTime } from '../../src/util/datetime';
 import { darkSwitch, darkSwitchGrey } from '../../src/util/cssUtil';
 
 import Container from '@mui/material/Container';
@@ -23,7 +23,6 @@ import HomeBase from '../../src/components/home/home-base';
 import { getEvent, getUserInfo } from '../../src/api';
 
 import data from '../../src/data.json';
-import Link from '../../src/components/shared/Link';
 import ResourceMeta from '../../src/components/meta/resource-meta';
 import TitleMeta from '../../src/components/meta/title-meta';
 import RobotBlockMeta from '../../src/components/meta/robot-block-meta';
@@ -132,6 +131,11 @@ const EventDisplay = ({ event, error, level, userId }: InferGetServerSidePropsTy
                                 <Typography variant="h3" gutterBottom sx={{ fontWeight: 400 }}>
                                     {formatEventTime(event, event.noEnd, true)}
                                 </Typography>
+                                {event.repeatingId && (
+                                    <Typography sx={{ color: (theme) => darkSwitchGrey(theme) }}>
+                                        Event repeats until {formatTime(event.repeatsUntil, 'dddd, MMMM D, YYYY')}
+                                    </Typography>
+                                )}
                                 <Typography
                                     variant="h3"
                                     sx={{
