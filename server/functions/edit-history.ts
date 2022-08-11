@@ -15,7 +15,7 @@ import History from '../models/history';
  * @param editorId UUIDv4 for the ID of the user that edited the event
  * @param historyId UUIDv4 for the history object
  * @param isNew True if a new resource (default: true)
- * @param club Will use club object instead of req.body to get diff if defined
+ * @param newData Will use resource object instead of req.body to get diff if defined
  */
 export function createHistory(
     req: Request,
@@ -25,7 +25,7 @@ export function createHistory(
     editorId: string,
     historyId: string,
     isNew: boolean = true,
-    club?: ClubObject,
+    newData?: object,
 ): Document {
     // Make sure editor is valid user
     if (!editorId) return null;
@@ -37,7 +37,7 @@ export function createHistory(
         resourceId: id,
         time: new Date().valueOf(),
         editorId,
-        fields: isNew ? objectToHistoryObject(data) : getDiff(data, club || req.body),
+        fields: isNew ? objectToHistoryObject(data) : getDiff(data, newData || req.body),
     });
 }
 
