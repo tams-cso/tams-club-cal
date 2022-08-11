@@ -321,7 +321,7 @@ const EditEvents = ({
 
     // Returns the user back to the event display page
     const back = (_, addEvent = false) => {
-        const url = `/events${id ? `/${id}` : ''}`
+        const url = `/events${id ? `/${id}` : ''}`;
         if (addEvent) router.push('/events');
         else router.push(url);
     };
@@ -566,10 +566,10 @@ const EditEvents = ({
                         severity="info"
                         sx={{ my: 3, backgroundColor: (theme) => darkSwitch(theme, null, '#304249') }}
                     >
-                        This event is an instance of a repeating event. You may either choose to edit all repeating
-                        instances or just this specific event. Editing only this event will detatch the current instance
-                        from the repeating instances! This means that it will NOT be editable with the rest of the
-                        events.
+                        This event is an instance of a repeating event. After hitting submit, you may either choose to
+                        edit all repeating instances or just this specific event. Editing only this event will detatch
+                        the current instance from the repeating instances! This means that it will NOT be editable with
+                        the rest of the events.
                     </Alert>
                 )}
                 <TwoButtonBox success="Submit" onCancel={back} submit right disabled={unauthorized} />
