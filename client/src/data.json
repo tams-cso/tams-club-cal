@@ -138,6 +138,23 @@
     ],
     "changelog": [
         {
+            "v": "6.3",
+            "date": "August 16, 2022",
+            "changes": [
+                "Removed support for Google Calendar integration",
+                "Optimized the repeating events system (faster creation and editing)",
+                "Fixed issue where empty history entries were being added to the edit history",
+                "Renamed the \"private\" checkbox on edit events to \"Show on Calendar\"",
+                "Clarified resolutions of the error about private events with no reservations",
+                "Changed color of events that are not public on the reservation calendar",
+                "Added ability to see user-created events on the user's profile",
+                "Completed the \"How to Use\" section",
+                "Renamed save button on admin edit links",
+                "Replaced \"Invalid token\" with \"Stale token\" text on login page for invalid token",
+                "Sort feedback display on admin dashboard by descending time"
+            ]
+        },
+        {
             "v": "6.2.1",
             "date": "August 11, 2022",
             "changes": [
