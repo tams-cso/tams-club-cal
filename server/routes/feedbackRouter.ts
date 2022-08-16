@@ -8,7 +8,7 @@ const router = express.Router();
  * GET /feedback
  */
 router.get('/', async (req: Request, res: Response) => {
-    const feedback = await Feedback.find({});
+    const feedback = await Feedback.find({}).sort({ time: -1 }).exec();
     res.send(feedback);
 });
 
