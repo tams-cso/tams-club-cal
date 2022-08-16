@@ -22,7 +22,6 @@ import { getParams } from '../../src/util/miscUtil';
 export const getServerSideProps = async (ctx: GetServerSidePropsContext) => {
     // Get the token from cookies
     const token = ctx.req.cookies.token;
-    console.log(token)
     if (token === undefined) return { props: { authorized: false, error: false } };
 
     // Check if valid token and compare with database
