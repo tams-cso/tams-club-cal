@@ -80,8 +80,9 @@ router.post('/', imageUpload, async (req: Request, res: Response) => {
         const newHistory = createHistory(req, newClub.toObject(), 'clubs', id, userId, newId(), true, club);
 
         const clubRes = await newClub.save();
-        const historyRes = await newHistory.save();
-        if (clubRes === newClub && historyRes === newHistory) res.sendStatus(204);
+        if (newHistory) await newHistory.save();
+
+        if (clubRes === newClub) res.sendStatus(204);
         else sendError(res, 500, 'Unable to add new club to database');
     } catch (error) {
         console.error(error);
@@ -118,7 +119,7 @@ router.put('/:id', imageUpload, async (req: Request, res: Response) => {
         // Get User
         const userId = await getUserId(req);
 
-        const clubRes = await Club.updateOne(
+        await Club.updateOne(
             { id },
             {
                 $set: {
@@ -136,13 +137,12 @@ router.put('/:id', imageUpload, async (req: Request, res: Response) => {
 
         // Create history
         const newHistory = createHistory(req, prev, 'clubs', id, userId, newId(), false, club);
-        const historyRes = await newHistory.save();
+        if (newHistory) await newHistory.save();
 
-        if (clubRes.acknowledged && historyRes === newHistory) res.sendStatus(204);
-        else sendError(res, 500, 'Unable to update event in database.');
+        res.sendStatus(204);
     } catch (error) {
         console.error(error);
-        sendError(res, 500, 'Internal server error');
+        sendError(res, 500, 'Unable to update club in database');
     }
 });
 

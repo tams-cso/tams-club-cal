@@ -29,6 +29,7 @@
         "@mui/styles": "^5.2.3",
         "@mui/x-data-grid": "^5.5.0",
         "aws-sdk": "^2.1057.0",
+        "chalk": "4",
         "compression": "^1.7.4",
         "cookie-parser": "^1.4.6",
         "cors": "^2.8.5",

@@ -153,7 +153,7 @@ const Home = ({ eventList, error, level }: InferGetServerSidePropsType<typeof ge
         return (
             <HomeBase title={`Events`}>
                 <Loading error sx={{ marginBottom: 4 }}>
-                    Could not get activity list. Please reload the page or contact the site manager to fix this issue.
+                    Could not get event list. Please reload the page or contact the site manager to fix this issue.
                 </Loading>
             </HomeBase>
         );

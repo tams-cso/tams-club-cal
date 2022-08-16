@@ -7,7 +7,6 @@ import Event from '../models/event';
 import Club from '../models/club';
 import Volunteering from '../models/volunteering';
 import History from '../models/history';
-import { deleteCalendarEvent } from '../functions/gcal';
 import { AccessLevelEnum } from '../types/AccessLevel';
 
 const router = express.Router();
@@ -79,8 +78,7 @@ router.delete('/resources/:resource/:id', async (req: Request, res: Response) =>
                     return;
                 }
 
-                // Delete event from Google Calendar, History DB, and Events DB
-                if (event.publicEvent) await deleteCalendarEvent(event.eventId);
+                // Delete event from History DB and Events DB
                 const deleteRes = await Event.deleteOne({ id: req.params.id });
                 await History.deleteMany({ resource: 'events', editId: req.params.id });
 

@@ -19,11 +19,11 @@ const EventListSection = (props: EventListSectionProps) => {
         <React.Fragment>
             <DateSection time={props.eventList[0].start} />
             <List>
-                {props.eventList.map((activity, index) => {
+                {props.eventList.map((event, index) => {
                     return (
                         <React.Fragment key={index}>
                             {index === 0 ? null : <Divider variant="middle" />}
-                            <EventEntry event={activity} />
+                            <EventEntry event={event} />
                         </React.Fragment>
                     );
                 })}

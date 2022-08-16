@@ -1,7 +1,6 @@
 import express from 'express';
 import type { Request, Response } from 'express';
 import dayjs from 'dayjs';
-import { addToCalendar, deleteCalendarEvent, updateCalendar } from '../functions/gcal';
 import { sendError, newId } from '../functions/util';
 import { createHistory } from '../functions/edit-history';
 import Event from '../models/event';
@@ -111,8 +110,8 @@ router.get('/reservations/room/:room/:month?', async (req: Request, res: Respons
  */
 router.get('/:id', async (req: Request, res: Response) => {
     const id = req.params.id;
-    const activity = await Event.findOne({ id }).exec();
-    if (activity) res.send(activity);
+    const event = await Event.findOne({ id }).exec();
+    if (event) res.send(event);
     else sendError(res, 400, 'Invalid event id');
 });
 
@@ -208,15 +207,6 @@ router.post('/', async (req: Request, res: Response) => {
                 currEnd = currEnd.add(1, 'week');
             }
 
-            // If public, add all events to the Google Calendar
-            if (req.body.publicEvent) {
-                await Promise.all(
-                    eventList.map(async (e) => {
-                        e.eventId = await addToCalendar(e);
-                    })
-                );
-            }
-
             // Create a list of history objects
             const historyList = eventList.map((e) => createHistory(req, e, 'events', e.id, userId, newId()));
             await History.insertMany(historyList);
@@ -230,14 +220,9 @@ router.post('/', async (req: Request, res: Response) => {
         // If not repeating, simply create a new event
         const newEvent = new Event(eventObj);
 
-        // If public, add to Google Calendar
-        if (req.body.publicEvent) {
-            newEvent.eventId = await addToCalendar(newEvent);
-        }
-
         // Create a new history object
         const newHistory = createHistory(req, newEvent.toObject(), 'events', id, userId, newId());
-        await newHistory.save();
+        if (newHistory) await newHistory.save();
 
         // Save the event
         await newEvent.save();
@@ -273,6 +258,15 @@ router.put('/:id', async (req: Request, res: Response) => {
 
         // Check if we are editing all events
         if (req.body.editAll) {
+            // Retrieve all repeating events from database
+            const repeatingEvents = await Event.find({ repeatingId: req.body.repeatingId });
+
+            // Calculate the date change
+            const startChange = dayjs(req.body.start).diff(prev.start);
+            const endChange = dayjs(req.body.end).diff(prev.end);
+
+            // TODO: Check to make sure repeatsUntil is still correct and update if not
+
             // Create the edit object
             const toUpdate = {
                 editorId: userId,
@@ -287,62 +281,24 @@ router.put('/:id', async (req: Request, res: Response) => {
                 repeatsUntil: req.body.repeatsUntil,
             };
 
+            // Add new history entries
+            const historyList = repeatingEvents.map((event) => {
+                const toUpdateFull: EventObject = {
+                    ...toUpdate,
+                    id: event.id,
+                    eventId: event.eventId,
+                    repeatingId: event.repeatingId,
+                    start: event.start + startChange,
+                    end: event.end + endChange,
+                };
+                return createHistory(null, event, 'events', event.id, userId, newId(), false, toUpdateFull);
+            });
+            await History.insertMany(historyList);
+
             // Update events in DB
-            await Event.updateMany({ repeatingId: req.body.repeatingId }, { $set: toUpdate });
-
-            // Retrieve all repeating events from database
-            const repeatingEvents = await Event.find({ repeatingId: req.body.repeatingId });
-
-            // Calculate the date change
-            const startChange = dayjs(req.body.start).diff(prev.start);
-            const endChange = dayjs(req.body.end).diff(prev.end);
-
-            // Iterate through all previous event objects
-            await Promise.all(
-                repeatingEvents.map(async (event) => {
-                    // Update each event with its adjusted date if date was changed
-                    let adjustedStart = null;
-                    let adjustedEnd = null;
-                    if (startChange !== 0 || endChange !== 0) {
-                        adjustedStart = dayjs(event.start).add(startChange, 'ms').valueOf();
-                        adjustedEnd = dayjs(event.end).add(endChange, 'ms').valueOf();
-                    }
-
-                    // Create and save a new history for each object
-                    const toUpdateFull: EventObject = {
-                        ...toUpdate,
-                        id: event.id,
-                        eventId: event.eventId,
-                        repeatingId: event.repeatingId,
-                        start: adjustedStart,
-                        end: adjustedEnd,
-                    };
-                    const newHistory = createHistory(
-                        null,
-                        event,
-                        'events',
-                        event.id,
-                        userId,
-                        newId(),
-                        false,
-                        toUpdateFull
-                    );
-                    await newHistory.save();
-
-                    // Updates the event date fields
-                    if (adjustedStart) {
-                        event.start = adjustedStart;
-                        event.end = adjustedEnd;
-                    }
-
-                    // Updates the event in Google Calendar
-                    if (prev.publicEvent && toUpdate.publicEvent) await updateCalendar(event, event.eventId);
-                    else if (toUpdate.publicEvent) event.eventId = await addToCalendar(event);
-                    else if (prev.publicEvent && !toUpdate.publicEvent) await deleteCalendarEvent(event.eventId);
-
-                    // Save the updated event
-                    await event.save();
-                })
+            await Event.updateMany(
+                { repeatingId: req.body.repeatingId },
+                { $set: toUpdate, $inc: { start: startChange, end: endChange } }
             );
 
             // Send user success and return
@@ -371,11 +327,6 @@ router.put('/:id', async (req: Request, res: Response) => {
             repeatsUntil: null,
         };
 
-        // Update or create google calendar event
-        if (prev.publicEvent && toUpdate.publicEvent) await updateCalendar(req.body, prev.eventId);
-        else if (toUpdate.publicEvent) toUpdate.eventId = await addToCalendar(toUpdate);
-        else if (prev.publicEvent && !toUpdate.publicEvent) await deleteCalendarEvent(prev.eventId);
-
         // Update event in DB
         await Event.updateOne({ id }, { $set: toUpdate });
 
@@ -397,50 +348,57 @@ router.put('/:id', async (req: Request, res: Response) => {
  * Deletes an event by id, needs an authorization token that is valid and has user
  */
 router.delete('/:id', async (req: Request, res: Response) => {
-    // Get the previous event
-    const event: EventObject = await Event.findOne({ id: req.params.id });
-    if (!event) {
-        sendError(res, 400, 'Invalid event ID');
-        return;
+    try {
+        // Get the previous event
+        const event: EventObject = await Event.findOne({ id: req.params.id });
+        if (!event) {
+            sendError(res, 400, 'Invalid event ID');
+            return;
+        }
+
+        // Check if user is authenticated
+        if (!isAuthenticated(req, res, AccessLevelEnum.STANDARD, event.editorId)) return;
+
+        // Delete event from Google Calendar, History DB, and Events DB
+        const deleteRes = await Event.deleteOne({ id: req.params.id });
+        await History.deleteMany({ resource: 'events', editId: req.params.id });
+
+        // Return ok status or error
+        if (deleteRes.deletedCount === 1) res.sendStatus(204);
+        else sendError(res, 500, 'Could not delete event');
+    } catch (error) {
+        console.error(error);
+        sendError(res, 500, 'Internal server error');
     }
-
-    // Check if user is authenticated
-    if (!isAuthenticated(req, res, AccessLevelEnum.STANDARD, event.editorId)) return;
-
-    // Delete event from Google Calendar, History DB, and Events DB
-    if (event.publicEvent) await deleteCalendarEvent(event.eventId);
-    const deleteRes = await Event.deleteOne({ id: req.params.id });
-    await History.deleteMany({ resource: 'events', editId: req.params.id });
-
-    // Return ok status or error
-    if (deleteRes.deletedCount === 1) res.sendStatus(204);
-    else sendError(res, 500, 'Could not delete event');
 });
 
 /**
  * DELETE /events/repeating/<repeatingId>
  */
 router.delete('/repeating/:id', async (req: Request, res: Response) => {
-    // Get the previous event
-    const eventList = await Event.find({ repeatingId: req.params.id });
-    if (eventList.length === 0) {
-        sendError(res, 400, 'Invalid repeating ID');
-        return;
+    try {
+        // Get the previous event
+        const eventList = await Event.find({ repeatingId: req.params.id });
+        if (eventList.length === 0) {
+            sendError(res, 400, 'Invalid repeating ID');
+            return;
+        }
+
+        // Check if user is authenticated
+        if (!isAuthenticated(req, res, AccessLevelEnum.STANDARD, eventList[0].editorId)) return;
+
+        // Delete all events from History DB and Events DB
+        const idList = eventList.map((e) => e.id);
+        await History.deleteMany({ resource: 'events', editId: { $in: idList } });
+        const deleteRes = await Event.deleteMany({ repeatingId: req.params.id });
+
+        // Return ok status or error
+        if (deleteRes.deletedCount > 0) res.sendStatus(204);
+        else sendError(res, 500, 'Could not delete event');
+    } catch (error) {
+        console.error(error);
+        sendError(res, 500, 'Internal server error');
     }
-
-    // Check if user is authenticated
-    if (!isAuthenticated(req, res, AccessLevelEnum.STANDARD, eventList[0].editorId)) return;
-
-    // Delete all events from Google Calendar, History DB, and Events DB
-    for (let i = 0; i < eventList.length; i++) {
-        if (eventList[i].publicEvent) await deleteCalendarEvent(eventList[i].eventId);
-        await History.deleteMany({ resource: 'events', editId: eventList[i].id });
-    }
-    const deleteRes = await Event.deleteMany({ repeatingId: req.params.id });
-
-    // Return ok status or error
-    if (deleteRes.deletedCount > 0) res.sendStatus(204);
-    else sendError(res, 500, 'Could not delete event');
 });
 
 export default router;

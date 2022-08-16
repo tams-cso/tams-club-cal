@@ -73,7 +73,7 @@ export function isSameDate(first: number, second: number): boolean {
  * Formats the full date of the event.
  * Includes an end date if not the same as the start date.
  *
- * @param event The activity object
+ * @param event The event object
  * @returns The formatted full date
  */
 
@@ -85,7 +85,7 @@ export function formatEventDate(event: CalEvent): string {
  * Formats the time of the event.
  * Includes an end time if not the same as the start time.
  *
- * @param event The activity object
+ * @param event The event object
  * @param noEnd If true, will not show an end time
  * @param checkSame If true, will check to see if start !== end and return the end time. This is used for the EventDisplay component
  * @returns The formatted time for the event in the format [h:mma - h:mma]

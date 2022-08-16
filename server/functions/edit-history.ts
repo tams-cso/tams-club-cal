@@ -30,6 +30,12 @@ export function createHistory(
     // Make sure editor is valid user
     if (!editorId) return null;
 
+    // Generate fields object
+    const fields = isNew ? objectToHistoryObject(data) : getDiff(data, newData || req.body);
+
+    // Return null if empty edit
+    if (fields.length === 0) return null;
+
     // Return history object
     return new History({
         id: historyId,
@@ -37,7 +43,7 @@ export function createHistory(
         resourceId: id,
         time: new Date().valueOf(),
         editorId,
-        fields: isNew ? objectToHistoryObject(data) : getDiff(data, newData || req.body),
+        fields,
     });
 }
 
