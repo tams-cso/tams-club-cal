@@ -108,7 +108,7 @@ export function createEvent(
     end: number = dayjs().startOf('hour').add(2, 'hour').valueOf(),
     location: string = 'none',
     noEnd: boolean = false,
-    publicEvent: boolean = true,
+    publicEvent: boolean = false,
     reservation: boolean = false,
     repeatingId: string = null,
     repeatsUntil: number = null,

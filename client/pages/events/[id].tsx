@@ -59,7 +59,8 @@ const EventDisplay = ({ event, error, level, userId }: InferGetServerSidePropsTy
     // If a specific view was passed in, go back to that view
     const back = () => {
         const prevView = getParams('view');
-        router.push(`/${prevView ? `events/${prevView}` : ''}`);
+        if (prevView === 'profile') router.push('/profile/dashboard');
+        else router.push(`/${prevView ? `events/${prevView}` : ''}`);
     };
 
     // Show error message if errored

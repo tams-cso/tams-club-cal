@@ -45,6 +45,12 @@ const ReservationEntry = (props: ReservationEntryProps) => {
     const urlDate = start.format('/YYYY/MM/DD');
     const fullUrl = props.room ? `/room/${props.room.value}/${urlDate}` : urlDate;
 
+    // Get the color
+    const backgroundColor = (theme) =>
+        props.res.data.publicEvent
+            ? alpha(darkSwitch(theme, theme.palette.primary.light, theme.palette.primary.dark), 0.5)
+            : alpha(darkSwitch(theme, theme.palette.secondary.main, theme.palette.secondary.dark), 0.5);
+
     return (
         <Box
             sx={{ position: 'absolute', ...props.sx, left: `${leftOffset}%`, width: `${width}%`, alignSelf: 'center' }}
@@ -61,8 +67,7 @@ const ReservationEntry = (props: ReservationEntryProps) => {
                         textAlign: 'center',
                         textDecoration: 'none',
                         color: 'inherit',
-                        backgroundColor: (theme) =>
-                            alpha(darkSwitch(theme, theme.palette.primary.light, theme.palette.primary.dark), 0.5),
+                        backgroundColor,
                         '&:hover': {
                             textDecoration: 'underline',
                         },

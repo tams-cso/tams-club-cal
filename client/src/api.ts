@@ -125,6 +125,7 @@ async function deleteRequest(url: string, auth: boolean = true): Promise<StatusR
 function createHeaders(auth: boolean, json: boolean): Headers {
     const tokenCookies = getCookie('token');
     const token = tokenCookies ? tokenCookies['token'] : null;
+    console.log("MY TOKEN IS", token);
 
     let headers = new Headers();
     if (auth && token) headers.set('Authorization', `Bearer ${token}`);
@@ -171,8 +172,21 @@ export async function getReservationList(week: number = null): Promise<ListFetch
     return getRequest(`/events/reservations/${week ? week : ''}`) as Promise<ListFetchResponse<CalEvent>>;
 }
 
-export async function getRoomReservationList(room: string, week: number = null): Promise<ListFetchResponse<CalEvent>> {
-    return getRequest(`/events/reservations/room/${room}/${week ? week : ''}`) as Promise<ListFetchResponse<CalEvent>>;
+/**
+ * Gets the list of all reservations for a specific room in a specific month
+ * 
+ * @param room Location to search
+ * @param month Month to show
+ */
+export async function getRoomReservationList(room: string, month: number = null): Promise<ListFetchResponse<CalEvent>> {
+    return getRequest(`/events/reservations/room/${room}/${month ? month : ''}`) as Promise<ListFetchResponse<CalEvent>>;
+}
+
+/**
+ * Gets the list of all events that the user created
+ */
+export async function getUserEvents(token: string): Promise<ListFetchResponse<CalEvent>> {
+    return getRequest(`/events/user/${token}`) as Promise<ListFetchResponse<CalEvent>>;
 }
 
 // Define extra types for event POST/PUT
