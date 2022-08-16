@@ -110,7 +110,7 @@ const Login = ({ authorized, error }: InferGetServerSidePropsType<typeof getServ
                         ></GoogleLogin>
                     </Box>
                     <Typography sx={{ color: (theme) => darkSwitchGrey(theme) }}>
-                        {error ? 'Invalid token detected. Please log in again to refresh the token.' : loginText}
+                        {error ? 'Stale token detected. Please log in again to refresh the token.' : loginText}
                     </Typography>
                 </CardContent>
             </Card>
