@@ -79,7 +79,7 @@ const ReservationDay = (props: ReservationDayProps) => {
 
             // Add the row to the table
             table.push(
-                <Box key={room.value} sx={{ display: 'flex' }}>
+                <Box key={room.value} sx={{ display: 'flex', position: 'relative' }}>
                     {row}
                 </Box>
             );
