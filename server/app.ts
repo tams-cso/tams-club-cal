@@ -8,6 +8,7 @@ import cors from 'cors';
 import compression from 'compression';
 import helmet from 'helmet';
 import morgan from 'morgan';
+import chalk from 'chalk';
 import cookieParser from 'cookie-parser';
 import mongoose, { ConnectOptions } from 'mongoose';
 import { checkEnv, sendError } from './functions/util';
@@ -32,12 +33,24 @@ app.use(cors());
 app.use(compression());
 app.use(helmet());
 app.use(cookieParser());
-app.use(morgan('combined'));
 app.use(express.json());
 app.use(express.urlencoded({ limit: '50mb', extended: true, parameterLimit: 50000 }));
 
 // Trust proxy
 app.set('trust proxy', true);
+
+// Log output with morgan
+app.use(
+    morgan((tokens, req, res) => {
+        return [
+            chalk.green(chalk.bold(tokens.method(req, res))),
+            tokens.url(req, res),
+            chalk.blue(tokens.status(req, res)),
+            chalk.yellow(tokens['response-time'](req, res) + 'ms'),
+            chalk.grey(JSON.stringify(req.body)),
+        ].join(' ');
+    })
+);
 
 // Parse every request here first
 app.use(function (req: Request, res: Response, next) {
