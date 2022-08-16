@@ -7,6 +7,7 @@ import Event from '../models/event';
 import { AccessLevelEnum } from '../types/AccessLevel';
 import History from '../models/history';
 import { getUserId, isAuthenticated } from '../functions/auth';
+import User from '../models/user';
 
 const router = express.Router();
 
@@ -104,7 +105,7 @@ router.get('/reservations/room/:room/:month?', async (req: Request, res: Respons
 });
 
 /**
- * GET /events/<id>
+ * GET /events/id/<id>
  *
  * Gets an event by id
  */
@@ -151,6 +152,29 @@ router.get('/reservations/search/:location/:start/:end', async (req: Request, re
     } catch (error) {
         console.error(error);
         sendError(res, 500, 'Internal server error when searching for a reservation.');
+    }
+});
+
+/**
+ * GET /events/user/<token>
+ *
+ * Fetches the events for the authenticated user
+ */
+router.get('/user/:token', async (req: Request, res: Response) => {
+    try {
+        // Fetch the user's events
+        const user = await User.findOne({ token: req.params.token });
+        if (!user) {
+            sendError(res, 400, 'Invalid user token');
+            return;
+        }
+        const data = await Event.find({ editorId: user.id }).sort({ start: -1 }).exec();
+
+        // Send data to user or error
+        res.send(data);
+    } catch (error) {
+        console.error(error);
+        sendError(res, 500, 'Internal server error when searching for events by a user.');
     }
 });
 
