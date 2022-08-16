@@ -1,7 +1,7 @@
 import React from 'react';
 import Typography from '@mui/material/Typography';
 import Paragraph from '../shared/paragraph';
-import { darkSwitchGrey } from '../../util/cssUtil';
+import { darkSwitch } from '../../util/cssUtil';
 
 import data from '../../data.json';
 
@@ -21,7 +21,7 @@ const HowToUse = () => {
                     >
                         {entry.section}
                     </Typography>
-                    <Paragraph text={entry.text} fontSize="1.125rem" sx={{ color: (theme) => darkSwitchGrey(theme) }} />
+                    <Paragraph text={entry.text} fontSize="1.125rem" sx={{ color: (theme) => darkSwitch(theme, theme.palette.grey[800], theme.palette.grey[400]) }} />
                 </React.Fragment>
             ))}
         </React.Fragment>
