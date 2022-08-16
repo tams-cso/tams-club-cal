@@ -110,8 +110,8 @@ router.get('/reservations/room/:room/:month?', async (req: Request, res: Respons
  */
 router.get('/:id', async (req: Request, res: Response) => {
     const id = req.params.id;
-    const activity = await Event.findOne({ id }).exec();
-    if (activity) res.send(activity);
+    const event = await Event.findOne({ id }).exec();
+    if (event) res.send(event);
     else sendError(res, 400, 'Invalid event id');
 });
 
