@@ -22,7 +22,6 @@ import { getParams } from '../../src/util/miscUtil';
 export const getServerSideProps = async (ctx: GetServerSidePropsContext) => {
     // Get the token from cookies
     const token = ctx.req.cookies.token;
-    console.log(token)
     if (token === undefined) return { props: { authorized: false, error: false } };
 
     // Check if valid token and compare with database
@@ -110,7 +109,7 @@ const Login = ({ authorized, error }: InferGetServerSidePropsType<typeof getServ
                         ></GoogleLogin>
                     </Box>
                     <Typography sx={{ color: (theme) => darkSwitchGrey(theme) }}>
-                        {error ? 'Invalid token detected. Please log in again to refresh the token.' : loginText}
+                        {error ? 'Stale token detected. Please log in again to refresh the token.' : loginText}
                     </Typography>
                 </CardContent>
             </Card>

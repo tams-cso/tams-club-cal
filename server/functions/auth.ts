@@ -90,7 +90,6 @@ export async function isValidToken(
     const user = await User.findOne({ token }).exec();
     if (user !== null && user.level >= level) {
         if (!id || user.level === AccessLevelEnum.ADMIN) return true;
-        console.log(user.id);
         return id === user.id;
     }
     return false;

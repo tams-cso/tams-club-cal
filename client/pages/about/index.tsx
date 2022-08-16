@@ -43,7 +43,7 @@ const About = () => {
                 <Paragraph text={data.aboutFeedback} fontSize="1.1rem" />
                 <FeedbackForm />
                 <Typography variant="h2" sx={sectionTitle}>
-                    Site Information
+                    How to Use (Read Me!) 
                 </Typography>
                 <HowToUse />
                 <Typography variant="h2" sx={sectionTitle}>

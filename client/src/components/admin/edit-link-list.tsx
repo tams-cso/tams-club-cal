@@ -112,7 +112,7 @@ const EditLinkList = () => {
                 <Button color="secondary" onClick={addItem} sx={{ margin: '6px auto 24px', display: 'block' }}>
                     Add External Link
                 </Button>
-                <TwoButtonBox success="Submit" onCancel={reset} submit right />
+                <TwoButtonBox success="Save" onCancel={reset} submit right />
             </FormWrapper>
         </Paper>
     );

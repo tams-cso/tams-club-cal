@@ -125,7 +125,6 @@ async function deleteRequest(url: string, auth: boolean = true): Promise<StatusR
 function createHeaders(auth: boolean, json: boolean): Headers {
     const tokenCookies = getCookie('token');
     const token = tokenCookies ? tokenCookies['token'] : null;
-    console.log("MY TOKEN IS", token);
 
     let headers = new Headers();
     if (auth && token) headers.set('Authorization', `Bearer ${token}`);
