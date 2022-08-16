@@ -51,12 +51,12 @@ router.post('/', async (req: Request, res: Response) => {
             description: req.body.description,
             filters: req.body.filters,
         });
-        
+
         const newHistory = createHistory(req, newVolunteering.toObject(), 'volunteering', id, userId, newId());
-        const historyRes = await newHistory.save();
+        if (newHistory) await newHistory.save();
 
         const volunteeringRes = await newVolunteering.save();
-        if (volunteeringRes === newVolunteering && historyRes === newHistory) res.sendStatus(204);
+        if (volunteeringRes === newVolunteering) res.sendStatus(204);
         else sendError(res, 500, 'Unable to add new volunteering opportunity to database');
     } catch (error) {
         console.error(error);
@@ -81,7 +81,7 @@ router.put('/:id', async (req: Request, res: Response) => {
         // Get user ID
         const userId = await getUserId(req);
 
-        const volunteeringRes = await Volunteering.updateOne(
+        await Volunteering.updateOne(
             { id },
             {
                 $set: {
@@ -94,13 +94,12 @@ router.put('/:id', async (req: Request, res: Response) => {
         );
 
         const newHistory = createHistory(req, prev, 'volunteering', id, userId, newId(), false);
-        const historyRes = await newHistory.save();
+        if (newHistory) await newHistory.save();
 
-        if (volunteeringRes.acknowledged && historyRes === newHistory) res.sendStatus(204);
-        else sendError(res, 500, 'Unable to update volunteering opportunity in database.');
+        res.sendStatus(204);
     } catch (error) {
         console.error(error);
-        sendError(res, 500, 'Internal server error');
+        sendError(res, 500, 'Unable to update volunteering opportunity in database.');
     }
 });
 

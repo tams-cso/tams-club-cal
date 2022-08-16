@@ -222,7 +222,7 @@ router.post('/', async (req: Request, res: Response) => {
 
         // Create a new history object
         const newHistory = createHistory(req, newEvent.toObject(), 'events', id, userId, newId());
-        await newHistory.save();
+        if (newHistory) await newHistory.save();
 
         // Save the event
         await newEvent.save();
@@ -348,47 +348,57 @@ router.put('/:id', async (req: Request, res: Response) => {
  * Deletes an event by id, needs an authorization token that is valid and has user
  */
 router.delete('/:id', async (req: Request, res: Response) => {
-    // Get the previous event
-    const event: EventObject = await Event.findOne({ id: req.params.id });
-    if (!event) {
-        sendError(res, 400, 'Invalid event ID');
-        return;
+    try {
+        // Get the previous event
+        const event: EventObject = await Event.findOne({ id: req.params.id });
+        if (!event) {
+            sendError(res, 400, 'Invalid event ID');
+            return;
+        }
+
+        // Check if user is authenticated
+        if (!isAuthenticated(req, res, AccessLevelEnum.STANDARD, event.editorId)) return;
+
+        // Delete event from Google Calendar, History DB, and Events DB
+        const deleteRes = await Event.deleteOne({ id: req.params.id });
+        await History.deleteMany({ resource: 'events', editId: req.params.id });
+
+        // Return ok status or error
+        if (deleteRes.deletedCount === 1) res.sendStatus(204);
+        else sendError(res, 500, 'Could not delete event');
+    } catch (error) {
+        console.error(error);
+        sendError(res, 500, 'Internal server error');
     }
-
-    // Check if user is authenticated
-    if (!isAuthenticated(req, res, AccessLevelEnum.STANDARD, event.editorId)) return;
-
-    // Delete event from Google Calendar, History DB, and Events DB
-    const deleteRes = await Event.deleteOne({ id: req.params.id });
-    await History.deleteMany({ resource: 'events', editId: req.params.id });
-
-    // Return ok status or error
-    if (deleteRes.deletedCount === 1) res.sendStatus(204);
-    else sendError(res, 500, 'Could not delete event');
 });
 
 /**
  * DELETE /events/repeating/<repeatingId>
  */
 router.delete('/repeating/:id', async (req: Request, res: Response) => {
-    // Get the previous event
-    const eventList = await Event.find({ repeatingId: req.params.id });
-    if (eventList.length === 0) {
-        sendError(res, 400, 'Invalid repeating ID');
-        return;
+    try {
+        // Get the previous event
+        const eventList = await Event.find({ repeatingId: req.params.id });
+        if (eventList.length === 0) {
+            sendError(res, 400, 'Invalid repeating ID');
+            return;
+        }
+
+        // Check if user is authenticated
+        if (!isAuthenticated(req, res, AccessLevelEnum.STANDARD, eventList[0].editorId)) return;
+
+        // Delete all events from History DB and Events DB
+        const idList = eventList.map((e) => e.id);
+        await History.deleteMany({ resource: 'events', editId: { $in: idList } });
+        const deleteRes = await Event.deleteMany({ repeatingId: req.params.id });
+
+        // Return ok status or error
+        if (deleteRes.deletedCount > 0) res.sendStatus(204);
+        else sendError(res, 500, 'Could not delete event');
+    } catch (error) {
+        console.error(error);
+        sendError(res, 500, 'Internal server error');
     }
-
-    // Check if user is authenticated
-    if (!isAuthenticated(req, res, AccessLevelEnum.STANDARD, eventList[0].editorId)) return;
-
-    // Delete all events from History DB and Events DB
-    const idList = eventList.map((e) => e.id);
-    await History.deleteMany({ resource: 'events', editId: { $in: idList } });
-    const deleteRes = await Event.deleteMany({ repeatingId: req.params.id });
-
-    // Return ok status or error
-    if (deleteRes.deletedCount > 0) res.sendStatus(204);
-    else sendError(res, 500, 'Could not delete event');
 });
 
 export default router;
