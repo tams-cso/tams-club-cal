@@ -58,7 +58,7 @@ type SubmitData = {
     date: Dayjs;
     noEnd: boolean;
     description: string;
-    private: boolean;
+    public: boolean;
     repeatsWeekly: boolean;
     repeatsUntil: Dayjs;
 };
@@ -122,7 +122,7 @@ const EditEvents = ({
     const watchNoEnd: boolean = watch('noEnd');
     const watchLocation: string = watch('location');
     const watchOtherLocation: string = watch('otherLocation');
-    const watchHideEvent: boolean = watch('private');
+    const watchPublic: boolean = watch('public');
     const watchRepeatsWeekly: boolean = watch('repeatsWeekly');
     const watchRepeatsUntil: Dayjs = watch('repeatsUntil');
 
@@ -175,8 +175,8 @@ const EditEvents = ({
 
     // Set display error if neither public or reservation is selected
     useEffect(() => {
-        setDisplayError(watchHideEvent && noReservationLocations.indexOf(watchLocation) !== -1);
-    }, [watchHideEvent, watchLocation]);
+        setDisplayError(!watchPublic && noReservationLocations.indexOf(watchLocation) !== -1);
+    }, [watchPublic, watchLocation]);
 
     // When the user submits the form, either create or update the event
     const onSubmit: SubmitHandler<SubmitData> = (data: SubmitData, e) => {
@@ -216,7 +216,7 @@ const EditEvents = ({
         }
 
         // Make sure the events with a location are shown
-        if (data.private && noReservationLocations.indexOf(data.location) !== -1) {
+        if (data.public && noReservationLocations.indexOf(data.location) !== -1) {
             setPopupEvent(createPopupEvent('Events that do not have a room reservation cannot be private!', 3));
         }
 
@@ -263,7 +263,7 @@ const EditEvents = ({
             endTime,
             data.location === 'other' ? data.otherLocation : data.location,
             data.noEnd,
-            !data.private,
+            data.public,
             createReservation,
             data.repeatsWeekly ? '1' : event.repeatingId,
             data.repeatsWeekly ? data.repeatsUntil.valueOf() : event.repeatsUntil
@@ -529,9 +529,9 @@ const EditEvents = ({
                 />
                 <ControlledCheckbox
                     control={control}
-                    name="private"
-                    label="Private event/reservation (This will be shown ONLY on the reservation calendar)"
-                    value={!event.publicEvent}
+                    name="public"
+                    label="Show on Public Calendar (Only check this if you want your event to be shown on the schedule view)"
+                    value={event.publicEvent}
                     setValue={setValue}
                     sx={{ display: 'block' }}
                 />
