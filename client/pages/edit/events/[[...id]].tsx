@@ -537,8 +537,8 @@ const EditEvents = ({
                 />
                 {displayError ? (
                     <Typography sx={{ color: (theme) => theme.palette.error.main }}>
-                        You may not hide events that do not have a reservation! (Because they would literally not show
-                        up anywhere)
+                        You may not hide events that do not have a reservation! (Either make the event public or choose
+                        a location)
                     </Typography>
                 ) : null}
                 {event.id && !duplicate ? null : (
