@@ -48,7 +48,7 @@ const ReservationDay = (props: ReservationDayProps) => {
         data.rooms.forEach((room) => {
             // Create the labels for each row, which is the room name
             const row = [
-                <Box key={room.value} sx={{ width: '10%', ...cellStyle }}>
+                <Box key={room.value} sx={{ width: '10.75%', ...cellStyle }}>
                     <Link
                         href={`/events/reservations/room/${room.value}/${props.date.format('YYYY/MM/DD')}`}
                         sx={{
@@ -73,8 +73,8 @@ const ReservationDay = (props: ReservationDayProps) => {
             });
 
             // Add 18 empty divs to draw the empty grid
-            for (let i = 0; i < 18; i++) {
-                row.push(<Box key={i} sx={{ width: '5%', ...cellStyle }} />);
+            for (let i = 0; i < 17; i++) {
+                row.push(<Box key={i} sx={{ width: '5.25%', ...cellStyle }} />);
             }
 
             // Add the row to the table
@@ -97,7 +97,7 @@ const ReservationDay = (props: ReservationDayProps) => {
                     id={props.date.format('YYYY-MM-DD')}
                     sx={{
                         ...cellStyle,
-                        width: '10%',
+                        width: '10.75%',
                         margin: 0,
                         textAlign: 'left',
                         paddingLeft: '0.5rem',
@@ -113,7 +113,7 @@ const ReservationDay = (props: ReservationDayProps) => {
                         key={i}
                         sx={{
                             ...cellStyle,
-                            width: '5%',
+                            width: '5.25%',
                             textAlign: 'left',
                             paddingLeft: '0.5rem',
                             fontWeight: 500,
