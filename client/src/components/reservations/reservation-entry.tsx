@@ -30,11 +30,11 @@ const ReservationEntry = (props: ReservationEntryProps) => {
     // Calculate the offset (percentage of table width)
     const hourStart = start.hour();
     const minuteStart = start.minute();
-    const leftOffset = 10 + (hourStart - 6) * 5 + (5 * minuteStart) / 60;
+    const leftOffset = 10.75 + (hourStart - 6) * 5.25 + (5.25 * minuteStart) / 60;
 
     // Calculate the width
     const diffMinute = end.diff(start, 'minute');
-    const width = (5 * diffMinute) / 60;
+    const width = (5.25 * diffMinute) / 60;
 
     // Format the tooltip title
     const startFormatted = formatTime(start.valueOf(), 'h:mma', true);

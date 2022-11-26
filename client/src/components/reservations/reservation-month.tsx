@@ -53,7 +53,7 @@ const ReservationMonth = (props: ReservationMonthProps) => {
         while (curr.isSame(month, 'month')) {
             // Create the labels for each row, which is the date
             const row = [
-                <Box key={curr.valueOf()} sx={{ width: '10%', ...cellStyle }}>
+                <Box key={curr.valueOf()} sx={{ width: '10.75%', ...cellStyle }}>
                     {curr.format('ddd, MMM DD, YYYY')}
                 </Box>,
             ];
@@ -66,9 +66,9 @@ const ReservationMonth = (props: ReservationMonthProps) => {
                 row.push(<ReservationEntry res={res} key={res.data.name} room={props.room} />);
             });
 
-            // Add 18 empty divs to draw the empty grid
-            for (let i = 0; i < 18; i++) {
-                row.push(<Box key={i} sx={{ width: '5%', ...cellStyle }} />);
+            // Add 17 empty divs to draw the empty grid
+            for (let i = 0; i < 17; i++) {
+                row.push(<Box key={i} sx={{ width: '5.25%', ...cellStyle }} />);
             }
 
             // Add the row to the table
@@ -94,7 +94,7 @@ const ReservationMonth = (props: ReservationMonthProps) => {
                     id={props.date.format('YYYY-MM-DD')}
                     sx={{
                         ...cellStyle,
-                        width: '10%',
+                        width: '10.75%',
                         margin: 0,
                         textAlign: 'left',
                         paddingLeft: '0.5rem',
@@ -110,7 +110,7 @@ const ReservationMonth = (props: ReservationMonthProps) => {
                         key={i}
                         sx={{
                             ...cellStyle,
-                            width: '5%',
+                            width: '5.25%',
                             textAlign: 'left',
                             paddingLeft: '0.5rem',
                             fontWeight: 500,
