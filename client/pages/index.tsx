@@ -88,10 +88,14 @@ const Home = ({ eventList, error, level }: InferGetServerSidePropsType<typeof ge
 
         // Filter the event list
         const filteredEventList = eventList.filter((event) => {
-            // If no filters selected, return true
-            if (!(filters.event || filters.ga || filters.meeting || filters.volunteering || filters.other)) return true;
+            // If no filters selected, ignore filter field and check for private event
+            if (!(filters.event || filters.ga || filters.meeting || filters.volunteering || filters.other)) {
+                return showPrivate || event.publicEvent;
+            }
 
-            return filters[event.type];
+            // Check if event matches filter
+            // AND isn't private if we want to hide private events
+            return filters[event.type] && (showPrivate || event.publicEvent);
         });
 
         // Return if the list is empty
@@ -132,7 +136,7 @@ const Home = ({ eventList, error, level }: InferGetServerSidePropsType<typeof ge
 
         // Display list
         setEventComponentList(groupedComponents);
-    }, [eventList, filters]);
+    }, [eventList, filters, showPrivate]);
 
     // Open the popup element on click
     // The setAchorEl is used for the Popover component
@@ -153,7 +157,7 @@ const Home = ({ eventList, error, level }: InferGetServerSidePropsType<typeof ge
     // Change showPrivate when switch state is changed
     const handlePrivateChange = (event) => {
         setShowPrivate(event.target.checked);
-    }
+    };
 
     // Show error message if errored
     if (error) {
@@ -179,7 +183,7 @@ const Home = ({ eventList, error, level }: InferGetServerSidePropsType<typeof ge
                 <AddButton
                     color="primary"
                     label="Event"
-                    path={level < AccessLevelEnum.STANDARD ? "/profile?prev=/edit/events" : "/edit/events"}
+                    path={level < AccessLevelEnum.STANDARD ? '/profile?prev=/edit/events' : '/edit/events'}
                 />
                 <Box width="100%" marginBottom={2} display="flex" alignItems="center">
                     <Tooltip title="Filters">
@@ -198,7 +202,12 @@ const Home = ({ eventList, error, level }: InferGetServerSidePropsType<typeof ge
                         Filter Events by Type
                     </Typography>
                     <FormGroup>
-                        <FormControlLabel control={<Switch defaultChecked />} checked={showPrivate} onChange={handlePrivateChange} label="Show Private Events" />
+                        <FormControlLabel
+                            control={<Switch />}
+                            checked={showPrivate}
+                            onChange={handlePrivateChange}
+                            label="Show Private Events"
+                        />
                     </FormGroup>
                 </Box>
                 {eventComponentList}
