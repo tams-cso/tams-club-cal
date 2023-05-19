@@ -157,8 +157,8 @@ export async function getEventListInRange(start: number, end: number): Promise<L
  *
  * @param id ID of the event to get
  */
-export async function getEvent(id: string): Promise<ResourceFetchResponse<CalEvent>> {
-    return getRequest(`/events/${id}`) as Promise<ResourceFetchResponse<CalEvent>>;
+export async function getEvent(id: string): Promise<ResourceFetchResponse<SingleEvent>> {
+    return getRequest(`/events/${id}`) as Promise<ResourceFetchResponse<SingleEvent>>;
 }
 
 /**
