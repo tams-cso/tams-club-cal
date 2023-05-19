@@ -4,10 +4,10 @@ import { useRouter } from 'next/router';
 import { Typography } from '@mui/material';
 import dayjs from 'dayjs';
 import { getAccessLevel } from '../../../src/util/miscUtil';
-import { parsePublicEventList } from '../../../src/util/dataParsing';
+import { parseEventList } from '../../../src/util/dataParsing';
 import { parseDateParams } from '../../../src/util/datetime';
 import { darkSwitch } from '../../../src/util/cssUtil';
-import { getPublicEventListInRange } from '../../../src/api';
+import { getEventListInRange } from '../../../src/api';
 import { AccessLevelEnum } from '../../../src/types/enums';
 
 import Box from '@mui/material/Box';
@@ -57,7 +57,7 @@ export const getServerSideProps = async (ctx: GetServerSidePropsContext) => {
 
     // Retrieve the events based on the set dates
     // If there is an error, show an error popup and don't continue
-    let res = await getPublicEventListInRange(startOfPrevMonth.valueOf(), endOfNextMonth.valueOf());
+    let res = await getEventListInRange(startOfPrevMonth.valueOf(), endOfNextMonth.valueOf());
     const error = res.status !== 200;
     const level = await getAccessLevel(ctx);
     return {
@@ -98,7 +98,7 @@ const Calendar = (props: InferGetServerSidePropsType<typeof getServerSideProps>)
         if (props.error) return;
 
         // Parse the fetched events by splitting multi-day events into separate event objects
-        const events = parsePublicEventList(props.activities);
+        const events = parseEventList(props.activities);
 
         // Create the actual list of calendar days by grouping
         // events into their days and adding it to the components list

@@ -13,7 +13,7 @@ import { isNotMidnight } from './datetime';
  * @returns The event list with split up events across days
  */
 
-export function parsePublicEventList(eventList: CalEvent[]): CalEvent[] {
+export function parseEventList(eventList: CalEvent[]): CalEvent[] {
     const outputList = [];
     eventList.forEach((a) => {
         // Simply return the event if it does not span across multiple days

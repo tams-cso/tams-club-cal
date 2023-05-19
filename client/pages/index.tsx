@@ -3,9 +3,9 @@ import { GetServerSidePropsContext, InferGetServerSidePropsType } from 'next';
 import type { SxProps, Theme } from '@mui/material';
 import dayjs from 'dayjs';
 import { AccessLevelEnum } from '../src/types/enums';
-import { getPublicEventList } from '../src/api';
+import { getEventList } from '../src/api';
 import { getAccessLevel } from '../src/util/miscUtil';
-import { parsePublicEventList } from '../src/util/dataParsing';
+import { parseEventList } from '../src/util/dataParsing';
 import { isSameDate } from '../src/util/datetime';
 import { darkSwitchGrey } from '../src/util/cssUtil';
 
@@ -20,6 +20,7 @@ import FormLabel from '@mui/material/FormLabel';
 import FormControlLabel from '@mui/material/FormControlLabel';
 import FormGroup from '@mui/material/FormGroup';
 import Checkbox from '@mui/material/Checkbox';
+import Switch from '@mui/material/Switch';
 import FilterListIcon from '@mui/icons-material/FilterList';
 import HomeBase from '../src/components/home/home-base';
 import Loading from '../src/components/shared/loading';
@@ -37,7 +38,7 @@ const listTextFormat = {
 
 // Server-side Rendering
 export const getServerSideProps = async (ctx: GetServerSidePropsContext) => {
-    const eventRes = await getPublicEventList();
+    const eventRes = await getEventList();
     const level = await getAccessLevel(ctx);
 
     // Return error if bad data
@@ -47,7 +48,7 @@ export const getServerSideProps = async (ctx: GetServerSidePropsContext) => {
     // that do not start on or after the current date
     const startOfToday = dayjs().startOf('day').valueOf();
     const filteredList = eventRes.data.sort((a, b) => a.start - b.start).filter((e) => e.start >= startOfToday);
-    const parsedEventList = parsePublicEventList(filteredList);
+    const parsedEventList = parseEventList(filteredList);
     return {
         props: { eventList: parsedEventList, error: false, level },
     };
@@ -58,6 +59,7 @@ const Home = ({ eventList, error, level }: InferGetServerSidePropsType<typeof ge
         <Loading sx={{ marginBottom: 4 }} />
     );
     const [anchorEl, setAnchorEl] = useState(null);
+    const [showPrivate, setShowPrivate] = useState(true);
     const [filters, setFilters] = useState({
         event: false,
         ga: false,
@@ -148,6 +150,11 @@ const Home = ({ eventList, error, level }: InferGetServerSidePropsType<typeof ge
         setFilters({ ...filters, [event.target.name]: event.target.checked });
     };
 
+    // Change showPrivate when switch state is changed
+    const handlePrivateChange = (event) => {
+        setShowPrivate(event.target.checked);
+    }
+
     // Show error message if errored
     if (error) {
         return (
@@ -190,6 +197,9 @@ const Home = ({ eventList, error, level }: InferGetServerSidePropsType<typeof ge
                     >
                         Filter Events by Type
                     </Typography>
+                    <FormGroup>
+                        <FormControlLabel control={<Switch defaultChecked />} checked={showPrivate} onChange={handlePrivateChange} label="Show Private Events" />
+                    </FormGroup>
                 </Box>
                 {eventComponentList}
             </Container>
