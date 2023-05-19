@@ -60,6 +60,15 @@ const EventEntry = ({ event }: EventEntryProps) => {
                             fontSize: { lg: '1.25rem', xs: '1rem' },
                         }}
                     >
+                        <StyledSpan
+                            sx={{
+                                color: (theme: Theme) =>
+                                    darkSwitch(theme, theme.palette.secondary.dark, theme.palette.secondary.main),
+                                fontSize: { lg: '1rem', xs: '0.75rem' },
+                            }}
+                        >
+                            {!event.publicEvent ? '[Private] ' : ''}
+                        </StyledSpan>
                         {event.name}
                     </Typography>
                     <Typography
