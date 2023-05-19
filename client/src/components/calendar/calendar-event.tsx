@@ -7,6 +7,7 @@ import { darkSwitch, darkSwitchGrey } from '../../util/cssUtil';
 import ListItem from '@mui/material/ListItem';
 import Typography from '@mui/material/Typography';
 import Link from '../shared/Link';
+import StyledSpan from '../shared/styled-span';
 
 interface CalendarEventProps {
     /** Event object to display */
@@ -61,6 +62,14 @@ const CalendarEvent = (props: CalendarEventProps) => {
                         fontSize: { lg: '0.85rem', xs: '0.65rem' },
                     }}
                 >
+                    <StyledSpan
+                        sx={{
+                            color: (theme: Theme) =>
+                                darkSwitch(theme, theme.palette.secondary.dark, theme.palette.secondary.main),
+                        }}
+                    >
+                        {!props.event.publicEvent ? '[p] ' : ''}
+                    </StyledSpan>
                     {props.event.name}
                 </Typography>
             </Link>

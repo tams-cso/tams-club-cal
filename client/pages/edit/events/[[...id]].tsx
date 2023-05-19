@@ -107,7 +107,6 @@ const EditEvents = ({
     const [repPopup, setRepPopup] = useState(false);
     const [editAll, setEditAll] = useState('one');
     const [tempData, setTempData] = useState<SubmitData>(null);
-    const [displayError, setDisplayError] = useState(false);
     const {
         handleSubmit,
         setError,
@@ -173,11 +172,6 @@ const EditEvents = ({
         }
     }, [watchLocation]);
 
-    // Set display error if neither public or reservation is selected
-    useEffect(() => {
-        setDisplayError(!watchPublic && noReservationLocations.indexOf(watchLocation) !== -1);
-    }, [watchPublic, watchLocation]);
-
     // When the user submits the form, either create or update the event
     const onSubmit: SubmitHandler<SubmitData> = (data: SubmitData, e) => {
         // Stop reload
@@ -213,11 +207,6 @@ const EditEvents = ({
         if (dayjs(endTime).diff(startTime, 'day') > 100) {
             setPopupEvent(createPopupEvent('Events cannot last more than 100 days!', 3));
             return;
-        }
-
-        // Make sure the events with a location are shown
-        if (data.public && noReservationLocations.indexOf(data.location) !== -1) {
-            setPopupEvent(createPopupEvent('Events that do not have a room reservation cannot be private!', 3));
         }
 
         // Start the upload process display because the reservation might take a bit to find
@@ -530,17 +519,11 @@ const EditEvents = ({
                 <ControlledCheckbox
                     control={control}
                     name="public"
-                    label="Show on Public Calendar (Only check this if you want your event to be shown on the schedule view)"
+                    label="Public Event (Check this if your event is open to everyone)"
                     value={event.publicEvent}
                     setValue={setValue}
                     sx={{ display: 'block' }}
                 />
-                {displayError ? (
-                    <Typography sx={{ color: (theme) => theme.palette.error.main }}>
-                        You may not hide events that do not have a reservation! (Either make the event public or choose
-                        a location)
-                    </Typography>
-                ) : null}
                 {event.id && !duplicate ? null : (
                     <FormBox sx={{ marginTop: 2 }}>
                         <ControlledCheckbox

@@ -138,7 +138,7 @@ function createHeaders(auth: boolean, json: boolean): Headers {
 /**
  * Gets the list of public events.
  */
-export async function getPublicEventList(): Promise<ListFetchResponse<CalEvent>> {
+export async function getEventList(): Promise<ListFetchResponse<CalEvent>> {
     return getRequest('/events') as Promise<ListFetchResponse<CalEvent>>;
 }
 
@@ -148,7 +148,7 @@ export async function getPublicEventList(): Promise<ListFetchResponse<CalEvent>>
  * @param start Starting time to get events from
  * @param end Ending time to get events to
  */
-export async function getPublicEventListInRange(start: number, end: number): Promise<ListFetchResponse<CalEvent>> {
+export async function getEventListInRange(start: number, end: number): Promise<ListFetchResponse<CalEvent>> {
     return getRequest(`/events?start=${start}&end=${end}`) as Promise<ListFetchResponse<CalEvent>>;
 }
 

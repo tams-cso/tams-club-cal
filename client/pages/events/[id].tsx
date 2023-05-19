@@ -28,10 +28,7 @@ import TitleMeta from '../../src/components/meta/title-meta';
 import RobotBlockMeta from '../../src/components/meta/robot-block-meta';
 
 // Coloring for the event type
-const eventTypeStyle = {
-    color: (theme: Theme) => darkSwitch(theme, theme.palette.grey[600], theme.palette.secondary.main),
-    fontSize: '1.5rem',
-};
+const eventTypeStyle = {};
 
 // Server-side Rendering
 export const getServerSideProps = async (ctx: GetServerSidePropsContext) => {
@@ -115,7 +112,21 @@ const EventDisplay = ({ event, error, level, userId }: InferGetServerSidePropsTy
                                     padding: { lg: 1, xs: 0 },
                                 }}
                             >
-                                <Typography sx={eventTypeStyle}>{eventTypeToString(event.type)}</Typography>
+                                <Typography
+                                    sx={{
+                                        color: (theme: Theme) =>
+                                            event.publicEvent
+                                                ? theme.palette.primary.main
+                                                : darkSwitch(
+                                                      theme,
+                                                      theme.palette.secondary.dark,
+                                                      theme.palette.secondary.main
+                                                  ),
+                                        fontSize: '1.5rem',
+                                    }}
+                                >
+                                    {eventTypeToString(event.type) + (event.publicEvent ? ' [Public]' : ' [Private]')}
+                                </Typography>
                                 <Typography variant="h2" component="h1">
                                     {event.name}
                                 </Typography>

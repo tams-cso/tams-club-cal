@@ -14,7 +14,7 @@ const router = express.Router();
 /**
  * GET /events
  *
- * Sends a list of public events
+ * Sends a list of all events
  *
  * Query parameters:
  * - start:      Starting time to get events from (default: Current Day Start)
@@ -33,20 +33,18 @@ router.get('/', async (req: Request, res: Response) => {
     const end = Number(req.query.end) || null;
 
     if (!end) {
-        const activities = await Event.find({
-            publicEvent: true,
+        const events = await Event.find({
             start: { $gte: dayjs(start).startOf('day').subtract(1, 'day') },
         }).exec();
-        res.send(activities);
+        res.send(events);
     } else {
-        const activities = await Event.find({
-            publicEvent: true,
+        const events = await Event.find({
             start: {
                 $gte: dayjs(start).startOf('day').subtract(1, 'day'),
                 $lte: dayjs(end).endOf('day').add(1, 'day'),
             },
         }).exec();
-        res.send(activities);
+        res.send(events);
     }
 });
 
