@@ -37,7 +37,7 @@ const HomeDrawerList = () => {
     useEffect(() => {
         setLinkComponents(
             links.map((link) => (
-                <ListItemButton component="a" href={link.url} target="_blank">
+                <ListItemButton component="a" href={link.url} target="_blank" key={link.url}>
                     <MaterialSymbol icon={link.icon} />
                     <ListItemText primary={link.name} />
                 </ListItemButton>
