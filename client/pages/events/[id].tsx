@@ -75,7 +75,6 @@ const EventDisplay = ({ event, error, level, userId }: InferGetServerSidePropsTy
     }
 
     const location = data.rooms.find((d) => d.value === event.location);
-    const reserved = event.reservation ? ' (Reserved)' : '';
     const unauthorized =
         (level < AccessLevelEnum.STANDARD || userId !== event.editorId) && level !== AccessLevelEnum.ADMIN;
 
@@ -152,13 +151,17 @@ const EventDisplay = ({ event, error, level, userId }: InferGetServerSidePropsTy
                                     variant="h3"
                                     sx={{
                                         marginTop: 6,
-                                        color: (theme) => darkSwitchGrey(theme),
                                         fontSize: '0.9rem',
                                     }}
                                 >
                                     {event.location === 'none'
                                         ? null
-                                        : `Location: ${location ? location.label : event.location}${reserved}`}
+                                        : `Location: ${location ? location.label : event.location}`}
+                                </Typography>
+                                <Typography
+                                    sx={{ marginTop: 2, color: (theme) => darkSwitchGrey(theme), fontSize: '0.8rem' }}
+                                >
+                                    {`Created by: ${event.editorName} (${event.editorEmail})`}
                                 </Typography>
                             </Box>
                             <Hidden mdDown>

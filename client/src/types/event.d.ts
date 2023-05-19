@@ -48,6 +48,15 @@ interface CalEvent {
     repeatsUntil: number;
 }
 
+/** A single event with the editor name/email */
+interface SingleEvent extends CalEvent {
+    /* Name of the editor */
+    editorName: string;
+
+    /* Email of the editor */
+    editorEmail: string;
+}
+
 /** Type of the event, can be used as filter on the event list */
 type EventType = 'event' | 'ga' | 'meeting' | 'volunteering' | 'other';
 
