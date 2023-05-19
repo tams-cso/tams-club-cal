@@ -67,7 +67,7 @@ const DeleteButton = (props: DeleteButtonProps) => {
         let res = null;
         if (props.resource === 'events') {
             res =
-                props.isRepeating && repDelete
+                props.isRepeating && repDelete === 'all'
                     ? await deleteRepeatingEvents(props.repeatingId)
                     : await deleteEvent(props.id);
         } else if (props.resource === 'clubs') {
@@ -91,7 +91,7 @@ const DeleteButton = (props: DeleteButtonProps) => {
 
     const handleRepeatingRadioChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         setRepDelete(e.currentTarget.value);
-    }
+    };
 
     return (
         <React.Fragment>
