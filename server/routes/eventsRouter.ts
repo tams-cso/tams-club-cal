@@ -110,7 +110,10 @@ router.get('/reservations/room/:room/:month?', async (req: Request, res: Respons
 router.get('/:id', async (req: Request, res: Response) => {
     const id = req.params.id;
     const event = await Event.findOne({ id }).exec();
-    if (!event) sendError(res, 400, 'Invalid event id');
+    if (!event) {
+        sendError(res, 400, 'Invalid event ID');
+        return;
+    }
 
     // Get the email of the user that created the event
     const editor = await User.findOne({ id: event.editorId }).exec();
