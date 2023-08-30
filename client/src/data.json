@@ -49,6 +49,10 @@
             "label": "[Room] TV Room"
         },
         {
+            "value": "room-computer",
+            "label": "[Room] Computer Lab"
+        },
+        {
             "value": "room-bewley",
             "label": "[Room] Bewley"
         },
