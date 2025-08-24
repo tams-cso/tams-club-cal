@@ -57,7 +57,7 @@ router.get('/', async (req: Request, res: Response) => {
  * - week: Week to get reservations of, should be a UTC date number
  *         This can be any time within the week
  */
-router.get('/reservations/:week?', async (req: Request, res: Response) => {
+router.get('/reservations{/:week}', async (req: Request, res: Response) => {
     const week = req.params.week ? dayjs(Number(req.params.week)) : dayjs();
     try {
         const reservations = await Event.find({
@@ -84,7 +84,7 @@ router.get('/reservations/:week?', async (req: Request, res: Response) => {
  * - Month: Month to get reservations of, should be a UTC date number
  *          This can be any time within the month
  */
-router.get('/reservations/room/:room/:month?', async (req: Request, res: Response) => {
+router.get('/reservations/room/:room{/:month}', async (req: Request, res: Response) => {
     const month = req.params.month ? dayjs(Number(req.params.month)) : dayjs();
     try {
         const reservations = await Event.find({

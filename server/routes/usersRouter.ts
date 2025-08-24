@@ -51,7 +51,7 @@ router.get('/id/:id', async (req: Request, res: Response) => {
 /**
  * PUT /users/level/<id>
  *
- * Updates a user's level
+ * Updates a user's access level
  */
 router.put('/level/:id', async (req: Request, res: Response) => {
     const id = req.params.id;

@@ -89,7 +89,7 @@ router.get('/:resource/:id', async (req: Request, res: Response) => {
 
     // Get the history object and the list of editor names
     // If invalid, return error
-    const history = await History.find({ resource: req.params.resource, resourceId: resourceObj.id }).exec();
+    const history = (await History.find({ resource: req.params.resource, resourceId: resourceObj.id }).exec()) as HistoryObject[];
     if (history) {
         // Sort history object
         const sortedHistory = history.sort((a, b) => b.time - a.time);
