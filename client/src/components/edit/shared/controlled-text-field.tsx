@@ -39,7 +39,7 @@ interface ControlledTextFieldProps {
     required?: boolean;
 
     /** Pass custom validation function to controller */
-    validate?: Validate<any> | Record<string, Validate<any>>;
+    validate?: Validate<any, any> | Record<string, Validate<any, any>>;
 
     /** Error message to display in the case of an error; required if 'required' defined */
     errorMessage?: string;

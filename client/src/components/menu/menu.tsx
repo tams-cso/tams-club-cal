@@ -1,12 +1,12 @@
 import React, { useEffect, useState } from 'react';
-import type { Theme } from '@mui/material';
+import { useMediaQuery, type Theme } from '@mui/material';
 import { darkSwitch } from '../../util/cssUtil';
 
-import Hidden from '@mui/material/Hidden';
 import WbSunnyRoundedIcon from '@mui/icons-material/WbSunnyRounded';
 import Brightness2RoundedIcon from '@mui/icons-material/Brightness2Rounded';
 import MobileMenu from './mobile-menu';
 import DesktopMenu from './desktop-menu';
+import theme from '../../theme';
 
 // Style the dark theme switcher icon
 const iconStyle = {
@@ -29,6 +29,7 @@ interface MenuProps {
  */
 const Menu = (props: MenuProps) => {
     const [currentDarkThemeIcon, setCurrentDarkThemeIcon] = useState(null);
+    const desktopSize = useMediaQuery(theme.breakpoints.up('md'));
 
     // Set the dark theme switcher icon based on the current theme
     // which will be passed in through the props
@@ -49,20 +50,19 @@ const Menu = (props: MenuProps) => {
 
     return (
         <React.Fragment>
-            <Hidden mdDown>
+            {desktopSize ? (
                 <DesktopMenu
                     toggleDarkTheme={toggleDarkTheme}
                     currentDarkThemeIcon={currentDarkThemeIcon}
                     dark={props.dark}
                 />
-            </Hidden>
-            <Hidden mdUp>
+            ) : (
                 <MobileMenu
                     toggleDarkTheme={toggleDarkTheme}
                     currentDarkThemeIcon={currentDarkThemeIcon}
                     dark={props.dark}
                 />
-            </Hidden>
+            )}
         </React.Fragment>
     );
 };

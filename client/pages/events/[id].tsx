@@ -14,7 +14,6 @@ import CardActions from '@mui/material/CardActions';
 import Button from '@mui/material/Button';
 import Box from '@mui/material/Box';
 import Divider from '@mui/material/Divider';
-import Hidden from '@mui/material/Hidden';
 import Typography from '@mui/material/Typography';
 import Paragraph from '../../src/components/shared/paragraph';
 import AddButton from '../../src/components/shared/add-button';
@@ -164,12 +163,12 @@ const EventDisplay = ({ event, error, level, userId }: InferGetServerSidePropsTy
                                     {`Created by: ${event.editorName} (${event.editorEmail})`}
                                 </Typography>
                             </Box>
-                            <Hidden mdDown>
-                                <Divider orientation="vertical" flexItem />
-                            </Hidden>
-                            <Hidden mdUp>
-                                <Divider orientation="horizontal" flexItem sx={{ marginTop: 2 }} />
-                            </Hidden>
+                            <Divider orientation="vertical" flexItem sx={{ display: { xs: 'none', md: 'block' } }} />
+                            <Divider
+                                orientation="horizontal"
+                                flexItem
+                                sx={{ marginTop: 2, display: { xs: 'block', md: 'none' } }}
+                            />
                             <Paragraph
                                 text={event.description}
                                 sx={{

@@ -4,6 +4,7 @@ module.exports = {
     images: {
         domains: ['cdn.tams.club', 'staging.cdn.tams.club', 'localhost'],
     },
+    output: 'standalone',
     async redirects() {
         return [
             {
@@ -12,8 +13,5 @@ module.exports = {
                 permanent: true,
             },
         ];
-    },
-    experimental: {
-        outputStandalone: true,
     },
 };

@@ -4,7 +4,7 @@ import dayjs from 'dayjs';
 
 import { Controller } from 'react-hook-form';
 import TextField from '@mui/material/TextField';
-import DateTimePicker from '@mui/lab/DateTimePicker';
+import { DateTimePicker } from '@mui/x-date-pickers/DateTimePicker';
 
 interface DateTimeInputProps {
     /** React hook form controller */
@@ -20,7 +20,7 @@ interface DateTimeInputProps {
     required?: boolean;
 
     /** Pass custom validation function to controller */
-    validate?: Validate<any> | Record<string, Validate<any>>;
+    validate?: Validate<any, any> | Record<string, Validate<any, any>>;
 
     /** Error message to display in the case of an error; required if 'required' defined */
     errorMessage?: string;
@@ -63,15 +63,14 @@ const DateTimeInput = (props: DateTimeInputProps) => {
                     value={value}
                     onChange={onChange}
                     disabled={props.disabled}
-                    renderInput={(params) => (
-                        <TextField
-                            {...params}
-                            sx={props.sx}
-                            error={error ? true : false}
-                            helperText={error ? props.errorMessage : props.helperText}
-                            onBlur={onBlur}
-                        />
-                    )}
+                    slotProps={{
+                        textField: {
+                            error: !!error,
+                            helperText: error ? props.errorMessage : props.helperText,
+                            onBlur,
+                        },
+                    }}
+                    sx={props.sx}
                 />
             )}
         />

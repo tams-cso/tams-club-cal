@@ -3,7 +3,6 @@ import type { Theme } from '@mui/material';
 import { darkSwitchGrey } from '../../util/cssUtil';
 
 import Box from '@mui/material/Box';
-import Hidden from '@mui/material/Hidden';
 import Typography from '@mui/material/Typography';
 import CustomImage from '../shared/custom-image';
 import Paragraph from '../shared/paragraph';
@@ -63,16 +62,17 @@ const ExecCard = (props: ExecCardProps) => {
                     >
                         {props.exec.position}
                     </Typography>
-                    <Hidden smDown>
-                        <Paragraph
-                            text={props.exec.description}
-                            smallMargin
-                            sx={{ fontSize: { xl: '1rem', xs: '0.75rem' }, color: (theme) => darkSwitchGrey(theme) }}
-                        />
-                    </Hidden>
+                    <Paragraph
+                        text={props.exec.description}
+                        smallMargin
+                        sx={{
+                            fontSize: { xl: '1rem', xs: '0.75rem' },
+                            color: (theme) => darkSwitchGrey(theme),
+                            display: { xs: 'none', sm: 'block' },
+                        }}
+                    />
                 </Box>
             </Box>
-            <Hidden smUp>
                 <Paragraph
                     text={props.exec.description}
                     fontSize="0.75rem"
@@ -81,9 +81,9 @@ const ExecCard = (props: ExecCardProps) => {
                         paddingLeft: 1,
                         paddingBottom: 1,
                         color: (theme: Theme) => darkSwitchGrey(theme),
+                        display: { xs: 'block', sm: 'none' }
                     }}
                 />
-            </Hidden>
         </React.Fragment>
     );
 };

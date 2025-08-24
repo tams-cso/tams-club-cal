@@ -50,7 +50,7 @@ const ClubList = ({ clubList, error, level }: InferGetServerSidePropsType<typeof
         setClubCardList(
             <Grid container spacing={4} sx={{ marginBottom: 4 }}>
                 {sortedList.map((c) => (
-                    <Grid item xs={12} sm={6} lg={4} key={c.name} sx={{ flexGrow: { lg: 1, xs: 0 } }}>
+                    <Grid size={{ xs: 12, sm: 6, lg: 4 }} key={c.name} sx={{ flexGrow: { lg: 1, xs: 0 } }}>
                         <ClubCard club={c} />
                     </Grid>
                 ))}

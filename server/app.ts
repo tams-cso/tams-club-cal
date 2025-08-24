@@ -47,7 +47,7 @@ app.use(
             tokens.url(req, res),
             chalk.blue(tokens.status(req, res)),
             chalk.yellow(tokens['response-time'](req, res) + 'ms'),
-            chalk.grey(JSON.stringify(req.body) || {}),
+            chalk.grey(JSON.stringify(req.body) || "{}"),
         ].join(' ');
     })
 );

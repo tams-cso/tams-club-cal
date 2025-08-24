@@ -9,7 +9,7 @@ import Card from '@mui/material/Card';
 import CardContent from '@mui/material/CardContent';
 import Box from '@mui/material/Box';
 import Typography from '@mui/material/Typography';
-import GoogleLogin from 'react-google-login';
+import { GoogleOAuthProvider, GoogleLogin } from '@react-oauth/google';
 import PageWrapper from '../../src/components/shared/page-wrapper';
 import TitleMeta from '../../src/components/meta/title-meta';
 import Popup from '../../src/components/shared/popup';
@@ -57,8 +57,10 @@ const Login = ({ authorized, error }: InferGetServerSidePropsType<typeof getServ
         // Login backdrop
         setBackdrop(true);
 
+        console.log(response)
+
         // Token exchange
-        const token = await postLogin(response.tokenId);
+        const token = await postLogin(response.credential);
         if (token.status !== 200) {
             setPopupEvent(createPopupEvent('Could not log in. Please check your connection and try again.', 4));
             return;
@@ -79,8 +81,8 @@ const Login = ({ authorized, error }: InferGetServerSidePropsType<typeof getServ
         }
     };
 
-    const errorMessage = (response) => {
-        setPopupEvent(createPopupEvent(`Could not log in: ${response.error}`, 3));
+    const errorMessage = () => {
+        setPopupEvent(createPopupEvent(`Could not log in using Google!`, 3));
     };
 
     // Redirect user if they are logged in
@@ -99,14 +101,9 @@ const Login = ({ authorized, error }: InferGetServerSidePropsType<typeof getServ
                         Login
                     </Typography>
                     <Box sx={{ justifyContent: 'center', display: 'flex', marginTop: 3, marginBottom: 3 }}>
-                        <GoogleLogin
-                            clientId={CLIENT_ID}
-                            buttonText="Login with Google"
-                            onSuccess={responseGoogle}
-                            onFailure={errorMessage}
-                            cookiePolicy={'single_host_origin'}
-                            theme="dark"
-                        ></GoogleLogin>
+                        <GoogleOAuthProvider clientId={CLIENT_ID}>
+                            <GoogleLogin onSuccess={responseGoogle} onError={errorMessage} />
+                        </GoogleOAuthProvider>
                     </Box>
                     <Typography sx={{ color: (theme) => darkSwitchGrey(theme) }}>
                         {error ? 'Stale token detected. Please log in again to refresh the token.' : loginText}

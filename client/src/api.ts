@@ -422,8 +422,8 @@ export async function postFeedback(feedback: Feedback): Promise<StatusResponse> 
  * @param googleId Google ID
  * @param accessCode Google Auth access code
  */
-export async function postLogin(tokenId: string): Promise<FetchResponse> {
-    return postRequest('/auth/login', JSON.stringify({ tokenId }), true, true, true) as Promise<FetchResponse>;
+export async function postLogin(credential: string): Promise<FetchResponse> {
+    return postRequest('/auth/login', JSON.stringify({ credential }), true, true, true) as Promise<FetchResponse>;
 }
 
 /**
