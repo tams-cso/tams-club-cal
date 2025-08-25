@@ -69,7 +69,7 @@ const ChangeUserPermissions = () => {
                         params.row.id,
                         params.row.name,
                         params.row.email,
-                        params.row.level
+                        params.row.level,
                     )}
                     sx={{ margin: 'auto' }}
                 >
@@ -135,7 +135,7 @@ const ChangeUserPermissions = () => {
             const rowsRes = await getUserList(1, rowsState.pageSize, sort, reverse, filter);
             if (rowsRes.status !== 200) {
                 setPopupEvent(
-                    createPopupEvent('Error fetching resource. Please check your connection and reload the page.', 4)
+                    createPopupEvent('Error fetching resource. Please check your connection and reload the page.', 4),
                 );
                 return;
             }

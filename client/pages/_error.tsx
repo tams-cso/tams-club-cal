@@ -6,7 +6,7 @@ import Container from '@mui/material/Container';
 import Paper from '@mui/material/Paper';
 import Typography from '@mui/material/Typography';
 import List from '@mui/material/List';
-import ListItem from '@mui/material/ListItem';
+import ListItemButton from '@mui/material/ListItemButton';
 import ListItemIcon from '@mui/material/ListItemIcon';
 import ListItemText from '@mui/material/ListItemText';
 import HomeRoundedIcon from '@mui/icons-material/HomeRounded';
@@ -40,29 +40,29 @@ const PageNotFound: NextPage = () => {
                 <Typography sx={textStyle}>But here are some cool pages that you could go to!</Typography>
                 <Container sx={{ width: { md: '50%', xs: '100%' } }}>
                     <List sx={{ color: (theme) => darkSwitchGrey(theme) }}>
-                        <ListItem button component={Link} href="/">
+                        <ListItemButton component={Link} href="/">
                             <ListItemIcon>
                                 <HomeRoundedIcon />
                             </ListItemIcon>
                             <ListItemText>Home - See upcoming events and helpful external resources</ListItemText>
-                        </ListItem>
-                        <ListItem button component={Link} href="/clubs">
+                        </ListItemButton>
+                        <ListItemButton component={Link} href="/clubs">
                             <ListItemIcon>
                                 <AppsRoundedIcon />
                             </ListItemIcon>
                             <ListItemText>
                                 Clubs - List of all the student organizations, both advised and independent
                             </ListItemText>
-                        </ListItem>
-                        <ListItem button component={Link} href="/volunteering">
+                        </ListItemButton>
+                        <ListItemButton component={Link} href="/volunteering">
                             <ListItemIcon>
                                 <EmojiPeopleRoundedIcon />
                             </ListItemIcon>
                             <ListItemText>
                                 Volunteering - Information about all the volunteering opportunities our clubs provide
                             </ListItemText>
-                        </ListItem>
-                        <ListItem button component={Link} href="/about">
+                        </ListItemButton>
+                        <ListItemButton component={Link} href="/about">
                             <ListItemIcon>
                                 <InfoRoundedIcon />
                             </ListItemIcon>
@@ -70,7 +70,7 @@ const PageNotFound: NextPage = () => {
                                 About - Learn about the history and creators behind tams.club, as well as leave us some
                                 feedback!
                             </ListItemText>
-                        </ListItem>
+                        </ListItemButton>
                     </List>
                 </Container>
             </Paper>

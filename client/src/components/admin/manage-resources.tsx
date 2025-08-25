@@ -199,7 +199,7 @@ const ManageResources = () => {
                 rowsState.pageSize,
                 sort,
                 reverse,
-                filter
+                filter,
             );
             if (newRowsRes.status !== 200) {
                 setPopupEvent(createPopupEvent('Error fetching resource', 4));
