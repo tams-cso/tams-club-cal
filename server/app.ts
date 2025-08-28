@@ -105,7 +105,7 @@ app.listen(process.env.PORT || 5000, () => console.log(`Listening on port ${proc
 
 // Start mongoose
 const mongoUrl = `mongodb+srv://${process.env.MONGO_USER}:${process.env.MONGO_PASS}@${process.env.MONGO_URL}/data?retryWrites=true&w=majority`;
-mongoose.connect(mongoUrl, { useNewUrlParser: true, useUnifiedTopology: true } as ConnectOptions);
+mongoose.connect(mongoUrl);
 
 // Callbacks for db connections
 const db = mongoose.connection;
