@@ -9,6 +9,7 @@ import { AccessLevelEnum } from '../types/AccessLevel';
 import { RequestWithClubFiles } from '../types/RequestWithClubFiles';
 import { getUserId, isAuthenticated } from '../functions/auth';
 import History from '../models/history';
+import { asyncHandler } from '../functions/asyncHandler';
 
 const router = express.Router();
 const upload = multer({ storage: multer.memoryStorage() });
@@ -18,22 +19,28 @@ const upload = multer({ storage: multer.memoryStorage() });
  *
  * Sends the list of all clubs
  */
-router.get('/', async (req: Request, res: Response) => {
-    const clubs = await Club.find({});
-    res.send(clubs);
-});
+router.get(
+    '/',
+    asyncHandler(async (req: Request, res: Response) => {
+        const clubs = await Club.find({});
+        res.send(clubs);
+    }),
+);
 
 /**
  * GET /clubs/<id>
  *
  * Gets a club by id
  */
-router.get('/:id', async (req: Request, res: Response) => {
-    const id = req.params.id;
-    const club = await Club.findOne({ id }).exec();
-    if (club) res.send(club);
-    else sendError(res, 400, 'Invalid club id');
-});
+router.get(
+    '/:id',
+    asyncHandler(async (req: Request, res: Response) => {
+        const id = req.params.id;
+        const club = await Club.findOne({ id }).exec();
+        if (club) res.send(club);
+        else sendError(res, 400, 'Invalid club id');
+    }),
+);
 
 // Create images object for multer
 const imageUpload = upload.fields([
@@ -46,8 +53,10 @@ const imageUpload = upload.fields([
  *
  * Creates a new club
  */
-router.post('/', imageUpload, async (req: Request, res: Response) => {
-    try {
+router.post(
+    '/',
+    imageUpload,
+    asyncHandler(async (req: Request, res: Response) => {
         // Check if user is authenticated
         if (!isAuthenticated(req, res, AccessLevelEnum.CLUBS)) return;
 
@@ -84,17 +93,16 @@ router.post('/', imageUpload, async (req: Request, res: Response) => {
 
         if (clubRes === newClub) res.sendStatus(204);
         else sendError(res, 500, 'Unable to add new club to database');
-    } catch (error) {
-        console.error(error);
-        sendError(res, 500, 'Internal server error');
-    }
-});
+    }),
+);
 
 /**
  * PUT /clubs/<id>
  */
-router.put('/:id', imageUpload, async (req: Request, res: Response) => {
-    try {
+router.put(
+    '/:id',
+    imageUpload,
+    asyncHandler(async (req: Request, res: Response) => {
         // Check if user is authenticated
         if (!isAuthenticated(req, res, AccessLevelEnum.CLUBS)) return;
 
@@ -132,7 +140,7 @@ router.put('/:id', imageUpload, async (req: Request, res: Response) => {
                     execs,
                     committees: club.committees,
                 },
-            }
+            },
         );
 
         // Create history
@@ -140,19 +148,17 @@ router.put('/:id', imageUpload, async (req: Request, res: Response) => {
         if (newHistory) await newHistory.save();
 
         res.sendStatus(204);
-    } catch (error) {
-        console.error(error);
-        sendError(res, 500, 'Unable to update club in database');
-    }
-});
+    }),
+);
 
 /**
  * DELETE /clubs/<id>
  *
  * Deletes a club by ID
  */
-router.delete('/:id', async (req: Request, res: Response) => {
-    try {
+router.delete(
+    '/:id',
+    asyncHandler(async (req: Request, res: Response) => {
         // Check if user is authenticated
         if (!isAuthenticated(req, res, AccessLevelEnum.CLUBS)) return;
 
@@ -169,10 +175,7 @@ router.delete('/:id', async (req: Request, res: Response) => {
         // Return ok: 1 or error
         if (deleteRes.deletedCount === 1) res.sendStatus(204);
         else sendError(res, 500, 'Could not delete club');
-    } catch (error) {
-        console.error(error);
-        sendError(res, 500, 'Internal server error');
-    }
-});
+    }),
+);
 
 export default router;

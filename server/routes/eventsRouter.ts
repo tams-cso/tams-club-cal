@@ -8,6 +8,7 @@ import { AccessLevelEnum } from '../types/AccessLevel';
 import History from '../models/history';
 import { getUserId, isAuthenticated } from '../functions/auth';
 import User from '../models/user';
+import { asyncHandler } from '../functions/asyncHandler';
 
 const router = express.Router();
 
@@ -28,25 +29,28 @@ const router = express.Router();
  *               The same rules will apply to end time. It will round to exactly
  *               23:59:59 the next UTC day.
  */
-router.get('/', async (req: Request, res: Response) => {
-    const start = Number(req.query.start) || new Date().valueOf();
-    const end = Number(req.query.end) || null;
+router.get(
+    '/',
+    asyncHandler(async (req: Request, res: Response) => {
+        const start = Number(req.query.start) || new Date().valueOf();
+        const end = Number(req.query.end) || null;
 
-    if (!end) {
-        const events = await Event.find({
-            start: { $gte: dayjs(start).startOf('day').subtract(1, 'day') },
-        }).exec();
-        res.send(events);
-    } else {
-        const events = await Event.find({
-            start: {
-                $gte: dayjs(start).startOf('day').subtract(1, 'day'),
-                $lte: dayjs(end).endOf('day').add(1, 'day'),
-            },
-        }).exec();
-        res.send(events);
-    }
-});
+        if (!end) {
+            const events = await Event.find({
+                start: { $gte: dayjs(start).startOf('day').subtract(1, 'day') },
+            }).exec();
+            res.send(events);
+        } else {
+            const events = await Event.find({
+                start: {
+                    $gte: dayjs(start).startOf('day').subtract(1, 'day'),
+                    $lte: dayjs(end).endOf('day').add(1, 'day'),
+                },
+            }).exec();
+            res.send(events);
+        }
+    }),
+);
 
 /**
  * GET /events/reservations
@@ -57,9 +61,10 @@ router.get('/', async (req: Request, res: Response) => {
  * - week: Week to get reservations of, should be a UTC date number
  *         This can be any time within the week
  */
-router.get('/reservations{/:week}', async (req: Request, res: Response) => {
-    const week = req.params.week ? dayjs(Number(req.params.week)) : dayjs();
-    try {
+router.get(
+    '/reservations{/:week}',
+    asyncHandler(async (req: Request, res: Response) => {
+        const week = req.params.week ? dayjs(Number(req.params.week)) : dayjs();
         const reservations = await Event.find({
             reservation: true,
             start: {
@@ -68,11 +73,8 @@ router.get('/reservations{/:week}', async (req: Request, res: Response) => {
             },
         });
         res.send(reservations);
-    } catch (error) {
-        console.error(error);
-        sendError(res, 500, 'Could not get list of reservations');
-    }
-});
+    }),
+);
 
 /**
  * GET /events/reservations/room/<room>/[month]
@@ -84,9 +86,10 @@ router.get('/reservations{/:week}', async (req: Request, res: Response) => {
  * - Month: Month to get reservations of, should be a UTC date number
  *          This can be any time within the month
  */
-router.get('/reservations/room/:room{/:month}', async (req: Request, res: Response) => {
-    const month = req.params.month ? dayjs(Number(req.params.month)) : dayjs();
-    try {
+router.get(
+    '/reservations/room/:room{/:month}',
+    asyncHandler(async (req: Request, res: Response) => {
+        const month = req.params.month ? dayjs(Number(req.params.month)) : dayjs();
         const reservations = await Event.find({
             reservation: true,
             location: req.params.room,
@@ -96,34 +99,34 @@ router.get('/reservations/room/:room{/:month}', async (req: Request, res: Respon
             },
         });
         res.send(reservations);
-    } catch (error) {
-        console.error(error);
-        sendError(res, 500, 'Could not get list of reservations');
-    }
-});
+    }),
+);
 
 /**
  * GET /events/id/<id>
  *
  * Gets an event by id
  */
-router.get('/:id', async (req: Request, res: Response) => {
-    const id = req.params.id;
-    const event = await Event.findOne({ id }).exec();
-    if (!event) {
-        sendError(res, 400, 'Invalid event ID');
-        return;
-    }
+router.get(
+    '/:id',
+    asyncHandler(async (req: Request, res: Response) => {
+        const id = req.params.id;
+        const event = await Event.findOne({ id }).exec();
+        if (!event) {
+            sendError(res, 400, 'Invalid event ID');
+            return;
+        }
 
-    // Get the email of the user that created the event
-    const editor = await User.findOne({ id: event.editorId }).exec();
+        // Get the email of the user that created the event
+        const editor = await User.findOne({ id: event.editorId }).exec();
 
-    res.send({
-        ...event.toObject(),
-        editorName: editor ? editor.name : '[unknown]',
-        editorEmail: editor ? editor.email : '[unknown]',
-    });
-});
+        res.send({
+            ...event.toObject(),
+            editorName: editor ? editor.name : '[unknown]',
+            editorEmail: editor ? editor.email : '[unknown]',
+        });
+    }),
+);
 
 /**
  * GET /events/reservations/search/<location>/<start>/<end>
@@ -132,8 +135,9 @@ router.get('/:id', async (req: Request, res: Response) => {
  * start and end, which are passed in as UTC millisecond times, as well as the location that
  * in which all events should be searched for
  */
-router.get('/reservations/search/:location/:start/:end', async (req: Request, res: Response) => {
-    try {
+router.get(
+    '/reservations/search/:location/:start/:end',
+    asyncHandler(async (req: Request, res: Response) => {
         // Parse the passed in start and end times
         const start = Number.parseInt(req.params.start);
         const end = Number.parseInt(req.params.end);
@@ -158,19 +162,17 @@ router.get('/reservations/search/:location/:start/:end', async (req: Request, re
 
         // Send data to user or error
         res.send(data);
-    } catch (error) {
-        console.error(error);
-        sendError(res, 500, 'Internal server error when searching for a reservation.');
-    }
-});
+    }),
+);
 
 /**
  * GET /events/user/<token>
  *
  * Fetches the events for the authenticated user
  */
-router.get('/user/:token', async (req: Request, res: Response) => {
-    try {
+router.get(
+    '/user/:token',
+    asyncHandler(async (req: Request, res: Response) => {
         // Fetch the user's events
         const user = await User.findOne({ token: req.params.token });
         if (!user) {
@@ -181,11 +183,8 @@ router.get('/user/:token', async (req: Request, res: Response) => {
 
         // Send data to user or error
         res.send(data);
-    } catch (error) {
-        console.error(error);
-        sendError(res, 500, 'Internal server error when searching for events by a user.');
-    }
-});
+    }),
+);
 
 /**
  * POST /events
@@ -194,8 +193,9 @@ router.get('/user/:token', async (req: Request, res: Response) => {
  *
  * req.body.repeatsUntil stores the end date of the repeating events (inclusive)
  */
-router.post('/', async (req: Request, res: Response) => {
-    try {
+router.post(
+    '/',
+    asyncHandler(async (req: Request, res: Response) => {
         // Check if user is authenticated
         if (!isAuthenticated(req, res, AccessLevelEnum.STANDARD)) return;
 
@@ -260,11 +260,8 @@ router.post('/', async (req: Request, res: Response) => {
         // Save the event
         await newEvent.save();
         res.sendStatus(204);
-    } catch (error) {
-        console.error(error);
-        sendError(res, 500, 'Unable to add new event to database');
-    }
-});
+    }),
+);
 
 /**
  * PUT /events/<id>
@@ -273,8 +270,9 @@ router.post('/', async (req: Request, res: Response) => {
  *
  * req.body.editAll is true if this will edit all events
  */
-router.put('/:id', async (req: Request, res: Response) => {
-    try {
+router.put(
+    '/:id',
+    asyncHandler(async (req: Request, res: Response) => {
         // Get ID and find previous event
         const id = req.params.id;
         const prev: EventObject = await Event.findOne({ id }).exec();
@@ -331,7 +329,7 @@ router.put('/:id', async (req: Request, res: Response) => {
             // Update events in DB
             await Event.updateMany(
                 { repeatingId: req.body.repeatingId },
-                { $set: toUpdate, $inc: { start: startChange, end: endChange } }
+                { $set: toUpdate, $inc: { start: startChange, end: endChange } },
             );
 
             // Send user success and return
@@ -369,19 +367,17 @@ router.put('/:id', async (req: Request, res: Response) => {
 
         // Send user success and return
         res.sendStatus(204);
-    } catch (error) {
-        console.error(error);
-        sendError(res, 500, 'Unable to update event to database');
-    }
-});
+    }),
+);
 
 /**
  * DELETE /events/<id>
  *
  * Deletes an event by id, needs an authorization token that is valid and has user
  */
-router.delete('/:id', async (req: Request, res: Response) => {
-    try {
+router.delete(
+    '/:id',
+    asyncHandler(async (req: Request, res: Response) => {
         // Get the previous event
         const event: EventObject = await Event.findOne({ id: req.params.id });
         if (!event) {
@@ -399,17 +395,15 @@ router.delete('/:id', async (req: Request, res: Response) => {
         // Return ok status or error
         if (deleteRes.deletedCount === 1) res.sendStatus(204);
         else sendError(res, 500, 'Could not delete event');
-    } catch (error) {
-        console.error(error);
-        sendError(res, 500, 'Internal server error');
-    }
-});
+    }),
+);
 
 /**
  * DELETE /events/repeating/<repeatingId>
  */
-router.delete('/repeating/:id', async (req: Request, res: Response) => {
-    try {
+router.delete(
+    '/repeating/:id',
+    asyncHandler(async (req: Request, res: Response) => {
         // Get the previous event
         const eventList = await Event.find({ repeatingId: req.params.id });
         if (eventList.length === 0) {
@@ -428,10 +422,7 @@ router.delete('/repeating/:id', async (req: Request, res: Response) => {
         // Return ok status or error
         if (deleteRes.deletedCount > 0) res.sendStatus(204);
         else sendError(res, 500, 'Could not delete event');
-    } catch (error) {
-        console.error(error);
-        sendError(res, 500, 'Internal server error');
-    }
-});
+    }),
+);
 
 export default router;

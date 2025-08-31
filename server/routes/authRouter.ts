@@ -3,6 +3,7 @@ import type { Request, Response } from 'express';
 import { verifyToken, upsertUser } from '../functions/auth';
 import { getIp, sendError } from '../functions/util';
 import User from '../models/user';
+import { asyncHandler } from '../functions/asyncHandler';
 
 const router = express.Router();
 
@@ -23,11 +24,14 @@ router.get('/ip', (req: Request, res: Response) => {
  * If invalid token or missing token, return false.
  * This function will also return the user's level if they are logged in.
  */
-router.get('/:token', async (req: Request, res: Response) => {
-    const user = await User.findOne({ token: req.params.token }).exec();
-    if (user) res.send({ loggedIn: true, level: user.level });
-    else res.send({ loggedIn: false, level: null });
-});
+router.get(
+    '/:token',
+    asyncHandler(async (req: Request, res: Response) => {
+        const user = await User.findOne({ token: req.params.token }).exec();
+        if (user) res.send({ loggedIn: true, level: user.level });
+        else res.send({ loggedIn: false, level: null });
+    }),
+);
 
 /**
  * POST /auth/login
@@ -35,16 +39,19 @@ router.get('/:token', async (req: Request, res: Response) => {
  * Recieve the Oauth2 sign in credentials and do a token exchange
  * to either return an auth code or an error
  */
-router.post('/login', async (req: Request, res: Response) => {
-    // Check for valid token
-    const payload = await verifyToken(req.body.credential);
-    if (!payload) {
-        sendError(res, 401, 'Unable to verify token');
-        return;
-    }
+router.post(
+    '/login',
+    asyncHandler(async (req: Request, res: Response) => {
+        // Check for valid token
+        const payload = await verifyToken(req.body.credential);
+        if (!payload) {
+            sendError(res, 401, 'Unable to verify token');
+            return;
+        }
 
-    const token = await upsertUser(payload);
-    res.send({ token });
-});
+        const token = await upsertUser(payload);
+        res.send({ token });
+    }),
+);
 
 export default router;

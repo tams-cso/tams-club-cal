@@ -23,7 +23,7 @@ export function checkEnv() {
  * (see: https://httpstatuses.com/) and error message.
  * The status codes are in ../files/status.json
  */
-export function sendError(res: Response, status: number, message: string) {
+export function sendError(res: Response, status = 500, message = 'Internal Server Error') {
     res.status(status);
     res.send({
         status,

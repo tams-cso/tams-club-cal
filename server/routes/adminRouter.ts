@@ -8,6 +8,7 @@ import Club from '../models/club';
 import Volunteering from '../models/volunteering';
 import History from '../models/history';
 import { AccessLevelEnum } from '../types/AccessLevel';
+import { asyncHandler } from '../functions/asyncHandler';
 
 const router = express.Router();
 
@@ -19,41 +20,44 @@ const router = express.Router();
  * If the page field is defined and the field is 'all', then the function will return
  * the specified page of the resource list.
  */
-router.get('/resources/:resource', async (req: Request, res: Response) => {
-    const limit = req.query.limit ? parseInt(req.query.limit as string) : 20;
-    const page = req.query.page ? parseInt(req.query.page as string) : 1;
-    const sort = req.query.sort ? { [req.query.sort as string]: req.query.reverse === 'true' ? -1 : 1 } : null;
-    // TODO: The filter querystring should NOT be JSON TT -> change it to be filter-field=[field]&filter-value=[value]
-    const filterData = req.query.filter ? JSON.parse(req.query.filter as string) : null;
-    const filter = filterData ? { [filterData.columnField]: new RegExp(`.*${filterData.value}.*`, 'i') } : {};
+router.get(
+    '/resources/:resource',
+    asyncHandler(async (req: Request, res: Response) => {
+        const limit = req.query.limit ? parseInt(req.query.limit as string) : 20;
+        const page = req.query.page ? parseInt(req.query.page as string) : 1;
+        const sort = req.query.sort ? { [req.query.sort as string]: req.query.reverse === 'true' ? -1 : 1 } : null;
+        // TODO: The filter querystring should NOT be JSON TT -> change it to be filter-field=[field]&filter-value=[value]
+        const filterData = req.query.filter ? JSON.parse(req.query.filter as string) : null;
+        const filter = filterData ? { [filterData.columnField]: new RegExp(`.*${filterData.value}.*`, 'i') } : {};
 
-    switch (req.params.resource) {
-        case 'events': {
-            const events = await Event.paginate(filter, { lean: true, leanWithId: false, page, limit, sort });
-            res.send(events);
-            break;
+        switch (req.params.resource) {
+            case 'events': {
+                const events = await Event.paginate(filter, { lean: true, leanWithId: false, page, limit, sort });
+                res.send(events);
+                break;
+            }
+            case 'clubs': {
+                const clubs = await Club.paginate(filter, { lean: true, leanWithId: false, page, limit, sort });
+                res.send(clubs);
+                break;
+            }
+            case 'volunteering': {
+                const volunteering = await Volunteering.paginate(filter, {
+                    lean: true,
+                    leanWithId: false,
+                    page,
+                    limit,
+                    sort,
+                });
+                res.send(volunteering);
+                break;
+            }
+            default:
+                sendError(res, 400, 'Invalid resource field!');
+                return;
         }
-        case 'clubs': {
-            const clubs = await Club.paginate(filter, { lean: true, leanWithId: false, page, limit, sort });
-            res.send(clubs);
-            break;
-        }
-        case 'volunteering': {
-            const volunteering = await Volunteering.paginate(filter, {
-                lean: true,
-                leanWithId: false,
-                page,
-                limit,
-                sort,
-            });
-            res.send(volunteering);
-            break;
-        }
-        default:
-            sendError(res, 400, 'Invalid resource field!');
-            return;
-    }
-});
+    }),
+);
 
 /**
  * DELETE /admin/resources/<resource>/<id>
@@ -61,14 +65,15 @@ router.get('/resources/:resource', async (req: Request, res: Response) => {
  * Deletes the given resource by id. This will also delete the related history entries.
  * Additionally, if the resource is an event, then the related reservation will also be deleted.
  */
-router.delete('/resources/:resource/:id', async (req: Request, res: Response) => {
-    // TODO: This is honestly also a spaghetti pile but idk if it can actually be cleaned up LMAO
+router.delete(
+    '/resources/:resource/:id',
+    asyncHandler(async (req: Request, res: Response) => {
+        // TODO: This is honestly also a spaghetti pile but idk if it can actually be cleaned up LMAO
 
-    // Check if user is authenticated
-    if (!isAuthenticated(req, res, AccessLevelEnum.ADMIN)) return;
+        // Check if user is authenticated
+        if (!isAuthenticated(req, res, AccessLevelEnum.ADMIN)) return;
 
-    // If everything is good, delete the resource
-    try {
+        // If everything is good, delete the resource
         switch (req.params.resource) {
             case 'events': {
                 // Get previous event and return error if invalid ID
@@ -117,10 +122,7 @@ router.delete('/resources/:resource/:id', async (req: Request, res: Response) =>
                 sendError(res, 400, 'Invalid resource field!');
                 return;
         }
-    } catch (error) {
-        console.error(error);
-        sendError(res, 500, 'Internal server error when deleting resource!');
-    }
-});
+    }),
+);
 
 export default router;
