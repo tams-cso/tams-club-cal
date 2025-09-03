@@ -23,6 +23,7 @@ import feedbackRouter from './routes/feedbackRouter';
 import adminRouter from './routes/adminRouter';
 import textDataRouter from './routes/textDataRouter';
 import usersRouter from './routes/usersRouter';
+import { errorHandler } from './routes/errorHandler';
 
 // Check for the correct environmental variables
 if (process.env.NODE_ENV !== 'production') checkEnv();
@@ -47,7 +48,7 @@ app.use(
             tokens.url(req, res),
             chalk.blue(tokens.status(req, res)),
             chalk.yellow(tokens['response-time'](req, res) + 'ms'),
-            chalk.grey(JSON.stringify(req.body)),
+            chalk.grey(JSON.stringify(req.body) || "{}"),
         ].join(' ');
     })
 );
@@ -100,12 +101,15 @@ app.use('/admin', adminRouter);
 app.use('/text-data', textDataRouter);
 app.use('/users', usersRouter);
 
+// Error handler
+app.use(errorHandler);
+
 // Start express server
 app.listen(process.env.PORT || 5000, () => console.log(`Listening on port ${process.env.PORT || 5000}`));
 
 // Start mongoose
 const mongoUrl = `mongodb+srv://${process.env.MONGO_USER}:${process.env.MONGO_PASS}@${process.env.MONGO_URL}/data?retryWrites=true&w=majority`;
-mongoose.connect(mongoUrl, { useNewUrlParser: true, useUnifiedTopology: true } as ConnectOptions);
+mongoose.connect(mongoUrl);
 
 // Callbacks for db connections
 const db = mongoose.connection;

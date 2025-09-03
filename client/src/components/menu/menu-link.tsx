@@ -46,7 +46,13 @@ const MenuLink = (props: MenuLinkProps) => {
                 textDecoration: 'none',
                 borderColor: 'transparent',
                 borderBottom: (theme) =>
-                    darkSwitch(theme, 'none', !active ? '0.2rem' : `0.2rem solid ${theme.palette.primary.light}`),
+                    !active
+                        ? '0.2rem'
+                        : darkSwitch(
+                              theme,
+                              `0.2rem solid ${theme.palette.primary.main}`,
+                              `0.2rem solid ${theme.palette.primary.light}`
+                          ),
                 backgroundColor: (theme) => (active ? alpha(theme.palette.common.white, 0.1) : 'transparent'),
                 transition: '0.2s',
                 color: (theme) =>

@@ -10,7 +10,7 @@ import { parseDateParams } from '../../../src/util/datetime';
 import Box from '@mui/material/Box';
 import TextField from '@mui/material/TextField';
 import Button from '@mui/material/Button';
-import DatePicker from '@mui/lab/DatePicker';
+import { DatePicker } from '@mui/x-date-pickers/DatePicker';
 import IconButton from '@mui/material/IconButton';
 import ArrowBackIosRounded from '@mui/icons-material/ArrowBackIosRounded';
 import ArrowForwardIosRounded from '@mui/icons-material/ArrowForwardIosRounded';
@@ -97,7 +97,7 @@ const Reservations = ({
         // Update the state variable with the list of reservations
         setReservationComponentList(
             <Box display="flex" flexDirection="column">
-                {components}
+                <>{components}</>
             </Box>
         );
     }, [reservationList]);
@@ -126,13 +126,16 @@ const Reservations = ({
             <TitleMeta title="Reservations" path="/events/reservations" />
             <Box width="100%" display="flex" justifyContent="left" alignItems="center">
                 <DatePicker
-                    inputFormat="[Week of] MMM D, YYYY"
                     label="Select week to show"
-                    value={now}
+                    value={dayjs(now)}
                     onChange={changeWeek}
-                    renderInput={(params) => (
-                        <TextField {...params} variant="standard" sx={{ marginLeft: { sm: 4, xs: 2 } }} />
-                    )}
+                    format="Week of MMM D, YYYY"
+                    slotProps={{
+                        textField: {
+                            variant: 'standard',
+                            sx: { marginLeft: 4, display: { xs: 'none', md: 'inline' } },
+                        },
+                    }}
                 />
                 <IconButton size="small" onClick={offsetWeek.bind(this, false)} sx={{ marginLeft: 3 }}>
                     <ArrowBackIosRounded />
@@ -147,7 +150,7 @@ const Reservations = ({
                     <Button
                         variant="text"
                         onClick={goToDay.bind(this, i)}
-                        sx={{ mx: 2, display: { lg: 'flex', md: 'none' } }}
+                        sx={{ mx: 2, display: 'flex' }}
                         key={day}
                     >
                         {day}
@@ -159,7 +162,7 @@ const Reservations = ({
                 label="Event"
                 path={level < AccessLevelEnum.STANDARD ? '/profile?prev=/edit/events' : '/edit/events'}
             />
-            {reservationComponentList === null ? <Loading /> : reservationComponentList}
+            {reservationComponentList ? reservationComponentList : <Loading />}
         </HomeBase>
     );
 };

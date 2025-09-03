@@ -21,7 +21,7 @@ export function getParams(key: string): string | null {
  * @param text The text to parse and display
  * @returns A React jsx fragment containing text and link components
  */
-export function parseLinks(text: string): React.ReactFragment {
+export function parseLinks(text: string): React.JSX.Element {
     const re = /((?:http|https):\/\/.+?)(?:\.|\?|!)?(?:\s|$)/g;
     let m: RegExpExecArray;
     let matches = [];

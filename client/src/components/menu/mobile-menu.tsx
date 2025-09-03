@@ -12,7 +12,6 @@ import List from '@mui/material/List';
 import ListItemButton from '@mui/material/ListItemButton';
 import ListItemIcon from '@mui/material/ListItemIcon';
 import ListItemText from '@mui/material/ListItemText';
-import SvgIcon from '@mui/material/SvgIcon';
 import MenuHamburgerIcon from '@mui/icons-material/Menu';
 import HomeRoundedIcon from '@mui/icons-material/HomeRounded';
 import AppsRoundedIcon from '@mui/icons-material/AppsRounded';
@@ -38,7 +37,7 @@ interface MobileMenuProps {
     dark: boolean;
 
     /** Current icon for the dark theme switcher */
-    currentDarkThemeIcon: typeof SvgIcon;
+    currentDarkThemeIcon: React.JSX.Element;
 }
 
 /**

@@ -7,10 +7,11 @@ import Toolbar from '@mui/material/Toolbar';
 import ToggleButtonGroup from '@mui/material/ToggleButtonGroup';
 import ToggleButton from '@mui/material/ToggleButton';
 import Typography from '@mui/material/Typography';
-import Hidden from '@mui/material/Hidden';
 import FormatListBulletedRoundedIcon from '@mui/icons-material/FormatListBulletedRounded';
 import EventNoteRoundedIcon from '@mui/icons-material/EventNoteRounded';
 import MeetingRoomRoundedIcon from '@mui/icons-material/MeetingRoomRounded';
+
+const BUTTON_FORMAT = { display: { xs: 'none', md: 'block' }, fontWeight: 500, fontSize: '14px' };
 
 /**
  * Displays an action bar for the home page for switching between views.
@@ -66,15 +67,15 @@ const ActionBar = () => {
                 >
                     <ToggleButton value="schedule">
                         <FormatListBulletedRoundedIcon width="16" sx={{ marginRight: { xs: 0, md: 1 } }} />
-                        <Hidden mdDown>Schedule</Hidden>
+                        <Typography sx={BUTTON_FORMAT}>Schedule</Typography>
                     </ToggleButton>
                     <ToggleButton value="calendar">
                         <EventNoteRoundedIcon width="16" sx={{ marginRight: { xs: 0, md: 1 } }} />
-                        <Hidden mdDown>Calendar</Hidden>
+                        <Typography sx={BUTTON_FORMAT}>Calendar</Typography>
                     </ToggleButton>
                     <ToggleButton value="reservations">
                         <MeetingRoomRoundedIcon width="16" sx={{ marginRight: { xs: 0, md: 1 } }} />
-                        <Hidden mdDown>Reservations</Hidden>
+                        <Typography sx={BUTTON_FORMAT}>Reservations</Typography>
                     </ToggleButton>
                 </ToggleButtonGroup>
             </Toolbar>

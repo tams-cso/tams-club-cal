@@ -55,7 +55,7 @@ export const getServerSideProps = async (ctx: GetServerSidePropsContext) => {
 };
 
 const Home = ({ eventList, error, level }: InferGetServerSidePropsType<typeof getServerSideProps>) => {
-    const [eventComponentList, setEventComponentList] = useState<JSX.Element | JSX.Element[]>(
+    const [eventComponentList, setEventComponentList] = useState<React.JSX.Element | React.JSX.Element[]>(
         <Loading sx={{ marginBottom: 4 }} />
     );
     const [anchorEl, setAnchorEl] = useState(null);

@@ -1,14 +1,15 @@
-import AWS from 'aws-sdk';
 import sharp from 'sharp';
+import { DeleteObjectCommand, DeleteObjectsCommand, PutObjectCommand, S3Client } from "@aws-sdk/client-s3";
 import { RequestWithClubFiles } from '../types/RequestWithClubFiles';
 import { newId } from './util';
 
 // Connect to AWS S3 instance
-AWS.config.update({ region: 'us-east-1' });
-const s3 = new AWS.S3({
-    apiVersion: '2006-03-01',
-    accessKeyId: process.env.AWS_ACCESS_ID,
-    secretAccessKey: process.env.AWS_SECRET_KEY,
+const s3 = new S3Client({
+    credentials: {
+        accessKeyId: process.env.AWS_ACCESS_ID,
+        secretAccessKey: process.env.AWS_SECRET_KEY,
+    },
+    region: 'us-east-1',
 });
 const BUCKET = `${
     process.env.NODE_ENV === 'production' && !process.env.STAGING ? '' : 'staging-'
@@ -77,13 +78,12 @@ async function uploadImage(resource: string, buffer: Buffer): Promise<string> {
     const id = newId();
 
     try {
-        await s3
-            .putObject({
-                Bucket: BUCKET,
-                Key: `${resource}/${id}.webp`,
-                Body: buffer,
-            })
-            .promise();
+        const command = new PutObjectCommand({
+            Bucket: BUCKET,
+            Key: `${resource}/${id}.webp`,
+            Body: buffer,
+        });
+        await s3.send(command);
         return `${resource}/${id}.webp`;
     } catch (error) {
         console.error(error);
@@ -97,12 +97,11 @@ async function uploadImage(resource: string, buffer: Buffer): Promise<string> {
 async function deletePrevious(previousSrc: string): Promise<1> {
     if (!previousSrc) return null;
     try {
-        await s3
-            .deleteObject({
-                Bucket: BUCKET,
-                Key: previousSrc.substring(1),
-            })
-            .promise();
+        const command = new DeleteObjectCommand({
+            Bucket: BUCKET,
+            Key: previousSrc.substring(1),
+        })
+        await s3.send(command);
         return 1;
     } catch (error) {
         console.error(error);
@@ -125,12 +124,11 @@ export async function deleteClubImages(club: ClubObject) {
     if (urls.length === 0) return;
 
     try {
-        await s3
-            .deleteObjects({
-                Bucket: BUCKET,
-                Delete: { Objects: urls.map((u) => ({ Key: u })) },
-            })
-            .promise();
+        const command = new DeleteObjectsCommand({
+            Bucket: BUCKET,
+            Delete: { Objects: urls.map((u) => ({ Key: u })) },
+        })
+        await s3.send(command);
         return 1;
     } catch (error) {
         console.error(error);

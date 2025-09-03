@@ -5,7 +5,6 @@ import { getParams } from '../../util/miscUtil';
 import Box from '@mui/material/Box';
 import Drawer from '@mui/material/Drawer';
 import Toolbar from '@mui/material/Toolbar';
-import Hidden from '@mui/material/Hidden';
 import PageWrapper from '../shared/page-wrapper';
 import HomeDrawerList from './home-drawer-list';
 import ActionBar from './action-bar';
@@ -34,14 +33,12 @@ interface HomeBaseProps extends React.HTMLProps<HTMLDivElement> {
 const HomeBase = (props: HomeBaseProps) => {
     return (
         <PageWrapper noBottom title={props.title}>
-            <Hidden mdDown>
-                {props.noDrawer ? null : (
-                    <Drawer variant="permanent" sx={{ width: drawerWidth }}>
-                        <Toolbar sx={{ width: drawerWidth, marginBottom: 0 }} />
-                        <HomeDrawerList />
-                    </Drawer>
-                )}
-            </Hidden>
+            {props.noDrawer ? null : (
+                <Drawer variant="permanent" sx={{ width: drawerWidth, display: { xs: 'none', md: 'block' } }}>
+                    <Toolbar sx={{ width: drawerWidth, marginBottom: 0 }} />
+                    <HomeDrawerList />
+                </Drawer>
+            )}
             <Box
                 display="flex"
                 flexDirection="column"

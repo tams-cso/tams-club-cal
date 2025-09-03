@@ -9,7 +9,6 @@ import Toolbar from '@mui/material/Toolbar';
 import Link from '@mui/material/Link';
 import Box from '@mui/material/Box';
 import AccountCircleIcon from '@mui/icons-material/AccountCircle';
-import SvgIcon from '@mui/material/SvgIcon';
 import AppIcon from './app-icon';
 import MenuLink from './menu-link';
 import MenuIcon from './menu-icon';
@@ -27,7 +26,7 @@ interface DesktopMenuProps {
     dark: boolean;
 
     /** Current icon for the dark theme switcher */
-    currentDarkThemeIcon: typeof SvgIcon;
+    currentDarkThemeIcon: React.JSX.Element;
 }
 
 /**

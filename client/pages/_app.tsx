@@ -6,8 +6,8 @@ import createEmotionCache from '../src/createEmotionCache';
 import theme from '../src/theme';
 import darkTheme from '../src/darkTheme';
 
-import AdapterDayjs from '@mui/lab/AdapterDayjs';
-import LocalizationProvider from '@mui/lab/LocalizationProvider';
+import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
+import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { StyledEngineProvider } from '@mui/material';
 import { ThemeProvider } from '@mui/material/styles';
 import CssBaseline from '@mui/material/CssBaseline';

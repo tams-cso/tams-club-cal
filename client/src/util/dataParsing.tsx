@@ -61,7 +61,7 @@ export function parseReservations(
     date: Dayjs,
     useMonth: boolean = false,
     room?: Room
-): JSX.Element[] {
+): React.JSX.Element[] {
     // Break up reservations into days and sort the reservations
     const brokenUpReservationList: BrokenReservation[] = [];
     reservationList.forEach((r) => {

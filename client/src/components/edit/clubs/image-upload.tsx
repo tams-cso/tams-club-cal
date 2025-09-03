@@ -8,7 +8,7 @@ import Backdrop from '@mui/material/Backdrop';
 import Container from '@mui/material/Container';
 import Card from '@mui/material/Card';
 import Typography from '@mui/material/Typography';
-import ReactCrop from 'react-image-crop';
+import ReactCrop, { makeAspectCrop } from 'react-image-crop';
 import CustomImage from '../../shared/custom-image';
 import TwoButtonBox from '../../shared/two-button-box';
 import 'react-image-crop/dist/ReactCrop.css';
@@ -56,7 +56,7 @@ const ImageUpload = (props: ImageUploadProps) => {
     const [src, setSrc] = useState(props.src);
     const [popupOpen, setPopupOpen] = useState(false);
     const [upImg, setUpImg] = useState<string>(null);
-    const [crop, setCrop] = useState<Partial<Crop>>({ unit: '%', width: 80, aspect: props.aspect });
+    const [crop, setCrop] = useState<Crop | null>(null);
     const [completedCrop, setCompletedCrop] = useState(null);
     const canvasRef = useRef(null);
     const imgRef = useRef(null);
@@ -99,12 +99,6 @@ const ImageUpload = (props: ImageUploadProps) => {
             crop.height
         );
     }, [completedCrop]);
-
-    // onLoad function for ReactCrop component
-    // Will update the imageRef to the img element
-    const onLoad = useCallback((img) => {
-        imgRef.current = img;
-    }, []);
 
     // When the image is uploaded, check to make sure
     // the file is valid, the correct image type, and < 10 MB
@@ -167,9 +161,8 @@ const ImageUpload = (props: ImageUploadProps) => {
     // If the image upload is canceled (popup closed), reset the image to
     // wait for the next user upload
     const onCancel = () => {
-        const newCrop: Partial<Crop> = { unit: '%', width: 80, height: 80, x: 10, y: 10, aspect: props.aspect };
         setUpImg(null);
-        setCrop(newCrop);
+        setCrop(null);
         setCompletedCrop(null);
         setPopupOpen(false);
     };
@@ -181,13 +174,18 @@ const ImageUpload = (props: ImageUploadProps) => {
                     <Card>
                         <Box sx={{ display: 'flex', justifyContent: 'center' }}>
                             <ReactCrop
-                                src={upImg}
-                                onImageLoaded={onLoad}
                                 crop={crop}
+                                aspect={props.aspect}
                                 onChange={(c) => setCrop(c)}
                                 onComplete={(c) => setCompletedCrop(c)}
-                                imageStyle={{ maxHeight: '80vh', maxWidth: '100%', objectFit: 'cover' }}
-                            />
+                            >
+                                <img
+                                    ref={imgRef}
+                                    alt="Uploaded image"
+                                    src={upImg}
+                                    style={{ maxHeight: '80vh', maxWidth: '100%', objectFit: 'cover' }}
+                                />
+                            </ReactCrop>
                         </Box>
                         <Typography sx={{ marginTop: 2, textAlign: 'center' }}>
                             Click and drag to crop the image
@@ -196,6 +194,7 @@ const ImageUpload = (props: ImageUploadProps) => {
                             success="Upload"
                             onCancel={onCancel}
                             onSuccess={saveCrop}
+                            disabled={!crop}
                             sx={{ margin: '12px 0' }}
                         />
                     </Card>

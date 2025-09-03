@@ -13,7 +13,6 @@ import Button from '@mui/material/Button';
 import Box from '@mui/material/Box';
 import Typography from '@mui/material/Typography';
 import Divider from '@mui/material/Divider';
-import Hidden from '@mui/material/Hidden';
 import Loading from '../../src/components/shared/loading';
 import FilterList from '../../src/components/volunteering/filter-list';
 import Paragraph from '../../src/components/shared/paragraph';
@@ -111,9 +110,7 @@ const VolunteeringDisplay = ({
                                 </Typography>
                                 <Paragraph text={volunteering.description} />
                             </Box>
-                            <Hidden mdDown>
-                                <Divider orientation="vertical" flexItem />
-                            </Hidden>
+                            <Divider orientation="vertical" flexItem sx={{ display: { xs: 'none', md: 'block' } }} />
                             <FilterList
                                 filters={volunteering.filters}
                                 sx={{

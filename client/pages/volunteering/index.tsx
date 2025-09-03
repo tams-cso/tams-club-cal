@@ -90,16 +90,16 @@ const Volunteering = ({ volunteeringList, error, level }: InferGetServerSideProp
         );
     }, [volunteeringList, filters, sort, reverse]);
 
-    // Create a list of ClubCard components from the filtered list
+    // Create a list of Volunteering components from the filtered list
     useEffect(() => {
         // If the filtered list is not created, don't do anything
         if (filteredList === null || error) return;
 
-        // Map the filtered list to a list of ClubCard components
+        // Map the filtered list to a list of VolunteeringCard components
         setVolunteeringCardList(
             <Grid container spacing={4} sx={{ marginBottom: 4 }}>
                 {filteredList.map((v) => (
-                    <Grid item xs={12} sm={6} lg={4} key={v.name} sx={{ flexGrow: { lg: 0, xs: 1 } }}>
+                    <Grid size={{ xs: 12, sm: 6, lg: 4 }} key={v.name} sx={{ flexGrow: { lg: 1, xs: 0 } }}>
                         <VolunteeringCard volunteering={v} />
                     </Grid>
                 ))}

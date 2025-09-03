@@ -1,11 +1,11 @@
 import React from 'react';
-import type { Theme } from '@mui/material';
+import { type Theme } from '@mui/material';
 import { eventTypeToString, locationToString } from '../../util/miscUtil';
 import { formatEventTime } from '../../util/datetime';
 import { darkSwitch } from '../../util/cssUtil';
 
 import Box from '@mui/material/Box';
-import ListItem from '@mui/material/ListItem';
+import ListItemButton from '@mui/material/ListItemButton';
 import Typography from '@mui/material/Typography';
 import Link from '../shared/Link';
 import StyledSpan from '../shared/styled-span';
@@ -21,8 +21,7 @@ interface EventEntryProps {
 const EventEntry = ({ event }: EventEntryProps) => {
     const location = locationToString(event.location);
     return (
-        <ListItem
-            button
+        <ListItemButton
             sx={{
                 overflowX: 'hidden',
                 padding: 0,
@@ -95,7 +94,7 @@ const EventEntry = ({ event }: EventEntryProps) => {
                     </Typography>
                 </Box>
             </Link>
-        </ListItem>
+        </ListItemButton>
     );
 };
 

@@ -10,7 +10,6 @@ import { setCookie } from '../../../src/util/cookies';
 
 import { Controller } from 'react-hook-form';
 import Typography from '@mui/material/Typography';
-import Hidden from '@mui/material/Hidden';
 import Switch from '@mui/material/Switch';
 import FormControlLabel from '@mui/material/FormControlLabel';
 import ControlledTextField from '../../../src/components/edit/shared/controlled-text-field';
@@ -178,9 +177,9 @@ const EditVolunteering = ({
                         errorMessage="Please enter a club name"
                     />
                 </FormBox>
-                <Hidden mdDown>
-                    <Typography sx={{ display: 'inline', marginRight: { lg: 16, xs: 0 } }}>Filters:</Typography>
-                </Hidden>
+                <Typography sx={{ display: { xs: 'none', md: 'inline' }, marginRight: { lg: 16, xs: 0 } }}>
+                    Filters:
+                </Typography>
                 <ControlledFilterCheckbox
                     control={control}
                     setValue={setValue}
