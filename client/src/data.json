@@ -137,7 +137,7 @@
     ],
     "changelog": [
         {
-            "v": "6.4",
+            "v": "6.5",
             "date": "September 5, 2025",
             "changes": [
                 "Massive package updates, including Next.js, Material UI, Express.js, Mongoose, etc",
@@ -145,6 +145,16 @@
                 "Created global async error catching on backend",
                 "Updated Github Actions to use latest node versions",
                 "Fixed deployment script's possible Docker restart race condition"
+            ]
+        },
+        {
+            "v": "6.4",
+            "date": "May 23, 2023",
+            "changes": [
+                "Removed computer lab as a reservable room",
+                "Show private events by default and added toggle switch to show both on home screen",
+                "Added event creator name + email to the event card display",
+                "Fixed a bug where deleting a single repeating event would not delete correctly"
             ]
         },
         {
