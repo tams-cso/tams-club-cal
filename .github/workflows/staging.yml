@@ -54,6 +54,5 @@ jobs:
                   key: ${{ secrets.SSH_KEY }}
                   script: |
                       docker pull tamsclubcalendar/tcc-staging:latest
-                      docker stop staging
-                      docker run --rm -d --name staging -p 8083:80 -p 8085:90 tamsclubcalendar/tcc-staging
+                      docker stop staging && docker run --rm -d --name staging -p 8083:80 -p 8085:90 tamsclubcalendar/tcc-staging
                       docker image prune -af

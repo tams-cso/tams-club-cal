@@ -53,6 +53,5 @@ jobs:
                   key: ${{ secrets.SSH_KEY }}
                   script: |
                       docker pull tamsclubcalendar/tcc-production:latest
-                      docker stop production
-                      docker run --rm -d --name production -p 8082:80 -p 8084:90 tamsclubcalendar/tcc-production
+                      docker stop production && docker run --rm -d --name production -p 8082:80 -p 8084:90 tamsclubcalendar/tcc-production
                       docker image prune -af
