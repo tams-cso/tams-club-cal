@@ -61,6 +61,10 @@
             "label": "[Room] Kitchenette"
         },
         {
+            "value": "room-studyroom",
+            "label": "[Room] Study Room"
+        },
+        {
             "value": "mac-park",
             "label": "Mcconnell Park Area"
         },
