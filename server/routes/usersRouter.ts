@@ -3,6 +3,8 @@ import type { Request, Response } from 'express';
 import User from '../models/user';
 import { sendError } from '../functions/util';
 import { asyncHandler } from '../functions/asyncHandler';
+import { isAuthenticated } from '../functions/auth';
+import { AccessLevelEnum } from '../types/AccessLevel';
 
 const router = express.Router();
 
@@ -66,6 +68,8 @@ router.get(
 router.put(
     '/level/:id',
     asyncHandler(async (req: Request, res: Response) => {
+        if (!(await isAuthenticated(req, res, AccessLevelEnum.ADMIN))) return;
+        
         const id = req.params.id;
         const prev = await User.findOne({ id }).exec();
         if (!prev) {
