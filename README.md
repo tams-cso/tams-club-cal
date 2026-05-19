@@ -37,8 +37,9 @@ SERVICE_EMAIL="[Google Cloud service account email]"
 SERVICE_PRIVATE_KEY="[Google Cloud service account private key]"
 CALENDAR_ID="[ID for Google Calendar for syncing]"
 
-AWS_ACCESS_ID="[AWS IAM User Access Key ID]"
-AWS_SECRET_KEY="[AWS IAM User Secret Key]"
+R2_ACCOUNT_ID="[Cloudflare R2 Account ID for Endpoint]"
+R2_ACCESS_KEY_ID="[Cloudflare R2 Account Access Key ID]"
+R2_SECRET_ACCESS_KEY="[Cloudflare R2 Secret Access Key]"
 
 ORIGIN="[(optional) Origin requests are sent from. This is needed for google login -- thus, login will not work for local development]"
 NO_ORIGIN_CHECK="[(optional) If true, all requests not from ORIGIN will be *denied with a 403 error*]"
@@ -51,7 +52,7 @@ PORT="[(optional) The port to start the server on - DEPLOYMENTS SHOULD BE PORT 8
 As mentioned above, please contact [MichaelZhao21](https://github.com/MichaelZhao21) for credentials if you would like to help develop the backend as it will probably be easier than setting everything up manually. That said, if you want a your own resources, go right ahead:
 
 1. The first thing you will need is a [Mongodb Atlas Cluster](https://www.mongodb.com/cloud/atlas). A free tier instance should be good enough. If you decide to opt for a local instance, make sure to use that username/password and url instead
-2. Next, you need an AWS account to set up an [S3 bucket](https://aws.amazon.com/s3/) and connect that to a [CloudFront CDN](https://aws.amazon.com/cloudfront/). Then, create an IAM user and allow access to S3 management. Put that user's access key ID and secret in the `.env` file
+2. Next, you need an Cloudflare account to set up an [R2 bucket](https://www.cloudflare.com/products/r2/) and enable the Public Development URL. Then, create an API Token and put the token's Access Key ID and Access Key in '.env' and the prefix of the development URL as the Account ID.
 3. Additionally, you need to make a [Google Cloud Developer Account](https://cloud.google.com/docs), create a project, and make both OAuth 2.0 Client credentials and a service account credentials, enabling the Google Calendar API and Login with Google API. The Oauth2 credentials and the service account email/private key should be placed in the `.env` file
 4. Finally, you will need to create a new [Google Calendar](https://calendar.google.com), share it with the service account email, and add the id and url to the `.env` file
 
