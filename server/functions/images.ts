@@ -3,16 +3,17 @@ import { DeleteObjectCommand, DeleteObjectsCommand, PutObjectCommand, S3Client }
 import { RequestWithClubFiles } from '../types/RequestWithClubFiles';
 import { newId } from './util';
 
-// Connect to AWS S3 instance
+// Connect to Cloudflare R2 instance (S3-compatible)
 const s3 = new S3Client({
+    region: 'auto',
     credentials: {
-        accessKeyId: process.env.AWS_ACCESS_ID,
-        secretAccessKey: process.env.AWS_SECRET_KEY,
+        accessKeyId: process.env.R2_ACCESS_KEY_ID!,
+        secretAccessKey: process.env.R2_SECRET_ACCESS_KEY!,
     },
-    region: 'us-east-1',
+    endpoint: `https://${process.env.R2_ACCOUNT_ID}.r2.cloudflarestorage.com`,
 });
 const BUCKET = `${
-    process.env.NODE_ENV === 'production' && !process.env.STAGING ? '' : 'staging-'
+    process.env.NODE_ENV === 'production' && !process.env.STAGING ? 'production-' : 'staging-'
 }tams-club-calendar-images`;
 
 /**
