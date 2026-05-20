@@ -41,7 +41,8 @@ export async function processClubUpload(req: RequestWithClubFiles) {
     }
 
     if (execs && execs.length > 0) {
-        const rawExecList = execPhotos.map((e: boolean, i: number) => (!e ? null : execs[i]));
+        let blobIncrementer = 0; // bug fix - used as api.ts passes only blobs as a list of new images but not the index as to which one is which, however, they are in order and can be mapped simply with this. Reference issue: #604
+        const rawExecList = execPhotos.map((e: boolean) => (e ? execs[blobIncrementer++] : null));
         const compressedExecs = await Promise.all(
             rawExecList.map(async (e: MulterFile) => {
                 return await compressImage(e, 300);
