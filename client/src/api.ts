@@ -10,7 +10,7 @@ const BACKEND_URL =
 
 const CDN_URL =
     process.env.NEXT_PUBLIC_BACKEND === 'staging' || process.env.NODE_ENV !== 'production'
-        ? 'https://staging.cdn.tams.club'
+        ? 'https://staging-cdn.tams.club'
         : 'https://cdn.tams.club';
 
 interface ListFetchResponse<T> extends FetchResponse {
