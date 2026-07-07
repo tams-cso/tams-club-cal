@@ -10,6 +10,9 @@ const userSchema = new mongoose.Schema({
     name: String,
     token: String,
     level: Number,
+    msId: String,
+    msEmail: String,
+    msName: String,
 });
 userSchema.plugin(mongoosePaginate);
 

@@ -1,7 +1,7 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useRouter } from 'next/router';
 import { GetServerSidePropsContext, InferGetServerSidePropsType } from 'next';
-import { getUserEvents, getUserInfo } from '../../src/api';
+import { getUserEvents, getUserInfo, deleteUnlinkMicrosoft } from '../../src/api';
 import { AccessLevelEnum } from '../../src/types/enums';
 
 import Card from '@mui/material/Card';
@@ -19,10 +19,36 @@ import Container from '@mui/material/Container';
 import PageWrapper from '../../src/components/shared/page-wrapper';
 import Loading from '../../src/components/shared/loading';
 import TitleMeta from '../../src/components/meta/title-meta';
+import Popup from '../../src/components/shared/popup';
 import { accessLevelToString, getTokenFromCookies, redirect } from '../../src/util/miscUtil';
 import { removeCookie, setCookie } from '../../src/util/cookies';
 import { formatTime } from '../../src/util/datetime';
 import { darkSwitch } from '../../src/util/cssUtil';
+import { createPopupEvent } from '../../src/util/constructors';
+
+/**
+ * Builds the Microsoft Entra ID authorize URL for the redirect flow.
+ * User is redirected here, logs in, then Microsoft redirects to /auth/unt-callback.
+ */
+function buildMicrosoftAuthUrl(): string {
+    const clientId = process.env.NEXT_PUBLIC_MS_CLIENT_ID || '';
+    const redirectUri = `${window.location.origin}/auth/unt-callback`;
+    const nonce = crypto.randomUUID();
+    const state = crypto.randomUUID();
+    sessionStorage.setItem('msNonce', nonce);
+    sessionStorage.setItem('msState', state);
+    sessionStorage.setItem('msReturnUrl', window.location.href);
+    const params = new URLSearchParams({
+        client_id: clientId,
+        response_type: 'id_token',
+        redirect_uri: redirectUri,
+        scope: 'openid profile email',
+        response_mode: 'fragment',
+        nonce,
+        state,
+    });
+    return `https://login.microsoftonline.com/common/oauth2/v2.0/authorize?${params}`;
+}
 
 // Server-side Rendering to check for token and get data
 export const getServerSideProps = async (ctx: GetServerSidePropsContext) => {
@@ -67,6 +93,10 @@ const Dashboard = ({
     userEvents,
 }: InferGetServerSidePropsType<typeof getServerSideProps>) => {
     const router = useRouter();
+    const [popupEvent, setPopupEvent] = useState<PopupEvent>(null);
+    const [msLinked, setMsLinked] = useState(!!info?.msId);
+    const [msEmail, setMsEmail] = useState(info?.msEmail || '');
+    const [msName, setMsName] = useState(info?.msName || '');
 
     // Redirect the user to the admin page
     const toAdmin = () => router.push('/profile/admin');
@@ -81,6 +111,28 @@ const Dashboard = ({
     // Redirect the user to the event page
     const goTo = (eventId: string) => {
         router.push(`/events/${eventId}?view=profile`);
+    };
+
+    // Redirect to Microsoft Entra ID login, then come back to /auth/unt-callback
+    const linkMicrosoft = () => {
+        if (!process.env.NEXT_PUBLIC_MS_CLIENT_ID) {
+            setPopupEvent(createPopupEvent('Microsoft login is not configured (missing client ID).', 4));
+            return;
+        }
+        window.location.href = buildMicrosoftAuthUrl();
+    };
+
+    // Unlink Microsoft account
+    const unlinkMicrosoft = async () => {
+        const res = await deleteUnlinkMicrosoft();
+        if (res.status === 204) {
+            setMsLinked(false);
+            setMsEmail('');
+            setMsName('');
+            setPopupEvent(createPopupEvent('UNT account unlinked.', 2));
+        } else {
+            setPopupEvent(createPopupEvent('Failed to unlink UNT account.', 4));
+        }
     };
 
     // Redirect user if they are not logged in
@@ -105,6 +157,7 @@ const Dashboard = ({
 
     return (
         <PageWrapper>
+            <Popup event={popupEvent} />
             <TitleMeta title="Profile" path="/profile/dashboard" />
             <Container>
                 <Card>
@@ -123,8 +176,8 @@ const Dashboard = ({
                                 </TableHead>
                                 <TableBody>
                                     <TableRow>
-                                        <TableCell>{info.name}</TableCell>
-                                        <TableCell>{info.email}</TableCell>
+                                        <TableCell>{info.name || '—'}</TableCell>
+                                        <TableCell>{info.email || '—'}</TableCell>
                                         <TableCell>{accessLevelToString(level)}</TableCell>
                                     </TableRow>
                                 </TableBody>
@@ -138,6 +191,39 @@ const Dashboard = ({
                                 <Button onClick={toAdmin}>Go to Admin Dashboard</Button>
                             </Box>
                         ) : null}
+                        {msLinked ? (
+                            <Box>
+                                <TableContainer sx={{ marginTop: 1 }}>
+                                    <Table>
+                                        <TableHead>
+                                            <TableRow>
+                                                <TableCell>Linked Google Account</TableCell>
+                                                <TableCell>UNT Email</TableCell>
+                                                <TableCell>UNT Name</TableCell>
+                                            </TableRow>
+                                        </TableHead>
+                                        <TableBody>
+                                            <TableRow>
+                                                <TableCell>{info.email || '—'}</TableCell>
+                                                <TableCell>{msEmail}</TableCell>
+                                                <TableCell>{msName}</TableCell>
+                                            </TableRow>
+                                        </TableBody>
+                                    </Table>
+                                </TableContainer>
+                                <Box sx={{ display: 'flex', justifyContent: 'center', marginTop: 2 }}>
+                                    <Button color="error" onClick={unlinkMicrosoft}>
+                                        Unlink UNT Account
+                                    </Button>
+                                </Box>
+                            </Box>
+                        ) : (
+                            <Box sx={{ display: 'flex', justifyContent: 'center', marginTop: 2 }}>
+                                <Button variant="contained" onClick={linkMicrosoft}>
+                                    Link UNT Account
+                                </Button>
+                            </Box>
+                        )}
                         <Typography variant="h2" component="h1" sx={{ marginTop: 3 }}>
                             User-Created Events
                         </Typography>

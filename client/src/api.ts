@@ -476,6 +476,41 @@ export async function getUserList(
     >;
 }
 
+/** #################### MICROSOFT AUTH API #################### */
+
+/**
+ * Links a Microsoft Entra ID account to the currently logged-in user.
+ *
+ * @param credential The Microsoft ID token from the MSAL login
+ */
+export async function postLinkMicrosoft(credential: string): Promise<FetchResponse> {
+    return postRequest('/auth/link-microsoft', JSON.stringify({ credential }), true, true, true) as Promise<FetchResponse>;
+}
+
+/**
+ * Gets the paginated list of users who have linked Microsoft accounts.
+ * Admin-only.
+ */
+export async function getMicrosoftAccounts(
+    page: number = 1,
+    limit: number = 10,
+    sort: string = '',
+    reverse: boolean = false,
+    filter: GridFilterItem
+): Promise<ResourceFetchResponse<AdminResourceList>> {
+    const aFilter = filter ? `&filter=${JSON.stringify(filter)}` : '';
+    return getRequest(`/users/microsoft?page=${page}&limit=${limit}&sort=${sort}&reverse=${reverse}${aFilter}`, true) as Promise<
+        ResourceFetchResponse<AdminResourceList>
+    >;
+}
+
+/**
+ * Unlinks the Microsoft account from the currently authenticated user.
+ */
+export async function deleteUnlinkMicrosoft(): Promise<StatusResponse> {
+    return deleteRequest('/users/unlink-microsoft');
+}
+
 /** #################### ADMIN API #################### */
 
 /**

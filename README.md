@@ -24,6 +24,8 @@ It is assumed that you have `node` installed on your system. If not, follow the 
 
 If you would like to help develop the backend, email or message [MichaelZhao21](https://github.com/MichaelZhao21) to get access to the database and other resources. If you are just developing frontend, you can simply use `https://dev.tams.club` as the backend server (skip to [Execution and Deployment](#execution-and-deployment)). You will **not** need to do the following steps if you are *only developing frontend*.
 
+### Server Environment
+
 Create the environmental variable file at `server/.env`:
 
 ```.env
@@ -37,6 +39,8 @@ SERVICE_EMAIL="[Google Cloud service account email]"
 SERVICE_PRIVATE_KEY="[Google Cloud service account private key]"
 CALENDAR_ID="[ID for Google Calendar for syncing]"
 
+MS_CLIENT_ID="[Azure AD App Registration Client ID]"
+
 R2_ACCOUNT_ID="[Cloudflare R2 Account ID for Endpoint]"
 R2_ACCESS_KEY_ID="[Cloudflare R2 Account Access Key ID]"
 R2_SECRET_ACCESS_KEY="[Cloudflare R2 Secret Access Key]"
@@ -46,6 +50,16 @@ NO_ORIGIN_CHECK="[(optional) If true, all requests not from ORIGIN will be *deni
 STAGING="[(optional) On dev.tams.club, this value needs to be true to upload files to the correct bucket due to docker running in production]"
 PORT="[(optional) The port to start the server on - DEPLOYMENTS SHOULD BE PORT 80 due to docker port mapping]"
 ```
+
+### Client Environment
+
+Create the environmental variable file at `client/.env`:
+
+```.env
+NEXT_PUBLIC_MS_CLIENT_ID="[Same Azure Client ID from server]"
+```
+
+For Docker builds (staging/production), the client `.env` is provided via GitHub Actions secrets (`PROD_CLIENT_ENV` / `STAGING_CLIENT_ENV`), written to `client/.env` before the build.
 
 ### External Resources (Backend)
 

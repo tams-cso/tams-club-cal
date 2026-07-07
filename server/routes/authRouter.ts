@@ -1,8 +1,9 @@
 import express from 'express';
 import type { Request, Response } from 'express';
-import { verifyToken, upsertUser } from '../functions/auth';
+import { verifyToken, upsertUser, verifyMicrosoftToken, linkMicrosoftAccount, isAuthenticated } from '../functions/auth';
 import { getIp, sendError } from '../functions/util';
 import User from '../models/user';
+import { AccessLevelEnum } from '../types/AccessLevel';
 import { asyncHandler } from '../functions/asyncHandler';
 
 const router = express.Router();
@@ -51,6 +52,52 @@ router.post(
 
         const token = await upsertUser(payload);
         res.send({ token });
+    }),
+);
+
+/**
+ * POST /auth/link-microsoft
+ *
+ * Links a Microsoft Entra ID account to an existing user account.
+ * The user must be authenticated (token in Authorization header).
+ * The Microsoft ID token must be from an @unt.edu or @my.unt.edu email.
+ * This permanently links the two accounts so the user can eventually log in with Microsoft.
+ */
+router.post(
+    '/link-microsoft',
+    asyncHandler(async (req: Request, res: Response) => {
+        // Check if user is authenticated
+        if (!(await isAuthenticated(req, res, AccessLevelEnum.STANDARD))) return;
+
+        // Verify the Microsoft token
+        const msPayload = await verifyMicrosoftToken(req.body.credential);
+        if (!msPayload) {
+            sendError(res, 401, 'Invalid Microsoft token or email domain not allowed');
+            return;
+        }
+
+        // Get the user's auth token from the Authorization header
+        const userToken = req.headers.authorization.substring(7);
+
+        // Check if the user already has a Microsoft account linked
+        const currentUser = await User.findOne({ token: userToken }).exec();
+        if (currentUser?.msId) {
+            sendError(res, 400, 'Microsoft account already linked to this user');
+            return;
+        }
+
+        // Link the Microsoft account
+        const success = await linkMicrosoftAccount(msPayload, userToken);
+        if (!success) {
+            sendError(res, 500, 'Failed to link Microsoft account');
+            return;
+        }
+
+        res.send({
+            msId: msPayload.oid || msPayload.sub,
+            msEmail: msPayload.email || msPayload.preferred_username,
+            msName: msPayload.name || msPayload.preferred_username,
+        });
     }),
 );
 

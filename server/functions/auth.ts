@@ -1,6 +1,7 @@
 import { OAuth2Client, TokenPayload } from 'google-auth-library';
 import type { Request, Response } from 'express';
 import crypto from 'crypto';
+import jwt from 'jsonwebtoken';
 import User from '../models/user';
 import { newId, sendError } from './util';
 import { AccessLevelEnum } from '../types/AccessLevel';
@@ -93,6 +94,148 @@ export async function isValidToken(
         return id === user.id;
     }
     return false;
+}
+
+/**
+ * Interface for decoded Microsoft Entra ID token payload
+ */
+interface MicrosoftTokenPayload {
+    /** Issuer (https://login.microsoftonline.com/{tenant}/v2.0) */
+    iss: string;
+    /** Audience (client ID) */
+    aud: string;
+    /** Object ID of the user in Entra ID */
+    oid: string;
+    /** User's email address */
+    email?: string;
+    /** User's display name */
+    name?: string;
+    /** Tenant ID */
+    tid: string;
+    /** Subject (usually same as oid) */
+    sub: string;
+    /** Preferred username (UPN) */
+    preferred_username?: string;
+    [key: string]: any;
+}
+
+/**
+ * Verifies a Microsoft Entra ID token.
+ * Checks signature, audience, issuer pattern, and email domain.
+ * Uses Microsoft's common JWKS endpoint so it works with any tenant.
+ *
+ * @param token Microsoft Entra ID token to verify
+ * @returns Decoded token payload or null
+ */
+export async function verifyMicrosoftToken(token: string): Promise<MicrosoftTokenPayload> {
+    try {
+        const msClientId = process.env.MS_CLIENT_ID;
+
+        if (!msClientId) {
+            console.error('Missing MS_CLIENT_ID environment variable');
+            return null;
+        }
+
+        // Decode header to get the kid
+        const decoded = jwt.decode(token, { complete: true });
+        if (!decoded || typeof decoded === 'string' || !decoded.header) {
+            console.error('Failed to decode Microsoft token');
+            return null;
+        }
+
+        const kid = decoded.header.kid;
+        if (!kid) {
+            console.error('Microsoft token missing kid in header');
+            return null;
+        }
+
+        // Fetch Microsoft's common JWKS (contains keys for all tenants)
+        const jwksUri = 'https://login.microsoftonline.com/common/discovery/v2.0/keys';
+        const jwksRes = await fetch(jwksUri);
+        if (!jwksRes.ok) {
+            console.error('Failed to fetch Microsoft JWKS');
+            return null;
+        }
+        const jwks = (await jwksRes.json()) as { keys: any[] };
+
+        // Find the key matching the kid
+        const key = jwks.keys.find((k: any) => k.kid === kid);
+        if (!key) {
+            console.error('No matching key found in Microsoft JWKS');
+            return null;
+        }
+
+        // Convert JWK to PEM public key using Node.js crypto
+        const pubKey = crypto.createPublicKey({ key, format: 'jwk' });
+
+        // Verify signature, audience; accept any valid Microsoft issuer
+        const payload = jwt.verify(token, pubKey, {
+            algorithms: ['RS256'],
+            audience: msClientId,
+        }) as MicrosoftTokenPayload;
+
+        // Verify issuer matches the expected Microsoft pattern (any tenant)
+        if (!payload.iss || !payload.iss.startsWith('https://login.microsoftonline.com/') || !payload.iss.endsWith('/v2.0')) {
+            console.error(`Microsoft token has unexpected issuer: ${payload.iss}`);
+            return null;
+        }
+
+        // Check email domain
+        const email = payload.email || payload.preferred_username;
+        if (!email) {
+            console.error('Microsoft token missing email');
+            return null;
+        }
+
+        const allowedDomains = ['unt.edu', 'my.unt.edu'];
+        const emailDomain = email.split('@')[1]?.toLowerCase();
+        if (!emailDomain || !allowedDomains.includes(emailDomain)) {
+            console.error(`Microsoft account email domain not allowed: ${emailDomain}`);
+            return null;
+        }
+
+        return payload;
+    } catch (error) {
+        console.error('Microsoft token verification failed:', error);
+        return null;
+    }
+}
+
+/**
+ * Links a Microsoft account to an existing user.
+ * Updates the user's msId, msEmail, and msName fields.
+ *
+ * @param msPayload Decoded Microsoft token payload
+ * @param userToken The user's auth token to find the user
+ * @returns True if successful
+ */
+export async function linkMicrosoftAccount(
+    msPayload: MicrosoftTokenPayload,
+    userToken: string
+): Promise<boolean> {
+    try {
+        const msId = msPayload.oid || msPayload.sub;
+        const msEmail = msPayload.email || msPayload.preferred_username;
+        const msName = msPayload.name || msEmail;
+
+        // Check that the Microsoft account isn't already linked to another user
+        const existing = await User.findOne({ msId, token: { $ne: userToken } }).exec();
+        if (existing) {
+            console.error('Microsoft account already linked to another user');
+            return false;
+        }
+
+        // Update the user with Microsoft account info
+        const res = await User.updateOne(
+            { token: userToken },
+            { $set: { msId, msEmail, msName } }
+        ).exec();
+
+        return res.modifiedCount > 0;
+    } catch (error) {
+        console.error('Failed to link Microsoft account:', error);
+        return false;
+    }
 }
 
 /**

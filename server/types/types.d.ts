@@ -202,8 +202,8 @@ interface UserObject {
     /** Google Auth unique ID for the user */
     googleId: string;
 
-    /** Email address of the user */
-    email: string;
+    /** Email address of the user (may be null when once Google auth is phased out) */
+    email?: string;
 
     /** Display name of the user */
     name: string;
@@ -213,4 +213,13 @@ interface UserObject {
 
     /** Access level of the user */
     level: AccessLevel;
+
+    /** Microsoft Entra ID (object ID / sub) */
+    msId?: string;
+
+    /** Microsoft account email (must be @unt.edu or @my.unt.edu) */
+    msEmail?: string;
+
+    /** Microsoft account display name */
+    msName?: string;
 }
