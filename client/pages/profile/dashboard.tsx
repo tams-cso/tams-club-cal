@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { useRouter } from 'next/router';
 import { GetServerSidePropsContext, InferGetServerSidePropsType } from 'next';
-import { getUserEvents, getUserInfo, deleteUnlinkMicrosoft } from '../../src/api';
+import { getUserEvents, getUserInfo, deleteUnlinkMicrosoft, getMicrosoftAuthUrl } from '../../src/api';
 import { AccessLevelEnum } from '../../src/types/enums';
 
 import Card from '@mui/material/Card';
@@ -25,30 +25,6 @@ import { removeCookie, setCookie } from '../../src/util/cookies';
 import { formatTime } from '../../src/util/datetime';
 import { darkSwitch } from '../../src/util/cssUtil';
 import { createPopupEvent } from '../../src/util/constructors';
-
-/**
- * Builds the Microsoft Entra ID authorize URL for the redirect flow.
- * User is redirected here, logs in, then Microsoft redirects to /auth/unt-callback.
- */
-function buildMicrosoftAuthUrl(): string {
-    const clientId = process.env.NEXT_PUBLIC_MS_CLIENT_ID || '';
-    const redirectUri = `${window.location.origin}/auth/unt-callback`;
-    const nonce = crypto.randomUUID();
-    const state = crypto.randomUUID();
-    sessionStorage.setItem('msNonce', nonce);
-    sessionStorage.setItem('msState', state);
-    sessionStorage.setItem('msReturnUrl', window.location.href);
-    const params = new URLSearchParams({
-        client_id: clientId,
-        response_type: 'id_token',
-        redirect_uri: redirectUri,
-        scope: 'openid profile email',
-        response_mode: 'fragment',
-        nonce,
-        state,
-    });
-    return `https://login.microsoftonline.com/common/oauth2/v2.0/authorize?${params}`;
-}
 
 // Server-side Rendering to check for token and get data
 export const getServerSideProps = async (ctx: GetServerSidePropsContext) => {
@@ -113,13 +89,15 @@ const Dashboard = ({
         router.push(`/events/${eventId}?view=profile`);
     };
 
-    // Redirect to Microsoft Entra ID login, then come back to /auth/unt-callback
-    const linkMicrosoft = () => {
-        if (!process.env.NEXT_PUBLIC_MS_CLIENT_ID) {
-            setPopupEvent(createPopupEvent('Microsoft login is not configured (missing client ID).', 4));
+    // Ask the server for a Microsoft Entra ID authorize URL, then redirect.
+    const linkMicrosoft = async () => {
+        const res = await getMicrosoftAuthUrl();
+        if (res.status !== 200 || !(res.data as { url?: string })?.url) {
+            setPopupEvent(createPopupEvent('Microsoft login is not configured on the server.', 4));
             return;
         }
-        window.location.href = buildMicrosoftAuthUrl();
+        sessionStorage.setItem('msReturnUrl', window.location.href);
+        window.location.href = (res.data as { url: string }).url;
     };
 
     // Unlink Microsoft account

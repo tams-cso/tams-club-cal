@@ -222,4 +222,10 @@ interface UserObject {
 
     /** Microsoft account display name */
     msName?: string;
+
+    /** Transient nonce for the Microsoft Entra ID link flow (internal) */
+    msNonce?: string;
+
+    /** Transient state for the Microsoft Entra ID link flow (internal) */
+    msState?: string;
 }

@@ -51,16 +51,6 @@ STAGING="[(optional) On dev.tams.club, this value needs to be true to upload fil
 PORT="[(optional) The port to start the server on - DEPLOYMENTS SHOULD BE PORT 80 due to docker port mapping]"
 ```
 
-### Client Environment
-
-Create the environmental variable file at `client/.env`:
-
-```.env
-NEXT_PUBLIC_MS_CLIENT_ID="[Same Azure Client ID from server]"
-```
-
-For Docker builds (staging/production), the client `.env` is provided via GitHub Actions secrets (`PROD_CLIENT_ENV` / `STAGING_CLIENT_ENV`), written to `client/.env` before the build.
-
 ### External Resources (Backend)
 
 As mentioned above, please contact [MichaelZhao21](https://github.com/MichaelZhao21) for credentials if you would like to help develop the backend as it will probably be easier than setting everything up manually. That said, if you want a your own resources, go right ahead:
@@ -68,7 +58,8 @@ As mentioned above, please contact [MichaelZhao21](https://github.com/MichaelZha
 1. The first thing you will need is a [Mongodb Atlas Cluster](https://www.mongodb.com/cloud/atlas). A free tier instance should be good enough. If you decide to opt for a local instance, make sure to use that username/password and url instead
 2. Next, you need an Cloudflare account to set up an [R2 bucket](https://www.cloudflare.com/products/r2/) and enable the Public Development URL. Then, create an API Token and put the token's Access Key ID and Access Key in '.env' and the prefix of the development URL as the Account ID.
 3. Additionally, you need to make a [Google Cloud Developer Account](https://cloud.google.com/docs), create a project, and make both OAuth 2.0 Client credentials and a service account credentials, enabling the Google Calendar API and Login with Google API. The Oauth2 credentials and the service account email/private key should be placed in the `.env` file
-4. Finally, you will need to create a new [Google Calendar](https://calendar.google.com), share it with the service account email, and add the id and url to the `.env` file
+4. Then, you will need to create a new [Google Calendar](https://calendar.google.com), share it with the service account email, and add the id and url to the `.env` file
+5. Lastly, for UNT account linking, create an [Azure App Registration](https://portal.azure.com/#view/Microsoft_AAD_RegisteredApps/ApplicationsListBlade) with the `MS_CLIENT_ID` and redirect URIs set up. See [CONTRIBUTING.md](CONTRIBUTING.md#microsoft-entra-unt-authentication-setup) for detailed instructions.
 
 ## Execution and Deployment
 

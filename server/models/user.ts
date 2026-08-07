@@ -13,6 +13,10 @@ const userSchema = new mongoose.Schema({
     msId: String,
     msEmail: String,
     msName: String,
+    // Transient auth-flow state for the Microsoft Entra ID link flow;
+    // generated server-side and cleared once the callback is processed.
+    msNonce: String,
+    msState: String,
 });
 userSchema.plugin(mongoosePaginate);
 

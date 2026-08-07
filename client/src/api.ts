@@ -479,12 +479,20 @@ export async function getUserList(
 /** #################### MICROSOFT AUTH API #################### */
 
 /**
+ * Gets the Microsoft Entra ID authorize URL from the server.
+ */
+export async function getMicrosoftAuthUrl(): Promise<FetchResponse> {
+    return getRequest('/auth/microsoft-auth-url', true) as Promise<FetchResponse>;
+}
+
+/**
  * Links a Microsoft Entra ID account to the currently logged-in user.
  *
- * @param credential The Microsoft ID token from the MSAL login
+ * @param credential The Microsoft ID token from the OAuth redirect
+ * @param state The OAuth state returned by Microsoft in the redirect fragment
  */
-export async function postLinkMicrosoft(credential: string): Promise<FetchResponse> {
-    return postRequest('/auth/link-microsoft', JSON.stringify({ credential }), true, true, true) as Promise<FetchResponse>;
+export async function postLinkMicrosoft(credential: string, state: string): Promise<FetchResponse> {
+    return postRequest('/auth/link-microsoft', JSON.stringify({ credential, state }), true, true, true) as Promise<FetchResponse>;
 }
 
 /**

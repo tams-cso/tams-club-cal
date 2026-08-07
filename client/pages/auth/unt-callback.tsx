@@ -6,13 +6,13 @@ import RobotBlockMeta from '../../src/components/meta/robot-block-meta';
 import { postLinkMicrosoft } from '../../src/api';
 
 const UntCallback = () => {
-    const [error, setError] = useState(false);
+    const [errorMsg, setErrorMsg] = useState<string | null>(null);
 
     useEffect(() => {
         async function processRedirect() {
             const hash = window.location.hash.substring(1);
             if (!hash) {
-                setError(true);
+                setErrorMsg('Missing OAuth response from Microsoft. Please try again from the dashboard.');
                 return;
             }
 
@@ -22,32 +22,25 @@ const UntCallback = () => {
             const errDesc = params.get('error_description') || params.get('error');
 
             if (errDesc) {
-                setError(true);
+                setErrorMsg(errDesc);
                 return;
             }
 
             if (!idToken) {
-                setError(true);
+                setErrorMsg('Missing ID token from Microsoft. Please try again from the dashboard.');
                 return;
             }
 
-            const savedState = sessionStorage.getItem('msState');
-            if (state && savedState && state !== savedState) {
-                setError(true);
-                return;
-            }
-
-            sessionStorage.removeItem('msNonce');
-            sessionStorage.removeItem('msState');
             const returnUrl = sessionStorage.getItem('msReturnUrl') || '/profile/dashboard';
             sessionStorage.removeItem('msReturnUrl');
 
-            const res = await postLinkMicrosoft(idToken);
+            const res = await postLinkMicrosoft(idToken, state);
             if (res.status === 200) {
                 window.location.hash = '';
                 window.location.href = returnUrl;
             } else {
-                setError(true);
+                const serverError = (res.data as { error?: string })?.error;
+                setErrorMsg(serverError || 'Failed to link UNT account. Please try again from the dashboard.');
             }
         }
 
@@ -58,11 +51,7 @@ const UntCallback = () => {
         <PageWrapper>
             <TitleMeta title="Linking UNT Account" path="/auth/unt-callback" />
             <RobotBlockMeta />
-            <Loading error={error}>
-                {error
-                    ? 'Failed to link UNT account. Please try again from the dashboard.'
-                    : 'Processing UNT account link...'}
-            </Loading>
+            <Loading error={!!errorMsg}>{errorMsg || 'Processing UNT account link...'}</Loading>
         </PageWrapper>
     );
 };

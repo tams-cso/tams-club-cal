@@ -99,7 +99,7 @@ export async function isValidToken(
 /**
  * Interface for decoded Microsoft Entra ID token payload
  */
-interface MicrosoftTokenPayload {
+export interface MicrosoftTokenPayload {
     /** Issuer (https://login.microsoftonline.com/{tenant}/v2.0) */
     iss: string;
     /** Audience (client ID) */
@@ -116,89 +116,127 @@ interface MicrosoftTokenPayload {
     sub: string;
     /** Preferred username (UPN) */
     preferred_username?: string;
+    /** Nonce that was included in the authorization request */
+    nonce?: string;
     [key: string]: any;
 }
 
 /**
+ * Result of a Microsoft token verification.
+ * Either contains the decoded payload on success or an error message on failure so the error can be surfaced to the client.
+ */
+export type MicrosoftTokenResult =
+    | { success: true; payload: MicrosoftTokenPayload }
+    | { success: false; error: string };
+
+/**
  * Verifies a Microsoft Entra ID token.
- * Checks signature, audience, issuer pattern, and email domain.
+ * Checks signature, audience, issuer pattern, email domain, and nonce.
  * Uses Microsoft's common JWKS endpoint so it works with any tenant.
  *
  * @param token Microsoft Entra ID token to verify
- * @returns Decoded token payload or null
+ * @param nonce The nonce that was stored when the auth request was generated
+ * @returns A result object with the decoded payload or an error message
  */
-export async function verifyMicrosoftToken(token: string): Promise<MicrosoftTokenPayload> {
+export async function verifyMicrosoftToken(token: string, nonce?: string): Promise<MicrosoftTokenResult> {
     try {
         const msClientId = process.env.MS_CLIENT_ID;
 
         if (!msClientId) {
-            console.error('Missing MS_CLIENT_ID environment variable');
-            return null;
+            return { success: false, error: 'Microsoft auth is not configured on the server.' };
         }
 
         // Decode header to get the kid
         const decoded = jwt.decode(token, { complete: true });
         if (!decoded || typeof decoded === 'string' || !decoded.header) {
-            console.error('Failed to decode Microsoft token');
-            return null;
+            return { success: false, error: 'Failed to decode Microsoft token.' };
         }
 
         const kid = decoded.header.kid;
         if (!kid) {
-            console.error('Microsoft token missing kid in header');
-            return null;
+            return { success: false, error: 'Microsoft token is missing the key ID in its header.' };
         }
 
         // Fetch Microsoft's common JWKS (contains keys for all tenants)
         const jwksUri = 'https://login.microsoftonline.com/common/discovery/v2.0/keys';
         const jwksRes = await fetch(jwksUri);
         if (!jwksRes.ok) {
-            console.error('Failed to fetch Microsoft JWKS');
-            return null;
+            return { success: false, error: 'Unable to fetch Microsoft signing keys.' };
         }
         const jwks = (await jwksRes.json()) as { keys: any[] };
 
         // Find the key matching the kid
         const key = jwks.keys.find((k: any) => k.kid === kid);
         if (!key) {
-            console.error('No matching key found in Microsoft JWKS');
-            return null;
+            return { success: false, error: 'No matching signing key found for the Microsoft token.' };
         }
 
         // Convert JWK to PEM public key using Node.js crypto
         const pubKey = crypto.createPublicKey({ key, format: 'jwk' });
 
-        // Verify signature, audience; accept any valid Microsoft issuer
-        const payload = jwt.verify(token, pubKey, {
+        // Verify signature, audience, and nonce; accept any valid Microsoft issuer
+        const verifyOptions: jwt.VerifyOptions = {
             algorithms: ['RS256'],
             audience: msClientId,
-        }) as MicrosoftTokenPayload;
+        };
+        if (nonce) verifyOptions.nonce = nonce;
+        const payload = jwt.verify(token, pubKey, verifyOptions) as MicrosoftTokenPayload;
 
         // Verify issuer matches the expected Microsoft pattern (any tenant)
-        if (!payload.iss || !payload.iss.startsWith('https://login.microsoftonline.com/') || !payload.iss.endsWith('/v2.0')) {
-            console.error(`Microsoft token has unexpected issuer: ${payload.iss}`);
-            return null;
+        if (
+            !payload.iss ||
+            !payload.iss.startsWith('https://login.microsoftonline.com/') ||
+            !payload.iss.endsWith('/v2.0')
+        ) {
+            return { success: false, error: 'Microsoft token was issued by an unexpected issuer.' };
         }
 
         // Check email domain
         const email = payload.email || payload.preferred_username;
         if (!email) {
-            console.error('Microsoft token missing email');
-            return null;
+            return { success: false, error: 'Microsoft token is missing an email address.' };
         }
 
         const allowedDomains = ['unt.edu', 'my.unt.edu'];
         const emailDomain = email.split('@')[1]?.toLowerCase();
         if (!emailDomain || !allowedDomains.includes(emailDomain)) {
-            console.error(`Microsoft account email domain not allowed: ${emailDomain}`);
-            return null;
+            return { success: false, error: `Microsoft account email domain not allowed: ${emailDomain}.` };
         }
 
-        return payload;
+        return { success: true, payload };
     } catch (error) {
         console.error('Microsoft token verification failed:', error);
-        return null;
+        return { success: false, error: 'Microsoft token verification failed.' };
     }
+}
+
+/**
+ * Generates the Microsoft Entra ID authorize URL for the given user.
+ * @param userToken The auth token of the current user
+ * @param redirectUri The callback URL that Microsoft should redirect to
+ * @returns The full authorize URL, or null if MS_CLIENT_ID is not configured
+ */
+export async function generateMicrosoftAuthUrl(userToken: string, redirectUri: string): Promise<string> {
+    const msClientId = process.env.MS_CLIENT_ID;
+    if (!msClientId) {
+        throw new Error('Microsoft auth is not configured on the server.');
+    }
+
+    const nonce = crypto.randomBytes(16).toString('hex');
+    const state = crypto.randomBytes(16).toString('hex');
+
+    await User.updateOne({ token: userToken }, { $set: { msNonce: nonce, msState: state } }).exec();
+
+    const params = new URLSearchParams({
+        client_id: msClientId,
+        response_type: 'id_token',
+        redirect_uri: redirectUri,
+        scope: 'openid profile email',
+        response_mode: 'fragment',
+        nonce,
+        state,
+    });
+    return `https://login.microsoftonline.com/common/oauth2/v2.0/authorize?${params}`;
 }
 
 /**
@@ -207,12 +245,12 @@ export async function verifyMicrosoftToken(token: string): Promise<MicrosoftToke
  *
  * @param msPayload Decoded Microsoft token payload
  * @param userToken The user's auth token to find the user
- * @returns True if successful
+ * @returns A result object indicating success or an error message
  */
 export async function linkMicrosoftAccount(
     msPayload: MicrosoftTokenPayload,
     userToken: string
-): Promise<boolean> {
+): Promise<{ success: boolean; error?: string }> {
     try {
         const msId = msPayload.oid || msPayload.sub;
         const msEmail = msPayload.email || msPayload.preferred_username;
@@ -221,20 +259,17 @@ export async function linkMicrosoftAccount(
         // Check that the Microsoft account isn't already linked to another user
         const existing = await User.findOne({ msId, token: { $ne: userToken } }).exec();
         if (existing) {
-            console.error('Microsoft account already linked to another user');
-            return false;
+            return { success: false, error: 'This UNT account is already linked to another user.' };
         }
 
         // Update the user with Microsoft account info
-        const res = await User.updateOne(
-            { token: userToken },
-            { $set: { msId, msEmail, msName } }
-        ).exec();
+        const res = await User.updateOne({ token: userToken }, { $set: { msId, msEmail, msName } }).exec();
 
-        return res.modifiedCount > 0;
+        if (res.modifiedCount > 0) return { success: true };
+        return { success: false, error: 'Failed to link UNT account.' };
     } catch (error) {
         console.error('Failed to link Microsoft account:', error);
-        return false;
+        return { success: false, error: 'Failed to link UNT account.' };
     }
 }
 
