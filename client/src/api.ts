@@ -476,6 +476,49 @@ export async function getUserList(
     >;
 }
 
+/** #################### MICROSOFT AUTH API #################### */
+
+/**
+ * Gets the Microsoft Entra ID authorize URL from the server.
+ */
+export async function getMicrosoftAuthUrl(): Promise<FetchResponse> {
+    return getRequest('/auth/microsoft-auth-url', true) as Promise<FetchResponse>;
+}
+
+/**
+ * Links a Microsoft Entra ID account to the currently logged-in user.
+ *
+ * @param credential The Microsoft ID token from the OAuth redirect
+ * @param state The OAuth state returned by Microsoft in the redirect fragment
+ */
+export async function postLinkMicrosoft(credential: string, state: string): Promise<FetchResponse> {
+    return postRequest('/auth/link-microsoft', JSON.stringify({ credential, state }), true, true, true) as Promise<FetchResponse>;
+}
+
+/**
+ * Gets the paginated list of users who have linked Microsoft accounts.
+ * Admin-only.
+ */
+export async function getMicrosoftAccounts(
+    page: number = 1,
+    limit: number = 10,
+    sort: string = '',
+    reverse: boolean = false,
+    filter: GridFilterItem
+): Promise<ResourceFetchResponse<AdminResourceList>> {
+    const aFilter = filter ? `&filter=${JSON.stringify(filter)}` : '';
+    return getRequest(`/users/microsoft?page=${page}&limit=${limit}&sort=${sort}&reverse=${reverse}${aFilter}`, true) as Promise<
+        ResourceFetchResponse<AdminResourceList>
+    >;
+}
+
+/**
+ * Unlinks the Microsoft account from the currently authenticated user.
+ */
+export async function deleteUnlinkMicrosoft(): Promise<StatusResponse> {
+    return deleteRequest('/users/unlink-microsoft');
+}
+
 /** #################### ADMIN API #################### */
 
 /**
