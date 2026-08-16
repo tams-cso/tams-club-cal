@@ -22,7 +22,7 @@ export function setCookie(name: string, value: any): void {
  * @return Value of the cookie or null if not found
  */
 export function getCookie(name: string): string {
-    const val = cookies.get(name);
+    const val = cookies.get(name, {doNotParse: true});
     if (val) return val;
     else return null;
 }
