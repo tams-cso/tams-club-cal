@@ -7,7 +7,7 @@ import { AccessLevelEnum } from '../../../src/types/enums';
 import { getTokenFromCookies } from '../../../src/util/miscUtil';
 import { createPopupEvent, createEvent } from '../../../src/util/constructors';
 import { darkSwitch } from '../../../src/util/cssUtil';
-import { getEvent, getOverlappingReservations, getUserInfo, postEvent, putEvent } from '../../../src/api';
+import { getClubList, getEvent, getOverlappingReservations, getUserInfo, postEvent, putEvent } from '../../../src/api';
 import { setCookie } from '../../../src/util/cookies';
 import { formatEventDateTime } from '../../../src/util/datetime';
 
@@ -45,6 +45,7 @@ import DateInput from '../../../src/components/edit/events/date-input';
 import ControlledSelect from '../../../src/components/edit/shared/controlled-select';
 
 import data from '../../../src/data.json';
+import ControlledAutocomplete from '../../../src/components/edit/shared/controlled-autocomplete';
 
 // Object for holding form data
 type SubmitData = {
@@ -74,19 +75,25 @@ export const getServerSideProps = async (ctx: GetServerSidePropsContext) => {
     const userId = userRes.status === 200 ? userRes.data.id : null;
     const level = userId ? userRes.data.level : AccessLevelEnum.NONE;
 
+    // Get list of clubs
+    let clubList: Club[];
+    const rawClubList = await getClubList();
+    let error = rawClubList.status !== 200;
+    clubList = rawClubList.data.sort((a, b) => a.name.localeCompare(b.name));
+
     // Check if adding event
     const id = ctx.params.id as string;
-    if (!id) return { props: { event: createEvent(), id: null, error: false, userId, level, duplicate: false } };
+    if (!id || error) return { props: { event: createEvent(), id: null, error, userId, level, duplicate: false, clubList } };
 
     // Get event info
     const eventRes = await getEvent(id);
-    const error = eventRes.status !== 200;
+    error = eventRes.status !== 200;
     const event = error ? createEvent() : eventRes.data;
 
     // Check if duplicating event
     const duplicate = (ctx.query.duplicate as string) === '1';
 
-    return { props: { event, error, id: error ? null : id, userId, level, duplicate } };
+    return { props: { event, error, id: error ? null : id, userId, level, duplicate, clubList } };
 };
 
 /**
@@ -99,6 +106,7 @@ const EditEvents = ({
     userId,
     level,
     duplicate,
+    clubList,
 }: InferGetServerSidePropsType<typeof getServerSideProps>) => {
     const router = useRouter();
     const [backdrop, setBackdrop] = useState(false);
@@ -434,16 +442,16 @@ const EditEvents = ({
                     />
                 </FormBox>
                 <FormBox>
-                    <ControlledTextField
+                    <ControlledAutocomplete
                         control={control}
                         setValue={setValue}
                         value={event.club}
                         label="Club"
                         name="club"
                         variant="outlined"
-                        grow
+                        options={clubList.map(c => c.name)}
                         required
-                        errorMessage="Please enter a club name"
+                        grow
                     />
                     <Spacer />
                     <LocationSelect
