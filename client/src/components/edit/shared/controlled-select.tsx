@@ -26,6 +26,9 @@ interface ControlledSelectProps extends React.HTMLProps<HTMLDivElement> {
     /** Whether or not to set the width of the select to the width of the input */
     autoWidth?: boolean;
 
+    /** If true, the element will have flex grow set to 1 */
+    grow?: boolean;
+
     /** Default value for the field */
     value?: string;
 
@@ -76,7 +79,10 @@ const ControlledSelect = (props: ControlledSelectProps) => {
             rules={{ required: props.required || false }}
             defaultValue={props.value}
             render={({ field: { onChange, onBlur, value } }) => (
-                <FormControl sx={props.wrapperSx}>
+                <FormControl sx={{
+                    flexGrow: props.grow ? 1 : undefined,
+                    ...props.wrapperSx
+                }}>
                     <InputLabel id={`select-label-${props.name}`}>{props.label}</InputLabel>
                     <Select
                         variant={props.variant || 'standard'}
