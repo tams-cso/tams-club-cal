@@ -28,6 +28,46 @@ router.get(
 );
 
 /**
+ * GET /users/microsoft?page=<page_num>&limit=<items_per_page>&sort=<sorting_method>&reverse=<true_if_sort_reverse>&filter=<filter>
+ *
+ * Admin-only: retrieves a paginated list of users who have linked Microsoft accounts.
+ */
+router.get(
+    '/microsoft',
+    asyncHandler(async (req: Request, res: Response) => {
+        if (!(await isAuthenticated(req, res, AccessLevelEnum.ADMIN))) return;
+
+        const limit = req.query.limit ? parseInt(req.query.limit as string) : 20;
+        const page = req.query.page ? parseInt(req.query.page as string) : 1;
+        const sort = req.query.sort ? { [req.query.sort as string]: req.query.reverse === 'true' ? -1 : 1 } : null;
+        const filterData = req.query.filter ? JSON.parse(req.query.filter as string) : null;
+        const filter = filterData ? { [filterData.columnField]: new RegExp(`.*${filterData.value}.*`, 'i') } : {};
+
+        // Only return users that have msId set
+        const msFilter = { msId: { $ne: null, $exists: true }, ...filter };
+
+        const users = await User.paginate(msFilter, { lean: true, leanWithId: false, page, limit, sort });
+        res.send(users);
+    }),
+);
+
+/**
+ * GET /users/unlink-microsoft
+ *
+ * Unlinks the Microsoft account from the currently authenticated user.
+ */
+router.delete(
+    '/unlink-microsoft',
+    asyncHandler(async (req: Request, res: Response) => {
+        if (!(await isAuthenticated(req, res, AccessLevelEnum.STANDARD))) return;
+
+        const userToken = req.headers.authorization.substring(7);
+        await User.updateOne({ token: userToken }, { $unset: { msId: '', msEmail: '', msName: '' } }).exec();
+        res.sendStatus(204);
+    }),
+);
+
+/**
  * GET /users/<token>
  *
  * Sends the user info to the client given the token.
@@ -40,7 +80,7 @@ router.get(
             return;
         }
         const user = await User.findOne({ token: req.params.token }).exec();
-        if (user) res.send({ id: user.id, email: user.email, name: user.name, level: user.level });
+        if (user) res.send({ id: user.id, email: user.email, name: user.name, level: user.level, msId: user.msId, msEmail: user.msEmail, msName: user.msName });
         else sendError(res, 400, 'User not found in database');
     }),
 );

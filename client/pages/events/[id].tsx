@@ -125,13 +125,15 @@ const EventDisplay = ({ event, error, level, userId }: InferGetServerSidePropsTy
                                 >
                                     {eventTypeToString(event.type) + (event.publicEvent ? ' [Public]' : ' [Private]')}
                                 </Typography>
-                                <Typography variant="h2" component="h1">
+                                <Typography variant="h2" component="h1"
+                                    sx={{ overflowWrap: 'break-word' }}
+                                >
                                     {event.name}
                                 </Typography>
                                 <Typography
                                     variant="subtitle1"
                                     component="p"
-                                    sx={{ marginBottom: 4, color: (theme) => darkSwitchGrey(theme) }}
+                                    sx={{ marginBottom: 4, color: (theme) => darkSwitchGrey(theme), overflowWrap: 'break-word' }}
                                 >
                                     {event.club}
                                 </Typography>
@@ -176,6 +178,7 @@ const EventDisplay = ({ event, error, level, userId }: InferGetServerSidePropsTy
                                     textAlign: 'left',
                                     margin: { lg: '0 0 0 12px', xs: '16px 0 0 0' },
                                     padding: { lg: '8px 0', xs: 0 },
+                                    overflowWrap: 'break-word',
                                     color: (theme: Theme) =>
                                         darkSwitch(theme, theme.palette.grey[700], theme.palette.grey[200]),
                                 }}

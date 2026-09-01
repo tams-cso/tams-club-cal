@@ -3,16 +3,17 @@ import { DeleteObjectCommand, DeleteObjectsCommand, PutObjectCommand, S3Client }
 import { RequestWithClubFiles } from '../types/RequestWithClubFiles';
 import { newId } from './util';
 
-// Connect to AWS S3 instance
+// Connect to Cloudflare R2 instance (S3-compatible)
 const s3 = new S3Client({
+    region: 'auto',
     credentials: {
-        accessKeyId: process.env.AWS_ACCESS_ID,
-        secretAccessKey: process.env.AWS_SECRET_KEY,
+        accessKeyId: process.env.R2_ACCESS_KEY_ID!,
+        secretAccessKey: process.env.R2_SECRET_ACCESS_KEY!,
     },
-    region: 'us-east-1',
+    endpoint: `https://${process.env.R2_ACCOUNT_ID}.r2.cloudflarestorage.com`,
 });
 const BUCKET = `${
-    process.env.NODE_ENV === 'production' && !process.env.STAGING ? '' : 'staging-'
+    process.env.NODE_ENV === 'production' && !process.env.STAGING ? 'production-' : 'staging-'
 }tams-club-calendar-images`;
 
 /**
@@ -40,7 +41,8 @@ export async function processClubUpload(req: RequestWithClubFiles) {
     }
 
     if (execs && execs.length > 0) {
-        const rawExecList = execPhotos.map((e: boolean, i: number) => (!e ? null : execs[i]));
+        let blobIncrementer = 0; // bug fix - used as api.ts passes only blobs as a list of new images but not the index as to which one is which, however, they are in order and can be mapped simply with this. Reference issue: #604
+        const rawExecList = execPhotos.map((e: boolean) => (e ? execs[blobIncrementer++] : null)); // Note that the blobIncrementer is incremented after being referenced here!!
         const compressedExecs = await Promise.all(
             rawExecList.map(async (e: MulterFile) => {
                 return await compressImage(e, 300);
