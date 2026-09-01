@@ -71,7 +71,7 @@ router.delete(
         // TODO: This is honestly also a spaghetti pile but idk if it can actually be cleaned up LMAO
 
         // Check if user is authenticated
-        if (!isAuthenticated(req, res, AccessLevelEnum.ADMIN)) return;
+        if (!(await isAuthenticated(req, res, AccessLevelEnum.ADMIN))) return;
 
         // If everything is good, delete the resource
         switch (req.params.resource) {

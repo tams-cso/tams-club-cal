@@ -59,7 +59,7 @@ const Home = ({ eventList, error, level }: InferGetServerSidePropsType<typeof ge
         <Loading sx={{ marginBottom: 4 }} />
     );
     const [anchorEl, setAnchorEl] = useState(null);
-    const [showPrivate, setShowPrivate] = useState(true);
+    const [showPrivate, setShowPrivate] = useState(false);
     const [filters, setFilters] = useState({
         event: false,
         ga: false,

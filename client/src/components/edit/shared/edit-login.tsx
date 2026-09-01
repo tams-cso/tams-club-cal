@@ -6,7 +6,7 @@ import { getUserInfo } from '../../../api';
 import Box from '@mui/material/Box';
 import Typography from '@mui/material/Typography';
 import Popup from '../../shared/popup';
-import { getCookie } from '../../../util/cookies';
+import { getTokenFromCookie } from '../../../util/cookies';
 
 /**
  * Display a login message at the top of edit pages telling
@@ -20,16 +20,16 @@ const EditLogin = () => {
     // When component mounts and the user opens any edit page, check if they are logged in
     useEffect(() => {
         (async () => {
-            const tokenCookie = getCookie('token');
+            const token = getTokenFromCookie();
 
             // Check if token defined
-            if (!tokenCookie) {
+            if (!token) {
                 setMessage('You are not logged in');
                 return;
             }
 
             // Get user information and return not valid token
-            const userRes = await getUserInfo(tokenCookie['token']);
+            const userRes = await getUserInfo(token);
             if (userRes.status === 401) {
                 setMessage('You are not logged in');
                 return;

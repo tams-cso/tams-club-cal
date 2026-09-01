@@ -58,7 +58,7 @@ router.post(
     imageUpload,
     asyncHandler(async (req: Request, res: Response) => {
         // Check if user is authenticated
-        if (!isAuthenticated(req, res, AccessLevelEnum.CLUBS)) return;
+        if (!(await isAuthenticated(req, res, AccessLevelEnum.CLUBS))) return;
 
         // Create or get IDs needed
         const id = newId();
@@ -104,7 +104,7 @@ router.put(
     imageUpload,
     asyncHandler(async (req: Request, res: Response) => {
         // Check if user is authenticated
-        if (!isAuthenticated(req, res, AccessLevelEnum.CLUBS)) return;
+        if (!(await isAuthenticated(req, res, AccessLevelEnum.CLUBS))) return;
 
         // Get ID and find previous club object
         const id = req.params.id;
@@ -160,7 +160,7 @@ router.delete(
     '/:id',
     asyncHandler(async (req: Request, res: Response) => {
         // Check if user is authenticated
-        if (!isAuthenticated(req, res, AccessLevelEnum.CLUBS)) return;
+        if (!(await isAuthenticated(req, res, AccessLevelEnum.CLUBS))) return;
 
         // Get club
         const club = await Club.findOne({ id: req.params.id });

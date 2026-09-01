@@ -46,7 +46,7 @@ router.post(
     '/',
     asyncHandler(async (req: Request, res: Response) => {
         // Check if user is authenticated
-        if (!isAuthenticated(req, res, AccessLevelEnum.CLUBS)) return;
+        if (!(await isAuthenticated(req, res, AccessLevelEnum.CLUBS))) return;
 
         // Create or get IDs needed
         const id = newId();
@@ -76,7 +76,8 @@ router.put(
     '/:id',
     asyncHandler(async (req: Request, res: Response) => {
         // Check if user is authenticated
-        if (!isAuthenticated(req, res, AccessLevelEnum.CLUBS)) return;
+        if (!(await isAuthenticated(req, res, AccessLevelEnum.CLUBS))) return;
+
         const id = req.params.id;
         const prev = await Volunteering.findOne({ id }).exec();
         if (!prev) {
@@ -113,7 +114,7 @@ router.delete(
     '/:id',
     asyncHandler(async (req: Request, res: Response) => {
         // Check for authentication and access level
-        if (!isAuthenticated(req, res, AccessLevelEnum.CLUBS)) return;
+        if (!(await isAuthenticated(req, res, AccessLevelEnum.CLUBS))) return;
 
         // Delete volunteering and history
         const deleteRes = await Volunteering.deleteOne({ id: req.params.id });

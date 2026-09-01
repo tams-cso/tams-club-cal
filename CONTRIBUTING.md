@@ -22,7 +22,7 @@ The frontend site is mainly bootstrapped through the **Next.js** framework, whic
 
 ### Backend
 
-The backend server runs almost entirely using the **Express** framework. For simplicity’s sake, we have decided to use the same language, Typescript, for both the frontend and backend. The other major library that we use is **Mongoose**, which is how we interact with our NoSQL MongoDB database. In addition to these two, we also utilize a lot of useful libraries: middleware libraries (**cors**, **compression**, **helmet**, **cookie-parser**, **morgan**), **dayjs** (date formatting), **multer** (form data parsing), **sharp** (image processing), **uuid** (generating uuidv4), and **aws-sdk** (accessing AWS S3 resource).
+The backend server runs almost entirely using the **Express** framework. For simplicity’s sake, we have decided to use the same language, Typescript, for both the frontend and backend. The other major library that we use is **Mongoose**, which is how we interact with our NoSQL MongoDB database. In addition to these two, we also utilize a lot of useful libraries: middleware libraries (**cors**, **compression**, **helmet**, **cookie-parser**, **morgan**), **dayjs** (date formatting), **multer** (form data parsing), **sharp** (image processing), **uuid** (generating uuidv4), and **aws-sdk** (accessing Cloudflare R2 resource which is S3-Compatible).
 
 * [Express](https://expressjs.com/) - Complete Node.js backend REST server framework
 * [Mongoose ODM](https://mongoosejs.com/) - Object modeling for accessing MongoDB
@@ -42,13 +42,12 @@ CI/CD stands for continuous integration, continuous deployment. This is what all
 
 ## Deployment
 
-There are a multitude of platforms that help tams.club run smoothly. First of all, **Github** hosts all the code and manages contributions through the issue and pull request system. All the text data is stored on **MongoDB**, a NoSQL database that is hosted through their **MongoDB Atlas** platform. We also use an **AWS S3 Bucket** to hold our images, from club cover images to profile pictures. These are served through the CDN provided from **AWS Cloudfront**. Both these AWS services are basically free, based on our minimal usage. Our app also connects with the **Google Cloud Platform** to sync event data with TAMS Club Calendar Google Calendar, as well as provide the "Login with Google" functionality. Finally, the entire website (both frontend and backend Docker instances) are being hosted on a **DigitalOcean Droplet**. I ([Michael Zhao](https://github.com/MichaelZhao21)) am actually hosting both these instances on my personal droplet (server), which costs me about $5/month and gives 25GB of disk and 1GB of RAM.
+There are a multitude of platforms that help tams.club run smoothly. First of all, **Github** hosts all the code and manages contributions through the issue and pull request system. All the text data is stored on **MongoDB**, a NoSQL database that is hosted through their **MongoDB Atlas** platform. We also use an **Cloudflare R2 Bucket** to hold our images, from club cover images to profile pictures. These are served through the CDN provided by deafult from **Cloudflare** with our domain. Both these Cloudflare services remain under the free tier. Our app also connects with the **Google Cloud Platform** to sync event data with TAMS Club Calendar Google Calendar, as well as provide the "Login with Google" functionality. Finally, the entire website (both frontend and backend Docker instances) are being hosted on a **DigitalOcean Droplet**. I ([Michael Zhao](https://github.com/MichaelZhao21)) am actually hosting both these instances on my personal droplet (server), which costs me about $5/month and gives 25GB of disk and 1GB of RAM.
 
 * [Github](https://www.github.com) - Probably the website you are on right now
 * [MongoDB](https://www.mongodb.com/) - NoSQL Database
 * [MongoDB Atlas](https://www.mongodb.com/atlas) - MongoDB in the cloud!
-* [AWS S3](https://aws.amazon.com/s3/) - AWS Blob Storage solution
-* [AWS Cloudfront](https://aws.amazon.com/cloudfront/) - AWS content delivery network
+* [Cloudflare R2](https://www.cloudflare.com/products/r2/) - Cloudflare Blob Storage solution
 * [Google Cloud Platform](https://cloud.google.com/) - All of Google's cloud computing resources
 * [DigitalOcean](https://www.digitalocean.com/) - Cloud server hosting provider
 

@@ -1,7 +1,7 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useRouter } from 'next/router';
 import { GetServerSidePropsContext, InferGetServerSidePropsType } from 'next';
-import { getUserEvents, getUserInfo } from '../../src/api';
+import { getUserEvents, getUserInfo, deleteUnlinkMicrosoft, getMicrosoftAuthUrl } from '../../src/api';
 import { AccessLevelEnum } from '../../src/types/enums';
 
 import Card from '@mui/material/Card';
@@ -19,10 +19,12 @@ import Container from '@mui/material/Container';
 import PageWrapper from '../../src/components/shared/page-wrapper';
 import Loading from '../../src/components/shared/loading';
 import TitleMeta from '../../src/components/meta/title-meta';
+import Popup from '../../src/components/shared/popup';
 import { accessLevelToString, getTokenFromCookies, redirect } from '../../src/util/miscUtil';
 import { removeCookie, setCookie } from '../../src/util/cookies';
 import { formatTime } from '../../src/util/datetime';
 import { darkSwitch } from '../../src/util/cssUtil';
+import { createPopupEvent } from '../../src/util/constructors';
 
 // Server-side Rendering to check for token and get data
 export const getServerSideProps = async (ctx: GetServerSidePropsContext) => {
@@ -67,6 +69,10 @@ const Dashboard = ({
     userEvents,
 }: InferGetServerSidePropsType<typeof getServerSideProps>) => {
     const router = useRouter();
+    const [popupEvent, setPopupEvent] = useState<PopupEvent>(null);
+    const [msLinked, setMsLinked] = useState(!!info?.msId);
+    const [msEmail, setMsEmail] = useState(info?.msEmail || '');
+    const [msName, setMsName] = useState(info?.msName || '');
 
     // Redirect the user to the admin page
     const toAdmin = () => router.push('/profile/admin');
@@ -81,6 +87,30 @@ const Dashboard = ({
     // Redirect the user to the event page
     const goTo = (eventId: string) => {
         router.push(`/events/${eventId}?view=profile`);
+    };
+
+    // Ask the server for a Microsoft Entra ID authorize URL, then redirect.
+    const linkMicrosoft = async () => {
+        const res = await getMicrosoftAuthUrl();
+        if (res.status !== 200 || !(res.data as { url?: string })?.url) {
+            setPopupEvent(createPopupEvent('Microsoft login is not configured on the server.', 4));
+            return;
+        }
+        sessionStorage.setItem('msReturnUrl', window.location.href);
+        window.location.href = (res.data as { url: string }).url;
+    };
+
+    // Unlink Microsoft account
+    const unlinkMicrosoft = async () => {
+        const res = await deleteUnlinkMicrosoft();
+        if (res.status === 204) {
+            setMsLinked(false);
+            setMsEmail('');
+            setMsName('');
+            setPopupEvent(createPopupEvent('UNT account unlinked.', 2));
+        } else {
+            setPopupEvent(createPopupEvent('Failed to unlink UNT account.', 4));
+        }
     };
 
     // Redirect user if they are not logged in
@@ -105,6 +135,7 @@ const Dashboard = ({
 
     return (
         <PageWrapper>
+            <Popup event={popupEvent} />
             <TitleMeta title="Profile" path="/profile/dashboard" />
             <Container>
                 <Card>
@@ -123,8 +154,8 @@ const Dashboard = ({
                                 </TableHead>
                                 <TableBody>
                                     <TableRow>
-                                        <TableCell>{info.name}</TableCell>
-                                        <TableCell>{info.email}</TableCell>
+                                        <TableCell>{info.name || '—'}</TableCell>
+                                        <TableCell>{info.email || '—'}</TableCell>
                                         <TableCell>{accessLevelToString(level)}</TableCell>
                                     </TableRow>
                                 </TableBody>
@@ -138,6 +169,39 @@ const Dashboard = ({
                                 <Button onClick={toAdmin}>Go to Admin Dashboard</Button>
                             </Box>
                         ) : null}
+                        {msLinked ? (
+                            <Box>
+                                <TableContainer sx={{ marginTop: 1 }}>
+                                    <Table>
+                                        <TableHead>
+                                            <TableRow>
+                                                <TableCell>Linked Google Account</TableCell>
+                                                <TableCell>UNT Email</TableCell>
+                                                <TableCell>UNT Name</TableCell>
+                                            </TableRow>
+                                        </TableHead>
+                                        <TableBody>
+                                            <TableRow>
+                                                <TableCell>{info.email || '—'}</TableCell>
+                                                <TableCell>{msEmail}</TableCell>
+                                                <TableCell>{msName}</TableCell>
+                                            </TableRow>
+                                        </TableBody>
+                                    </Table>
+                                </TableContainer>
+                                <Box sx={{ display: 'flex', justifyContent: 'center', marginTop: 2 }}>
+                                    <Button color="error" onClick={unlinkMicrosoft}>
+                                        Unlink UNT Account
+                                    </Button>
+                                </Box>
+                            </Box>
+                        ) : (
+                            <Box sx={{ display: 'flex', justifyContent: 'center', marginTop: 2 }}>
+                                <Button variant="contained" onClick={linkMicrosoft}>
+                                    Link UNT Account
+                                </Button>
+                            </Box>
+                        )}
                         <Typography variant="h2" component="h1" sx={{ marginTop: 3 }}>
                             User-Created Events
                         </Typography>

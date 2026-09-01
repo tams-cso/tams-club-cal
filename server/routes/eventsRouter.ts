@@ -197,7 +197,7 @@ router.post(
     '/',
     asyncHandler(async (req: Request, res: Response) => {
         // Check if user is authenticated
-        if (!isAuthenticated(req, res, AccessLevelEnum.STANDARD)) return;
+        if (!(await isAuthenticated(req, res, AccessLevelEnum.STANDARD))) return;
 
         // Create/get IDs
         const userId = await getUserId(req);
@@ -282,7 +282,7 @@ router.put(
         }
 
         // Check if user is authenticated
-        if (!isAuthenticated(req, res, AccessLevelEnum.STANDARD, prev.editorId)) return;
+        if (!(await isAuthenticated(req, res, AccessLevelEnum.STANDARD, prev.editorId))) return;
 
         // Get user
         const userId = await getUserId(req);
@@ -386,7 +386,7 @@ router.delete(
         }
 
         // Check if user is authenticated
-        if (!isAuthenticated(req, res, AccessLevelEnum.STANDARD, event.editorId)) return;
+        if (!(await isAuthenticated(req, res, AccessLevelEnum.STANDARD, event.editorId))) return;
 
         // Delete event from Google Calendar, History DB, and Events DB
         const deleteRes = await Event.deleteOne({ id: req.params.id });
@@ -412,7 +412,7 @@ router.delete(
         }
 
         // Check if user is authenticated
-        if (!isAuthenticated(req, res, AccessLevelEnum.STANDARD, eventList[0].editorId)) return;
+        if (!(await isAuthenticated(req, res, AccessLevelEnum.STANDARD, eventList[0].editorId))) return;
 
         // Delete all events from History DB and Events DB
         const idList = eventList.map((e) => e.id);
