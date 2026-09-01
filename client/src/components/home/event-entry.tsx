@@ -57,6 +57,7 @@ const EventEntry = ({ event }: EventEntryProps) => {
                         sx={{
                             color: (theme) => darkSwitch(theme, theme.palette.common.black, theme.palette.grey[200]),
                             fontSize: { lg: '1.25rem', xs: '1rem' },
+                            overflowWrap: 'break-word'
                         }}
                     >
                         <StyledSpan

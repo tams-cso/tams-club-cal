@@ -15,6 +15,7 @@ import ManageResources from '../../src/components/admin/manage-resources';
 import EditLinkList from '../../src/components/admin/edit-link-list';
 import ChangeUserPermissions from '../../src/components/admin/change-user-permissions';
 import ViewFeedback from '../../src/components/admin/view-feedback';
+import MicrosoftAccounts from '../../src/components/admin/microsoft-accounts';
 
 // Server-side Rendering to check for token
 export const getServerSideProps = async (ctx: GetServerSidePropsContext) => {
@@ -83,6 +84,10 @@ const Admin = ({ authorized, error }: InferGetServerSidePropsType<typeof getServ
                     Change User Permissions
                 </Typography>
                 <ChangeUserPermissions />
+                <Typography variant="h3" sx={{ textAlign: 'center', marginTop: 3 }}>
+                    UNT Accounts
+                </Typography>
+                <MicrosoftAccounts />
                 <Typography variant="h3" sx={{ textAlign: 'center', marginTop: 3 }}>
                     Feedback
                 </Typography>
