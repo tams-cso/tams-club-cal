@@ -35,3 +35,25 @@ export function getCookie(name: string): string {
 export function removeCookie(name: string) {
     cookies.remove(name, { path: '/' });
 }
+
+/**
+ * Gets the user auth token from the token cookie.
+ * 
+ * The token may be stored as a plain string or as a JSON object
+ * string in the form {"token": "<token>"} (from older logins),
+ * so both formats are handled here.
+ *
+ * @return The auth token or null if not found
+ */
+export function getTokenFromCookie(): string | null {
+    const val = getCookie('token');
+    if (!val) return null;
+    try {
+        const parsed = JSON.parse(val);
+        if (typeof parsed === 'object' && parsed !== null && parsed.token) return parsed.token;
+        if (typeof parsed === 'string') return parsed;
+    } catch (e) {
+        // if the value is not valid json, continue and treat it as a plain token
+    }
+    return val;
+}

@@ -1,5 +1,5 @@
 import type { GridFilterItem } from '@mui/x-data-grid';
-import { getCookie } from './util/cookies';
+import { getTokenFromCookie } from './util/cookies';
 
 const BACKEND_URL =
     process.env.NEXT_PUBLIC_BACKEND === 'staging'
@@ -123,8 +123,7 @@ async function deleteRequest(url: string, auth: boolean = true): Promise<StatusR
  * @param json True if adding json content type
  */
 function createHeaders(auth: boolean, json: boolean): Headers {
-    const tokenCookies = getCookie('token');
-    const token = tokenCookies ? tokenCookies['token'] : null;
+    const token = getTokenFromCookie();
 
     let headers = new Headers();
     if (auth && token) headers.set('Authorization', `Bearer ${token}`);
