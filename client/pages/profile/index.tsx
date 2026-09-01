@@ -15,14 +15,14 @@ import TitleMeta from '../../src/components/meta/title-meta';
 import Popup from '../../src/components/shared/popup';
 import UploadBackdrop from '../../src/components/edit/shared/upload-backdrop';
 import { setCookie } from '../../src/util/cookies';
-import { getParams } from '../../src/util/miscUtil';
+import { getParams, getTokenFromCookies } from '../../src/util/miscUtil';
 
 // Server-side Rendering to check for token
 // TODO: This block can be cleaned up
 export const getServerSideProps = async (ctx: GetServerSidePropsContext) => {
     // Get the token from cookies
-    const token = ctx.req.cookies.token;
-    if (token === undefined) return { props: { authorized: false, error: false } };
+    const token = getTokenFromCookies(ctx);
+    if (!token) return { props: { authorized: false, error: false } };
 
     // Check if valid token and compare with database
     const res = await getUserInfo(token);

@@ -45,11 +45,20 @@ interface User {
     /** Display name of the user */
     name: string;
 
-    /** Email of the user */
-    email: string;
+    /** Email of the user (may be null once Google auth is phased out) */
+    email?: string;
 
     /** Access level of the user */
     level: AccessLevel;
+
+    /** Microsoft Entra ID (object ID) */
+    msId?: string;
+
+    /** UNT account email */
+    msEmail?: string;
+
+    /** UNT account display name */
+    msName?: string;
 }
 
 /** Object that stores data for resource to delete */
