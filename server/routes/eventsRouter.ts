@@ -139,8 +139,8 @@ router.get(
     '/reservations/search/:location/:start/:end',
     asyncHandler(async (req: Request, res: Response) => {
         // Parse the passed in start and end times
-        const start = Number.parseInt(req.params.start);
-        const end = Number.parseInt(req.params.end);
+        const start = Number.parseInt(req.params.start.toString());
+        const end = Number.parseInt(req.params.end.toString());
 
         // Send bad request error if invalid times
         if (isNaN(start) || isNaN(end)) {
@@ -274,7 +274,7 @@ router.put(
     '/:id',
     asyncHandler(async (req: Request, res: Response) => {
         // Get ID and find previous event
-        const id = req.params.id;
+        const id: string = req.params.id.toString();
         const prev: EventObject = await Event.findOne({ id }).exec();
         if (!prev) {
             sendError(res, 400, 'Invalid event ID');

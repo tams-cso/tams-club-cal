@@ -1,5 +1,5 @@
 import type { Request, Response } from 'express';
-import * as uuid from 'uuid';
+import { v4 as uuidv4 } from 'uuid';
 import statusList from '../files/status.json';
 import envList from '../files/env.json';
 
@@ -36,7 +36,7 @@ export function sendError(res: Response, status = 500, message = 'Internal Serve
  * Creates and returns a new UUIDv4
  */
 export function newId(): string {
-    return uuid.v4();
+    return uuidv4();
 }
 
 /**
