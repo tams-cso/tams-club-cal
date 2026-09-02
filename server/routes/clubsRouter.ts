@@ -107,7 +107,7 @@ router.put(
         if (!(await isAuthenticated(req, res, AccessLevelEnum.CLUBS))) return;
 
         // Get ID and find previous club object
-        const id = req.params.id;
+        const id: string = req.params.id.toString();
         const prev = await Club.findOne({ id }).exec();
         if (!prev) {
             sendError(res, 400, 'Invalid event ID');
