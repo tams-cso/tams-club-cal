@@ -4,24 +4,28 @@ FROM node:20-alpine AS deps
 RUN apk add --no-cache libc6-compat
 WORKDIR /app
 COPY package.json yarn.lock ./
-RUN yarn install --frozen-lockfile
+
+ENV YARN_NODE_LINKER=node-modules
+RUN corepack enable
+RUN yarn install --immutable
 
 # Rebuild the source code only when needed
-FROM node:24-alpine AS builder
+FROM node:20-alpine AS builder
 
 ARG NEXT_PUBLIC_BACKEND
 ENV NEXT_PUBLIC_BACKEND=${NEXT_PUBLIC_BACKEND}
 
-WORKDIR /app/client
-COPY --from=deps /app/node_modules ./node_modules
-COPY client ./
-COPY package.json ./
-RUN yarn build
+WORKDIR /app
+COPY package.json yarn.lock ./
+COPY client ./client
+COPY server ./server
 
-WORKDIR /app/server
-COPY ["server/.env", "server/esbuild.js", "package.json", "./"]
-COPY server ./
-COPY --from=deps /app/node_modules ./node_modules
+ENV YARN_NODE_LINKER=node-modules
+RUN corepack enable
+RUN yarn install --immutable
+
+# Build Next.js client and Express backend
+RUN yarn build
 RUN yarn build:backend
 
 # Production image, copy all the files and run apps
@@ -32,30 +36,28 @@ RUN cp /usr/share/zoneinfo/America/Chicago /etc/localtime
 
 ENV NODE_ENV=production
 
-# You only need to copy next.config.js if you are NOT using the default configuration
+# Copy Next.js frontend standalone build artifacts
 COPY --from=builder /app/client/next.config.js ./
 COPY --from=builder /app/client/public ./public
-COPY --from=builder /app/client/package.json ./package.json
-
-# Automatically leverage output traces to reduce image size 
-# https://nextjs.org/docs/advanced-features/output-file-tracing
-COPY --from=builder /app/client/.next/standalone ./
+COPY --from=builder /app/package.json ./package.json
+COPY --from=builder /app/client/.next/standalone/client ./
 COPY --from=builder /app/client/.next/static ./.next/static
 
+# Copy compiled backend output from server/build
 WORKDIR /app/server
 COPY --from=builder /app/server/build ./
-RUN yarn install --production
+RUN corepack enable
+RUN yarn install
 
-# Next.js collects completely anonymous telemetry data about general usage.
-# Learn more here: https://nextjs.org/telemetry
-# Uncomment the following line in case you want to disable telemetry.
-# ENV NEXT_TELEMETRY_DISABLED 1
+WORKDIR /app/client
+ENV YARN_NODE_LINKER=node-modules
+RUN corepack enable
+RUN yarn install
+
 
 WORKDIR /app
 COPY docker-runner.sh ./
 RUN chmod +x ./docker-runner.sh
-RUN ls -la
-RUN pwd
 EXPOSE 80 90
 ENV PORT=80
 ENV TZ="America/Chicago"
