@@ -10,19 +10,22 @@ jobs:
         runs-on: ubuntu-latest
         steps:
             - name: Checkout
-              uses: actions/checkout@v2
+              uses: actions/checkout@v4
 
             - name: Use NodeJS 20
-              uses: actions/setup-node@v2
+              uses: actions/setup-node@v4
               with:
                   node-version: '20'
+                  
+            - name: Enable corepack
+              run: corepack enable
 
             - name: Setup repo
               env:
                   ENV: ${{ secrets.STAGING_ENV }}
               run: |
                   cd $GITHUB_WORKSPACE/server && echo "$ENV" >| .env
-                  cd .. && yarn install --frozen-lockfile
+                  cd .. && yarn install --immutable
 
             - name: Client type check
               run: cd $GITHUB_WORKSPACE && yarn type

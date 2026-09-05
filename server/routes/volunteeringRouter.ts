@@ -78,7 +78,7 @@ router.put(
         // Check if user is authenticated
         if (!(await isAuthenticated(req, res, AccessLevelEnum.CLUBS))) return;
 
-        const id = req.params.id;
+        const id: string = req.params.id.toString();
         const prev = await Volunteering.findOne({ id }).exec();
         if (!prev) {
             sendError(res, 400, 'Invalid volunteering ID');
