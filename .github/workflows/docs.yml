@@ -3,6 +3,7 @@ on:
     push:
         branches:
             - master
+            - action-test
 permissions:
     contents: write
 
@@ -16,6 +17,7 @@ jobs:
 
             - name: Install and Build 🔧
               run: |
+                  corepack enable
                   yarn install
                   yarn docs
 
