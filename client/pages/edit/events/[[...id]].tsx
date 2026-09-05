@@ -449,9 +449,10 @@ const EditEvents = ({
                         label="Club"
                         name="club"
                         variant="outlined"
-                        options={clubList.map(c => c.name)}
+                        options={["Staff", "Student", ...clubList.map(c => c.name)]}
                         required
                         grow
+                        errorMessage='Please select a club. If you are booking as for a student or staff member, please select "Student" or "Staff" respectively.'
                     />
                     <Spacer />
                     <LocationSelect
