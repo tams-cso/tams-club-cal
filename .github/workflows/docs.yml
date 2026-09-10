@@ -3,6 +3,7 @@ on:
     push:
         branches:
             - master
+            - action-test
 permissions:
     contents: write
 
