@@ -16,6 +16,7 @@ jobs:
 
             - name: Install and Build 🔧
               run: |
+                  corepack enable
                   yarn install
                   yarn docs
 
