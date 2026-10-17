@@ -33,7 +33,7 @@
         "@react-oauth/google": "^0.12.2",
         "@types/react-dom": "^19.1.7",
         "chalk": "^5.4.1",
-        "compression": "^1.8.1",
+        "compression": "^1.8.2",
         "cookie-parser": "^1.4.6",
         "cors": "^2.8.5",
         "dayjs": "^1.10.7",
