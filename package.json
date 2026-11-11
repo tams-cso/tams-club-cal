@@ -46,7 +46,7 @@
         "helmet": "^8.1.0",
         "jsonwebtoken": "^9.0.3",
         "minimatch": "^9.0.7",
-        "mongoose": "^8.18.0",
+        "mongoose": "^8.24.7",
         "mongoose-paginate-v2": "^1.6.0",
         "morgan": "^1.10.0",
         "multer": "^2.0.2",
