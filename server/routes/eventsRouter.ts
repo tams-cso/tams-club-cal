@@ -1,7 +1,7 @@
 import express from 'express';
 import type { Request, Response } from 'express';
 import dayjs from 'dayjs';
-import { sendError, newId } from '../functions/util';
+import { sendError, newId, getWeeklyStarts } from '../functions/util';
 import { createHistory } from '../functions/edit-history';
 import Event from '../models/event';
 import { AccessLevelEnum } from '../types/AccessLevel';
@@ -228,16 +228,12 @@ router.post(
         // If repeating event, repeatingId will be not be null
         if (repeatingId) {
             // Generate the repeating events
-            const lastDay = dayjs(req.body.repeatsUntil).add(1, 'day');
-            let currStart = dayjs(req.body.start).add(1, 'week');
-            let currEnd = dayjs(req.body.end).add(1, 'week');
+            const duration = eventObj.end - eventObj.start;
             const eventList = [eventObj];
 
             // Create events until the last day
-            while (currStart.isBefore(lastDay, 'day')) {
-                eventList.push({ ...eventObj, id: newId(), start: currStart.valueOf(), end: currEnd.valueOf() });
-                currStart = currStart.add(1, 'week');
-                currEnd = currEnd.add(1, 'week');
+            for (const start of getWeeklyStarts(eventObj.start, Number(req.body.repeatsUntil))) {
+                eventList.push({ ...eventObj, id: newId(), start, end: start + duration });
             }
 
             // Create a list of history objects

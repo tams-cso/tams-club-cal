@@ -9,7 +9,7 @@ import { createPopupEvent, createEvent } from '../../../src/util/constructors';
 import { darkSwitch } from '../../../src/util/cssUtil';
 import { getClubList, getEvent, getOverlappingReservations, getUserInfo, postEvent, putEvent } from '../../../src/api';
 import { setCookie } from '../../../src/util/cookies';
-import { formatEventDateTime } from '../../../src/util/datetime';
+import { formatEventDateTime, getWeeklyStarts } from '../../../src/util/datetime';
 
 import Typography from '@mui/material/Typography';
 import Box from '@mui/material/Box';
@@ -233,16 +233,10 @@ const EditEvents = ({
                 (!event.id && data.repeatsWeekly) ||
                 (event.repeatingId && (data.start.valueOf() !== event.start || data.end.valueOf() !== event.end))
             ) {
-                const repeatsUntil = event.repeatsUntil ? dayjs(event.repeatsUntil) : data.repeatsUntil;
-                const lastDay = repeatsUntil.add(1, 'day');
-                let currStart = data.start.add(1, 'week');
-                let currEnd = data.end.add(1, 'week');
+                const repeatsUntil = event.repeatsUntil ? event.repeatsUntil : data.repeatsUntil.valueOf();
 
-                // Check events up to the last day
-                while (currStart.isBefore(lastDay, 'day')) {
-                    if (await isOverlapping(data.location, currStart.valueOf(), currEnd.valueOf(), true)) return;
-                    currStart = currStart.add(1, 'week');
-                    currEnd = currEnd.add(1, 'week');
+                for (const start of getWeeklyStarts(startTime, repeatsUntil)) {
+                    if (await isOverlapping(data.location, start, start + (endTime - startTime), true)) return;
                 }
             }
         }

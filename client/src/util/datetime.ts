@@ -10,6 +10,16 @@ dayjs.extend(timezone);
 dayjs.extend(isLeapYear);
 dayjs.extend(customParseFormat);
 
+/**
+ * Timezone events are entered and repeated in. Stored times are UTC millis.
+ */
+export const CENTRAL_TZ = 'America/Chicago';
+
+/**
+ * Wall clock format with no offset, for moving times between zones.
+ */
+const WALL_CLOCK = 'YYYY-MM-DDTHH:mm:ss';
+
 // ================== DATE AND TIME FUNCTIONS =================== //
 /**
  * Returns the current time in UTC milliseconds
@@ -26,7 +36,7 @@ export function getNow(): number {
  */
 
 export function toTz(millis: number): Dayjs {
-    return dayjs(Number(millis)).tz('America/Chicago');
+    return dayjs(Number(millis)).tz(CENTRAL_TZ);
 }
 /**
  * Formats a UTC millisecond time while converting to central timezone
@@ -161,4 +171,31 @@ export function parseDateParams(dates: string[]): Dayjs {
 
     // Return the dayjs object
     return dayjs().year(year).month(month).date(date);
+}
+
+/**
+ * Start times of the rest of a weekly series (not incl first item).
+ *
+ * Adding a week to the previous start leaves dayjs's old UTC offset in place,
+ * so times drift an hour after DST. Walking the wall clock in CENTRAL_TZ and
+ * resolving it there avoids that, wherever this code runs.
+ *
+ * @param start First instance, UTC millis
+ * @param repeatsUntil Last day of the series, inclusive, UTC millis
+ * @param weeksBetween Weeks between instances
+ * @returns Start of each later instance, UTC millis
+ */
+export function getWeeklyStarts(start: number, repeatsUntil: number, weeksBetween: number = 1): number[] {
+    const starts = [];
+    // Strip the offset so adding a week is just calendar math
+    const toWallClock = (millis: number) => dayjs(millis).tz(CENTRAL_TZ).format(WALL_CLOCK);
+    let wallClock = dayjs(toWallClock(start)).add(weeksBetween, 'week');
+    const lastDay = dayjs(toWallClock(repeatsUntil)).add(1, 'day');
+
+    // repeatsUntil is inclusive, so stop after that day
+    while (wallClock.isBefore(lastDay, 'day')) {
+        starts.push(dayjs.tz(wallClock.format(WALL_CLOCK), CENTRAL_TZ).valueOf());
+        wallClock = wallClock.add(weeksBetween, 'week');
+    }
+    return starts;
 }
