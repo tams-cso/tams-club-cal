@@ -3,6 +3,9 @@ import utc from 'dayjs/plugin/utc';
 import timezone from 'dayjs/plugin/timezone';
 import isLeapYear from 'dayjs/plugin/isLeapYear';
 import customParseFormat from 'dayjs/plugin/customParseFormat';
+import { CENTRAL_TZ } from '../../../shared/datetime';
+
+export { CENTRAL_TZ, getWeeklyStarts } from '../../../shared/datetime';
 
 // Plugins for dayjs base library
 dayjs.extend(utc);
@@ -26,7 +29,7 @@ export function getNow(): number {
  */
 
 export function toTz(millis: number): Dayjs {
-    return dayjs(Number(millis)).tz('America/Chicago');
+    return dayjs(Number(millis)).tz(CENTRAL_TZ);
 }
 /**
  * Formats a UTC millisecond time while converting to central timezone

@@ -74,7 +74,7 @@ formatting rules for Prettier and will be automatically applied when formatting 
 
 ### File and Organization Conventions
 
-All files will be named with **lowercase** letters and **dash-seperated** (called **kebab case**!). This is because on legacy systems, capital letters will be ignored in file names. In terms of file organization, the client and server top-level folders contain each individual program, with seperate `package.json` files and `node_modules` folders. The file organization is detailed below:
+All files will be named with **lowercase** letters and **dash-seperated** (called **kebab case**!). This is because on legacy systems, capital letters will be ignored in file names. In terms of file organization, the client and server top-level folders contain each individual program, with seperate `package.json` files and `node_modules` folders. The `shared` top-level folder contains code used by both programs. The file organization is detailed below:
 
 ```
 .github - Contains all workflows and issue templates
@@ -113,6 +113,8 @@ server - Contains server (backend) code
     | .env - Not in Git but required for backend development, contains all the environmental variables
     | app.ts - Entry point script for backend server
     | esbuild.js - Build script for backend
+shared - Contains code shared between client and server
+    | datetime.ts - Date/time helpers used by both programs
 .dockerignore - Ignore file for Docker
 .gitignore - Ignore file for Git
 .prettierrc - Formatting file used by the Prettier VSCode extension

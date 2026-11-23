@@ -3,6 +3,8 @@ import { v4 as uuidv4 } from 'uuid';
 import statusList from '../files/status.json';
 import envList from '../files/env.json';
 
+export { CENTRAL_TZ, getWeeklyStarts } from '../../shared/datetime';
+
 /**
  * Checks that all the neccessary environmental variables
  * are defined before running the app.
