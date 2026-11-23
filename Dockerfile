@@ -19,6 +19,7 @@ WORKDIR /app
 COPY package.json yarn.lock ./
 COPY client ./client
 COPY server ./server
+COPY shared ./shared
 
 ENV YARN_NODE_LINKER=node-modules
 RUN corepack enable
